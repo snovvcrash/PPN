@@ -2797,6 +2797,18 @@ PS> type 'file.txt:Password'
 
 
 
+## .msc
+
+```
+secpol.msc  -- "Local Security Policy" -- "Локальная политика безопасности"
+gpedit.msc  -- "Local Group Policy Editor" -- "Редактор локальной групповой политики"
+lusrmgr.msc -- "Local Users and Groups (Local)" -- "Локальные пользователи и группы (локально)"
+certmgr.msc -- "Certificates - Current User" -- "Сертификаты - текущий пользователь"
+```
+
+
+
+
 
 # VirtualBox
 
