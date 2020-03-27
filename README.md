@@ -2080,11 +2080,14 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 * Allocate 4GB RAM
 * Set up shared folder (+ automount)
 * Disable screen lock (Power manager settings -> Display)
-* Set up root user (+ disable kali user)
+* Set up root user (+ disable kali user) [NOT RECOMMENDED THOUGH :unamused:]
 	kali@kali:$ sudo -i
 	root@kali:$ passwd root
 	* Re-login as root
 	root@kali:$ usermod -L kali && usermod -s /sbin/nologin kali && chage -E0 kali
+* Or just increase sudo timestamp_timeout value
+	root@kali:$ sudo visudo
+		Defaults    env_reset,timestamp_timeout=45
 * Configure networks
 * Update && Upgrade
 * Install guest additions
@@ -2093,8 +2096,9 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 * zsh & oh-my-zh (https://git.io/M1y4bQ)
 	root@kali:$ apt install zsh -y && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 	root@kali:$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+	root@kali:$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 	root@kali:$ vi ~/.zshrc
-		plugins=(git zsh-syntax-highlighting)
+		plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
 	* Re-login
 * dotfiles
 	root@kali:$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
@@ -2102,6 +2106,9 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 	root@kali:$ apt install tillix -y
 * tmux
 	root@kali:$ bash ~/.dotfiles/tmux/INSTALL.sh
+	* Themes: https://github.com/storm119/Tilix-Themes/blob/master/Themes.md
+* keepass
+	root@kali:$ apt install keepassx -y
 ```
 
 
@@ -2351,6 +2358,8 @@ $ chmod 600 rsa_key
 
 $ openssl rsa -text -in rsa_key -passin 'pass:s3cr3t_p4ssw0rd'
 $ openssl asn1parse -in rsa_key
+
+$ ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 ```
 
 
