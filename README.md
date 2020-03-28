@@ -876,6 +876,18 @@ id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
 
 
 
+### Redirections
+
+```html
+<head> 
+  <meta http-equiv="refresh" content="0; URL=http://www.example.com/" />
+</head>
+```
+
+* [developer.mozilla.org/ru/docs/Web/HTTP/Redirections](https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections)
+
+
+
 ### Data Grabbers
 
 
@@ -2076,6 +2088,8 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 
 ## Initial
 
+Mix settings list (both for hardware install and virtualization):
+
 ```
 * Allocate 4GB RAM
 * Set up shared folder (+ automount)
@@ -2097,18 +2111,17 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 	root@kali:$ apt install zsh -y && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 	root@kali:$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 	root@kali:$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	root@kali:$ vi ~/.zshrc
-		plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+	root@kali:$ sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
 	* Re-login
 * dotfiles
 	root@kali:$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
-* tillix
-	root@kali:$ apt install tillix -y
+* tilix
+	root@kali:$ apt install tilix -y && mkdir -p ~/.config/tilix/schemes
 * tmux
 	root@kali:$ bash ~/.dotfiles/tmux/INSTALL.sh
-	* Themes: https://github.com/storm119/Tilix-Themes/blob/master/Themes.md
-* keepass
-	root@kali:$ apt install keepassx -y
+	root@kali:$ git clone https://github.com/thewtex/tmux-mem-cpu-load ~/.tmux/plugins/tmux-mem-cpu-load && cd ~/.tmux/plugins/tmux-mem-cpu-load && cmake . && make && sudo make install
+* Other
+	root@kali:$ apt install keepassx timeshift -y
 ```
 
 
