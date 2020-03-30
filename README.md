@@ -1519,6 +1519,18 @@ root@kali:$ mkdir -p discovery/{subnets,hosts,services/names} exploitation/ file
 
 
 
+## Network Status
+
+```
+ip addr (ifconfig)
+iproute (route -n)
+cat /etc/resolve.conf
+arp -a
+```
+
+
+
+
 ## Host Discovery
 
 CWD: `discovery/`
@@ -1535,6 +1547,14 @@ root@kali:$ grep 'Up' subnets/gateways.gnmap |cut -d' ' -f2 > subnets/ranges.txt
 
 root@kali:$ sed -i subnets/ranges.txt -e 's/$/\/24/'
 ```
+
+Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
+
+* ARP
+* LLMNR, NBNS -- `Responder.py`
+* STP
+* DHCP, DHCPv6 -- `mitm6.py`
+* mDNS
 
 
 
