@@ -1,3 +1,5 @@
+# [snovvcrash’s Security Blog](https://snovvcrash.github.io)
+
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
 [//]: # (### -- 3 spaces before)
@@ -1801,7 +1803,15 @@ root@kali: nmap -n -Pn -sV --script=ldap-search -oA nmap/ldap 127.0.0.1 -p389
 Flag `-A`:
 
 ```
-nmap -A ... == nmap -sC -sV -O --traceroute ...
+root@kali:$ nmap -A ... == nmap -sC -sV -O --traceroute ...
+```
+
+Enum WAF:
+
+```
+root@kali:$ nmap --script http-waf-detect 127.0.0.1 -p80
+root@kali:$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
++ wafw00f.py
 ```
 
 
