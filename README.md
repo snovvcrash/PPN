@@ -149,6 +149,26 @@ user@remote:$ export TERM=xterm
 
 
 
+## VNC
+
+Decrypt TightVNC password:
+
+```
+root@kali:$ msdbrun -q
+msf5 > irb
+>> fixedkey = "\x17\x52\x6b\x06\x23\x4e\x58\x07"
+=> "\u0017Rk\u0006#NX\a"
+>> require 'rex/proto/rfb'
+=> true
+>> Rex::Proto::RFB::Cipher.decrypt ["f0f0f0f0f0f0f0f0"].pack('H*'), fixedkey
+=> "<DECRYPTED>"
+```
+
+* [github.com/frizb/PasswordDecrypts](https://github.com/frizb/PasswordDecrypts)
+
+
+
+
 ## SMB
 
 
@@ -237,8 +257,8 @@ root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' qwe123
 ### crackmapexec
 
 ```
-root@kali:$ cme smb 127.0.0.1 -u nullinux_users.txt -p 'qwe123' --shares [--continue-on-success]
-root@kali:$ cme smb 127.0.0.1 -u snovvcrash -p qwe123 --spider-folder 'E\$' --pattern s3cret
+root@kali:$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'qwe123' --shares [--continue-on-success]
+root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p qwe123 --spider-folder 'E\$' --pattern s3cret
 ```
 
 Same password spraying with Metasploit:
@@ -262,6 +282,76 @@ root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass=qw
 ```
 
 * [resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
+
+
+
+
+## LDAP
+
+* [book.hacktricks.xyz/pentesting/pentesting-ldap](https://book.hacktricks.xyz/pentesting/pentesting-ldap)
+
+
+
+### ldapsearch
+
+Basic syntax:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s <SCOPE> -b <BASE_DN> <QUERY> <FILTER> <FILTER> <FILTER>
+```
+
+Get base naming contexts:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s base namingcontexts
+```
+
+Extract data for the whole domain catalog and then grep your way through:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s sub -b "DC=example,DC=local" |tee ldap.out
+root@kali:$ cat ldap.out |grep -i memberof
+```
+
+Or filter out only what you need:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
+```
+
+Get `Remote Management Users` group:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
+```
+
+Dump LAPS passwords:
+
+```
+root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
+```
+
+
+
+### ldapdomaindump
+
+* [github.com/dirkjanm/ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump)
+
+
+
+### ad-ldap-enum
+
+* [github.com/CroweCybersecurity/ad-ldap-enum](https://github.com/CroweCybersecurity/ad-ldap-enum)
+
+
+
+### Nmap NSE
+
+```
+root@kali:$ nmap -n -Pn --script=ldap-rootdse 127.0.0.1 -p389
+root@kali:$ nmap -n -Pn --script=ldap-search 127.0.0.1 -p389
+root@kali:$ nmap -n -Pn --script=ldap-brute 127.0.0.1 -p389
+```
 
 
 
@@ -1605,6 +1695,38 @@ CWD: `discovery/`
 
 
 
+### ARP
+
+* [edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html](http://edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html)
+* [null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/](https://null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/)
+
+
+#### arp-scan
+
+Active:
+
+```
+root@kali:$ arp-scan -l [-s <SPOOFED_IP>] -v
+root@kali:$ arp-scan -I eth0 192.168.0.1/24
+```
+
+
+#### netdiscover
+
+Passive:
+
+```
+root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -p
+```
+
+Active, sending 20 requests per IP:
+
+```
+root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
+```
+
+
+
 ### Hunt for Subnets
 
 Take `10.0.0.0/8` as an example:
@@ -1832,6 +1954,12 @@ msf5 > use exploit/windows/smb/ms08_067_netapi
 
 ## Tricks
 
+Grep only numbers to get list of ports separated by comma:
+
+```
+root@kali:$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' |tr '\n' ','; echo
+```
+
 Fast port discovery (Masscan) + versions and NSE scripts (Nmap):
 
 ```
@@ -1858,12 +1986,6 @@ DNS brute force:
 
 ```
 root@kali:$ nmap --dns-servers 127.0.0.1 --script dns-brute 127.0.0.1
-```
-
-Ldap search:
-
-```
-root@kali: nmap -n -Pn -sV --script=ldap-search -oA nmap/ldap 127.0.0.1 -p389
 ```
 
 Flag `-A`:
