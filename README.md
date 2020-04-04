@@ -627,6 +627,16 @@ Or
 PS> New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=example,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
 ```
 
+List deleted AD objects (AD recycle bin):
+
+```
+PS> Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
+PS> Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
+```
+
+* [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
+* [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
+
 
 #### MISC
 
@@ -1752,7 +1762,7 @@ Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
 ##### ARP Spoofing
 
 ```
-root@kali:$ arpspoof -c both -t ЖЕРТВА_10.0.0.5 ШЛЮЗ_10.0.0.1
+root@kali:$ arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
 ```
 
 * [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
