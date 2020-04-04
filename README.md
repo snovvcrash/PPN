@@ -2156,7 +2156,7 @@ PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-A
 
 PS> systeminfo
 PS> whoami /priv (whoami /all)
-PS> PS> gci "$env:userprofile" -recurse | select fullname
+PS> gci "$env:userprofile" -recurse | select fullname
 PS> net user
 PS> net localgroup Administrators
 PS> cmdkey /list
