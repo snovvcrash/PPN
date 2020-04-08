@@ -1731,7 +1731,7 @@ root@kali:$ hashcat -m 500 hashes/file.hash --username --show
 # Engagement
 
 ```
-root@kali:$ mkdir -p discovery/{subnets,hosts,services/names} exploitation/ files/ report/{logs,screenshots}
+root@kali:$ mkdir -p discovery/{subnets,hosts,services/names} exploitation/ loot/ report/{logs,screenshots}
 ```
 
 
