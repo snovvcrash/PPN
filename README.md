@@ -2708,8 +2708,12 @@ Known issues:
 Configure multiple interfaces to work simultaneously:
 
 ```
-root@kali:$ sudo vi /etc/network/interfaces
-...
+root@kali:$ cat /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
 # NAT
 allow-hotplug eth0
 iface eth0 inet dhcp
@@ -2721,11 +2725,16 @@ iface eth1 inet dhcp
 # Host-only
 allow-hotplug eth2
 iface eth2 inet dhcp
-...
 
-root@kali:$ sudo ifup eth0
-root@kali:$ sudo ifup eth1
-root@kali:$ sudo ifup eth2
+# The loopback network interface
+auto lo
+iface lo inet loopback
+```
+
+```
+root@kali:$ ifup eth0
+root@kali:$ ifup eth1
+root@kali:$ ifup eth2
 ```
 
 * [unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
