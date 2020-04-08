@@ -1290,6 +1290,25 @@ root@kali:$ nslookup
 ```
 
 
+#### Brute Force
+
+##### Domain Names
+
+`nmap`:
+
+```
+root@kali:$ nmap --dns-servers 127.0.0.53 --script dns-brute 127.0.0.1
+```
+
+##### Subdomain Names
+
+Brute virtual host routing with `wfuzz`:
+
+```
+root@kali:$ wfuzz -H 'Host: FUZZ.example.com' -u 'http://example.com/' -w /usr/share/seclists/Discovery/DNS/shubs-subdomains.txt --hc 400 --hh 0
+```
+
+
 
 ### SMTP
 
@@ -2041,12 +2060,6 @@ root@kali:$ rm ports
 
 
 ### Nmap
-
-DNS brute force:
-
-```
-root@kali:$ nmap --dns-servers 127.0.0.1 --script dns-brute 127.0.0.1
-```
 
 Flag `-A`:
 
