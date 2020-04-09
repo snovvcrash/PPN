@@ -1337,11 +1337,11 @@ RCPT TO: exists@exmaple.com
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
 ```
-root@kali:$ wget [1/linux] -O chisel.gz && gunzip chisel.gz && ls chisel*
-root@kali:$ mv chisel_??? chisel && chmod +x chisel
+root@kali:$ wget [1/linux]
+root@kali:$ gunzip chisel*.gz && rm chisel*.gz && mv chisel* chisel && chmod +x chisel
 
-root@kali:$ wget [1/windows] -O chisel.exe.gz && gunzip chisel.exe.gz && ls chisel*
-root@kali:$ mv chisel_???.exe chisel.exe && upx chisel.exe
+root@kali:$ wget [1/windows]
+root@kali:$ gunzip chisel*.exe.gz && rm chisel*.exe.gz && mv chisel*.exe chisel.exe && upx chisel.exe
 root@kali:$ md5sum chisel.exe
 
 root@kali:$ ./chisel server -p 8000 -v -reverse
@@ -2120,6 +2120,31 @@ root@kali:$ hashcat --force --stdout passwords.txt -r /usr/share/hashcat/rules/b
 root@kali:$ cp t passwords.txt
 ```
 
+Simple list for password spraying:
+
+```
+root@kali:$ cat << EOF >> passwords.txt
+admin
+root
+changeme
+Password
+Password1
+Password!
+Password2020
+Password2020!
+Gfhjkm
+Gfhjkm1
+Gfhjkm!
+Gfhjkm2020
+Gfhjkm2020!
+Megacorp
+Megacorp1
+Megacorp!
+Megacorp2020
+Megacorp2020!
+EOF
+```
+
 
 
 
@@ -2138,8 +2163,14 @@ Download through Tor:
 Install:
 
 ```
-mv
+$ mv /opt/tor-browser/Browser/Downloads/ghidra*.zip ~/tools
+$ cd ~/tools && unzip ghidra*.zip && rm ghidra*.zip && mv ghidra* ghidra && cd -
+$ sudo apt install openjdk-11-jdk
 ```
+
+
+
+
 
 # Methodologies
 
