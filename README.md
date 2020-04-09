@@ -1242,10 +1242,6 @@ root@kali:$ whois -h whois.radb.net AS48666
 
 ### DNS
 
-* [dnsdumpster.com/](https://dnsdumpster.com/)
-* [www.nmmapper.com/sys/tools/subdomainfinder/](https://www.nmmapper.com/sys/tools/subdomainfinder/)
-* [securitytrails.com/blog/subdomain-scanner-find-subdomains](https://securitytrails.com/blog/subdomain-scanner-find-subdomains)
-
 
 #### whois
 
@@ -1287,25 +1283,6 @@ root@kali:$ nslookup
 root@kali:$ nslookup
 > set q=ptr
 > 127.0.0.1
-```
-
-
-#### Brute Force
-
-##### Domain Names
-
-`nmap`:
-
-```
-root@kali:$ nmap --dns-servers 127.0.0.53 --script dns-brute 127.0.0.1
-```
-
-##### Subdomain Names
-
-Brute virtual host routing with `wfuzz`:
-
-```
-root@kali:$ wfuzz -H 'Host: FUZZ.example.com' -u 'http://example.com/' -w /usr/share/seclists/Discovery/DNS/shubs-subdomains.txt --hc 400 --hh 0
 ```
 
 
@@ -1896,12 +1873,6 @@ root@kali:$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1
 
 
 
-### DNS Brute
-
-* [github.com/blark/aiodnsbrute](https://github.com/blark/aiodnsbrute)
-
-
-
 
 ## Services
 
@@ -2153,7 +2124,24 @@ root@kali:$ cp t passwords.txt
 
 
 
-# Methodology
+# Reverse & PWN
+
+
+
+
+## Ghidra
+
+Download through Tor:
+
+* [ghidra-sre.org/](https://ghidra-sre.org/)
+
+Install:
+
+```
+mv
+```
+
+# Methodologies
 
 
 
@@ -2167,15 +2155,7 @@ root@kali:$ cp t passwords.txt
 ```
 * DNS
 	$ nslookup example.com
-	+ AXFR
-		$ dig example.com ns
-		$ dig axfr @ns.example.com example.com
-		$ ./axfr-test.py -d example.com
-	+ Subdomains
-		$ ./amass enum -d zonetransfer.me -v -ip -src [-active] [-brute]
-		$ ./subbrute.py example.com
-		$ ./knockpy example.com
-		$ ./dnsrecon.py -d example.com
+	+ Subdomains & AXFR
 	+ AS details
 		$ whois -h whois.cymru.com -- '-v 127.0.0.1'
 		$ whois -h whois.cymru.com -- '-v AS48666'
