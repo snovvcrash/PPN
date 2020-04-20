@@ -1286,43 +1286,112 @@ root@kali:$ nslookup
 ```
 
 
+#### DNS Amplification
+
+Check:
+
+```
+$ host facebook.com ns.example.com
+$ dig +short @ns.example.com test.openresolver.com TXT
+$ nmap -sU -p53 --script=dns-recursion ns.example.com
+```
+
+
 
 ### SMTP
 
-Check if sender could be forged with an existent domain user:
+Check if sender could be [forged](https://en.wikipedia.org/wiki/Callback_verification) with an domain user:
 
 ```
-telnet mail.example.com
+$ telnet mail.example.com 25
 HELO example.com
-MAIL FROM: exists@exmaple.com
-RCPT TO: admin@example.com
+MAIL FROM: <forged@exmaple.com>
+RCPT TO: <exists@example.com>
+RCPT TO: <exists@gmail.com>
 ```
 
-Check if sender could be forged with a non-nonexistent non-domain user:
+Check if sender could be forged with a non-domain user:
 
 ```
-telnet mail.example.com
+$ telnet mail.example.com 25
 HELO example.com
-MAIL FROM: doesnotexist@nowhere.local
-RCPT TO: admin@example.com
+MAIL FROM: <forged@gmail.com>
+RCPT TO: <exists@example.com>
+RCPT TO: <exists@gmail.com>
 ```
 
 Check if domain users could be enumerated with `VRFY` and `EXPN`:
 
 ```
-telnet mail.example.com
+$ telnet mail.example.com 25
 HELO example.com
-VRFY: exists@exmaple.com
-EXPN: exists@exmaple.com
+VRFY: <exists@exmaple.com>
+EXPN: <exists@exmaple.com>
 ```
 
-Check for Sender Address Verification and hiding non-existent recipient is enabled:
+Check if users could be enumerated:
 
 ```
-telnet mail.example.com
+$ telnet mail.example.com 25
 HELO example.com
-MAIL FROM: exists@exmaple.com
-RCPT TO: exists@exmaple.com
+MAIL FROM: <...>
+RCPT TO: <exists@exmaple.com>
+DATA
+SUBJECT: test
+...Some text...
+.
+```
+
+
+
+
+## IPSec
+
+
+
+### IKE
+
+* [xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
+* [book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
+
+Generate list of all transform-sets:
+
+```
+$ for ENC in 1 2 3 4 5 6 7/128 7/192 7/256 8; do for HASH in 1 2 3 4 5 6; do for AUTH in 1 2 3 4 5 6 7 8 64221 64222 64223 64224 65001 65002 65003 65004 65005 65006 65007 65008 65009 65010; do for GROUP in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do echo "$ENC,$HASH,$AUTH,$GROUP" >> trans-dict.txt; done; done; done; done
+```
+
+Brute force supported transform-sets:
+
+```
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t <IP>) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+Or
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --aggressive -P handshake.txt --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+Or
+$ sudo python ikeforce.py -s1 -a <IP>  # -s1 for max speed
+```
+
+Get information about vendor:
+
+```
+$ sudo ike-scan -M --showbackoff --trans=<TRANSFORM-SET> <IP>
+```
+
+Test for aggressive mode ON:
+
+```
+$ sudo ike-scan -P -M -A -n FAKEID --trans=<TRANSFORM-SET> <IP>
+```
+
+If no hash value is returned then brute force is possible:
+
+```
+$ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> <IP>) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
+Or
+$ sudo python ikeforce.py <IP> -e -w wordlists/groupnames.dic t <TRANSFORM-SET-IN-SEPARATE-ARGS>
+
+Dicts:
+- /usr/share/seclists/Miscellaneous/ike-groupid.txt
+- ~/tools/ikeforce/wordlists/groupnames.dic
 ```
 
 
@@ -2188,14 +2257,11 @@ $ sudo apt install openjdk-11-jdk
 	$ nslookup example.com
 	+ Subdomains & AXFR
 	+ AS details
-		$ whois -h whois.cymru.com -- '-v 127.0.0.1'
-		$ whois -h whois.cymru.com -- '-v AS48666'
 	$ whois example.com
 	$ whois 127.0.0.1
 	+ Check for DNS Amplification
-		$ host facebook.com ns.example.com
 * CMS, Stack, Vulns
-	$ whatweb 127.0.0.1
+	+ WhatWeb, Wappalyzer
 	+ Shodan/Censys/SecurityTrails
 * Google Dorks
 	+ /robots.txt
