@@ -1337,9 +1337,12 @@ HELO example.com
 MAIL FROM: <...>
 RCPT TO: <exists@exmaple.com>
 DATA
-SUBJECT: test
-...Some text...
+From: <...>
+To: <exists@exmaple.com>
+Subject: Job offer
+Hello, I would like to offer you a great job!
 .
+QUIT
 ```
 
 
