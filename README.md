@@ -1341,8 +1341,8 @@ Check if domain users could be enumerated with `VRFY` and `EXPN`:
 ```
 $ telnet mail.example.com 25
 HELO example.com
-VRFY: <exists@exmaple.com>
-EXPN: <exists@exmaple.com>
+VRFY exists@exmaple.com
+EXPN exists@exmaple.com
 ```
 
 Check if users could be enumerated:

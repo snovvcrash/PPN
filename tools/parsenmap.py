@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# git clone https://github.com/snovvcrash/Engagement /opt/Engagement && ln -s /opt/Engagement/parsenmap.py /usr/local/bin/parsenmap.py
+# Usage:
 # mkdir -p services/names
-# parsenmap.py -i services/alltcp-versions.xml
+# ./parsenmap.py -i services/alltcp-versions.xml
 
 import argparse
 import xml.etree.ElementTree as ET

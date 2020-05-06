@@ -7,6 +7,11 @@ from base64 import b64encode, b64decode
 from hashlib import md5
 from argparse import ArgumentParser
 
+parser = ArgumentParser()
+parser.add_argument('input_file', help='path to file for transfer')
+parser.add_argument('output_file', help='path to file for transfer')
+parser.add_argument('-n', '--number', type=int, default=1000, help='chunk size for a single PS write command')
+
 
 def get_pwsh_cmd(input_file, output_file, number):
 	RM_CMD = f"""rm {output_file}.b64\n"""
@@ -33,10 +38,6 @@ def get_pwsh_cmd(input_file, output_file, number):
 	return cmd
 
 
-parser = ArgumentParser()
-parser.add_argument('input_file', help='path to file for transfer')
-parser.add_argument('output_file', help='path to file for transfer')
-parser.add_argument('-n', '--number', type=int, default=1000, help='chunk size for a single PS write command')
 args = parser.parse_args()
 
 cmd = get_pwsh_cmd(args.input_file, args.output_file, args.number)
