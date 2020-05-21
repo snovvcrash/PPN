@@ -3530,3 +3530,15 @@ certmgr.msc -- "Certificates - Current User" -- "Сертификаты - тек
 
 * [www.jython.org/download.html](https://www.jython.org/download.html)
 * [xakep.ru/2018/08/23/burp-suite-plugins/](https://xakep.ru/2018/08/23/burp-suite-plugins/)
+
+### Extensions
+
+BApp Store:
+
+* [github.com/portswigger/active-scan-plus-plus](https://github.com/portswigger/active-scan-plus-plus)
+* [github.com/portswigger/add-custom-header](https://github.com/portswigger/add-custom-header)
+* [github.com/portswigger/backslash-powered-scanner](https://github.com/portswigger/backslash-powered-scanner)
+* [github.com/portswigger/freddy-deserialization-bug-finder](https://github.com/portswigger/freddy-deserialization-bug-finder)
+* [github.com/portswigger/j2ee-scan](https://github.com/portswigger/j2ee-scan)
+* [github.com/portswigger/json-beautifier](https://github.com/portswigger/json-beautifier)
+* [github.com/portswigger/logger-plus-plus](https://github.com/portswigger/logger-plus-plus)
