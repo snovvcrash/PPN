@@ -637,10 +637,69 @@ PS> Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NA
 * [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
 * [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
 
+Get DC names:
+
+```
+PS> $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
+PS> $searcher = [ADSISearcher]$ldapFilter
+PS> $searcher.FindAll()
+PS> $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
+Or
+PS> ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
+
+PS> [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
+
+Cmd> nltest /dsgetdc:example.local
+
+PS> $DomainName = (Get-ADDomain).DNSRoot
+PS> $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
+
+PS> $AllDCs = (Get-ADForest).GlobalCatalogs
+```
+
+Get Domain NetBIOS name:
+
+```
+PS> ([ADSI]"LDAP://example.local").dc
+
+PS> $DomainName = (Get-ADDomain).DNSRoot
+PS> (Get-ADDomain -Server $DomainName).NetBIOSName
+```
+
 
 #### MISC
 
 * [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
+
+
+
+
+## Exchange
+
+
+
+### ActiveSync
+
+
+#### PEAS:
+
+Install:
+
+```
+$ git clone https://github.com/FSecureLABS/peas && cd
+$ python -m virtualenv --python=/usr/bin/python venv && source venv/bin/activate
+$ pip install requests twisted pyOpenSSL lxml service_identity
+```
+
+Run:
+
+```
+$ python -m peas --check -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+$ python -m peas --list-unc='\\DC2' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\SYSVOL' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\SYSVOL\corp.ru' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\NETLOGON' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+```
 
 
 
@@ -1384,8 +1443,8 @@ Brute force supported transform-sets:
 
 ```
 $ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t <IP>) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
-Or
-$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --aggressive -P handshake.txt --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+Or (for aggressive mode)
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M -A -P'handshake.txt' -n FAKEID --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
 Or
 $ sudo python ikeforce.py -s1 -a <IP>  # -s1 for max speed
 ```
@@ -1399,7 +1458,7 @@ $ sudo ike-scan -M --showbackoff --trans=<TRANSFORM-SET> <IP>
 Test for aggressive mode ON:
 
 ```
-$ sudo ike-scan -P -M -A -n FAKEID --trans=<TRANSFORM-SET> <IP>
+$ sudo ike-scan -M -A -P -n FAKEID --trans=<TRANSFORM-SET> <IP>
 ```
 
 If no hash value is returned then brute force is (maybe also) possible:
