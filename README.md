@@ -1519,6 +1519,17 @@ Find and list all files newer than `2020-03-16` and not newer than `2020-03-17`:
 user@vict:$ find / -type f -readable -newermt '2020-03-16' ! -newermt '2020-03-17' -ls 2>/dev/null
 ```
 
+Find SUID binaries:
+
+```
+# User
+find / -type f -perm /4000 -ls 2>/dev/null
+# Group
+find / -type f -perm /2000 -ls 2>/dev/null
+# Both
+find / -type f -perm /6000 -ls 2>/dev/null
+```
+
 ##### Tools
 
 `LinEnum.sh`:
