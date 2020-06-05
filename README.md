@@ -3527,7 +3527,7 @@ Cmd> perfmon /res
 ```
 Cmd> netstat -b
 Cmd> netstat -ano
-Cmd> route print
+Cmd> route print [-4]
 ```
 
 
@@ -3593,6 +3593,17 @@ secpol.msc  -- "Local Security Policy" -- "Локальная политика �
 gpedit.msc  -- "Local Group Policy Editor" -- "Редактор локальной групповой политики"
 lusrmgr.msc -- "Local Users and Groups (Local)" -- "Локальные пользователи и группы (локально)"
 certmgr.msc -- "Certificates - Current User" -- "Сертификаты - текущий пользователь"
+```
+
+
+
+
+## Store Credentials
+
+Run:
+
+```
+rundll32.exe keymgr.dll, KRShowKeyMgr
 ```
 
 
