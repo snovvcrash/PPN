@@ -58,7 +58,7 @@ class SMTPInjectorServer(smtpd.SMTPServer):
 						continue
 
 				elif filename and self.MHT_RE.search(filename):
-					self._print_data(f'Attachemnt captured! RID=\033[1;39m{rid_bytes.decode("utf-8")}\033[0m')
+					self._print_data(f'Attachemnt captured! \033[1;39m{msg["To"]}:{rid_bytes.decode("utf-8")}\033[0m')
 					mht_filename = self.MHT_RE.sub('.doc', filename) # replace .mht with .doc
 					mht_content = part.get_payload(decode=True)
 					new_mht = self.MHT_PLACEHOLDER_RE.sub(rid_bytes, mht_content)
