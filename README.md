@@ -3609,6 +3609,19 @@ rundll32.exe keymgr.dll, KRShowKeyMgr
 
 
 
+## Permissions
+
+Take own of a directory and remove it (run cmd.exe as admin):
+
+```
+Cmd> takeown /F C:\$Windows.~BT\* /R /A 
+Cmd> icacls C:\$Windows.~BT\*.* /T /grant administrators:F 
+Cmd> rmdir /S /Q C:\$Windows.~BT\
+```
+
+
+
+
 
 # Useful Links
 
