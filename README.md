@@ -2225,6 +2225,12 @@ root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$po
 root@kali:$ rm ports
 ```
 
+Top UDP ports:
+
+```
+53,67,68,69,88,111,123,137,138,139,161,162,389,445,500,3391
+```
+
 
 
 ### Nmap
@@ -3440,6 +3446,41 @@ $ find . -type f -print0 | xargs -0 grep <PATTERN>
 $ dpkg -s <package_name>
 $ dpkg-query -W -f='${Status}' <package_name>
 $ OUT="dpkg-query-$(date +'%FT%H%M%S').csv"; echo 'package,version' > ${OUT} && dpkg-query -W -f '${Package},${Version}\n' >> ${OUT}
+```
+
+
+
+### iptables
+
+* [An In-Depth Guide to iptables, the Linux Firewall - Boolean World](https://www.booleanworld.com/depth-guide-iptables-linux-firewall/)
+
+List rules in all chains (default table is *filter*, there are *mangle*, *nat* and *raw* tables beside it):
+
+```
+$ sudo iptables -L -n --line-numbers [-t filter]
+```
+
+Print rules for all chains (for a specific chains):
+
+```
+$ sudo iptables -S [INPUT [1]]
+```
+
+
+
+### fail2ban:
+
+```bash
+# Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
+/etc/fail2ban/filter.d
+
+# Status
+$ sudo service fail2ban status
+$ sudo fail2ban-client status
+$ sudo fail2ban-client status sshd
+
+# Unban all
+$ sudo fail2ban-client unban --all
 ```
 
 
