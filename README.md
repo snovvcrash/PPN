@@ -2269,10 +2269,10 @@ root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$po
 root@kali:$ rm ports
 ```
 
-Top Windows ports:
+Top Windows TCP ports:
 
 ```
-53,80,88,135,139,389,443,445,464,593,636,1433,3268,5985,5986
+53,80,88,135,139,389,443,445,464,593,636,1433,3268,3269,3389,5985,5986,9389
 ```
 
 Top UDP ports:
