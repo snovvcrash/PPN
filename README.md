@@ -862,6 +862,14 @@ $ pypykatz lsa minidump lsass.dmp
 
 
 
+## ExecutionPolicy Bypass
+
+* [blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/](https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
+* [bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/](https://bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/)
+
+
+
+
 ## UAC Bypass
 
 
