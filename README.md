@@ -2575,7 +2575,7 @@ $ sudo apt install openjdk-11-jdk
 ```
 * Check src
 root@kali:$ whatweb http://127.0.0.1
-root@kali:$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x aspx,txt,bak,json,html -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+root@kali:$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,aspx,jsp,ini,config,cfg,xml,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 ```
 
 
@@ -3646,6 +3646,18 @@ $ sudo fail2ban-client status sshd
 
 # Unban all
 $ sudo fail2ban-client unban --all
+```
+
+
+
+### tmux
+
+
+#### tmux-logging
+
+```
+bash ~/.tmux/plugins/tmux-logging/scripts/screen_capture.sh
+bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 ```
 
 
