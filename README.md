@@ -155,7 +155,7 @@ user@remote:$ export TERM=xterm
 
 ### Linux
 
-* [snovvcrash.rocks/2018/10/11/simple-http-servers.html](https://snovvcrash.rocks/2018/10/11/simple-http-servers.html)
+* [snovvcrash.github.io/2018/10/11/simple-http-servers.html](https://snovvcrash.github.io/2018/10/11/simple-http-servers.html)
 
 
 
@@ -1665,7 +1665,7 @@ Dicts:
 ### Chisel
 
 1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
-2. [snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.rocks/2020/03/17/htb-reddish.html#chisel-socks)
+2. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
@@ -2041,9 +2041,9 @@ root@kali:$ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0
 ### Cowpaty + Wpaclean + Aircrack-ng
 
 ```
-root@kali:$ cowpatty -r wifi.cap -c
-root@kali:$ wpaclean wificleaned.cap wifi.cap
-root@kali:$ aircrack-ng -w /usr/share/wordlists/rockyou.txt wificleaned.cap
+$ cowpatty -r wifi.cap -c
+$ wpaclean wificleaned.cap wifi.cap
+$ aircrack-ng -w /usr/share/wordlists/rockyou.txt wificleaned.cap
 ```
 
 
@@ -2066,13 +2066,34 @@ Windows (netsh):
 
 
 
-### Hashcat
+### hashcat
 
 ```
-root@kali:$ hashcat --example-hashes | grep -B1 -i md5
-root@kali:$ hashcat -m 500 hashes/file.hash /usr/share/wordlists/rockyou.txt --username
-root@kali:$ hashcat -m 500 hashes/file.hash --username --show
+$ hashcat --example-hashes | grep -B1 -i md5
+$ hashcat -m 500 hashes/file.hash /usr/share/wordlists/rockyou.txt --username
+$ hashcat -m 500 hashes/file.hash --username --show
 ```
+
+Benchmarks:
+
+```
+root@kali:$ nvidia-smi.exe
+
+# MD5
+root@kali:$ ./hashcat64.exe -m 0 -b
+# NTLM
+root@kali:$ ./hashcat64.exe -m 1000 -b
+```
+
+| Единица Хэшрейта  |           Хэшрейт             | Хэши в секунду  |
+|-------------------|-------------------------------|-----------------|
+| 1kH/s             |                          1000 | Тысяча          |
+| 1MH/s             |                       1000000 | Одинмиллион     |
+| 1GH/s             |                    1000000000 | Одинмиллиард    |
+| 1TH/s             |             1.000.000.000.000 | Одинтриллион    |
+| 1PH/s             |         1.000.000.000.000.000 | Одинквадриллион |
+| 1EH/s             |     1.000.000.000.000.000.000 | Одинквинтиллион |
+| 1ZH/s             | 1.000.000.000.000.000.000.000 | Одинсекстиллион |
 
 
 
@@ -3009,6 +3030,16 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 
 ```
 Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
+```
+
+
+
+
+## Shared Folders
+
+```
+$ sudo usermod -aG vboxsf snovvcrash
+$ sudo reboot
 ```
 
 
