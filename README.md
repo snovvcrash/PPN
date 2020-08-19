@@ -1159,6 +1159,53 @@ root@kali:$ mysql -u snovvcrash -p'Passw0rd1!' -e 'show databases;'
 
 
 
+### Oracle
+
+
+#### TNS Poison
+
+##### Nmap
+
+```
+$ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
+$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 127.0.0.1
+```
+
+##### odat
+
+Install:
+
+* [github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
+* [github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
+
+```
+$ git clone https://github.com/quentinhardy/odat ~/tools/odat && cd ~/tools/odat
+$ git submodule init && git submodule update
+$ sudo apt install libaio1 python3-dev alien python3-pip
+$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
+$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
+$ sudo alien --to-deb *.rpm
+$ sudo dpkg -i *.deb
+$ vi /etc/profile
+...
+export ORACLE_HOME=/usr/lib/oracle/19.6/client64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
+export PATH=${ORACLE_HOME}bin:$PATH
+...
+$ pip3 install cx_Oracle
+$ python3 odat.py -h
+```
+
+Usage:
+
+* [github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
+
+```
+$ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
+```
+
+
+
 ### MS SQL
 
 
@@ -1738,6 +1785,32 @@ Dicts:
 
 
 
+## Discovery
+
+
+
+### nmapAutomator
+
+```
+$ sudo apt install sslscan nikto joomscan wpscan smbmap enum4linux dnsrecon
+$ sudo python3 -m pip install droopescan
+$ sudo wget https://github.com/vulnersCom/nmap-vulners/raw/master/vulners.nse -O /usr/share/nmap/scripts/vulners.nse && nmap --script-updatedb
+$ git clone https://github.com/21y4d/nmapAutomator ~/tools/nmapAutomator
+$ sudo ln -s ~/tools/nmapAutomator/nmapAutomator.sh /usr/local/bin/nmapAutomator.sh
+```
+
+
+
+### AutoRecon
+
+```
+$ sudo apt install seclists curl enum4linux gobuster nbtscan nikto nmap onesixtyone oscanner smbclient smbmap smtp-user-enum snmp sslscan sipvicious tnscmd10g whatweb wkhtmltopdf
+$ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
+```
+
+
+
+
 ## Pivoting
 
 * [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
@@ -2112,34 +2185,6 @@ root@kali:$ hydra -V -t 20 -f -I -l admin -P /usr/share/john/password.lst 127.0.
 root@kali:$ patator smtp_login host=127.0.0.1 port=8888 user=FILE0 password=FILE1 0=logins.lst 1=/usr/share/john/password.lst -x ignore:mesg='(515) incorrect password or account name' -x free=user:code=0
 root@kali:$ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0 0=/usr/share/john/password.lst -x ignore:mesg='Login incorrect.' -x free=user:code=0
 ```
-
-
-
-
-## Wi-Fi
-
-
-
-### Cowpaty + Wpaclean + Aircrack-ng
-
-```
-$ cowpatty -r wifi.cap -c
-$ wpaclean wificleaned.cap wifi.cap
-$ aircrack-ng -w /usr/share/wordlists/rockyou.txt wificleaned.cap
-```
-
-
-
-### Credentials
-
-Windows (netsh):
-
-```
-> netsh wlan show profiles
-> netsh wlan show profiles "ESSID" key=clear
-```
-
-1. [https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks](https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks)
 
 
 
@@ -3909,6 +3954,18 @@ Cmd > mklink /D Link <DIRECTORY>
 
 
 
+## Wi-Fi Credentials
+
+* [https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks](https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks)
+
+```
+> netsh wlan show profiles
+> netsh wlan show profiles "ESSID" key=clear
+```
+
+
+
+
 ## Installed Software
 
 ```
@@ -3933,10 +3990,10 @@ PS > type 'file.txt:Password'
 ## .msc
 
 ```
-secpol.msc  -- "Local Security Policy" -- "Локальная политика безопасности"
-gpedit.msc  -- "Local Group Policy Editor" -- "Редактор локальной групповой политики"
-lusrmgr.msc -- "Local Users and Groups (Local)" -- "Локальные пользователи и группы (локально)"
-certmgr.msc -- "Certificates - Current User" -- "Сертификаты - текущий пользователь"
+secpol.msc  -- "Local Security Policy" -- «Локальная политика безопасности»
+gpedit.msc  -- "Local Group Policy Editor" -- «Редактор локальной групповой политики»
+lusrmgr.msc -- "Local Users and Groups (Local)" -- «Локальные пользователи и группы (локально)»
+certmgr.msc -- "Certificates - Current User" -- «Сертификаты - текущий пользователь»
 ```
 
 
@@ -3984,18 +4041,36 @@ Cmd > rmdir /S /Q C:\$Windows.~BT\
 
 ## Upgrade Burp
 
-* [www.jython.org/download.html](https://www.jython.org/download.html)
-* [xakep.ru/2018/08/23/burp-suite-plugins/](https://xakep.ru/2018/08/23/burp-suite-plugins/)
+* [Downloads | Jython](https://www.jython.org/download.html)
+* [Прокачай свой Burp! 11 наиболее полезных плагинов к Burp Suite — «Хакер»](https://xakep.ru/2018/08/23/burp-suite-plugins/)
 
 ### Extensions
 
 BApp Store:
 
-* [github.com/portswigger/active-scan-plus-plus](https://github.com/portswigger/active-scan-plus-plus)
-* [github.com/portswigger/add-custom-header](https://github.com/portswigger/add-custom-header)
-* [github.com/portswigger/backslash-powered-scanner](https://github.com/portswigger/backslash-powered-scanner)
-* [github.com/portswigger/collaborator-everywhere](https://github.com/portswigger/collaborator-everywhere)
-* [github.com/portswigger/freddy-deserialization-bug-finder](https://github.com/portswigger/freddy-deserialization-bug-finder)
-* [github.com/portswigger/j2ee-scan](https://github.com/portswigger/j2ee-scan)
-* [github.com/portswigger/json-beautifier](https://github.com/portswigger/json-beautifier)
-* [github.com/portswigger/logger-plus-plus](https://github.com/portswigger/logger-plus-plus)
+* [ActiveScan++](https://github.com/portswigger/active-scan-plus-plus) **Pro**
+* [Add Custom Header](https://github.com/portswigger/add-custom-header)
+* [Additional CSRF Checks](https://github.com/portswigger/additional-csrf-checks)
+* [Additional Scanner Checks](https://github.com/portswigger/additional-scanner-checks) **Pro**
+* [Attack Surface Detector](https://github.com/portswigger/attack-surface-detector)
+* [Backslash Powered Scanner](https://github.com/portswigger/backslash-powered-scanner) **Pro**
+* [Collaborator Everywhere](https://github.com/portswigger/collaborator-everywhere) **Pro**
+* [CSRF Scanner](https://github.com/portswigger/csrf-scanner) **Pro**
+* [Freddy, Deserialization Bug Finder](https://github.com/portswigger/freddy-deserialization-bug-finder) **Pro**
+* [IP Rotate](https://github.com/portswigger/ip-rotate)
+* [J2EEScan](https://github.com/portswigger/j2ee-scan) **Pro**
+* [Java Deserialization Scanner](https://github.com/portswigger/java-deserialization-scanner) **Pro**
+* [Java Serialized Payloads](https://github.com/portswigger/java-serialized-payloads)
+* [JS Link Finder](https://github.com/portswigger/js-link-finder) **Pro**
+* [JSON Beautifier](https://github.com/portswigger/json-beautifier)
+* [JSON Web Token Attacker](https://github.com/portswigger/json-web-token-attacker)
+* [Logger++](https://github.com/portswigger/logger-plus-plus)
+* [SQLiPy Sqlmap Integration](https://github.com/portswigger/sqli-py)
+* [SSL Scanner](https://github.com/portswigger/ssl-scanner)
+* [Taborator](https://github.com/portswigger/taborator) **Pro**
+* [WordPress Scanner](https://github.com/portswigger/wordpress-scanner)
+
+GitHub:
+
+* [Femida XSS](https://github.com/wish-i-was/femida)
+* [SHELLING](https://github.com/ewilded/shelling)
