@@ -769,6 +769,7 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 Get DC names:
 
 ```
+PS > $env:userdnsdomain
 PS > nslookup -type=all _ldap._tcp.dc._msdcs.megacorp.local
 
 PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
@@ -2732,6 +2733,7 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 
 
 
+
 ## Ghidra
 
 Download through Tor:
@@ -2755,7 +2757,9 @@ $ sudo apt install openjdk-11-jdk
 
 
 
+
 ## OSINT
+
 
 
 
@@ -3900,16 +3904,15 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 
 ##### bash
 
+`~/.bashrc`:
+
 ```
-$ cat .bashrc | grep -e PS1
-PS1='${debian_chroot:+($debian_chroot)}[\D{%d}|\D{%k:%M}] \[\033[01;31m\]➜  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
-PS1='${debian_chroot:+($debian_chroot)[\D{%d}|\D{%k:%M}]} ➜  \w '
-PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+PS1='${debian_chroot:+($debian_chroot)}[\D{%d}|\D{%k:%M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
 ```
 
 ##### zsh
 
-`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme`
+`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme`:
 
 ```
 PROMPT="[%D{%d}|%D{%k:%M}] "
