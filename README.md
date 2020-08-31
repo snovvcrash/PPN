@@ -3904,20 +3904,20 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 
 ##### bash
 
-`~/.bashrc`:
+`~/.bashrc` (replace `!` with `%`):
 
 ```
-PS1='${debian_chroot:+($debian_chroot)}[\D{%d}|\D{%k:%M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
+PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
 ```
 
 ##### zsh
 
-`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme`:
+`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` (replace `!` with `%`):
 
 ```
-PROMPT="[%D{%d}|%D{%k:%M}] "
-PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ ) "
-PROMPT+='%{$fg[cyan]%}%(4~|%-1~/…/%2~|%3~)%{$reset_color%} $(git_prompt_info)'
+PROMPT="[!D{!d}|!D{!k:!M}] "
+PROMPT+="!(?:!{$fg_bold[green]!}➜ :!{$fg_bold[red]!}➜ ) "
+PROMPT+='!{$fg[cyan]!}!(4~|!-1~/…/!2~|!3~)!{$reset_color!} $(git_prompt_info)'
 ```
 
 
