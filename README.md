@@ -459,17 +459,6 @@ root@kali:~# umount /mnt/smb
 
 
 
-### smbmap
-
-Null authentication:
-
-```
-root@kali:$ smbmap -H 127.0.0.1 -u anonymous -R
-root@kali:$ smbmap -H 127.0.0.1 -u null -p "" -R
-```
-
-
-
 ### smbclient
 
 Null authentication:
@@ -483,6 +472,17 @@ With user creds:
 
 ```
 root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
+```
+
+
+
+### smbmap
+
+Null authentication:
+
+```
+root@kali:$ smbmap -H 127.0.0.1 -u anonymous -R
+root@kali:$ smbmap -H 127.0.0.1 -u null -p "" -R
 ```
 
 
@@ -2741,17 +2741,6 @@ $ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
 
 
-#### Empire
-
-* [github.com/EmpireProject/Empire](https://github.com/EmpireProject/Empire)
-* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
-
-```
-$ git clone https://github.com/BC-SECURITY/Empire
-$ sudo ./setup/install.sh
-```
-
-
 #### PowerView
 
 * [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
@@ -2759,6 +2748,8 @@ $ sudo ./setup/install.sh
 * [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
 * [PowerView 2.0](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
 * [PowerView 3.0 [dev]](https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView.ps1)
+* [PowerView 3.0 [New-GPOImmediateTask]](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1)
+* [PowerView 4.0 [fork]](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1)
 
 ```
 $ curl -L https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1 > powerview2.ps1
@@ -2766,12 +2757,6 @@ $ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/dev/Recon/PowerView
 PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
 PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
-
-
-#### Seatbelt
-
-* [github.com/GhostPack/Seatbelt](https://github.com/GhostPack/Seatbelt)
-* [github.com/r3motecontrol/Ghostpack-CompiledBinaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries)
 
 
 
