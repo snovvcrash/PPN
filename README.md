@@ -5290,8 +5290,7 @@ $ sudo wifite -vi wlan1 --clients-only --wpa --no-wps
 
 #### PMKID
 
-> https://habr.com/ru/company/jetinfosystems/blog/419383/
-> [habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
+* [https://habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
 
 ##### wifite2
 
