@@ -1,4 +1,4 @@
-[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
+### [snovvcrash’s Security Blog](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
@@ -432,6 +432,15 @@ $ sudo pkill atftpd
 
 
 # VNC
+
+Enum with MSF:
+
+```
+msf > use auxiliary/scanner/vnc/vnc_none_auth
+```
+
+
+
 
 ## TightVNC
 
@@ -2374,6 +2383,7 @@ PS > .\SharpDPAPI.exe machinetriage [/password:Passw0rd!]
 * [https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire](https://hunter2.gitbook.io/darthsidious/execution/responder-with-ntlm-relay-and-empire)
 * [https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
 * [https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
+* [https://luemmelsec.github.io/Relaying-101/](https://luemmelsec.github.io/Relaying-101/)
 
 Generate relay list with cme and enumerate local admins when relaying
 
@@ -2683,6 +2693,8 @@ Nim > .\encrypted_assembly_loader.exe Passw0rd! b64.txt --Command logonpasswords
 
 
 ## Defender
+
+* [https://github.com/swagkarna/Defeat-Defender/blob/main/Defeat-Defender.bat](https://github.com/swagkarna/Defeat-Defender/blob/main/Defeat-Defender.bat)
 
 Disable real-time protection (proactive):
 
@@ -3983,6 +3995,31 @@ function handleResponse() {
 
 
 
+## GitLab
+
+* [https://devcraft.io/assets/hacktivitycon-slides.pdf](https://devcraft.io/assets/hacktivitycon-slides.pdf)
+* [https://github.com/dotPY-hax/gitlab_RCE](https://github.com/dotPY-hax/gitlab_RCE)
+
+
+
+### SSRF → Redis → RCE
+
+* [https://gitlab.com/gitlab-org/gitlab-foss/-/issues/41293](https://gitlab.com/gitlab-org/gitlab-foss/-/issues/41293)
+* [https://liveoverflow.com/gitlab-11-4-7-remote-code-execution-real-world-ctf-2018/](https://liveoverflow.com/gitlab-11-4-7-remote-code-execution-real-world-ctf-2018/)
+* [https://www.exploit-db.com/exploits/49334](https://www.exploit-db.com/exploits/49334)
+
+
+
+### Path Traversal + RCE
+
+**CVE-2020-10977**
+
+* [https://xakep.ru/2020/05/26/gitlab-exploit/](https://xakep.ru/2020/05/26/gitlab-exploit/)
+* [https://www.exploit-db.com/exploits/49076](https://www.exploit-db.com/exploits/49076)
+
+
+
+
 ## Web Security Academy
 
 * [All learning materials - detailed / Web Security Academy](https://portswigger.net/web-security/all-materials/detailed)
@@ -4061,6 +4098,34 @@ $ wfuzz -e encoders
 $ wfuzz -c -u 'http://10.10.13.37/index.php?id=FUZZ' -w /usr/share/seclists/Fuzzing/4-digits-0000-9999.txt -f wfuzz.out --hh 1337
 $ wfuzz -c -u 'http://10.10.13.37' --basic 'FUZZ:FUZ2Z' -w /usr/share/seclists/Usernames/top-usernames-shortlist.txt -w /usr/share/seclists/Passwords/Common-Credentials/top-20-common-SSH-passwords.txt --hc 1337
 ```
+
+
+
+### aquatone
+
+* [https://github.com/michenriksen/aquatone/releases](https://github.com/michenriksen/aquatone/releases)
+
+Default ports:
+
+```
+$ cat targets.txt | ./aquatone -ports 80,443,8000,8080,8443 -out 10.0-255.0-255.0-255
+```
+
+From Nmap XML:
+
+```
+$ ports=`cat nmap/tcp.gnmap | grep -ioP '\d+/open/tcp//http' | awk -F/ '{print $1}' | sort -u | awk 1 ORS=',' | sed 's/.$//'`
+$ cat targets.txt | ./aquatone -ports $ports -out 10.0-255.0-255.0-255_nmap
+Or
+$ cat nmap/tcp.xml | ./aquatone -out 10.0-255.0-255.0-255_nmap
+```
+
+
+
+### Amass
+
+* [https://github.com/OWASP/Amass/releases](https://github.com/OWASP/Amass/releases)
+* [https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html](https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html)
 
 
 
@@ -4511,7 +4576,7 @@ $ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-servic
 ### Ports (Full)
 
 ```
-$ nmap -n -Pn -sV -sC -iL hosts/targets.txt -oA services/alltcp-versions -p0-49152 --min-rate 50000 --min-hostgroup 256
+$ nmap -Pn -T3 [--min-rate 50000 --min-hostgroup 256] -sV --version-intensity 6 --open -p0-49152 -iL targets.txt -oA services/alltcp-versions
 ```
 
 Define which NSE scripts ran:
@@ -4617,14 +4682,15 @@ Top TCP ports:
 | 6379                                         | Redis                            |
 | 7000-7004,8000-8003,9000-9003,9503,7070,7071 | WebLogic                         |
 | 8088                                         | Apache Hadoop                    |
+| 8383                                         | Zoho Manageengine Desktop        |
 | 8500                                         | Hashicorp Consul                 |
 | 8686,9012,50500                              | JMX                              |
 | 8880                                         | IBM WebSphere                    |
-| 8383                                         | Zoho Manageengine Desktop        |
+| 8888                                         | Tornado                          |
 | 8983                                         | Apache Solr                      |
 | 9000                                         | Portainer                        |
-| 9389                                         | Active Directory Web Services    |
 | 9200                                         | Elasticsearch                    |
+| 9389                                         | Active Directory Web Services    |
 | 11111,4444,4445                              | jBoss                            |
 | 27017                                        | MongoDB                          |
 | 45000,45001                                  | JDWP                             |
@@ -4644,7 +4710,7 @@ Top UDP ports:
 | 3391 | RD Gateway |
 
 ```
-$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
+$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
 
 $ sudo masscan [-e eth0] --rate 500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
 $ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
@@ -6222,14 +6288,42 @@ ssh -T git@github.com
 
 # Docker
 
+List all running containers:
+
 ```
 $ docker ps -a
+```
+
+Stop all running containers:
+
+```
 $ docker stop `docker container ls -aq`
+```
+
+Remove stopped containers:
+
+```
 $ docker rm -v `docker container ls -aq -f status=exited`
+```
+
+Remove all images:
+
+```
 $ docker rmi `docker images -aq`
+```
+
+Attach to a running container:
+
+```
+$ docker exec -it <CONTAINER> /bin/bash
+```
+
+Unsorted:
+
+```
 $ docker start -ai <CONTAINER>
 $ docker cp project/. <CONTAINER>:/root/project
-$ docker run --rm -ith <HOSTNAME> --name <NAME> ubuntu bash
+$ docker run --rm -it <CONTAINER> --name <NAME> ubuntu bash
 $ docker build -t <USERNAME>/<IMAGE> .
 ```
 
@@ -7403,6 +7497,34 @@ if lsof -tac script "$(tty)" > /dev/null; then
 else
     PROMPT="[!D{!d}|!D{!k:!M}] $PROMPT"
 fi
+```
+
+
+
+
+## LAMP
+
+* [https://stackoverflow.com/a/46908573](https://stackoverflow.com/a/46908573)
+
+```
+ # PHP
+$ sudo add-apt-repository ppa:ondrej/php -y
+$ sudo apt update
+$ sudo apt install php7.2 -y
+$ sudo apt install php7.2-curl php7.2-gd php7.2-json php7.2-mbstring -y
+
+ # Apache
+$ sudo apt install apache2 libapache2-mod-php7.2 -y
+$ sudo service apache2 restart
+
+ # MySQL
+$ sudo apt install mysql-server php7.2-mysql
+$ sudo mysql_secure_installation
+$ service mysql restart
+
+ # Test
+$ sudo sh -c 'echo "<?php phpinfo(); ?>" > phpinfo.php'
+-> http://127.0.0.1/phpinfo.php
 ```
 
 
