@@ -1,4 +1,4 @@
-### [snovvcrash’s Security Blog](https://snovvcrash.github.io)
+[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
