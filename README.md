@@ -6985,9 +6985,17 @@ function handleResponse() {
 
 ### SSRF → Redis → RCE
 
+**CVE-2018-19571, CVE-2018-19585**
+
 * [https://gitlab.com/gitlab-org/gitlab-foss/-/issues/41293](https://gitlab.com/gitlab-org/gitlab-foss/-/issues/41293)
 * [https://liveoverflow.com/gitlab-11-4-7-remote-code-execution-real-world-ctf-2018/](https://liveoverflow.com/gitlab-11-4-7-remote-code-execution-real-world-ctf-2018/)
 * [https://www.exploit-db.com/exploits/49334](https://www.exploit-db.com/exploits/49334)
+
+Also possible to use this payload (instead of IPv6) to bypass filter checks for localhost, but works only with `git://` scheme:
+
+```
+git://127.0.0.1:6379/%0a<REDIS_COMMANDS>
+```
 
 
 
