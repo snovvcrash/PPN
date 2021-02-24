@@ -1,4 +1,4 @@
-﻿Back to the main page: [🔙](https://snovvcrash.github.io/)
+﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?logo=jekyll)](https://snovvcrash.github.io/)
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
