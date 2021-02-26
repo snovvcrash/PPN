@@ -1,6 +1,6 @@
-﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=social&logo=jekyll)](https://snovvcrash.github.io/)
+﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=for-the-badge&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
 
-Use your <kbd>Ctrl<kbd>-<kbd>F<kbd> to navigate around in this mess ☣️
+Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate around in this mess ☣️
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
