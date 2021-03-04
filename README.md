@@ -4243,7 +4243,7 @@ Find weak service permissions:
 
 * [https://www.ired.team/offensive-security/privilege-escalation/unquoted-service-paths](https://www.ired.team/offensive-security/privilege-escalation/unquoted-service-paths)
 
-[CreateProcessA](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa) function treats an unquoted `BINARY_PATH_NAME` like follows:
+[CreateProcessA](https://docs.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa) function parses an unquoted `BINARY_PATH_NAME` like follows:
 
 ```
 C:\Program Files\Sub Directory\Program Name.exe
