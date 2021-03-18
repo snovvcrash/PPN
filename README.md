@@ -1402,6 +1402,12 @@ Compile `.so` library (x64 example):
 $ gcc lib_mysqludf_sys.c -o lib_mysqludf_sys_x64.so -m64 -Wl,--hash-style=both -fPIC -Wall -I/usr/include/mariadb/server -I/usr/include/mariadb/server/private -I. -shared -L/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 ```
 
+Convert library to hex:
+
+```
+$ xxd -p lib_mysqludf_sys.so | tr -d '\n'
+```
+
 Load library and call user-defined `sys_exec` function with a rev-shell.
 
 MySQL (x86 example):
@@ -2434,7 +2440,7 @@ Search for Nmap NSE scripts:
 $ find /usr/share/nmap/scripts/ -type f | grep smb
 Or
 $ sudo nmap --script-updatedb
-$ cat /usr/share/nmap/scripts/scripts.db | grep smb
+$ cat /usr/share/nmap/scripts/script.db | grep smb
 ```
 
 Top TCP ports:
@@ -3466,167 +3472,7 @@ $ sudo pkill atftpd
 
 
 
-# GPG
-
-* [How to Use GPG Keys to Send Encrypted Messages](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
-* [Используем GPG для шифрования сообщений и файлов / Хабр](https://habr.com/ru/post/358182/)
-* [Как пользоваться gpg: шифрование, расшифровка файлов и сообщений, подпись файлов и проверка подписи, управление ключами - HackWare.ru](https://hackware.ru/?p=8215)
-
-List keychain:
-
-```
-$ gpg --list-keys
-```
-
-Gen key:
-
-```
-$ gpg --full-generate-key [--expert]
-```
-
-Gen revoke cert:
-
-```
-$ gpg --output revoke.asc --gen-revoke user@example.com
-revoke.asc
-```
-
-Export user's public key:
-
-```
-$ gpg --armor --output user.pub --export user@example.com
-user.pub
-```
-
-Import recipient's public key:
-
-```
-$ gpg --import recipient.pub
-```
-
-Sign and encrypt:
-
-```
-$ gpg -o/--output encrypted.txt.gpg -e/--encrypt -s/--sign -u/--local-user user1@example.com -r/--recipient user2@example.com plaintext.txt
-encrypted.txt.gpg
-```
-
-List recipients:
-
-```
-$ gpg --list-only -v -d/--decrypt encrypted.txt.gpg
-```
-
-Verify signature:
-
-```
-$ gpg --verify signed.txt.gpg
-$ gpg --verify signed.txt.sig signed.txt
-```
-
-Decrypt and verify:
-
-```
-$ gpg -o/--output decrypted.txt -d/--decrypt --try-secret-key user1@example.com encrypted.txt.gpg
-$ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -r/--recipient user2@example.com encrypted.txt.gpg
-```
-
-
-
-
-## Signing Git Commits
-
-* [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
-* [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
-
-Cache passphrase in gpg agent (dirty):
-
-```
-$ cd /tmp && touch aaa && gpg --sign aaa && rm aaa aaa.gpg && cd -
-```
-
-
-
-
-
-# Git
-
-Add SSH key to the ssh-agent:
-
-```
-$ eval "$(ssh-agent -s)"
-$ ssh-add ~/.ssh/id_rsa
-```
-
-Test SSH key:
-
-```
-ssh -T git@github.com
-```
-
-
-
-
-
-# IPSec
-
-
-
-
-## IKE
-
-* [https://xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
-* [https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
-* [https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
-
-Generate list of all transform-sets:
-
-```
-$ for ENC in 1 2 3 4 5 6 7/128 7/192 7/256 8; do for HASH in 1 2 3 4 5 6; do for AUTH in 1 2 3 4 5 6 7 8 64221 64222 64223 64224 65001 65002 65003 65004 65005 65006 65007 65008 65009 65010; do for GROUP in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do echo "$ENC,$HASH,$AUTH,$GROUP" >> trans-dict.txt; done; done; done; done
-```
-
-Brute force supported transform-sets:
-
-```
-$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t <IP>) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
-Or (for aggressive mode)
-$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M -A -P'handshake.txt' -n FAKEID --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
-Or
-$ sudo python ikeforce.py -s1 -a <IP>  # -s1 for max speed
-```
-
-Get information about vendor:
-
-```
-$ sudo ike-scan -M --showbackoff --trans=<TRANSFORM-SET> <IP>
-```
-
-Test for aggressive mode ON:
-
-```
-$ sudo ike-scan -M -A -P -n FAKEID --trans=<TRANSFORM-SET> <IP>
-```
-
-If no hash value is returned then brute force is (maybe also) possible:
-
-```
-$ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> <IP>) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
-Or
-$ sudo python ikeforce.py <IP> -e -w wordlists/groupnames.dic t <TRANSFORM-SET-IN-SEPARATE-ARGS>
-
-Dicts:
-- /usr/share/seclists/Miscellaneous/ike-groupid.txt
-- ~/tools/ikeforce/wordlists/groupnames.dic
-```
-
-
-
-
-
 # Information Gathering
-
-* [https://pentest-tools.com/home](https://pentest-tools.com/home)
-* [https://hackertarget.com/ip-tools/](https://hackertarget.com/ip-tools/)
 
 
 
@@ -3638,154 +3484,6 @@ site:example.com filetype:(doc | docx | docm | xls | xlsx | xlsm | ppt | pptx | 
 site:example.com ext:(config | cfg | ini | log | bak | backup | dat)
 site:example.com ext:(php | asp | aspx)
 "@example.com" email e-mail
-```
-
-
-
-
-## Autonomous Systems
-
-* [https://hackware.ru/?p=9245](https://hackware.ru/?p=9245)
-
-
-
-### via IP
-
-dig:
-
-```
-$ dig $(dig -x 127.0.0.1 | grep PTR | tail -n 1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}').origin.asn.cymru.com TXT +short
-```
-
-whois:
-
-```
-$ whois -h whois.cymru.com -- '-v 127.0.0.1'
-$ whois -h whois.radb.net 127.0.0.1
-```
-
-
-
-### via ASN
-
-whois:
-
-```
-$ whois -h whois.cymru.com -- '-v AS48666'
-$ whois -h whois.radb.net AS48666
-```
-
-
-
-
-## DNS
-
-
-
-### whois
-
-IP/domain info, IP ranges:
-
-```
-$ whois [-h whois.example.com] example.com или 127.0.0.1
-```
-
-
-
-### dig
-
-General:
-
-```
-$ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
-$ dig -x example.com [+short] [+timeout=1]
-```
-
-* [https://viewdns.info/reverseip/](https://viewdns.info/reverseip/)
-
-Zone transfer:
-
-```
-$ dig axfr @dns.example.com example.com
-```
-
-
-
-### nslookup
-
-```
-$ nslookup example.com (или 127.0.0.1 для PTR)
-
-$ nslookup
-[> server dns.example.com]
-> set q=mx
-> example.com
-
-$ nslookup
-> set q=ptr
-> 127.0.0.1
-```
-
-
-
-### DNS Amplification
-
-Check:
-
-```
-$ host facebook.com ns.example.com
-$ dig +short @ns.example.com test.openresolver.com TXT
-$ nmap -sU -sV --script dns-recursion ns.example.com -p53
-```
-
-
-
-
-## SMTP
-
-Check if sender could be [forged](https://en.wikipedia.org/wiki/Callback_verification) with an domain user:
-
-```
-$ telnet mail.example.com 25
-HELO example.com
-MAIL FROM: <forged@exmaple.com>
-RCPT TO: <exists@example.com>
-RCPT TO: <exists@gmail.com>
-```
-
-Check if sender could be forged with a non-domain user:
-
-```
-$ telnet mail.example.com 25
-HELO example.com
-MAIL FROM: <forged@gmail.com>
-RCPT TO: <exists@example.com>
-RCPT TO: <exists@gmail.com>
-```
-
-Check if domain users could be enumerated with `VRFY` and `EXPN`:
-
-```
-$ telnet mail.example.com 25
-HELO example.com
-VRFY exists@exmaple.com
-EXPN exists@exmaple.com
-```
-
-Check if users could be enumerated with `RCPT TO`:
-
-```
-$ telnet mail.example.com 25
-HELO example.com
-MAIL FROM: <...>
-RCPT TO: <exists@exmaple.com>
-DATA
-From: <...>
-To: <exists@exmaple.com>
-Subject: Job offer
-Hello, I would like to offer you a great job!
-.
-QUIT
 ```
 
 
@@ -4388,7 +4086,7 @@ PS > Stop-Service wuauserv
 
 ### UPnP Device Host Service
 
-**Windows 10, version 1803 < 1809**
+**CVE-2019-1405, CVE-2019-1322 - Windows 10, version 1803 < 1809**
 
 * [https://www.programmersought.com/article/35344126658/](https://www.programmersought.com/article/35344126658/)
 * [https://github.com/apt69/COMahawk/releases](https://github.com/apt69/COMahawk/releases)
@@ -4749,6 +4447,9 @@ $ ./hashcat64.exe -m 1000 -b
 
 # Perimeter
 
+* [https://pentest-tools.com/home](https://pentest-tools.com/home)
+* [https://hackertarget.com/ip-tools/](https://hackertarget.com/ip-tools/)
+
 * DNS
 	+ `$ nslookup example.com`
 	+ Subdomains & AXFR
@@ -4762,6 +4463,222 @@ $ ./hashcat64.exe -m 1000 -b
 * Google Dorks
 	+ `/robots.txt`
 	+ `/sitemap.xml`
+
+
+
+
+## Autonomous Systems
+
+* [https://hackware.ru/?p=9245](https://hackware.ru/?p=9245)
+
+
+
+### via IP
+
+dig:
+
+```
+$ dig $(dig -x 127.0.0.1 | grep PTR | tail -n 1 | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}').origin.asn.cymru.com TXT +short
+```
+
+whois:
+
+```
+$ whois -h whois.cymru.com -- '-v 127.0.0.1'
+$ whois -h whois.radb.net 127.0.0.1
+```
+
+
+
+### via ASN
+
+whois:
+
+```
+$ whois -h whois.cymru.com -- '-v AS48666'
+$ whois -h whois.radb.net AS48666
+```
+
+
+
+
+## NTP
+
+
+
+### NTP Amplification
+
+Check:
+
+```
+$ ntpq -c rv 10.10.13.37
+```
+
+
+
+
+## DNS
+
+
+
+### whois
+
+IP/domain info, IP ranges:
+
+```
+$ whois [-h whois.example.com] example.com или 127.0.0.1
+```
+
+
+
+### dig
+
+General:
+
+```
+$ dig [@dns.example.com] example.com [{any,a,mx,ns,soa,txt,...}]
+$ dig -x example.com [+short] [+timeout=1]
+```
+
+* [https://viewdns.info/reverseip/](https://viewdns.info/reverseip/)
+
+Zone transfer:
+
+```
+$ dig axfr @dns.example.com example.com
+```
+
+
+
+### nslookup
+
+```
+$ nslookup example.com (или 127.0.0.1 для PTR)
+
+$ nslookup
+[> server dns.example.com]
+> set q=mx
+> example.com
+
+$ nslookup
+> set q=ptr
+> 127.0.0.1
+```
+
+
+
+### DNS Amplification
+
+Check:
+
+```
+$ host facebook.com ns.example.com
+$ dig +short @ns.example.com test.openresolver.com TXT
+$ sudo nmap -Pn -sU -sV --script dns-recursion ns.example.com -p53
+```
+
+
+
+
+## SMTP
+
+Check if sender could be [forged](https://en.wikipedia.org/wiki/Callback_verification) with an domain user:
+
+```
+$ telnet mail.example.com 25
+HELO example.com
+MAIL FROM: <forged@exmaple.com>
+RCPT TO: <exists@example.com>
+RCPT TO: <exists@gmail.com>
+```
+
+Check if sender could be forged with a non-domain user:
+
+```
+$ telnet mail.example.com 25
+HELO example.com
+MAIL FROM: <forged@gmail.com>
+RCPT TO: <exists@example.com>
+RCPT TO: <exists@gmail.com>
+```
+
+Check if domain users could be enumerated with `VRFY` and `EXPN`:
+
+```
+$ telnet mail.example.com 25
+HELO example.com
+VRFY exists@exmaple.com
+EXPN exists@exmaple.com
+```
+
+Check if users could be enumerated with `RCPT TO`:
+
+```
+$ telnet mail.example.com 25
+HELO example.com
+MAIL FROM: <...>
+RCPT TO: <exists@exmaple.com>
+DATA
+From: <...>
+To: <exists@exmaple.com>
+Subject: Job offer
+Hello, I would like to offer you a great job!
+.
+QUIT
+```
+
+
+
+
+## IPSec
+
+
+
+### IKE
+
+* [https://xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
+* [https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
+* [https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
+
+Generate list of all transform-sets:
+
+```
+$ for ENC in 1 2 3 4 5 6 7/128 7/192 7/256 8; do for HASH in 1 2 3 4 5 6; do for AUTH in 1 2 3 4 5 6 7 8 64221 64222 64223 64224 65001 65002 65003 65004 65005 65006 65007 65008 65009 65010; do for GROUP in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do echo "$ENC,$HASH,$AUTH,$GROUP" >> trans-dict.txt; done; done; done; done
+```
+
+Brute force supported transform-sets:
+
+```
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t <IP>) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+Or (for aggressive mode)
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M -A -P'handshake.txt' -n FAKEID --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+Or
+$ sudo python ikeforce.py -s1 -a <IP>  # -s1 for max speed
+```
+
+Get information about vendor:
+
+```
+$ sudo ike-scan -M --showbackoff --trans=<TRANSFORM-SET> <IP>
+```
+
+Test for aggressive mode ON:
+
+```
+$ sudo ike-scan -M -A -P -n FAKEID --trans=<TRANSFORM-SET> <IP>
+```
+
+If no hash value is returned then brute force is (maybe also) possible:
+
+```
+$ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> <IP>) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
+Or
+$ sudo python ikeforce.py <IP> -e -w wordlists/groupnames.dic t <TRANSFORM-SET-IN-SEPARATE-ARGS>
+
+Dicts:
+- /usr/share/seclists/Miscellaneous/ike-groupid.txt
+- ~/tools/ikeforce/wordlists/groupnames.dic
+```
 
 
 
@@ -5341,6 +5258,8 @@ Other `xfreerdp` tips:
 
 
 # Privileges Abuse
+
+* [https://github.com/gtworek/Priv2Admin](https://github.com/gtworek/Priv2Admin)
 
 
 
@@ -6456,6 +6375,50 @@ $ kill -SIGKILL <PID>
 
 
 
+### Git
+
+Add SSH key to the ssh-agent:
+
+```
+$ eval "$(ssh-agent -s)"
+$ ssh-add ~/.ssh/id_rsa
+```
+
+Update to latest version:
+
+```
+$ sudo add-apt-repository ppa:git-core/ppa -y
+$ sudo apt update
+$ sudo apt install git -y
+$ git version
+```
+
+Syncing a forked repository:
+
+```
+$ git remote add upstream https://github.com/original/repository.git
+$ git fetch upstream
+
+$ git checkout master
+$ git rebase upstream/master (or git merge upstream/master)
+$ git push -f origin master
+```
+
+Working with a repository during a pull request:
+
+```
+$ git remote add upstream https://github.com/original/repository.git
+$ git fetch upstream
+$ git rebase upstream/master
+$ git checkout upstream/master
+$ git checkout -b new-feature
+...Make changes...
+$ gc -am "Add a new feature"
+$ git push -u origin new-feature
+```
+
+
+
 ### C Library Path
 
 ```
@@ -6503,6 +6466,87 @@ $ openssl rsa -text -in rsa_key -passin 'pass:s3cr3t_p4ssw0rd'
 $ openssl asn1parse -in rsa_key
 
 $ ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
+```
+
+
+
+
+## GPG
+
+* [How to Use GPG Keys to Send Encrypted Messages](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
+* [Используем GPG для шифрования сообщений и файлов / Хабр](https://habr.com/ru/post/358182/)
+* [Как пользоваться gpg: шифрование, расшифровка файлов и сообщений, подпись файлов и проверка подписи, управление ключами - HackWare.ru](https://hackware.ru/?p=8215)
+
+List keychain:
+
+```
+$ gpg --list-keys
+```
+
+Gen key:
+
+```
+$ gpg --full-generate-key [--expert]
+```
+
+Gen revoke cert:
+
+```
+$ gpg --output revoke.asc --gen-revoke user@example.com
+revoke.asc
+```
+
+Export user's public key:
+
+```
+$ gpg --armor --output user.pub --export user@example.com
+user.pub
+```
+
+Import recipient's public key:
+
+```
+$ gpg --import recipient.pub
+```
+
+Sign and encrypt:
+
+```
+$ gpg -o/--output encrypted.txt.gpg -e/--encrypt -s/--sign -u/--local-user user1@example.com -r/--recipient user2@example.com plaintext.txt
+encrypted.txt.gpg
+```
+
+List recipients:
+
+```
+$ gpg --list-only -v -d/--decrypt encrypted.txt.gpg
+```
+
+Verify signature:
+
+```
+$ gpg --verify signed.txt.gpg
+$ gpg --verify signed.txt.sig signed.txt
+```
+
+Decrypt and verify:
+
+```
+$ gpg -o/--output decrypted.txt -d/--decrypt --try-secret-key user1@example.com encrypted.txt.gpg
+$ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -r/--recipient user2@example.com encrypted.txt.gpg
+```
+
+
+
+### Signing Git Commits
+
+* [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
+* [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
+
+Cache passphrase in gpg agent (dirty):
+
+```
+$ cd /tmp && touch aaa && gpg --sign aaa && rm aaa aaa.gpg && cd -
 ```
 
 
@@ -6850,47 +6894,6 @@ $ sudo fail2ban-client status sshd
 
  # Unban all
 $ sudo fail2ban-client unban --all
-```
-
-
-
-### git
-
-Update to latest version:
-
-```
-$ sudo add-apt-repository ppa:git-core/ppa -y
-$ sudo apt update
-$ sudo apt install git -y
-$ git version
-```
-
-Syncing a forked repository:
-
-```
-$ git remote add upstream https://github.com/original/repository.git
-$ git fetch upstream
-
-$ git checkout master
-$ git rebase upstream/master (git merge upstream/master)
-$ git push -f origin master
-
-$ git checkout -b dev upstream/dev
-$ git rebase upstream/dev (git merge upstream/dev)
-$ git push -f origin dev
-```
-
-Working with a repository during a pull request:
-
-```
-$ git remote add upstream https://github.com/original/repository.git
-$ git fetch upstream
-$ git rebase upstream/master
-$ git checkout upstream/master
-$ git checkout -b new-pull-request
-...Make changes...
-$ gc -am "New pull request"
-$ git push -u origin new-pull-request
 ```
 
 
