@@ -496,7 +496,7 @@ $ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.1
 * [https://chryzsh.github.io/relaying-delegation/](https://chryzsh.github.io/relaying-delegation/)
 * [https://habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
 * [https://www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
-* [[PDF] From Zero Credential to Full Domain Compromise (Haboob Team)](https://mega.nz/file/GsZgwT5I#yFUN0tIourvznZVepA68YF7jeLuB3wxK7nSz1WXucks)
+* [[PDF] From Zero Credential to Full Domain Compromise (Haboob Team)](https://drive.google.com/file/d/1htCGIt1Wcg53zCSGnRk4wfcKOk5A_YDP/view?usp=sharing)
 
 ```
 $ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
@@ -589,7 +589,7 @@ PS > Remove-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbo
 * [https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8](https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8)
 * [https://wald0.com/?p=14](https://wald0.com/?p=14)
 * [http://www.offensiveops.io/tools/bloodhound-working-with-results/](http://www.offensiveops.io/tools/bloodhound-working-with-results/)
-* [[PDF] Pen Testing Active Directory Environments (Varonis)](https://mega.nz/file/CsJEkJCY#tL3QX7ozApOFRK0Ea7EZN9tsyFPxnb4G5CqmCHYugm8)
+* [[PDF] Pen Testing Active Directory Environments (Varonis)](https://drive.google.com/file/d/1OePiNlfL8-ZvbS0Ou27StfSJK6C2vA_J/view?usp=sharing)
 
 
 
@@ -4331,7 +4331,7 @@ $ vi ~/.msf4/modules/exploits/linux/http/p.rb
 
 Mitigating ARP spoofing:
 
-* [[PDF] Ruijie Anti-ARP Spoofing Technical White Paper](https://mega.nz/file/KtJkRR4Q#Hmw0d1zeGqzEG4gVNh2a2Bg4-sEV2-bpe8SYrZhGCA4)
+* [[PDF] Ruijie Anti-ARP Spoofing Technical White Paper](https://drive.google.com/file/d/12V2xbiCZn-YupiGc4mxYWjOmCPFNUss9/view?usp=sharing)
 
 
 
@@ -4348,11 +4348,11 @@ SMB lateral-movement hardening:
 
 * [https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f](https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f)
 * [https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721](https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721)
-* [[PDF] SMB Enumeration & Exploitation & Hardening (Anil BAS)](https://mega.nz/file/T5J2DJKA#7fbdSwnuu9uV4PoyIcCwOQJgkv1T9JWHpFCMd9OpfUA)
+* [[PDF] SMB Enumeration & Exploitation & Hardening (Anil BAS)](https://drive.google.com/file/d/13msLIywr_Slc00Rv3jue0lkRf7_1O1gM/view?usp=sharing)
 
 Antispam protection for Exchange:
 
-* [[PDF] Antispam Forefront Protection 2010 (Exchange Server)](https://mega.nz/file/KoRShD7Z#m4VYdvekzJTmE0eZby-cEA4S0KAWQy6Jpa5qVv21ECs)
+* [[PDF] Antispam Forefront Protection 2010 (Exchange Server)](https://drive.google.com/file/d/1B-HUcZMZkFjqNs3ckuiiTpYSKdI0EsiR/view?usp=sharing)
 
 
 
@@ -4437,7 +4437,7 @@ $ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,pass='Passw0rd!' 1
 * [https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
 * [https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
 * [https://luemmelsec.github.io/Relaying-101/](https://luemmelsec.github.io/Relaying-101/)
-* [[PDF] Lateral Movement using Credentials Relaying (taso_x)](https://mega.nz/file/btIWkDCQ#5LDGfTIgqwoc-gfKst9qcy_wL5bKSALSdzJvC7kKITI)
+* [[PDF] Lateral Movement using Credentials Relaying (taso_x)](https://drive.google.com/file/d/1t8akbdgan7i9Rw0tFEIP223CmHFlTRCH/view?usp=sharing)
 
 Generate relay list with cme and enumerate local admins when relaying
 
