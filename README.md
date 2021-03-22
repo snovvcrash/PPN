@@ -2516,7 +2516,7 @@ Top UDP ports:
 
 * [https://github.com/robertdavidgraham/masscan](https://github.com/robertdavidgraham/masscan)
 * [https://github.com/RustScan/RustScan/wiki/Usage](https://github.com/RustScan/RustScan/wiki/Usage)
-* [https://github.com/projectdiscovery/naabu](https://github.com/projectdiscovery/naabu)
+* [https://github.com/projectdiscovery/naabu/releases](https://github.com/projectdiscovery/naabu/releases)
 
 ```
 $ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,623,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
@@ -6516,9 +6516,9 @@ $ ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 
 ## GPG
 
-* [How to Use GPG Keys to Send Encrypted Messages](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
-* [Используем GPG для шифрования сообщений и файлов / Хабр](https://habr.com/ru/post/358182/)
-* [Как пользоваться gpg: шифрование, расшифровка файлов и сообщений, подпись файлов и проверка подписи, управление ключами - HackWare.ru](https://hackware.ru/?p=8215)
+* [https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
+* [https://habr.com/ru/post/358182/](https://habr.com/ru/post/358182/)
+* [https://hackware.ru/?p=8215](https://hackware.ru/?p=8215)
 
 List keychain:
 
@@ -7698,6 +7698,31 @@ $ cat nmap/tcp.xml | ./aquatone -out 10.0-255.0-255.0-255_nmap
 
 * [https://github.com/OWASP/Amass/releases](https://github.com/OWASP/Amass/releases)
 * [https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html](https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html)
+
+```
+$ amass intel -active -config config.ini -whois -df domains.txt -ipv4 -src -v -o intel.txt
+$ amass enum -active -brute -config config.ini -df domains.txt -ipv4 -src -v -o enum.txt
+```
+
+
+
+### Subfinder
+
+* [https://github.com/projectdiscovery/subfinder/releases](https://github.com/projectdiscovery/subfinder/releases)
+
+```
+$ subfinder -all -config config.yaml -d hackerone.com -o subdomains.txt [-oI -nW]
+```
+
+
+
+### ShuffleDNS
+
+* [https://github.com/projectdiscovery/shuffledns/releases]https://github.com/projectdiscovery/shuffledns/releases)
+
+```
+$ shuffledns -d hackerone.com -r /opt/dnsvalidator/resolvers.txt -w /usr/share/commonspeak2-wordlists/subdomains/subdomains.txt -o subdomains.txt -t 500
+```
 
 
 
