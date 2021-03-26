@@ -3764,7 +3764,7 @@ $ ifup eth2
 
 
 
-### Share Folder (old)
+### Share Folder (depreciated)
 
 Mount:
 
@@ -7192,7 +7192,7 @@ Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netna
 ## Shared Folders
 
 ```
-$ sudo usermod -aG vboxsf snovvcrash
+$ sudo usermod -aG vboxsf `whoami`
 $ sudo reboot
 ```
 
