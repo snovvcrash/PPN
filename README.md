@@ -4131,18 +4131,6 @@ $ cat ldapsearch.out | awk '{print $1}' | sort | uniq -c | sort -nr
 
 
 
-## LDAPPER.py
-
-* [https://github.com/shellster/LDAPPER](https://github.com/shellster/LDAPPER)
-
-```
-$ git clone https://github.com/shellster/LDAPPER
-$ sudo python3 -m pip install -r requirements.txt
-```
-
-
-
-
 ## windapsearch
 
 * [https://github.com/ropnop/windapsearch](https://github.com/ropnop/windapsearch)
@@ -4152,20 +4140,6 @@ Enumerate all AD Computers:
 ```
 ./windapsearch.py -u 'megacorp.local\snovvcrash' -p 'Passw0rd!' --dc 127.0.0.1 -C
 ```
-
-
-
-
-## ldapdomaindump
-
-* [https://github.com/dirkjanm/ldapdomaindump](https://github.com/dirkjanm/ldapdomaindump)
-
-
-
-
-## ad-ldap-enum
-
-* [https://github.com/CroweCybersecurity/ad-ldap-enum](https://github.com/CroweCybersecurity/ad-ldap-enum)
 
 
 
