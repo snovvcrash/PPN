@@ -1,4 +1,4 @@
-﻿[![homepage](https://img.shields.io/badge/Homepage-snovvcrash.github.io-success?style=social&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
+[![homepage](https://img.shields.io/badge/Homepage-snovvcrash.github.io-success?style=social&logo=jekyll&logoColor=cc0000)](https://snovvcrash.github.io/)
 [![github](https://img.shields.io/github/stars/snovvcrash/PPN?label=Star%20on%20GitHub&style=social)](https://github.com/snovvcrash/PPN)
 [![twitter](https://img.shields.io/twitter/follow/snovvcrash?label=Follow%20on%20Twitter&style=social)](https://twitter.com/snovvcrash)
 
