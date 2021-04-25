@@ -1,4 +1,6 @@
-# Pentest
+# Table of Contents
+
+## Pentest
 
 * [AD](pentest/ad.md)
 * [AMSI Bypass](pentest/amsi-bypass.md)
@@ -39,7 +41,7 @@
 * [Web](pentest/web.md)
 * [Wi-Fi](pentest/wi-fi.md)
 
-# Admin
+## Admin
 
 * [Docker](admin/docker.md)
 * [Kali](admin/kali.md)
@@ -48,6 +50,6 @@
 * [VirtualBox](admin/virtualbox.md)
 * [Windows](admin/windows.md)
 
-# Other
+## Other
 
 * [Mitigations](other/mitigations.md)
