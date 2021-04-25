@@ -2,7 +2,7 @@
 [![github](https://img.shields.io/github/stars/snovvcrash/PPN?label=Star%20on%20GitHub&style=social)](https://github.com/snovvcrash/PPN)
 [![twitter](https://img.shields.io/twitter/follow/snovvcrash?label=Follow%20on%20Twitter&style=social)](https://twitter.com/snovvcrash)
 
-❗❗❗ **THIS PROJECT HAS MOVED TO [ppn.snovvcrash.rocks](https://ppn.snovvcrash.rocks/)** ❗❗❗
+❗❗❗ **WARNING: THIS PROJECT HAS MOVED [HERE](https://ppn.snovvcrash.rocks/)** ❗❗❗
 
 Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess.
 
