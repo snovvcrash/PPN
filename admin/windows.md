@@ -141,10 +141,20 @@ PS > type 'file.txt:Password'
 ## .msc
 
 ```
-secpol.msc  -- "Local Security Policy" -- «Локальная политика безопасности»
-gpedit.msc  -- "Local Group Policy Editor" -- «Редактор локальной групповой политики»
-lusrmgr.msc -- "Local Users and Groups (Local)" -- «Локальные пользователи и группы (локально)»
-certmgr.msc -- "Certificates - Current User" -- «Сертификаты - текущий пользователь»
+secpol.msc  -- Local Security Policy          -- «Локальная политика безопасности»
+gpedit.msc  -- Local Group Policy Editor      -- «Редактор локальной групповой политики»
+lusrmgr.msc -- Local Users and Groups (Local) -- «Локальные пользователи и группы (локально)»
+certmgr.msc -- Certificates - Current User    -- «Сертификаты - текущий пользователь»
+```
+
+
+
+### Administrative Tools
+
+```
+Cmd > mmc.exe %SystemRoot%\system32\dsa.msc     -- Active Directory Users and Computers
+Cmd > mmc.exe %SystemRoot%\system32\dnsmgmt.msc -- DNS
+Cmd > mmc.exe %SystemRoot%\system32\gpmc.msc    -- Group Policy Management
 ```
 
 

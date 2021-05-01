@@ -610,6 +610,16 @@ $ readlink -f somefile.txt
 
 
 
+### paste
+
+Concatenate text files with a delimeter line by line:
+
+```
+$ paste -d':' a.txt b.txt > c.txt
+```
+
+
+
 ### dpkg
 
 ```
@@ -681,7 +691,7 @@ $ sudo openconnect --protocol=gp gp.megacorp.com -u snovvcrash
 ### script
 
 ```
-$ script tool-$(date "+%FT%H%M%S").script
+$ script ~/ws/shells/`date "+%FT%H%M%S"`.script
 ```
 
 

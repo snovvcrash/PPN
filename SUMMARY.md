@@ -17,6 +17,7 @@
 * [Information Gathering](pentest/information-gathering.md)
 * [IPMI](pentest/ipmi.md)
 * [Java RMI](pentest/java-rmi.md)
+* [Kerberos](pentest/kerberos.md)
 * [Lateral Movement](pentest/lateral-movement.md)
 * [LDAP](pentest/ldap.md)
 * [LPE](pentest/lpe.md)
