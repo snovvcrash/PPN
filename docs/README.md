@@ -1013,7 +1013,7 @@ Clear the `AdminCount` attribute (will be resetted if the user is still in the `
 ```
 PowerView3 > Set-DomainObject -Identity snovvcrash -Domain megacorp.local -Clear admincount -Verbose
 Or
-PS > Get-ADUser snovvcrash | Set-ADObject -Clear adminCount
+PS > Get-ADUser snovvcrash | Set-ADObject -Clear admincount
 ```
 
 Fix the inheritance rules:
