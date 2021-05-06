@@ -1,5 +1,3 @@
-﻿# Introduction
-
 [![github](https://img.shields.io/github/stars/snovvcrash/PPN?label=Star%20on%20GitHub&style=social)](https://github.com/snovvcrash/PPN)
 
 Hey there!
