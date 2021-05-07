@@ -46,7 +46,7 @@
 
 * [Docker](admin/docker.md)
 * [Kali](admin/kali.md)
-* [Python](admin/python.md)
+* [Networking](admin/networking.md)
 * [Unix](admin/unix.md)
 * [VirtualBox](admin/virtualbox.md)
 * [Windows](admin/windows.md)
@@ -54,3 +54,7 @@
 ## Other
 
 * [Mitigations](other/mitigations.md)
+
+## Programming
+
+* [Python](programming/python.md)
