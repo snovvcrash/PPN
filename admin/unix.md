@@ -113,70 +113,6 @@ $ kill -SIGKILL <PID>
 
 
 
-## Dev
-
-
-
-### Git
-
-Add SSH key to the ssh-agent:
-
-```
-$ eval "$(ssh-agent -s)"
-$ ssh-add ~/.ssh/id_rsa
-```
-
-Update to latest version:
-
-```
-$ sudo add-apt-repository ppa:git-core/ppa -y
-$ sudo apt update
-$ sudo apt install git -y
-$ git version
-```
-
-Syncing a forked repository:
-
-```
-$ git remote add upstream https://github.com/original/repository.git
-$ git fetch upstream
-$ git checkout --track master
-$ git rebase upstream/master (or git merge upstream/master)
-$ git push -f origin master
-```
-
-Working with a repository during a pull request:
-
-```
-$ git remote add upstream https://github.com/original/repository.git
-$ git fetch upstream
-$ git rebase upstream/master
-$ git checkout upstream/master
-$ git checkout -b new-feature
-...Make changes...
-$ gc -am "Add a new feature"
-$ git push -u origin new-feature
-```
-
-
-
-### C Library Path
-
-```
-$ echo '#include <sys/types.h>'' | gcc -E -x c - | grep '/types.h'
-```
-
-
-
-### Vangrind
-
-```
-$ valgrind --leak-check=full --track-origins=yes --leak-resolution=med ./a.out
-```
-
-
-
-
 ## OpenSSL
 
 
@@ -279,21 +215,8 @@ $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -
 
 
 
-### Signing Git Commits
 
-* [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
-* [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
-
-Cache passphrase in gpg agent (dirty):
-
-```
-$ cd /tmp && touch aaa && gpg --sign aaa && rm aaa aaa.gpg && cd -
-```
-
-
-
-
-## Clear
+## Cleanup
 
 
 
@@ -626,41 +549,6 @@ $ paste -d':' a.txt b.txt > c.txt
 $ dpkg -s <package_name>
 $ dpkg-query -W -f='${Status}' <package_name>
 $ OUT="dpkg-query-$(date +'%FT%H%M%S').csv"; echo 'package,version' > ${OUT} && dpkg-query -W -f '${Package},${Version}\n' >> ${OUT}
-```
-
-
-
-### iptables
-
-* [An In-Depth Guide to iptables, the Linux Firewall - Boolean World](https://www.booleanworld.com/depth-guide-iptables-linux-firewall/)
-
-List rules in all chains (default table is *filter*, there are *mangle*, *nat* and *raw* tables beside it):
-
-```
-$ sudo iptables -L -n --line-numbers [-t filter]
-```
-
-Print rules for all chains (for a specific chains):
-
-```
-$ sudo iptables -S [INPUT [1]]
-```
-
-
-
-### fail2ban
-
-```bash
- # Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
-/etc/fail2ban/filter.d
-
- # Status
-$ sudo service fail2ban status
-$ sudo fail2ban-client status
-$ sudo fail2ban-client status sshd
-
- # Unban all
-$ sudo fail2ban-client unban --all
 ```
 
 

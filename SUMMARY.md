@@ -1,5 +1,11 @@
 # Table of Contents
 
+## Dev
+
+* [Git](dev/git.md)
+* [Misc](dev/misc.md)
+* [Python](dev/python.md)
+
 ## Pentest
 
 * [AD](pentest/ad.md)
@@ -54,7 +60,3 @@
 ## Other
 
 * [Mitigations](other/mitigations.md)
-
-## Programming
-
-* [Python](programming/python.md)
