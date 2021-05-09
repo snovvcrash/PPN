@@ -8,13 +8,13 @@
 
 ## Pentest
 
-* Engagements
-  * [Internal](pentest/engagements/internal.md)
-  * [Password Brute Force](pentest/engagements/password-brute-force.md)
-  * [Perimeter](pentest/engagements/perimeter.md)
-  * [SE](pentest/engagements/se.md)
-  * [Web](pentest/engagements/web.md)
-  * [Wi-Fi](pentest/engagements/wi-fi.md)
+* Engagement
+  * [Internal](pentest/engagement/internal.md)
+  * [Password Brute Force](pentest/engagement/password-brute-force.md)
+  * [Perimeter](pentest/engagement/perimeter.md)
+  * [SE](pentest/engagement/se.md)
+  * [Web](pentest/engagement/web.md)
+  * [Wi-Fi](pentest/engagement/wi-fi.md)
 * [AD](pentest/ad.md)
 * [AMSI Bypass](pentest/amsi-bypass.md)
 * [AV Evasion](pentest/av-evasion.md)
@@ -47,6 +47,7 @@
 * [UAC Bypass](pentest/uac-bypass.md)
 * [VNC](pentest/vnc.md)
 * [WSUS](pentest/wsus.md)
+* [Web Shells](pentest/web-shells.md)
 
 ## Admin
 
