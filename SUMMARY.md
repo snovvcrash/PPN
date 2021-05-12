@@ -1,11 +1,5 @@
 # Table of Contents
 
-## Dev
-
-* [Git](dev/git.md)
-* [Misc](dev/misc.md)
-* [Python](dev/python.md)
-
 ## Pentest
 
 * Engagement
@@ -57,6 +51,12 @@
 * [Unix](admin/unix.md)
 * [VirtualBox](admin/virtualbox.md)
 * [Windows](admin/windows.md)
+
+## Dev
+
+* [C/C++](dev/c-cpp.md)
+* [Git](dev/git.md)
+* [Python](dev/python.md)
 
 ## Other
 
