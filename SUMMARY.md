@@ -37,6 +37,7 @@
 * [Reverse Shells](pentest/reverse-shells.md)
 * [SMB](pentest/smb.md)
 * [SNMP](pentest/snmp.md)
+* [SSH](pentest/ssh.md)
 * [TFTP](pentest/tftp.md)
 * [UAC Bypass](pentest/uac-bypass.md)
 * [VNC](pentest/vnc.md)
