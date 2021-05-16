@@ -17,7 +17,7 @@
 * [Auth Brute Force](pentest/auth-brute-force.md)
 * [Constrained Language Mode Bypass](pentest/constrained-language-mode-bypass.md)
 * [DBMS](pentest/dbms.md)
-* [Dump Credentials](pentest/dump-credentials.md)
+* [Credentials Dump](pentest/credentials-dump.md)
 * [ExecutionPolicy Bypass](pentest/executionpolicy-bypass.md)
 * [File Transfer](pentest/file-transfer.md)
 * [Information Gathering](pentest/information-gathering.md)

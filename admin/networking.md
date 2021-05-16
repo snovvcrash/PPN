@@ -95,7 +95,7 @@ $ sudo vi /etc/resolv.conf
 
 * [https://0xdf.gitlab.io/2021/05/04/networking-vms-for-htb.html](https://0xdf.gitlab.io/2021/05/04/networking-vms-for-htb.html)
 
-Configure traffic routing and NAT from a Windows host (192.168.0.101, eth0) through a Linux VM (192.168.0.151, eth0 bridged interface) to VPN (10.10.10.0/24, tun0).
+Configure traffic routing and NAT from a Windows host (192.168.0.101, eth0) through a Linux VM (192.168.0.181, eth0 bridged interface) to VPN (10.10.10.0/24, tun0).
 
 Enable IP forwarding on Linux VM:
 
@@ -119,7 +119,89 @@ $ sudo iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o tun0 -j MASQUERADE
 Add a route to Linux VM on Windows host:
 
 ```
-Cmd > route add 10.10.10.0 mask 255.255.255.0 192.168.0.151
+Cmd > route add 10.10.10.0 mask 255.255.255.0 192.168.0.181
+```
+
+
+#### Wrap All Traffic into VPN in Windows
+
+Check the name of VPN interface (`Virtual Ethernet Adapter`):
+
+```
+Cmd > ipconfig /all
+
+Адаптер Ethernet Ethernet 2:
+
+   DNS-суффикс подключения . . . . . :
+   Описание. . . . . . . . . . . . . : Virtual Ethernet Adapter
+   ...
+   IPv4-адрес. . . . . . . . . . . . : 192.168.100.181(Основной)
+```
+
+Checks its id (`16`, it's shown in decimal):
+
+```
+Cmd > route print -4
+===========================================================================
+Список интерфейсов
+  16...00 ff 00 ff 00 ff ......Virtual Ethernet Adapter
+```
+
+Add a static route to wrap all traffic into the VPN gateway. To achieve that specify VPN interface id in hexadecimal (`0x10` in this example) and set higher priority for this route (i.e., lower metric) than default gateway route has:
+
+```
+Cmd > route add 0.0.0.0 mask 0.0.0.0 192.168.100.1 metric 7 if 0x10
+Cmd > route print -4
+...
+IPv4 таблица маршрута
+===========================================================================
+Активные маршруты:
+Сетевой адрес           Маска сети      Адрес шлюза         Интерфейс   Метрика
+          0.0.0.0          0.0.0.0      192.168.0.1     192.168.0.101       25
+          0.0.0.0          0.0.0.0    192.168.100.1   192.168.100.181        7
+```
+
+To delete the route run:
+
+```
+Cmd > route add 0.0.0.0 mask 0.0.0.0 192.168.100.1
+```
+
+
+
+
+## Log Connections
+
+
+
+### tcpdump
+
+Register ICMP replies from 10.10.13.38:
+
+```
+$ sudo tcpdump -n -i tun0 -XSs 0 'src 10.10.13.38 and icmp[icmptype]==8'
+```
+
+
+
+### iptables
+
+Add rule to register **new** (does not watch for related, established) connections to your machine:
+
+```
+$ sudo iptables -A INPUT -p tcp -m state --state NEW -j LOG --log-prefix "IPTables New-Connection: " -i tun0
+```
+
+Check the logs:
+
+```
+$ sudo grep IPTables /var/log/messages
+```
+
+Delete rule:
+
+```
+$ sudo iptables -D INPUT -p tcp -m state --state NEW -j LOG --log-prefix "IPTables New-Connection: " -i tun0
 ```
 
 
