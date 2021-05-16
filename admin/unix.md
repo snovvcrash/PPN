@@ -558,7 +558,9 @@ $ OUT="dpkg-query-$(date +'%FT%H%M%S').csv"; echo 'package,version' > ${OUT} && 
 * [https://www.veracrypt.fr/en/Downloads.html](https://www.veracrypt.fr/en/Downloads.html)
 
 ```
+ # Mount volume
 $ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/SecretVolume.dat /mnt
+ # Unmount all
 $ veracrypt -d
 ```
 
