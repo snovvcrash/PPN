@@ -16,11 +16,13 @@
 
 ```
 $ sudo service NetworkManager stop
-$ sudo ifconfig 
+$ ifconfig 
 $ sudo ifconfig eth0 10.10.13.37 netmask 255.255.255.0
 $ sudo route add default gw 10.10.13.1 dev eth0
-$ sudo route -n
-$ sudo vi /etc/resolv.conf 
+$ route -n
+$ sudo vi /etc/resolv.conf
+nameserver 192.168.0.1
+search megacorp.local
 $ ping 8.8.8.8
 $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
@@ -62,7 +64,7 @@ $ sudo netplan apply
 Route inner traffic to eth0 (lan), Internet to wlan0 (wan):
 
 ```
-$ sudo route -n
+$ route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         192.168.0.1     0.0.0.0         UG    100    0        0 eth0
@@ -75,7 +77,7 @@ $ sudo ip route add 172.16.0.0/12 via 192.168.0.1 metric 100 dev eth0
 $ sudo ip route add 10.0.0.0/8 via 192.168.0.1 metric 100 dev eth0
 $ sudo ip route del 0.0.0.0/0 via 192.168.0.1 dev eth0
 
-$ sudo route -n
+$ route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
 0.0.0.0         172.20.10.1     0.0.0.0         UG    600    0        0 wlan0
