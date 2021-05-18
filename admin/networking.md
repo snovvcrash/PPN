@@ -97,7 +97,7 @@ $ sudo vi /etc/resolv.conf
 
 * [https://0xdf.gitlab.io/2021/05/04/networking-vms-for-htb.html](https://0xdf.gitlab.io/2021/05/04/networking-vms-for-htb.html)
 
-Configure traffic routing and NAT from a Windows host (192.168.0.101, eth0) through a Linux VM (192.168.0.181, eth0 bridged interface) to VPN (10.10.10.0/24, tun0).
+Configure traffic routing and NAT from a Windows host (192.168.0.101, eth0) through a Linux VM (192.168.0.181, eth1 bridged interface) to VPN (10.10.10.0/24, tun0).
 
 Enable IP forwarding on Linux VM:
 
@@ -108,8 +108,14 @@ $ sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
 Create iptables rules to do the forwarding on Linux VM:
 
 ```
-$ sudo iptables -A FORWARD -i tun0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
-$ sudo iptables -A FORWARD -i eth0 -o tun0 -j ACCEPT
+$ sudo iptables -A FORWARD -i tun0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+$ sudo iptables -A FORWARD -i eth1 -o tun0 -j ACCEPT
+```
+
+For the purpose of redirecting NEW connections from Linux tun0 to Windows host I can set socat on a needed port as a quick solution (actually it's not necessary for this routing task):
+
+```
+$ sudo socat TCP-LISTEN:1337,fork TCP:192.168.0.101:1337
 ```
 
 Create iptables rules to do NAT on Linux VM:
