@@ -21,8 +21,9 @@ $ sudo ifconfig eth0 10.10.13.37 netmask 255.255.255.0
 $ sudo route add default gw 10.10.13.1 dev eth0
 $ route -n
 $ sudo vi /etc/resolv.conf
-nameserver 192.168.0.1
+domain megacorp.local
 search megacorp.local
+nameserver 192.168.0.1
 $ ping 8.8.8.8
 $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
