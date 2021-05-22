@@ -29,3 +29,9 @@ SMB lateral-movement hardening:
 Antispam protection for Exchange:
 
 * [[PDF] Antispam Forefront Protection 2010 (Exchange Server)](https://drive.google.com/file/d/1B-HUcZMZkFjqNs3ckuiiTpYSKdI0EsiR/view?usp=sharing)
+
+Detect stale, unused or fake computer accounts based on password age (replace `-90` with your domain's maximum computer account password age):
+
+```
+$date = [DateTime]::Today.AddDays(-90); Get-ADComputer -Filter '(Enabled -eq $true) -and (PasswordLastSet -le $date)' | select Name
+```
