@@ -84,8 +84,9 @@
 * [Metasploit](pentest/metasploit.md)
 * [Persistence](pentest/persistence.md)
 * [Pivoting](pentest/pivoting.md)
-* [Reverse Shells](pentest/reverse-shells.md)
-* [Web Shells](pentest/web-shells.md)
+  * Shells
+    * [Reverse Shells](pentest/shells/reverse-shells.md)
+    * [Web Shells](pentest/shells/web-shells.md)
 
 ## Admin
 
