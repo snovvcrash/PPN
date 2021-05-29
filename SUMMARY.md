@@ -1,4 +1,6 @@
-# Table of Contents
+# Table of contents
+
+* [Introduction](README.md)
 
 ## Pentest
 
@@ -70,10 +72,10 @@
   * [WordPress](pentest/web/wordpress.md)
   * [XSS](pentest/web/xss.md)
 * [Wi-Fi](pentest/wi-fi/README.md)
-  * WPA/WPA2
+  * [WPA/WPA2](pentest/wi-fi/wpa-wpa2/README.md)
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
-* [SE](pentest/se/README.md)
+* [SE](pentest/se.md)
 * [Password Brute Force](pentest/password-brute-force/README.md)
   * [Generate Wordlists](pentest/password-brute-force/generate-wordlists.md)
 * [Auth Brute Force](pentest/auth-brute-force.md)
@@ -84,7 +86,7 @@
 * [Metasploit](pentest/metasploit.md)
 * [Persistence](pentest/persistence.md)
 * [Pivoting](pentest/pivoting.md)
-* Shells
+* [Shells](pentest/shells/README.md)
   * [Reverse Shells](pentest/shells/reverse-shells.md)
   * [Web Shells](pentest/shells/web-shells.md)
 
@@ -106,3 +108,4 @@
 ## Other
 
 * [Mitigations](other/mitigations.md)
+

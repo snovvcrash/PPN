@@ -1,32 +1,23 @@
 # VirtualBox
 
-
-
-
 ## DHCP
 
-```
+```text
 Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
 ```
 
-
-
-
 ## Shared Folders
 
-```
+```text
 $ sudo usermod -aG vboxsf `whoami`
 $ sudo reboot
 ```
-
-
-
 
 ## Dirty Network Configurations
 
 Manually:
 
-```
+```text
 $ sudo service NetworkManager stop
 $ sudo ifconfig 
 $ sudo ifconfig eth0 10.10.13.37 netmask 255.255.255.0
@@ -38,9 +29,9 @@ $ nslookup ya.ru
 $ sudo systemctl enable ssh --now
 ```
 
-Route inner traffic to eth0 (lan), internet to wlan0 (wan):
+Route inner traffic to eth0 \(lan\), internet to wlan0 \(wan\):
 
-```
+```text
 $ sudo route -n
 Kernel IP routing table
 Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
@@ -69,13 +60,11 @@ $ sudo vi /etc/resolv.conf
 ...change dns resolve order if necessary...
 ```
 
-
-
 ### netplan
 
 `/etc/netplan/*.yaml`:
 
-```
+```text
 network:
   version: 2
   renderer: networkd
@@ -89,7 +78,8 @@ network:
         addresses: [8.8.8.8,8.8.4.4]
 ```
 
-```
+```text
 $ sudo service NetworkManager stop
 $ sudo netplan apply
 ```
+

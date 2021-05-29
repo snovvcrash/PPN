@@ -2,56 +2,50 @@
 
 List all running containers:
 
-```
+```text
 $ docker ps -a
 ```
 
 Stop all running containers:
 
-```
+```text
 $ docker stop `docker container ls -aq`
 ```
 
 Remove stopped containers:
 
-```
+```text
 $ docker rm -v `docker container ls -aq -f status=exited`
 ```
 
 Remove all images:
 
-```
+```text
 $ docker rmi `docker images -aq`
 ```
 
 Attach to a running container:
 
-```
+```text
 $ docker exec -it <CONTAINER> /bin/bash
 ```
 
 Unsorted:
 
-```
+```text
 $ docker start -ai <CONTAINER>
 $ docker cp project/. <CONTAINER>:/root/project
 $ docker run --rm -it <CONTAINER> --name <NAME> ubuntu bash
 $ docker build -t <USERNAME>/<IMAGE> .
 ```
 
-
-
-
 ## Installation
-
-
 
 ### Linux
 
-
 #### docker-engine
 
-```
+```text
 $ sudo apt install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
 (Ubuntu) $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 (Kali) $ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
@@ -67,13 +61,13 @@ relogin
 [$ docker run --rm hello-world]
 ```
 
-
 #### docker-compose
 
-* [https://docs.docker.com/compose/install/#install-compose-on-linux-systems](https://docs.docker.com/compose/install/#install-compose-on-linux-systems)
+* [https://docs.docker.com/compose/install/\#install-compose-on-linux-systems](https://docs.docker.com/compose/install/#install-compose-on-linux-systems)
 
-```
+```text
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 $ sudo chmod +x /usr/local/bin/docker-compose
 $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
+

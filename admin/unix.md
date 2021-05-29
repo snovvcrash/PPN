@@ -1,13 +1,10 @@
 # Unix
 
-
-
-
 ## Encodings
 
 From CP1252 to UTF-8:
 
-```
+```text
 $ iconv -f CP1252 -t UTF8 inputfile.txt -o outputfile.txt
 Or
 $ enconv -x UTF8 somefile.txt
@@ -15,7 +12,7 @@ $ enconv -x UTF8 somefile.txt
 
 Check:
 
-```
+```text
 $ enconv -d somefile.txt
 Or
 $ file -i somefile.txt
@@ -23,15 +20,13 @@ $ file -i somefile.txt
 
 Remove ANSI escape codes:
 
-```
+```text
 $ awk '{ gsub("\\x1B\\[[0-?]*[ -/]*[@-~]", ""); print }' somefile.txt
 ```
 
-
-
 ### Windows/Unix Text
 
-```
+```text
 input.txt: ASCII text
 VS
 input.txt: ASCII text, with CRLF line terminators
@@ -39,7 +34,7 @@ input.txt: ASCII text, with CRLF line terminators
 
 From Win to Unix:
 
-```
+```text
 $ awk '{ sub("\r$", ""); print }' input.txt > output.txt
 Or
 $ dos2unix input.txt
@@ -47,40 +42,30 @@ $ dos2unix input.txt
 
 From Unix to Win:
 
-```
+```text
 $ awk 'sub("$", "\r")' input.txt > output.txt
 Or
 $ unix2dos input.txt
 ```
 
-
-
-
 ## Network
-
-
 
 ### Connections
 
-```
+```text
 $ netstat -anlp | grep LIST
 $ ss -nlpt | grep LIST
 ```
 
-
-
 ### Public IP
 
-```
+```text
 $ wget -q -O - https://ipinfo.io/ip
 ```
 
-
-
-
 ## Virtual Terminal
 
-```
+```text
 Start:
 CTRL + ALT + F1-6
 
@@ -88,12 +73,9 @@ Stop:
 ALT + F8
 ```
 
-
-
-
 ## Process Kill
 
-```
+```text
 $ ps aux | grep firefox
 Or
 $ pidof firefox
@@ -110,16 +92,11 @@ Or
 $ kill -SIGKILL <PID>
 ```
 
-
-
-
 ## OpenSSL
-
-
 
 ### Encrypt/Decrypt
 
-```
+```text
 $ openssl enc -e -aes-128-ecb -in file.txt -out file.txt.ecb -K 10101010
 $ openssl enc -d -aes-128-ecb -in file.txt.ecb -out file.txt.ecb_dec -K 10101010
 
@@ -127,11 +104,9 @@ $ echo 'secret_data1 + secret_data2 + secret_data3' | openssl enc -e -aes-256-cb
 $ echo 'U2FsdGVkX1+d1qH1M3nhYFKscrg5QYt+AlTSBPHgdB4JEP8YSy1FX+xYdrfJ5cZgfoGrW+2On7lMxRIhKCUmWQ==' | openssl enc -d -aes-256-cbc -a -salt -md sha256 -iv 10101010 -pass pass:qwerty
 ```
 
-
-
 ### Generate Keys
 
-```
+```text
 $ ssh-keygen -t rsa -b 4096 -N 's3cr3t_p4ssw0rd' -C 'user@email.com' -f rsa_key
 $ mv rsa_key rsa_key.old
 $ openssl pkcs8 -topk8 -v2 des3 \
@@ -145,9 +120,6 @@ $ openssl asn1parse -in rsa_key
 $ ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 ```
 
-
-
-
 ## GPG
 
 * [https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/](https://www.linode.com/docs/security/encryption/gpg-keys-to-send-encrypted-messages/)
@@ -156,73 +128,68 @@ $ ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519
 
 List keychain:
 
-```
+```text
 $ gpg --list-keys
 ```
 
 Gen key:
 
-```
+```text
 $ gpg --full-generate-key [--expert]
 ```
 
 Gen revoke cert:
 
-```
+```text
 $ gpg --output revoke.asc --gen-revoke user@example.com
 revoke.asc
 ```
 
 Export user's public key:
 
-```
+```text
 $ gpg --armor --output user.pub --export user@example.com
 user.pub
 ```
 
 Import recipient's public key:
 
-```
+```text
 $ gpg --import recipient.pub
 ```
 
 Sign and encrypt:
 
-```
+```text
 $ gpg -o/--output encrypted.txt.gpg -e/--encrypt -s/--sign -u/--local-user user1@example.com -r/--recipient user2@example.com plaintext.txt
 encrypted.txt.gpg
 ```
 
 List recipients:
 
-```
+```text
 $ gpg --list-only -v -d/--decrypt encrypted.txt.gpg
 ```
 
 Verify signature:
 
-```
+```text
 $ gpg --verify signed.txt.gpg
 $ gpg --verify signed.txt.sig signed.txt
 ```
 
 Decrypt and verify:
 
-```
+```text
 $ gpg -o/--output decrypted.txt -d/--decrypt --try-secret-key user1@example.com encrypted.txt.gpg
 $ gpg -o/--output decrypted.txt -d/--decrypt -u/--local-user user1@example.com -r/--recipient user2@example.com encrypted.txt.gpg
 ```
 
-
-
-
 ## Cleanup
-
-
 
 ### Log Files
 
-```
+```text
 $ > logfile
 Or
 $ cat /dev/null > logfile
@@ -232,27 +199,19 @@ Or
 $ truncate logfile --size 0
 ```
 
+### .bash\_history
 
-
-### .bash_history
-
-```
+```text
 $ cat /dev/null > ~/.bash_history && history -c && exit
 ```
 
-
-
-
 ## Secure Delete
 
-```
+```text
 $ shred -zvu -n7 /path/to/file
 $ find /path/to/dir -type f -exec shred -zvu -n7 {} \\;
 $ shred -zv -n0 /dev/sdc1
 ```
-
-
-
 
 ## Partitions
 
@@ -260,7 +219,7 @@ $ shred -zv -n0 /dev/sdc1
 
 List devices:
 
-```
+```text
 $ lsblk
 $ sudo fdisk -l
 $ df -h
@@ -268,107 +227,86 @@ $ df -h
 
 Manage partitions:
 
-```
+```text
 $ sudo fdisk /dev/sd??
 ```
 
 Format:
 
-```
+```text
 $ sudo umount /dev/sd??
 $ sudo mkfs.<type> -F 32 -I /dev/sd?? -n VOLUME-NAME
 type: 'msdos' (=fat32), 'ntfs'
 ```
 
-
-
-
 ## Floppy
 
-```
+```text
 $ mcopy -i floppy.img 123.txt ::123.txt
 $ mdel -i floppy.img 123.TXT
 ```
-
-
-
 
 ## Checksums
 
 Compare file hashes:
 
-```
+```text
 $ md5sum /path/to/abc.txt | awk '{print $1, "/path/to/cba.txt"}' > /tmp/checksum.txt
 $ md5sum -c /tmp/checksum.txt
 ```
 
 Compare directory hashes:
 
-```
+```text
 $ hashdeep -c md5 -r /path/to/dir1 > dir1hashes.txt
 $ hashdeep -c md5 -r -X -k dir1hashes.txt /path/to/dir2
 ```
-
-
-
 
 ## Permissions
 
 Set defaults for files:
 
-```
+```text
 $ find . -type f -exec chmod 644 {} \;
 ```
 
 Set defaults for directories:
 
-```
+```text
 $ find . -type d -exec chmod 755 {} \;
 ```
 
-
-
-
 ## Fix Linux Freezes while Copying
 
-```
+```text
 $ sudo crontab -l | { cat; echo '@reboot echo $((16*1024*1024)) > /proc/sys/vm/dirty_background_bytes'; } | crontab -
 $ sudo crontab -l | { cat; echo '@reboot echo $((48*1024*1024)) > /proc/sys/vm/dirty_bytes'; } | crontab -
 ```
-
-
-
 
 ## Kernel
 
 Remove old kernels:
 
-```
+```text
 $ dpkg -l linux-image-\* | grep ^ii
 $ kernelver=$(uname -r | sed -r 's/-[a-z]+//')
 $ dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve $kernelver
 $ sudo apt-get purge $(dpkg -l linux-{image,headers}-"[0-9]*" | awk '/ii/{print $2}' | grep -ve "$(uname -r | sed -r 's/-[a-z]+//')")
 ```
 
-
-
-
 ## Xfce4
 
 Install `xfce4`:
 
-```
+```text
 $ sudo apt update
 $ sudo apt upgrade -y
 $ sudo apt install xfce4 xfce4-terminal gtk2-engines-pixbuf -y
 ```
 
-
-
-
 ## GIFs
 
-```
+```text
 $ sudo apt install peek -y
 Or
 $ sudo apt install byzanz xdotool -y
@@ -376,12 +314,9 @@ $ xdotool getmouselocation
 $ byzanz-record --duration=15 --x=130 --y=90 --width=800 --height=500 ~/Desktop/out.gif
 ```
 
-
-
-
 ## NTP
 
-```
+```text
 $ sudo apt purge ntp -y
 $ sudo timedatectl set-timezone Europe/Moscow
 $ sudo vi /etc/systemd/timesyncd.conf
@@ -396,220 +331,187 @@ $ service systemd-timedated status
 1. [https://feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/](https://feeding.cloud.geek.nz/posts/time-synchronization-with-ntp-and-systemd/)
 2. [http://billauer.co.il/blog/2019/01/ntp-systemd/](http://billauer.co.il/blog/2019/01/ntp-systemd/)
 
-
-
-
 ## ImageMagick
 
 XOR 2 images:
 
-```
+```text
 $ convert img1.png img2.png -fx "(((255*u)&(255*(1-v)))|((255*(1-u))&(255*v)))/255" img_out
 ```
 
-
-
-
 ## Utilities Syntax
 
-
-
 ### tar
-
 
 #### .tar
 
 Pack:
 
-```
+```text
 tar -cvf directory.tar directory
 ```
 
 Unpack:
 
-```
+```text
 tar -xvf directory.tar
 ```
-
 
 #### .tar.gz
 
 Pack:
 
-```
+```text
 tar -cvzf directory.tar.gz directory
 ```
 
 Unpack:
 
-```
+```text
 tar -xvzf directory.tar.gz
 ```
-
 
 #### .tar.bz
 
 Pack:
 
-```
+```text
 tar -cvjf directory.tar.bz directory
 ```
 
 Unpack:
 
-```
+```text
 tar -xvjf directory.tar.bz
 ```
-
-
 
 ### scp
 
 Local file to a remote system:
 
-```
+```text
 $ scp [-P 2222] file.txt snovvcrash@10.10.13.37:/remote/directory
 ```
 
 Remote file to a local system:
 
-```
+```text
 $ scp [-P 2222] snovvcrash@10.10.13.37:/remote/file.txt /local/directory
 ```
-
-
 
 ### 7z
 
 Encrypt and pack all files in directory::
 
-```
+```text
 $ 7z a packed.7z -mhe -p"p4sSw0rD" *
 ```
 
 Decrypt and unpack:
 
-```
+```text
 $ 7z e packed.7z -p"p4sSw0rD"
 ```
-
-
 
 ### grep/find/sed
 
 Recursive grep:
 
-```
+```text
 $ grep -nwr 'pattern' /path/to/dir
 ```
 
 Recursive find and replace:
 
-```
+```text
 $ find . -type f -name "*.txt" -exec sed -i'' -e 's/\<foo\>/bar/g' {} +
 ```
 
 Exec `strings` and grep on the result with printing filenames:
 
-```
+```text
 $ find . -type f -print -exec sh -c 'strings $1 | grep -i -n "signature"' sh {} \;
 ```
 
 Find and `xargs` grep results:
 
-```
+```text
 $ find . -type f -print0 | xargs -0 grep <PATTERN>
 ```
-
-
 
 ### readlink
 
 Get absolute path of a file:
 
-```
+```text
 $ readlink -f somefile.txt
 ```
-
-
 
 ### paste
 
 Concatenate text files with a delimeter line by line:
 
-```
+```text
 $ paste -d':' a.txt b.txt > c.txt
 ```
 
-
-
 ### dpkg
 
-```
+```text
 $ dpkg -s <package_name>
 $ dpkg-query -W -f='${Status}' <package_name>
 $ OUT="dpkg-query-$(date +'%FT%H%M%S').csv"; echo 'package,version' > ${OUT} && dpkg-query -W -f '${Package},${Version}\n' >> ${OUT}
 ```
 
-
-
 ### veracrypt
 
 * [https://www.veracrypt.fr/en/Downloads.html](https://www.veracrypt.fr/en/Downloads.html)
 
-```
+```text
  # Mount volume
 $ veracrypt -t --pim=0 --keyfiles='' --protect-hidden=no /home/snovvcrash/SecretVolume.dat /mnt
  # Unmount all
 $ veracrypt -d
 ```
 
-
-
 ### openconnect
 
-```
+```text
 $ sudo openconnect --protocol=gp gp.megacorp.com -u snovvcrash
 ```
 
-
-
-
 ## Console Logging
-
 
 ### script
 
-```
+```text
 $ script ~/ws/shells/`date "+%FT%H%M%S"`.script
 ```
-
 
 ### tmux
 
 * [https://github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
 
-```
+```text
 bash ~/.tmux/plugins/tmux-logging/scripts/screen_capture.sh
 bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 ```
-
 
 ### Time in Prompt
 
 #### bash
 
-`~/.bashrc` (replace `!` with `%`):
+`~/.bashrc` \(replace `!` with `%`\):
 
-```
+```text
 PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
 ```
 
 #### zsh
 
-`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` (replace `!` with `%`):
+`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` \(replace `!` with `%`\):
 
-```
+```text
 PROMPT="!(?:!{$fg_bold[green]!}➜ :!{$fg_bold[red]!}➜ ) "
 PROMPT+='!{$fg[cyan]!}!(4~|!-1~/…/!2~|!3~)!{$reset_color!} $(git_prompt_info)'
 
@@ -620,14 +522,11 @@ else
 fi
 ```
 
-
-
-
 ## LAMP
 
 * [https://stackoverflow.com/a/46908573](https://stackoverflow.com/a/46908573)
 
-```
+```text
  # PHP
 $ sudo add-apt-repository ppa:ondrej/php -y
 $ sudo apt update
@@ -648,25 +547,19 @@ $ sudo sh -c 'echo "<?php phpinfo(); ?>" > phpinfo.php'
 -> http://127.0.0.1/phpinfo.php
 ```
 
-
-
-
 ## Fun
-
-
 
 ### CMatrix
 
-```
+```text
 $ sudo apt-get install cmatrix
 ```
 
-
-
 ### screenfetch
 
-```
+```text
 $ wget -O screenfetch https://raw.github.com/KittyKatt/screenFetch/master/screenfetch-dev
 $ chmod +x screenfetch
 $ sudo mv screenfetch /usr/bin
 ```
+
