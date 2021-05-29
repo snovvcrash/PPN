@@ -35,3 +35,7 @@ Detect stale, unused or fake computer accounts based on password age (replace `-
 ```
 $date = [DateTime]::Today.AddDays(-90); Get-ADComputer -Filter '(Enabled -eq $true) -and (PasswordLastSet -le $date)' | select Name
 ```
+
+Administrative Tier Model explained:
+
+* [https://security-tzu.com/2020/03/23/mitigate-credential-theft-with-administrative-tier-model/](https://security-tzu.com/2020/03/23/mitigate-credential-theft-with-administrative-tier-model/)
