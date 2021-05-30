@@ -1,6 +1,7 @@
 # Introduction
 
 [![github](https://img.shields.io/github/stars/snovvcrash/PPN?label=Star%20on%20GitHub&style=social)](https://github.com/snovvcrash/PPN)
+[![twitter](https://img.shields.io/twitter/follow/snovvcrash?label=Follow%20on%20Twitter&style=social)](https://twitter.com/snovvcrash)
 
 Hey there!
 
@@ -15,5 +16,3 @@ The previous version of PPN is 👉🏻 [here](https://snovvcrash.rocks/PPN/) (d
 {% embed url="https://snovvcrash.rocks/" caption="Blog" %}
 
 {% embed url="https://github.com/snovvcrash" caption="GitHub" %}
-
-{% embed url="https://twitter.com/snovvcrash" caption="Twitter" %}
