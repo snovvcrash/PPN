@@ -45,9 +45,9 @@ Mix settings list (both for hardware install and virtualization):
 	$ sudo visudo
 		SWITCH {
 			CASE (increase timeout):
-				"Defaults    env_reset,timestamp_timeout=45"
+				$ sudo sh -c 'echo "Defaults    env_reset,timestamp_timeout=45" > /etc/sudoers.d/snovvcrash'
 			CASE (disable password):
-				"snovvcrash ALL=(ALL) NOPASSWD: ALL"
+				$ sudo sh -c 'echo "snovvcrash ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/snovvcrash'
 		}
 [ALL] Install cmake
 	$ sudo apt install cmake -y

@@ -240,15 +240,18 @@ $ sudo iptables -S [INPUT [1]]
 
 ### fail2ban
 
-```bash
- # Filters location which turn into *user-defined* fail2ban iptables rules (automatically)
-/etc/fail2ban/filter.d
+* `/etc/fail2ban/filter.d` - filters which turn into *user-defined* fail2ban iptables rules (automatically).
 
- # Status
+Status:
+
+```
 $ sudo service fail2ban status
 $ sudo fail2ban-client status
 $ sudo fail2ban-client status sshd
+```
 
- # Unban all
+Unban all:
+
+```
 $ sudo fail2ban-client unban --all
 ```

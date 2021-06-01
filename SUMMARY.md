@@ -31,7 +31,6 @@
     * [Printer Bug](pentest/internal/ad/printer-bug.md)
     * [PrivExchange](pentest/internal/ad/privexchange.md)
     * [Privileges Abuse](pentest/internal/ad/privileges-abuse.md)
-    * [RID Cycling](pentest/internal/ad/rid-cycling.md)
     * [Roasting](pentest/internal/ad/roasting.md)
     * [SMB](pentest/internal/ad/smb.md)
     * [UAC Bypass](pentest/internal/ad/uac-bypass.md)
