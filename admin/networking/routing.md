@@ -45,6 +45,10 @@ Cmd > route add 10.10.10.0 mask 255.255.255.0 192.168.0.181
 
 ## OpenVPN Jump Server
 
+I shall configure an intermediate OpenVPN server to serve as a jump box (1st hop) to connect to the target lab. It's helpful when the target OpenVPN server (2nd hop) doesn't allow to have multiple connections with the same common name (`--duplicate-cn` not set), i.e. using the same client's `.ovpn` profile.
+
+![](/.gitbook/assets/2.png)
+
 Quick OpenVPN server installation:
 
 * [https://www.cyberciti.biz/faq/howto-setup-openvpn-server-on-ubuntu-linux-14-04-or-16-04-lts/](https://www.cyberciti.biz/faq/howto-setup-openvpn-server-on-ubuntu-linux-14-04-or-16-04-lts/)
@@ -61,10 +65,6 @@ Check OpenVPN server status:
 ```
 $ sudo service openvpn-server@server status
 ```
-
-I shall configure an intermediate OpenVPN server to serve as a jump box (1st hop) to connect to the target lab. It's helpful when the target OpenVPN server (2nd hop) doesn't allow to have multiple connections with the same common name (`--duplicate-cn` not set), i.e. using the same client's `.ovpn` profile.
-
-![](/.gitbook/assets/2.png)
 
 Change server config (`/etc/openvpn/server/server.conf`):
 
