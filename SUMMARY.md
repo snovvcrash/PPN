@@ -91,7 +91,10 @@
 
 * [Docker](admin/docker.md)
 * [Kali](admin/kali.md)
-* [Networking](admin/networking.md)
+* [Networking](admin/networking/README.md)
+  - [Log Connections](admin/networking/log-connections.md)
+  - [Quick Configurations](admin/networking/quick-configurations.md)
+  - [Routing](admin/networking/routing.md)
 * [Unix](admin/unix.md)
 * [VirtualBox](admin/virtualbox.md)
 * [Windows](admin/windows.md)
