@@ -62,6 +62,10 @@ Check OpenVPN server status:
 $ sudo service openvpn-server@server status
 ```
 
+I shall configure an intermediate OpenVPN server to serve as a jump box (1st hop) to connect to the target lab. It's helpful when the target OpenVPN server (2nd hop) doesn't allow to have multiple connections with the same common name (`--duplicate-cn` not set), i.e. using the same client's `.ovpn` profile.
+
+![](/.gitbook/assets/2.png)
+
 Change server config (`/etc/openvpn/server/server.conf`):
 
 ```
