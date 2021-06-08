@@ -80,7 +80,7 @@ route 10.8.2.0 255.255.255.0
 client-config-dir ccd
 ```
 
-Create a directory with clients' configs and set a static IP for clients:
+Create a directory with clients' configs to push and set static IPs for clients:
 
 ```
 $ sudo mkdir /etc/openvpn/server/ccd
@@ -89,7 +89,7 @@ $ sudo sh -c 'echo "ifconfig-push 10.8.1.5 10.8.1.6" > /etc/openvpn/server/ccd/p
 $ sudo sh -c 'echo "ifconfig-push 10.8.2.1 10.8.2.2" > /etc/openvpn/server/ccd/ubuntu'
 ```
 
-For other clients /30 subnets [must be used](https://openvpn.net/community-resources/configuring-client-specific-rules-and-access-policies/) as well:
+For other clients `/30` subnets [must be used](https://openvpn.net/community-resources/configuring-client-specific-rules-and-access-policies/) as well:
 
 ```
 [1,2] [5,6] [9,10] [13,14] [17,18] [21,22] [25,26] [29,30] [33,34] [37,38] [41,42] [45,46] [49,50] [53,54] [57,58] [61,62] [65,66] [69,70] [73,74] [77,78] [81,82] [85,86] [89,90] [93,94] [97,98] [101,102] [105,106] [109,110] [113,114] [117,118] [121,122] [125,126] [129,130] [133,134] [137,138] [141,142] [145,146] [149,150] [153,154] [157,158] [161,162] [165,166] [169,170] [173,174] [177,178] [181,182] [185,186] [189,190] [193,194] [197,198] [201,202] [205,206] [209,210] [213,214] [217,218] [221,222] [225,226] [229,230] [233,234] [237,238] [241,242] [245,246] [249,250] [253,254]
@@ -137,7 +137,7 @@ Configure NAT:
 ```
  # Source NAT to reach resources from tun0 to tun1
 $ sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/16 -o tun1 -j SNAT --to-source 10.10.13.37
- # Destination NAT to trigger reverse shells from tun1 to tun0 (separate port ranges for separate clients)
+ # Destination NAT to trigger reverse shells from tun1 to tun0 (separate port ranges for separate clients, red arrow on the diagram above)
 $ sudo iptables -t nat -A PREROUTING -i tun1 -p tcp --dport 6001:7000 -j DNAT --to-destination 10.8.1.1
 $ sudo iptables -t nat -A PREROUTING -i tun1 -p tcp --dport 7001:8000 -j DNAT --to-destination 10.8.1.5
 $ sudo iptables -t nat -A PREROUTING -i tun1 -p tcp --dport 8001:9000 -j DNAT --to-destination 10.8.2.1

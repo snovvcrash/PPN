@@ -41,8 +41,9 @@ $ sudo fail2ban-client status
 $ sudo fail2ban-client status sshd
 ```
 
-Unban all:
+Unban:
 
 ```
 $ sudo fail2ban-client unban --all
+$ sudo fail2ban-client set sshd unbanip <IP>
 ```

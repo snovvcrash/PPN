@@ -53,7 +53,7 @@ Mix settings list (both for hardware install and virtualization):
 	$ sudo apt install cmake -y
 [ALL] Clone dotfiles
 	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
-[ALL] Run ~/.dotfiles/00-autodeploy scripts on the discretion
+[ALL] Run ~/.dotfiles/00-autoconfig scripts on the discretion
 ```
 
 
