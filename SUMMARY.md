@@ -2,7 +2,7 @@
 
 ## Pentest
 
-* [Internal](pentest/internal/README.md)
+* [Infrastructure](pentest/internal/README.md)
   - [AD](pentest/internal/ad/README.md)
     * [ACL Abuse](pentest/internal/ad/acl-abuse.md)
     * [ADIDNS Abuse](pentest/internal/ad/adidns-abuse.md)
@@ -24,7 +24,6 @@
     * [LAPS](pentest/internal/ad/laps.md)
     * [Lateral Movement](pentest/internal/ad/lateral-movement.md)
     * [LDAP](pentest/internal/ad/ldap.md)
-    * [Low-Hanging Fruits](pentest/internal/ad/low-hanging-fruits.md)
     * [NTLM](pentest/internal/ad/ntlm.md)
     * [Password Spraying](pentest/internal/ad/password-spraying.md)
     * [Persistence](pentest/internal/ad/persistence.md)
@@ -41,7 +40,11 @@
     * [OSI L2 Attacks](pentest/internal/network/osi-l2-attacks.md)
     * [Scanning](pentest/internal/network/scanning.md)
   - [IPMI](pentest/internal/ipmi.md)
+  - [LHF](pentest/internal/lhf.md)
+  - [LPE](pentest/lpe.md)
   - [NFS](pentest/internal/nfs.md)
+  - [Persistence](pentest/persistence.md)
+  - [Pivoting](pentest/pivoting.md)
   - [SNMP](pentest/internal/snmp.md)
   - [TFTP](pentest/internal/tftp.md)
   - [VNC](pentest/internal/vnc.md)
@@ -77,12 +80,10 @@
   - [Generate Wordlists](pentest/password-brute-force/generate-wordlists.md)
 * [Auth Brute Force](pentest/auth-brute-force.md)
 * [Binary Exploitation](pentest/binary-exploitation.md)
+* [C2](pentest/c2/README.md)
+  - [Metasploit](pentest/c2/metasploit.md)
 * [DBMS](pentest/dbms.md)
 * [File Transfer](pentest/file-transfer.md)
-* [LPE](pentest/lpe.md)
-* [Metasploit](pentest/metasploit.md)
-* [Persistence](pentest/persistence.md)
-* [Pivoting](pentest/pivoting.md)
 * Shells
   - [Reverse Shells](pentest/shells/reverse-shells.md)
   - [Web Shells](pentest/shells/web-shells.md)
