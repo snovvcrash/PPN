@@ -78,6 +78,7 @@
   - [Web Shells](pentest/shells/web-shells.md)
 * [Web](pentest/web/README.md)
   - [GitLab](pentest/web/gitlab.md)
+  - [Jenkis](pentest/web/jenkis.md)
   - [LFI/RFI](pentest/web/lfi-rfi.md)
   - [SQLi](pentest/web/sqli.md)
   - [WAF](pentest/web/waf.md)
