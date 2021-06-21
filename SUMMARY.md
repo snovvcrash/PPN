@@ -31,6 +31,7 @@
     * [NTLM](pentest/infrastructure/ad/ntlm.md)
     * [Password Spraying](pentest/infrastructure/ad/password-spraying.md)
     * [Persistence](pentest/infrastructure/ad/persistence.md)
+    * [Post Exploitation](pentest/infrastructure/ad/post-exploitation.md)
     * [Printer Bug](pentest/infrastructure/ad/printer-bug.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)
     * [Privileges Abuse](pentest/infrastructure/ad/privileges-abuse.md)
