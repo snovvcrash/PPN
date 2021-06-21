@@ -43,6 +43,7 @@
   - [DBMS](pentest/infrastructure/dbms.md)
   - [File Transfer](pentest/infrastructure/file-transfer.md)
   - [IPMI](pentest/infrastructure/ipmi.md)
+  - [Kiosk Breakout](pentest/infrastructure/kiosk-breakout.md)
   - [Low-Hanging Fruits](pentest/infrastructure/low-hanging-fruits.md)
   - [LPE](pentest/infrastructure/lpe.md)
   - [Networks](pentest/infrastructure/networks/README.md)
