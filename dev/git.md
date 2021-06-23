@@ -24,10 +24,13 @@ $ git version
 Syncing a forked repository:
 
 ```
+ # Add remote upstream
 $ git remote add upstream https://github.com/original/repository.git
 $ git fetch upstream
-$ git checkout --track master
 $ git rebase upstream/master (or git merge upstream/master)
+ # Update fork from original repo
+$ git pull upstream master
+ # Push the updates to fork
 $ git push -f origin master
 ```
 
