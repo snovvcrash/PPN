@@ -152,9 +152,10 @@ certmgr.msc -- Certificates - Current User    -- «Сертификаты - те
 ### Administrative Tools
 
 ```
-Cmd > mmc.exe %SystemRoot%\system32\dsa.msc     -- Active Directory Users and Computers
-Cmd > mmc.exe %SystemRoot%\system32\dnsmgmt.msc -- DNS
-Cmd > mmc.exe %SystemRoot%\system32\gpmc.msc    -- Group Policy Management
+Cmd > mmc.exe %SystemRoot%\system32\dsa.msc      -- Active Directory Users and Computers
+Cmd > mmc.exe %SystemRoot%\system32\dnsmgmt.msc  -- DNS
+Cmd > mmc.exe %SystemRoot%\system32\gpmc.msc     -- Group Policy Management
+Cmd > mmc.exe %SystemRoot%\system32\adsiedit.msc -- ADSI Edit
 ```
 
 

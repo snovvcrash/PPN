@@ -35,6 +35,7 @@
     * [Printer Bug](pentest/infrastructure/ad/printer-bug.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)
     * [Privileges Abuse](pentest/infrastructure/ad/privileges-abuse.md)
+    * [RID Cycling](pentest/infrastructure/ad/rid-cycling.md)
     * [Roasting](pentest/infrastructure/ad/roasting.md)
     * [SMB](pentest/infrastructure/ad/smb.md)
     * [UAC Bypass](pentest/infrastructure/ad/uac-bypass.md)
