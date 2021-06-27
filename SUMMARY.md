@@ -25,6 +25,7 @@
     * [ExecutionPolicy Bypass](pentest/infrastructure/ad/executionpolicy-bypass.md)
     * [GPO Abuse](pentest/infrastructure/ad/gpo-buse.md)
     * [Kerberos](pentest/infrastructure/ad/kerberos.md)
+    * [Key Credentials Abuse](pentest/infrastructure/ad/key-credentials-abuse.md)
     * [LAPS](pentest/infrastructure/ad/laps.md)
     * [Lateral Movement](pentest/infrastructure/ad/lateral-movement.md)
     * [LDAP](pentest/infrastructure/ad/ldap.md)
