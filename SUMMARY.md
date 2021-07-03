@@ -34,6 +34,7 @@
     * [Persistence](pentest/infrastructure/ad/persistence.md)
     * [Post Exploitation](pentest/infrastructure/ad/post-exploitation.md)
     * [Printer Bug](pentest/infrastructure/ad/printer-bug.md)
+    * [PrintNightmare](pentest/infrastructure/ad/printnightmare.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)
     * [Privileges Abuse](pentest/infrastructure/ad/privileges-abuse.md)
     * [RID Cycling](pentest/infrastructure/ad/rid-cycling.md)
