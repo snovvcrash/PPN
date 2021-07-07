@@ -65,6 +65,8 @@
   - [SNMP](pentest/infrastructure/snmp.md)
   - [TFTP](pentest/infrastructure/tftp.md)
   - [VNC](pentest/infrastructure/vnc.md)
+* [OSINT](pentest/osint/README.md)
+  - [Shodan](pentest/osint/shodan.md)
 * [Password Brute Force](pentest/password-brute-force/README.md)
   - [Generate Wordlists](pentest/password-brute-force/generate-wordlists.md)
 * [Perimeter](pentest/perimeter/README.md)
