@@ -20,6 +20,7 @@
       - [.NET Reflective Assembly](pentest/infrastructure/ad/av-evasion/dotnet-reflective-assembly.md)
       - [Mimikatz](pentest/infrastructure/ad/av-evasion/mimikatz.md)
       - [Nim](pentest/infrastructure/ad/av-evasion/nim.md)
+      - [Shellcode Runners](pentest/infrastructure/ad/av-evasion/shellcode-runners.md)
     * [Azure](pentest/infrastructure/ad/azure.md)
     * [Constrained Language Mode Bypass](pentest/infrastructure/ad/constrained-language-mode-bypass.md)
     * [Credentials Dump](pentest/infrastructure/ad/credentials-dump/README.md)
@@ -100,6 +101,9 @@
   - [SSH](pentest/perimeter/ssh.md)
   - [Subdomain Takeover](pentest/perimeter/subdomain-takeover.md)
 * [SE](pentest/se/README.md)
+  - Phishing
+    * [HTML Smuggling](pentest/se/phishing/html-smuggling.md)
+    * [MS Office](pentest/se/phishing/ms-office.md)
 * [Shells](pentest/shells/README.md)
   - [Reverse Shells](pentest/shells/reverse-shells.md)
   - [Web Shells](pentest/shells/web-shells.md)
