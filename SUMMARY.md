@@ -10,6 +10,7 @@
 * [Infrastructure](pentest/infrastructure/README.md)
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
+    * [AD CS Abuse](pentest/infrastructure/ad/ad-cs-abuse.md)
     * [ADIDNS Abuse](pentest/infrastructure/ad/adidns-abuse.md)
     * [Application Whitelist Bypass](pentest/infrastructure/ad/application-whitelist-bypass.md)
     * [Attack Trusts](pentest/infrastructure/ad/attack-trusts.md)
@@ -28,6 +29,7 @@
       - [Nim](pentest/infrastructure/ad/av-edr-evasion/nim.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Azure](pentest/infrastructure/ad/azure.md)
+    * [Coerce Authentication](pentest/infrastructure/ad/coerce-authentication.md)
     * [Constrained Language Mode Bypass](pentest/infrastructure/ad/constrained-language-mode-bypass.md)
     * [Credentials Dump](pentest/infrastructure/ad/credentials-dump/README.md)
       - From Memory
@@ -55,7 +57,6 @@
     * [Password Spraying](pentest/infrastructure/ad/password-spraying.md)
     * [Persistence](pentest/infrastructure/ad/persistence.md)
     * [Post Exploitation](pentest/infrastructure/ad/post-exploitation.md)
-    * [Printer Bug](pentest/infrastructure/ad/printer-bug.md)
     * [PrintNightmare](pentest/infrastructure/ad/printnightmare.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)
     * [Privileges Abuse](pentest/infrastructure/ad/privileges-abuse.md)
