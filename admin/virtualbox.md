@@ -5,6 +5,8 @@
 
 ## DHCP
 
+Configure DHCP in VBox:
+
 ```
 Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netname intnet --ip 10.0.1.1 --netmask 255.255.255.0 --lowerip 10.0.1.101 --upperip 10.0.1.254 --enable
 ```
@@ -16,7 +18,7 @@ Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netna
 
 ```
 $ sudo usermod -aG vboxsf `whoami`
-$ sudo reboot
+$ sudo reboot  # or re-login
 ```
 
 

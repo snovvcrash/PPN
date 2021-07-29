@@ -493,6 +493,12 @@ Decrypt and unpack:
 $ 7z e packed.7z -p"p4sSw0rD"
 ```
 
+Best compression:
+
+```
+$ 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on files.7z files/
+```
+
 
 
 ### grep/find/sed

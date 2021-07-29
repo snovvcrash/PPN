@@ -10,6 +10,17 @@
 
 
 
+### dhclient
+
+Release the current lease on `eth0` and obtain a fresh IP via DHCP in Linux:
+
+```
+$ sudo dhclient -v -r eth0
+$ sudo dhclient -v eth0
+```
+
+
+
 ### iptables
 
 * [https://www.booleanworld.com/depth-guide-iptables-linux-firewall/](https://www.booleanworld.com/depth-guide-iptables-linux-firewall/)
