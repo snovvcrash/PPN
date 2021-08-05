@@ -74,6 +74,7 @@
     * [RID Cycling](pentest/infrastructure/ad/rid-cycling.md)
     * [Roasting](pentest/infrastructure/ad/roasting.md)
     * [SMB](pentest/infrastructure/ad/smb.md)
+    * [Token Manipulation](pentest/infrastructure/ad/token-manipulation.md)
     * [User Hunt](pentest/infrastructure/ad/user-hunt.md)
     * [WSUS](pentest/infrastructure/ad/wsus.md)
     * [Zerologon](pentest/infrastructure/ad/zerologon.md)
