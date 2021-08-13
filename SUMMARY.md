@@ -84,7 +84,7 @@
   - [Low-Hanging Fruits](pentest/infrastructure/low-hanging-fruits.md)
   - [LPE](pentest/infrastructure/lpe.md)
   - [Networks](pentest/infrastructure/networks/README.md)
-    * L2
+    * [L2](pentest/infrastructure/networks/l2/README.md)
       - [ARP Spoofing](pentest/infrastructure/networks/l2/arp-spoofing.md)
       - [DHCPv6 Spoofing](pentest/infrastructure/networks/l2/dhcpv6-spoofing.md)
       - [LLMNR/NBNS Poisoning](pentest/infrastructure/networks/l2/llmnr-nbns-poisoning.md)
@@ -126,7 +126,7 @@
 * [Web](pentest/web/README.md)
   - [2FA Bypass](pentest/web/2fa-bypass.md)
   - [GitLab](pentest/web/gitlab.md)
-  - [Jenkis](pentest/web/jenkis.md)
+  - [Jenkis](pentest/web/jenkins.md)
   - [LFI/RFI](pentest/web/lfi-rfi.md)
   - [SQLi](pentest/web/sqli.md)
   - [WAF](pentest/web/waf.md)
