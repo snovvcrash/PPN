@@ -1,5 +1,7 @@
 # Kali
 
+* [https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/](https://www.kali.org/docs/general-use/kali-linux-sources-list-repositories/)
+
 
 
 

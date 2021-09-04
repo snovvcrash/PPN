@@ -26,6 +26,18 @@ $ sudo systemctl enable ssh --now
 
 
 
+### resolvconf
+
+* [https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten](https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten)
+
+```
+$ sudo apt install resolvconf
+$ sudo vi /etc/resolvconf/resolv.conf.d/base
+$ sudo resolvconf -u
+```
+
+
+
 ### netplan
 
 `/etc/netplan/*.yaml`:

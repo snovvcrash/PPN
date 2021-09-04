@@ -574,8 +574,24 @@ $ veracrypt -d
 
 ### openconnect
 
+
+#### GlobalProtect
+
+Connect:
+
 ```
 $ sudo openconnect --protocol=gp gp.megacorp.com -u snovvcrash
+```
+
+Bypass HIP:
+
+* [https://www.infradead.org/openconnect/hip.html](https://www.infradead.org/openconnect/hip.html)
+* [https://gitlab.com/openconnect/openconnect/blob/master/trojans/hipreport.sh](https://gitlab.com/openconnect/openconnect/blob/master/trojans/hipreport.sh)
+
+```
+PS > Rename-Item "C:\Program Files\Palo Alto Networks\GlobalProtect\PanGpHip.exe" "PanGpHip.exe.bak"
+PS > Rename-Item "C:\Program Files\Palo Alto Networks\GlobalProtect\PanGpHipMp.exe" "PanGpHipMp.exe.bak"
+PS > Rename-Item "C:\Program Files\Palo Alto Networks\GlobalProtect\wa_3rd_party_host_64.exe" "wa_3rd_party_host_64.exe.bak"
 ```
 
 
