@@ -25,9 +25,23 @@ Cmd > VBoxManage setextradata "Kali Linux" "VBoxInternal/Devices/VMMDev/0/Config
 
 
 
-## Shared Folders
+## Share Folder (depreciated)
+
+Mount:
 
 ```
+$ mkdir ~/Desktop/Share
+$ mount -t vboxsf /mnt/share-host ~/Desktop/Share
+Or (if mounted from VBox settings)
+$ ln -s /mnt/share-host ~/Desktop/Share
+
 $ sudo usermod -aG vboxsf `whoami`
 $ sudo reboot  # or re-login
+```
+
+Automount:
+
+```
+$ crontab -e
+"@reboot    sleep 10; mount -t vboxsf /mnt/share-host ~/Desktop/Share"
 ```

@@ -5,7 +5,7 @@
 
 
 
-## Configure
+## Setup Checklist
 
 Mix settings list (both for hardware install and virtualization):
 
@@ -56,82 +56,4 @@ Mix settings list (both for hardware install and virtualization):
 [ALL] Clone dotfiles
 	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
 [ALL] Run ~/.dotfiles/00-autoconfig scripts on the discretion
-```
-
-
-
-
-## VirtualBox
-
-
-
-### Guest Additions
-
-Known issues:
-
-* [https://forums.virtualbox.org/viewtopic.php?f=3&t=96087](https://forums.virtualbox.org/viewtopic.php?f=3&t=96087)
-* [https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/](https://www.ceos3c.com/hacking/kali-linux-2020-1-virtualbox-shared-clipboard-stopped-working-fixed/)
-
-
-
-### Network
-
-Configure multiple interfaces to work simultaneously:
-
-```
-$ cat /etc/network/interfaces
- # This file describes the network interfaces available on your system
- # and how to activate them. For more information, see interfaces(5).
-
-source /etc/network/interfaces.d/*
-
- # NAT
-allow-hotplug eth0
-iface eth0 inet dhcp
-
- # Internal
-allow-hotplug eth1
-iface eth1 inet dhcp
-
- # Host-only
-allow-hotplug eth2
-iface eth2 inet dhcp
-
- # The loopback network interface
-auto lo
-iface lo inet loopback
-```
-
-```
-$ ifup eth0
-$ ifup eth1
-$ ifup eth2
-```
-
-* [https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on](https://unix.stackexchange.com/questions/37122/virtualbox-two-network-interfaces-nat-and-host-only-ones-in-a-debian-guest-on)
-* [https://kali.training/topic/configuring-the-network/](https://kali.training/topic/configuring-the-network/)
-* [https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/](https://www.blackmoreops.com/2013/11/25/how-to-fix-wired-network-interface-device-not-managed-error/)
-* [https://www.virtualbox.org/manual/ch06.html](https://www.virtualbox.org/manual/ch06.html)
-* [https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-(eth0-eth1-etc)-can-be-active-at-a-time](https://forums.kali.org/showthread.php?29657-Only-one-of-multiple-wired-interfaces-%28eth0-eth1-etc%29-can-be-active-at-a-time)
-
-
-
-### Share Folder (depreciated)
-
-Mount:
-
-```
-$ mkdir ~/Desktop/Share
-$ mount -t vboxsf /mnt/share-host ~/Desktop/Share
-Or (if mounted from VBox settings)
-$ ln -s /mnt/share-host ~/Desktop/Share
-
-$ sudo adduser $USER vboxsf
-```
-
-Automount:
-
-```
-$ crontab -e
-"@reboot    sleep 10; mount -t vboxsf /mnt/share-host ~/Desktop/Share"
 ```

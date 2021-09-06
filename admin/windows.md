@@ -182,6 +182,15 @@ Cmd > icacls C:\$Windows.~BT\*.* /T /grant administrators:F
 Cmd > rmdir /S /Q C:\$Windows.~BT\
 ```
 
+Change ownership of a file:
+
+```
+PS > $Acl = Get-ACL $filename
+PS > $AccessRule= New-Object System.Security.AccessControl.FileSystemAccessRule("snovvcrash", "FullControl", "none", "none", "Allow")
+PS > $Acl.AddAccessRule($AccessRule)
+PS > Set-Acl $filename $Acl
+```
+
 
 
 

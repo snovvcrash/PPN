@@ -26,7 +26,6 @@
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
       - [D/Invoke](pentest/infrastructure/ad/av-edr-evasion/dinvoke.md)
-      - [HTML Smuggling](pentest/infrastructure/ad/av-edr-evasion/html-smuggling.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [Nim](pentest/infrastructure/ad/av-edr-evasion/nim.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
@@ -123,6 +122,7 @@
   - [Subdomain Takeover](pentest/perimeter/subdomain-takeover.md)
 * [SE](pentest/se/README.md)
   - Phishing
+    * [HTML Smuggling](pentest/se/phishing/html-smuggling.md)
     * [MS Office](pentest/se/phishing/ms-office.md)
 * [Shells](pentest/shells/README.md)
   - [Reverse Shells](pentest/shells/reverse-shells.md)
@@ -150,9 +150,9 @@
   - [Quick Configurations](admin/networking/quick-configurations.md)
   - [Routing](admin/networking/routing.md)
 * Virtualization
-  - [Docker](admin/networking/virtualization/virtualbox.md)
-  - [Hyper-V](admin/networking/virtualization/virtualbox.md)
-  - [VirtualBox](admin/networking/virtualization/virtualbox.md)
+  - [Docker](admin/virtualization/virtualbox.md)
+  - [Hyper-V](admin/virtualization/virtualbox.md)
+  - [VirtualBox](admin/virtualization/virtualbox.md)
 * [Windows](admin/windows.md)
 
 ## Dev

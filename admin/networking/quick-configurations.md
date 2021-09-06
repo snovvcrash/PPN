@@ -26,18 +26,6 @@ $ sudo systemctl enable ssh --now
 
 
 
-### resolvconf
-
-* [https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten](https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten)
-
-```
-$ sudo apt install resolvconf
-$ sudo vi /etc/resolvconf/resolv.conf.d/base
-$ sudo resolvconf -u
-```
-
-
-
 ### netplan
 
 `/etc/netplan/*.yaml`:
@@ -61,6 +49,56 @@ Apply:
 ```
 $ sudo service NetworkManager stop
 $ sudo netplan apply
+```
+
+
+
+
+## resolvconf
+
+* [https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten](https://unix.stackexchange.com/questions/128220/how-do-i-set-my-dns-when-resolv-conf-is-being-overwritten)
+
+```
+$ sudo apt install resolvconf
+$ sudo vi /etc/resolvconf/resolv.conf.d/base
+$ sudo resolvconf -u
+```
+
+
+
+
+## Simultaneous Interfaces
+
+Configure multiple interfaces to work simultaneously:
+
+```
+$ cat /etc/network/interfaces
+ # This file describes the network interfaces available on your system
+ # and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+ # NAT
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+ # Internal
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+ # Host-only
+allow-hotplug eth2
+iface eth2 inet dhcp
+
+ # The loopback network interface
+auto lo
+iface lo inet loopback
+```
+
+```
+$ ifup eth0
+$ ifup eth1
+$ ifup eth2
 ```
 
 
