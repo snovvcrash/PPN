@@ -79,6 +79,7 @@
     * [Zerologon](pentest/infrastructure/ad/zerologon.md)
   - DevOps
     * [Ansible](pentest/infrastructure/devops/ansible.md)
+    * [Artifactory](pentest/infrastructure/devops/artifactory.md)
   - [DBMS](pentest/infrastructure/dbms/README.md)
     * [FireBird](pentest/infrastructure/dbms/firebird.md)
     * [MS SQL](pentest/infrastructure/dbms/mssql.md)
