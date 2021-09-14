@@ -51,7 +51,6 @@
     * [DnsAdmins](pentest/infrastructure/ad/dnsadmins.md)
     * [ExecutionPolicy Bypass](pentest/infrastructure/ad/executionpolicy-bypass.md)
     * [GPO Abuse](pentest/infrastructure/ad/gpo-buse.md)
-    * [HiveNightmare](pentest/infrastructure/ad/hivenightmare.md)
     * [Kerberos](pentest/infrastructure/ad/kerberos.md)
     * [Key Credentials Abuse](pentest/infrastructure/ad/key-credentials-abuse.md)
     * [LAPS](pentest/infrastructure/ad/laps.md)
