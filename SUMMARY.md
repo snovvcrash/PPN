@@ -148,10 +148,9 @@
 
 ## Admin
 
-* [Kali](admin/kali.md)
-* [Linux](admin/linux.md)
+* [Linux](admin/linux/README.md)
+  - [Kali](admin/linux/kali.md)
 * [Networking](admin/networking/README.md)
-  - [Log Connections](admin/networking/log-connections.md)
   - [Quick Configurations](admin/networking/quick-configurations.md)
   - [Routing](admin/networking/routing.md)
 * Virtualization

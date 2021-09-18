@@ -9,7 +9,7 @@ I'm [snovvcrash](https://snovvcrash.rocks/about) and that's a gitbook for keepin
 While taking these notes, one main rule is that all the given techniques are actually tested either during a real engagement or in a training lab.
 
 {% hint style="info" %}
-The previous version of PPN is 👉🏻 [here](https://snovvcrash.rocks/PPN/) (deprecated).
+Previous version of PPN is 👉🏻 [here](https://snovvcrash.rocks/PPN/) (deprecated).
 {% endhint %}
 
 ## About
