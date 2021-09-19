@@ -28,6 +28,7 @@
       - [D/Invoke](pentest/infrastructure/ad/av-edr-evasion/dinvoke.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [Nim](pentest/infrastructure/ad/av-edr-evasion/nim.md)
+      - [rundll32](pentest/infrastructure/ad/av-edr-evasion/rundll32.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Azure](pentest/infrastructure/ad/azure.md)
     * [Coerce Authentication](pentest/infrastructure/ad/coerce-authentication.md)
