@@ -102,6 +102,7 @@
   - [NFS](pentest/infrastructure/nfs.md)
   - [Persistence](pentest/infrastructure/persistence.md)
   - [Pivoting](pentest/infrastructure/pivoting.md)
+  - [Post Exploitation](pentest/infrastructure/post-exploitation.md)
   - [SNMP](pentest/infrastructure/snmp.md)
   - [TFTP](pentest/infrastructure/tftp.md)
   - [VNC](pentest/infrastructure/vnc.md)
