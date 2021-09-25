@@ -5,6 +5,7 @@
 * [Auth Brute Force](pentest/auth-brute-force.md)
 * [Binary Exploitation](pentest/binary-exploitation.md)
 * [C2](pentest/c2/README.md)
+  - [Cobalt Strike](pentest/c2/cobalt-strike.md)
   - [Empire](pentest/c2/empire.md)
   - [Metasploit](pentest/c2/metasploit.md)
 * [Infrastructure](pentest/infrastructure/README.md)
