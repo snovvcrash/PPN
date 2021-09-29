@@ -39,6 +39,7 @@
         * [svchost.exe](pentest/infrastructure/ad/credentials-dump/from-memory/svchost-exe.md)
       - [Credential Manager](pentest/infrastructure/ad/credentials-dump/credential-manager.md)
       - [DPAPI](pentest/infrastructure/ad/credentials-dump/dpapi.md)
+      - [Linux](pentest/infrastructure/ad/credentials-dump/linux.md)
       - [LSA](pentest/infrastructure/ad/credentials-dump/lsa.md)
       - [master.mdf](pentest/infrastructure/ad/credentials-dump/master-mdf.md)
       - [NTDS](pentest/infrastructure/ad/credentials-dump/ntds.md)
