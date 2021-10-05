@@ -5,6 +5,17 @@
 
 
 
+## Branches
+
+Switch to the most stable branch:
+
+```
+$ echo "deb http://http.kali.org/kali kali-last-snapshot main non-free contrib" | sudo tee /etc/apt/sources.list
+```
+
+
+
+
 ## Setup Checklist
 
 Mix settings list (both for hardware install and virtualization):

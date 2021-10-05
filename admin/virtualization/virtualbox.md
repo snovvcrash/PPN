@@ -25,7 +25,7 @@ Cmd > VBoxManage setextradata "Kali Linux" "VBoxInternal/Devices/VMMDev/0/Config
 
 
 
-## Share Folder (depreciated)
+## Shared Folders (depreciated)
 
 Mount:
 

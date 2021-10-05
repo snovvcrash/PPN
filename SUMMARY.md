@@ -5,7 +5,6 @@
 * [Auth Brute Force](pentest/auth-brute-force.md)
 * [Binary Exploitation](pentest/binary-exploitation.md)
 * [C2](pentest/c2/README.md)
-  - [Cobalt Strike](pentest/c2/cobalt-strike.md)
   - [Empire](pentest/c2/empire.md)
   - [Metasploit](pentest/c2/metasploit.md)
 * [Infrastructure](pentest/infrastructure/README.md)
@@ -149,6 +148,11 @@
   - WPA/WPA2
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
+
+## Red Team
+
+* [Cobalt Strike](redteam/cobalt-strike.md)
+* [Infrastructure](redteam/infrastructure.md)
 
 ## Admin
 
