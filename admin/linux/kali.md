@@ -68,3 +68,33 @@ Mix settings list (both for hardware install and virtualization):
 	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
 [ALL] Run ~/.dotfiles/00-autoconfig scripts on the discretion
 ```
+
+
+
+
+## Tricks
+
+When dealing with an engagement where there's no internet access available on the attacker's box, one can use [paperify](https://github.com/alisinabh/paperify) to send data to her teammates (hashes to brute force, for example).
+
+Zip the hashes with best compression, base64 the archive and create a QR code:
+
+```
+$ 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on archive.7z tgsrep.txt
+$ base64 -w0 archive.7z > 7z
+$ ./paperify.sh 7z
+```
+
+Translate the QR code with your favorite mobile app and send the contents via a secure channel (e. g., a messenger). Now your teammates can reverse the process to get the initial zip file:
+
+```
+PS > b64decode.ps1 .\b64.txt out.7z
+```
+
+{% code title="b64decode.ps1" %}
+```powershell
+$IN = $args[0]
+$OUT = $args[1]
+$data = [IO.File]::ReadAllText("$pwd\$IN")
+[IO.File]::WriteAllBytes("$pwd\$OUT", [Convert]::FromBase64String($data))
+```
+{% endcode %}
