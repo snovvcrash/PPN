@@ -163,6 +163,7 @@
 
 ## Red Team
 
+* [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike.md)
 * [Infrastructure](redteam/infrastructure.md)
 
