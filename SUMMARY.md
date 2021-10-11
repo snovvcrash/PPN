@@ -62,6 +62,7 @@
       - [DCERPC](pentest/infrastructure/ad/lateral-movement/dcrpc.md)
       - [Overpass-the-Hash](pentest/infrastructure/ad/lateral-movement/over-pth.md)
       - [Pass-the-Hash](pentest/infrastructure/ad/lateral-movement/pth.md)
+      - [Pass-the-Hash-Test](pentest/infrastructure/ad/lateral-movement/pth-test.md)
       - [Pass-the-Ticket](pentest/infrastructure/ad/lateral-movement/ptt.md)
       - [RDP](pentest/infrastructure/ad/lateral-movement/rdp.md)
       - [RPC](pentest/infrastructure/ad/lateral-movement/rpc.md)
