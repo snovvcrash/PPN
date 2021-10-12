@@ -59,7 +59,6 @@
     * [Key Credentials Abuse](pentest/infrastructure/ad/key-credentials-abuse.md)
     * [LAPS](pentest/infrastructure/ad/laps.md)
     * [Lateral Movement](pentest/infrastructure/ad/lateral-movement/README.md)
-      - [DCERPC](pentest/infrastructure/ad/lateral-movement/dcrpc.md)
       - [Overpass-the-Hash](pentest/infrastructure/ad/lateral-movement/over-pth.md)
       - [Pass-the-Hash](pentest/infrastructure/ad/lateral-movement/pth.md)
       - [Pass-the-Ticket](pentest/infrastructure/ad/lateral-movement/ptt.md)
