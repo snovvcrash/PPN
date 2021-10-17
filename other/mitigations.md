@@ -19,6 +19,7 @@ Common vulnerabilities & misconfigurations and recommendations:
 * [https://www.infosecmatter.com/top-16-active-directory-vulnerabilities/#2-admincount-attribute-set-on-common-users](https://www.infosecmatter.com/top-16-active-directory-vulnerabilities/#2-admincount-attribute-set-on-common-users)
 * [https://threadreaderapp.com/thread/1369309701050142720.html](https://threadreaderapp.com/thread/1369309701050142720.html)
 * [https://s3cur3th1ssh1t.github.io/The-most-common-on-premise-vulnerabilities-and-misconfigurations/](https://s3cur3th1ssh1t.github.io/The-most-common-on-premise-vulnerabilities-and-misconfigurations/)
+* [https://github.com/evilmog/ntlmv1-multi/blob/master/resources/checklist.txt](https://github.com/evilmog/ntlmv1-multi/blob/master/resources/checklist.txt)
 
 SMB lateral-movement hardening:
 

