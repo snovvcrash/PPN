@@ -73,7 +73,7 @@
       - [NTLM Relay](pentest/infrastructure/ad/ntlm/ntlm-relay.md)
       - [NTLMv1 Downgrade](pentest/infrastructure/ad/ntlm/ntlmv1-downgrade.md)
     * [Password Spraying](pentest/infrastructure/ad/password-spraying.md)
-    * [Persistence](pentest/infrastructure/ad/persistence.md)
+    * [Dominance](pentest/infrastructure/ad/dominance.md)
     * [Post Exploitation](pentest/infrastructure/ad/post-exploitation.md)
     * [PrintNightmare](pentest/infrastructure/ad/printnightmare.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)

