@@ -54,7 +54,7 @@
     * [Discovery](pentest/infrastructure/ad/discovery.md)
     * [DnsAdmins](pentest/infrastructure/ad/dnsadmins.md)
     * [ExecutionPolicy Bypass](pentest/infrastructure/ad/executionpolicy-bypass.md)
-    * [GPO Abuse](pentest/infrastructure/ad/gpo-buse.md)
+    * [GPO Abuse](pentest/infrastructure/ad/gpo-abuse.md)
     * [Kerberos](pentest/infrastructure/ad/kerberos.md)
     * [Key Credentials Abuse](pentest/infrastructure/ad/key-credentials-abuse.md)
     * [LAPS](pentest/infrastructure/ad/laps.md)
