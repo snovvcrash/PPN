@@ -155,16 +155,16 @@
 
 ## Red Team
 
-* [Basics](redteam/basics.md)
-* [Cobalt Strike](redteam/cobalt-strike.md)
-* [Infrastructure](redteam/infrastructure.md)
-* [Armoury](redteam/armoury/README.md)
+* Armoury
   - [Code Injection](redteam/armoury/code-injection/README.md)
     * [DLL Injectors](redteam/armoury/code-injection/dll-injectors.md)
     * [Process Injectors](redteam/armoury/code-injection/process-injectors.md)
     * [Shellcode Runners](redteam/armoury/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/armoury/dinvoke.md)
   - [Nim](redteam/armoury/nim.md)
+* [Basics](redteam/basics.md)
+* [Cobalt Strike](redteam/cobalt-strike.md)
+* [Infrastructure](redteam/infrastructure.md)
 
 ## Admin
 
