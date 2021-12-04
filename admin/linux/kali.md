@@ -72,6 +72,54 @@ Mix settings list (both for hardware install and virtualization):
 
 
 
+## Console Logging
+
+
+### script
+
+```
+$ script ~/ws/shells/`date "+%FT%H%M%S"`.script
+```
+
+
+### tmux
+
+* [https://github.com/tmux-plugins/tmux-logging](https://github.com/tmux-plugins/tmux-logging)
+
+```
+bash ~/.tmux/plugins/tmux-logging/scripts/screen_capture.sh
+bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
+```
+
+
+### Time in Prompt
+
+#### bash
+
+`~/.bashrc` (replace `!` with `%`):
+
+```
+PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
+```
+
+#### zsh
+
+`$ZSH_CUSTOM/themes/robbyrussell.zsh-theme` (replace `!` with `%`):
+
+```
+PROMPT="!(?:!{$fg_bold[green]!}➜ :!{$fg_bold[red]!}➜ ) "
+PROMPT+='!{$fg[cyan]!}!(4~|!-1~/…/!2~|!3~)!{$reset_color!} $(git_prompt_info)'
+
+if lsof -tac script "$(tty)" > /dev/null; then
+    PROMPT="[!D{!d}|!D{!k:!M}]* $PROMPT"
+else
+    PROMPT="[!D{!d}|!D{!k:!M}] $PROMPT"
+fi
+```
+
+
+
+
 ## Tricks
 
 When dealing with an engagement where there's no internet access available on the attacker's box, one can use [paperify](https://github.com/alisinabh/paperify) to send data to her teammates (hashes to brute force, for example).
