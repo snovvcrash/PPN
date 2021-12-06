@@ -25,7 +25,7 @@
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Authentication Coercion](pentest/infrastructure/ad/authentication-coercion.md)
-  * [Azure](pentest/infrastructure/ad/azure.md)
+    * [Azure](pentest/infrastructure/ad/azure.md)
     * [Credentials Dump](pentest/infrastructure/ad/credentials-dump/README.md)
       - [From Memory](pentest/infrastructure/ad/credentials-dump/from-memory/README.md)
         * [lsass.exe](pentest/infrastructure/ad/credentials-dump/from-memory/lsass-exe.md)
