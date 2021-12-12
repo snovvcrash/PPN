@@ -124,6 +124,13 @@ sub invoke_dcom
 beacon_remote_exploit_register("dcom", "x64", "Use DCOM to run a Beacon payload", &invoke_dcom);
 ```
 
+Forward SOCKS server's port from team server to the client:
+
+```
+beacon> socks 1080
+$ ssh -tt -v -L 9050:localhost:1080 root@teamserver
+```
+
 
 
 

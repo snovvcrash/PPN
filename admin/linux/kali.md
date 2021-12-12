@@ -122,6 +122,10 @@ fi
 
 ## Tricks
 
+
+
+### Paperify
+
 When dealing with an engagement where there's no internet access available on the attacker's box, one can use [paperify](https://github.com/alisinabh/paperify) to send data to her teammates (hashes to brute force, for example).
 
 Zip the hashes with best compression, base64 the archive and create a QR code:
@@ -146,3 +150,14 @@ $data = [IO.File]::ReadAllText("$pwd\$IN")
 [IO.File]::WriteAllBytes("$pwd\$OUT", [Convert]::FromBase64String($data))
 ```
 {% endcode %}
+
+
+
+### Debian to Kali
+
+```bash
+sudo sh -c 'echo "\ndeb http://http.kali.org/kali kali-rolling main contrib non-free" >> /etc/apt/sources.list'
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ED444FF07D8D0BF6
+sudo apt update
+sudo apt install kali-tools-top10 -y
+```
