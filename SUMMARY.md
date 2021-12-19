@@ -127,6 +127,7 @@
   - [Information Gathering](pentest/perimeter/information-gathering.md)
   - [IPSec](pentest/perimeter/ipsec.md)
   - [Java RMI](pentest/perimeter/java-rmi.md)
+  - [Lync & Skype for Business](pentest/perimeter/lync-s4b.md)
   - [NTP](pentest/perimeter/ntp.md)
   - [Outlook](pentest/perimeter/outlook.md)
   - [OWA](pentest/perimeter/owa.md)
@@ -165,6 +166,7 @@
     * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/maldev/dinvoke.md)
   - [Nim](redteam/maldev/nim.md)
+  - [Windows API](redteam/maldev/winapi.md)
 
 ## Admin
 

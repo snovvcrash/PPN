@@ -1,6 +1,5 @@
 # Code Injection
 
-* [https://yuval0x92.wordpress.com/2020/03/09/native-api-win32-api/](https://yuval0x92.wordpress.com/2020/03/09/native-api-win32-api/)
 * [https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process](https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process)
 * [https://www.solomonsklash.io/syscalls-for-shellcode-injection.html](https://www.solomonsklash.io/syscalls-for-shellcode-injection.html)
 * [https://jhalon.github.io/utilizing-syscalls-in-csharp-1/](https://jhalon.github.io/utilizing-syscalls-in-csharp-1/)
