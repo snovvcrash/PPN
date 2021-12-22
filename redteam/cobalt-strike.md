@@ -186,7 +186,7 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 
 * [https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146)
 
-Grab the latest version of [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe), convert it to a shellcode with donut, insert bytes in a C# skeleton and cross-compile it for use in Windows with [Mono](https://linux.die.net/man/1/mcs) compiler:
+Grab the latest version of [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe), convert it to a shellcode with [donut](https://github.com/TheWover/donut), insert bytes in a C# skeleton and cross-compile it for use in Windows with [Mono](https://www.mono-project.com/download/stable/) compiler:
 
 {% code title="sweetblood.sh" %}
 ```bash
