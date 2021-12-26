@@ -162,6 +162,7 @@
 * Malware Development
   - [Code Injection](redteam/maldev/code-injection/README.md)
     * [DLL Injectors](redteam/maldev/code-injection/dll-injectors.md)
+    * [Process Hollowing](redteam/maldev/code-injection/process-hollowing.md)
     * [Process Injectors](redteam/maldev/code-injection/process-injectors.md)
     * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/maldev/dinvoke.md)
