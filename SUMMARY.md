@@ -12,6 +12,8 @@
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
     * [AD CS Abuse](pentest/infrastructure/ad/ad-cs-abuse/README.md)
+      - [ESC1](pentest/infrastructure/ad/ad-cs-abuse/esc1.md)
+      - [ESC4](pentest/infrastructure/ad/ad-cs-abuse/esc4.md)
       - [ESC8](pentest/infrastructure/ad/ad-cs-abuse/esc8.md)
     * [ADIDNS Abuse](pentest/infrastructure/ad/adidns-abuse.md)
     * [Attack Trusts](pentest/infrastructure/ad/attack-trusts.md)
