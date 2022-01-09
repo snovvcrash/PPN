@@ -13,6 +13,14 @@
 - [https://github.com/rsmudge/Malleable-C2-Profiles](https://github.com/rsmudge/Malleable-C2-Profiles)
 - [https://github.com/BC-SECURITY/Malleable-C2-Profiles](https://github.com/BC-SECURITY/Malleable-C2-Profiles)
 - [https://github.com/threatexpress/malleable-c2](https://github.com/threatexpress/malleable-c2)
+- [https://gist.github.com/tothi/8abd2de8f4948af57aa2d027f9e59efe](https://gist.github.com/tothi/8abd2de8f4948af57aa2d027f9e59efe)
+
+
+
+### Generators
+
+- [https://github.com/Tylous/SourcePoint](https://github.com/Tylous/SourcePoint)
+- [https://github.com/FortyNorthSecurity/C2concealer](https://github.com/FortyNorthSecurity/C2concealer)
 
 
 

@@ -10,6 +10,8 @@
 
 - [https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure](https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure)
 - [https://caddyserver.com/docs/install](https://caddyserver.com/docs/install)
+- [https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy](https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy)
+- [https://github.com/improsec/CaddyStager](https://github.com/improsec/CaddyStager)
 
 Install:
 
