@@ -9,7 +9,7 @@ I'm [snovvcrash](https://snovvcrash.rocks/about) and that's a gitbook for keepin
 While taking these notes, one main rule is that all the given techniques are actually tested either during a real engagement or in a training lab.
 
 {% hint style="warning" %}
-All information contained on this blog is provided for educational and research purposes only. The author of the blog is not responsible for the misuse of any information published on the pages of the blog.
+All information contained on this blog is provided for educational and research purposes only. The author of the blog is not responsible for any illegal misuse of any information published on the pages of the blog.
 {% endhint %}
 
 {% hint style="info" %}
