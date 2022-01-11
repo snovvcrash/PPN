@@ -10,6 +10,7 @@
 
 - [https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure](https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure)
 - [https://caddyserver.com/docs/install](https://caddyserver.com/docs/install)
+- [https://github.com/caddyserver/caddy/releases](https://github.com/caddyserver/caddy/releases)
 - [https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy](https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy)
 - [https://github.com/improsec/CaddyStager](https://github.com/improsec/CaddyStager)
 
@@ -20,21 +21,20 @@ $ sudo apt install debian-keyring debian-archive-keyring apt-transport-https -y
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
-$ sudo apt install caddy
+$ sudo apt install caddy certbot
 ```
 
 Config sample to act as a reverse proxy:
 
 ```
 {
-    admin 127.0.0.1:2020
+    log
+	#debug
+    admin off
     auto_https disable_redirects
-    #acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
 }
 
-(proxy_upstream) {
-    log
-        
+(proxy-upstream) {
     @ua_denylist {
         header User-Agent curl*
     }
@@ -57,18 +57,18 @@ Config sample to act as a reverse proxy:
         close
     }
         
-    reverse_proxy 78.140.176.17:30481 {
+    reverse_proxy https://10.10.13.37:31337 {
         header_up Host {upstream_hostport}
         header_up X-Forwarded-Host {host}
         header_up X-Forwarded-Port {port}
         transport http {
             tls_insecure_skip_verify
-        }		
+        }
     }
 }
 
-example.com {
-    import proxy_upstream
+https://example.com {
+    import proxy-upstream
     tls /etc/letsencrypt/live/example.com/fullchain.pem /etc/letsencrypt/live/example.com/privkey.pem
 }
 ```

@@ -25,6 +25,15 @@
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
       - [ExecutionPolicy Bypass](pentest/infrastructure/ad/av-edr-evasion/executionpolicy-bypass.md)
+      - Malware Development
+        * [Code Injection](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/README.md)
+          - [DLL Injectors](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/dll-injectors.md)
+          - [Process Hollowing](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/process-hollowing.md)
+          - [Process Injectors](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/process-injectors.md)
+          - [Shellcode Runners](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/shellcode-runners.md)
+        * [D/Invoke](pentest/infrastructure/ad/av-edr-evasion/maldev/dinvoke.md)
+        * [Nim](pentest/infrastructure/ad/av-edr-evasion/maldev/nim.md)
+        * [Windows API](pentest/infrastructure/ad/av-edr-evasion/maldev/winapi.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Authentication Coercion](pentest/infrastructure/ad/authentication-coercion.md)
@@ -161,15 +170,6 @@
 * [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike.md)
 * [Infrastructure](redteam/infrastructure.md)
-* Malware Development
-  - [Code Injection](redteam/maldev/code-injection/README.md)
-    * [DLL Injectors](redteam/maldev/code-injection/dll-injectors.md)
-    * [Process Hollowing](redteam/maldev/code-injection/process-hollowing.md)
-    * [Process Injectors](redteam/maldev/code-injection/process-injectors.md)
-    * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
-  - [D/Invoke](redteam/maldev/dinvoke.md)
-  - [Nim](redteam/maldev/nim.md)
-  - [Windows API](redteam/maldev/winapi.md)
 
 ## Admin
 
