@@ -4,6 +4,8 @@
 
 ❗❗❗ **THIS PAGE IS DEPRECATED. THE PROJECT HAS MOVED [HERE](https://ppn.snovvcrash.rocks/)** ❗❗❗
 
+⚠️ **DISCLAIMER.** All information contained in this blog post is provided for educational and research purposes only. The author is not responsible for any illegal use of any information published in this blog post. ⚠️
+
 Use your <kbd>Ctrl</kbd>-<kbd>F</kbd> to navigate this mess.
 
 [//]: # (# -- 5 spaces)
