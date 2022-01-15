@@ -22,6 +22,7 @@ $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
 $ sudo apt install caddy certbot
+$ sudo rm /usr/share/caddy/index.html
 ```
 
 Config sample to act as a reverse proxy:

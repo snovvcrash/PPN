@@ -189,7 +189,8 @@
 
 * [C / C++](dev/c-cpp.md)
 * [Git](dev/git.md)
-* [Python](dev/python.md)
+* [Python](dev/python/README.md)
+  - [Code Snippets](dev/python/code-snippets.md)
 
 ## Other
 
