@@ -111,6 +111,7 @@
   - [LPE](pentest/infrastructure/lpe.md)
   - [Networks](pentest/infrastructure/networks/README.md)
     * [L2](pentest/infrastructure/networks/l2/README.md)
+      - [802.1X Bypass](pentest/infrastructure/networks/l2/8021x-bypass.md)
       - [ARP Spoofing](pentest/infrastructure/networks/l2/arp-spoofing.md)
       - [DHCPv6 Spoofing](pentest/infrastructure/networks/l2/dhcpv6-spoofing.md)
       - [LLMNR / NBNS Poisoning](pentest/infrastructure/networks/l2/llmnr-nbns-poisoning.md)
@@ -176,6 +177,7 @@
 * [Linux](admin/linux/README.md)
   - [Kali](admin/linux/kali.md)
 * [Networking](admin/networking/README.md)
+  - [DHCP Server & Linux Hotspot](admin/networking/dhcp-hostapd.md)
   - [Quick Configurations](admin/networking/quick-configurations.md)
   - [Routing](admin/networking/routing.md)
 * Virtualization
