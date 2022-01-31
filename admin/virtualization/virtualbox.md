@@ -16,10 +16,10 @@ Cmd > "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" dhcpserver add --netna
 
 ## Time Sync
 
-Disable time synchronization with host OS (useful when syncing Kerberos time with ntpdate):
+Disable time synchronization with host OS (useful when syncing Kerberos time with `ntpdate`):
 
 ```
-Cmd > VBoxManage setextradata "Kali Linux" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 0
+Cmd > VBoxManage setextradata "Kali Linux" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 1
 ```
 
 

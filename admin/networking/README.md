@@ -1,7 +1,8 @@
 # Networking
 
-* [https://linkmeup.ru/blog/11.html](https://linkmeup.ru/blog/11.html)
-* [https://habr.com/ru/post/307252/](https://habr.com/ru/post/307252/)
+- [https://linkmeup.ru/blog/11.html](https://linkmeup.ru/blog/11.html)
+- [https://habr.com/ru/post/307252/](https://habr.com/ru/post/307252/)
+- [https://kbespalov.medium.com/виртуальные-сетевые-устройства-в-linux-linux-bridge-7e0e887edd01](https://kbespalov.medium.com/виртуальные-сетевые-устройства-в-linux-linux-bridge-7e0e887edd01)
 
 
 
