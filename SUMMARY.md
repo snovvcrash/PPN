@@ -69,6 +69,7 @@
       - [RPC](pentest/infrastructure/ad/lateral-movement/rpc.md)
       - [RunAs](pentest/infrastructure/ad/lateral-movement/runas.md)
       - [SMB](pentest/infrastructure/ad/lateral-movement/smb.md)
+      - [SPN-jacking](pentest/infrastructure/ad/lateral-movement/spn-jacking.md)
       - [WinRM / PSRemoting](pentest/infrastructure/ad/lateral-movement/winrm.md)
       - [WMI](pentest/infrastructure/ad/lateral-movement/wmi.md)
     * [LDAP](pentest/infrastructure/ad/ldap.md)
