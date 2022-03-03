@@ -21,18 +21,37 @@ $ sudo apt install debian-keyring debian-archive-keyring apt-transport-https -y
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
-$ sudo apt install caddy certbot
-$ sudo rm /usr/share/caddy/index.html
+$ sudo apt install caddy certbot -y
+$ sudo certbot certonly --standalone -d example.com --register-unsafely-without-email --agree-tos
+$ sudo mkdir -p /opt/caddy/ssl
+$ sudo cp /etc/letsencrypt/live/example.com/{fullchain.pem,privkey.pem} /opt/caddy/ssl
+$ sudo chown -R caddy:caddy /opt/caddy
+$ sudo rm /etc/caddy/Caddyfile && sudo vi /etc/caddy/Caddyfile
+$ sudo systemctl restart caddy
+$ sudo systemctl status caddy
 ```
 
 Config sample to act as a reverse proxy:
 
+{% code title="/etc/caddy/Caddyfile" %}
 ```
 {
     log
 	#debug
     admin off
     auto_https disable_redirects
+}
+
+(logging) {
+    log {
+        output file /var/log/caddy-{args.0}-access.log {
+            roll true
+            roll_size 1Mib
+            roll_local_time true
+            roll_keep 24
+            roll_keep_for 7d
+        }
+    }
 }
 
 (proxy-upstream) {
@@ -69,7 +88,15 @@ Config sample to act as a reverse proxy:
 }
 
 https://example.com {
+    import logging all
     import proxy-upstream
-    tls /etc/letsencrypt/live/example.com/fullchain.pem /etc/letsencrypt/live/example.com/privkey.pem
+    tls /opt/caddy/ssl/fullchain.pem /opt/caddy/ssl/privkey.pem
+
+	handle {
+        file_server /files/* {
+            root /home/snovvcrash/www
+        }
+    }
 }
 ```
+{% endcode %}
