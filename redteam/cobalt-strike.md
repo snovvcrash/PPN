@@ -1,7 +1,5 @@
 # Cobalt Strike
 
-- [https://www.cobaltstrike.com/support](https://www.cobaltstrike.com/support)
-- [https://www.cobaltstrike.com/aggressor-script/functions.html](https://www.cobaltstrike.com/aggressor-script/functions.html)
 - [https://reconshell.com/list-of-awesome-cobaltstrike-resources/](https://reconshell.com/list-of-awesome-cobaltstrike-resources/)
 - [https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet](https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet)
 
@@ -21,6 +19,14 @@
 
 - [https://github.com/Tylous/SourcePoint](https://github.com/Tylous/SourcePoint)
 - [https://github.com/FortyNorthSecurity/C2concealer](https://github.com/FortyNorthSecurity/C2concealer)
+
+
+
+
+## Aggressor Scripts
+
+- [https://trial.cobaltstrike.com/aggressor-script/index.html](https://trial.cobaltstrike.com/aggressor-script/index.html)
+- [https://chowdera.com/2021/02/20210204190220156W.html](https://chowdera.com/2021/02/20210204190220156W.html)
 
 
 
