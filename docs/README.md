@@ -6443,7 +6443,6 @@ $ onesixtyone -c /usr/share/seclists/Discovery/SNMP/snmp.txt 10.10.13.37
 
 ```
 $ snmp-check -v 2c -c public 10.10.13.37
-$ for i in `seq 1 254`; do snmp-check -v 2c -c public -t1 10.10.13.$i | grep --text -A2 'System information'; done
 ```
 
 
