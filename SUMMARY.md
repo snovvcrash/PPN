@@ -33,6 +33,7 @@
           - [Shellcode Runners](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/shellcode-runners.md)
         * [D/Invoke](pentest/infrastructure/ad/av-edr-evasion/maldev/dinvoke.md)
         * [Nim](pentest/infrastructure/ad/av-edr-evasion/maldev/nim.md)
+        * [Syscalls](pentest/infrastructure/ad/av-edr-evasion/maldev/syscalls.md)
         * [Windows API](pentest/infrastructure/ad/av-edr-evasion/maldev/winapi.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
