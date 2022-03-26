@@ -355,7 +355,7 @@ PowerView3 > Get-DomainComputer -Unconstrained | select dnshostname,samaccountna
 ```
 
 
-### Resource-Based Constrained Delegation (RBCD)
+### Resource-based Constrained Delegation (RBCD)
 
 * [https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
 * [https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/](https://www.harmj0y.net/blog/activedirectory/a-case-study-in-wagging-the-dog-computer-takeover/)
