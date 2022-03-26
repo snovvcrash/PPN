@@ -47,7 +47,7 @@ Cmd > route add 10.10.10.0 mask 255.255.255.0 192.168.0.181
 
 I shall configure an intermediate OpenVPN server to serve as a jump box (1st hop) to connect to the target lab. It's helpful when the target OpenVPN server (2nd hop) doesn't allow to have multiple connections with the same common name (`--duplicate-cn` not set), i.e. using the same client's `.ovpn` profile.
 
-![](/.gitbook/assets/002.png)
+![OpenVPN Jump Server Scheme](/.gitbook/assets/002.png)
 
 Quick OpenVPN server installation:
 
