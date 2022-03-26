@@ -54,6 +54,7 @@
       - [SAM](pentest/infrastructure/ad/credentials-dump/sam.md)
     * [DCSync](pentest/infrastructure/ad/dcsync.md)
     * [Delegation Abuse](pentest/infrastructure/ad/delegation-abuse/README.md)
+      - [Constrained Delegation](pentest/infrastructure/ad/delegation-abuse/kcd.md)
       - [Resource-Based Constrained Delegation](pentest/infrastructure/ad/delegation-abuse/rbcd.md)
       - [Unconstrained Delegation](pentest/infrastructure/ad/delegation-abuse/kud.md)
     * [Discovery](pentest/infrastructure/ad/discovery.md)

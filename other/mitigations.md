@@ -7,7 +7,7 @@
 
 Mitigating ARP spoofing:
 
-* [[PDF] Ruijie Anti-ARP Spoofing Technical White Paper](https://drive.google.com/file/d/12V2xbiCZn-YupiGc4mxYWjOmCPFNUss9/view?usp=sharing)
+{% file src="https://drive.google.com/file/d/12V2xbiCZn-YupiGc4mxYWjOmCPFNUss9/view?usp=sharing" %}
 
 
 
@@ -25,11 +25,12 @@ SMB lateral-movement hardening:
 
 * [https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f](https://posts.specterops.io/offensive-lateral-movement-1744ae62b14f)
 * [https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721](https://medium.com/palantir/restricting-smb-based-lateral-movement-in-a-windows-environment-ed033b888721)
-* [[PDF] SMB Enumeration & Exploitation & Hardening (Anil BAS)](https://drive.google.com/file/d/13msLIywr_Slc00Rv3jue0lkRf7_1O1gM/view?usp=sharing)
+
+{% file src="https://drive.google.com/file/d/13msLIywr_Slc00Rv3jue0lkRf7_1O1gM/view?usp=sharing" %}
 
 Antispam protection for Exchange:
 
-* [[PDF] Antispam Forefront Protection 2010 (Exchange Server)](https://drive.google.com/file/d/1B-HUcZMZkFjqNs3ckuiiTpYSKdI0EsiR/view?usp=sharing)
+{% file src="https://drive.google.com/file/d/1B-HUcZMZkFjqNs3ckuiiTpYSKdI0EsiR/view?usp=sharing" %}
 
 Detect stale, unused or fake computer accounts based on password age (replace `-90` with your domain's maximum computer account password age):
 

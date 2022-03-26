@@ -8,5 +8,6 @@
 
 ## RTFM
 
-- [[PDF] Red Team Field Manual v3](https://github.com/tanc7/hacking-books/blob/master/RTFM%20-%20Red%20Team%20Field%20Manual%20v3.pdf)
 - [https://github.com/leostat/rtfm](https://github.com/leostat/rtfm)
+
+{% file src="https://github.com/tanc7/hacking-books/blob/master/RTFM%20-%20Red%20Team%20Field%20Manual%20v3.pdf" %}
