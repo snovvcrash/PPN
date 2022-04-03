@@ -21,14 +21,20 @@ $ sudo apt install debian-keyring debian-archive-keyring apt-transport-https -y
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
-$ sudo apt install caddy certbot -y
+$ sudo apt install caddy -y
+$ sudo rm /etc/caddy/Caddyfile && sudo vi /etc/caddy/Caddyfile
+$ sudo systemctl restart caddy
+$ sudo systemctl status caddy
+```
+
+Manually requesting Let's Encrypt certificate:
+
+```
+$ sudo apt install certbot -y
 $ sudo certbot certonly --standalone -d example.com --register-unsafely-without-email --agree-tos
 $ sudo mkdir -p /opt/caddy/ssl
 $ sudo cp /etc/letsencrypt/live/example.com/{fullchain.pem,privkey.pem} /opt/caddy/ssl
 $ sudo chown -R caddy:caddy /opt/caddy
-$ sudo rm /etc/caddy/Caddyfile && sudo vi /etc/caddy/Caddyfile
-$ sudo systemctl restart caddy
-$ sudo systemctl status caddy
 ```
 
 Config sample to act as a reverse proxy:
@@ -89,13 +95,18 @@ Config sample to act as a reverse proxy:
 
 https://example.com {
     import logging all
-    import proxy-upstream
-    tls /opt/caddy/ssl/fullchain.pem /opt/caddy/ssl/privkey.pem
+    #tls /opt/caddy/ssl/fullchain.pem /opt/caddy/ssl/privkey.pem
 
-	handle {
-        file_server /files/* {
+	handle /files/* {
+        file_server {
+	        # there should be this "files" directory in root
             root /home/snovvcrash/www
+            #browse
         }
+    }
+
+    handle {
+	    import proxy-upstream
     }
 }
 ```
