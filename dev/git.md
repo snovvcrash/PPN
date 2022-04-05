@@ -24,13 +24,15 @@ $ git version
 Syncing a forked repository:
 
 ```
- # Add remote upstream
+# Add remote upstream
 $ git remote add upstream https://github.com/original/repository.git
 $ git fetch upstream
 $ git rebase upstream/master (or git merge upstream/master)
- # Update fork from original repo
+
+# Update fork from original repo
 $ git pull upstream master
- # Push the updates to fork
+
+# Push the updates to fork
 $ git push -f origin master
 ```
 
@@ -52,11 +54,27 @@ $ git push -u origin new-feature
 
 ## Signing Git Commits
 
-* [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
-* [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
+- [https://www.youtube.com/watch?v=1vVIpIvboSg](https://www.youtube.com/watch?v=1vVIpIvboSg)
+- [https://www.youtube.com/watch?v=4166ExAnxmo](https://www.youtube.com/watch?v=4166ExAnxmo)
 
 Cache passphrase in gpg agent (dirty):
 
 ```
 $ cd /tmp && touch aaa && gpg --sign aaa && rm aaa aaa.gpg && cd -
+```
+
+
+
+
+## Submodules
+
+- [https://tech.serhatteker.com/post/2019-01/changing-git-submodules-urlbranch-to/](https://tech.serhatteker.com/post/2019-01/changing-git-submodules-urlbranch-to/)
+
+Edit submodule branch:
+
+```
+$ git config --file=.gitmodules -l | grep branch
+$ git config --file=.gitmodules submodule.Submod.branch development
+$ git submodule sync
+$ git submodule update --init --recursive --remote
 ```

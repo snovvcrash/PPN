@@ -43,9 +43,9 @@ Config sample to act as a reverse proxy:
 ```
 {
     log
-	#debug
+    #debug
     admin off
-    auto_https disable_redirects
+    #auto_https disable_redirects
 }
 
 (logging) {
@@ -97,16 +97,16 @@ https://example.com {
     import logging all
     #tls /opt/caddy/ssl/fullchain.pem /opt/caddy/ssl/privkey.pem
 
-	handle /files/* {
+    handle /files/* {
         file_server {
-	        # there should be this "files" directory in root
+            # there should be this "files" directory in root
             root /home/snovvcrash/www
             #browse
         }
     }
 
     handle {
-	    import proxy-upstream
+        import proxy-upstream
     }
 }
 ```
