@@ -12,6 +12,7 @@
 - [https://github.com/BC-SECURITY/Malleable-C2-Profiles](https://github.com/BC-SECURITY/Malleable-C2-Profiles)
 - [https://github.com/threatexpress/malleable-c2](https://github.com/threatexpress/malleable-c2)
 - [https://gist.github.com/tothi/8abd2de8f4948af57aa2d027f9e59efe](https://gist.github.com/tothi/8abd2de8f4948af57aa2d027f9e59efe)
+- [https://github.com/HuskyHacks/CobaltNotion](https://github.com/HuskyHacks/CobaltNotion)
 
 
 

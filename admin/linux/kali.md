@@ -62,8 +62,6 @@ Mix settings list (both for hardware install and virtualization):
 			CASE (disable password):
 				$ sudo sh -c 'echo "snovvcrash ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/snovvcrash'
 		}
-[ALL] Install cmake
-	$ sudo apt install cmake -y
 [ALL] Clone dotfiles
 	$ git clone https://github.com/snovvcrash/dotfiles-linux ~/.dotfiles
 [ALL] Run ~/.dotfiles/00-autoconfig scripts on the discretion
