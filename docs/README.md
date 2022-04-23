@@ -2384,7 +2384,7 @@ $ grep 'open' hosts/rmisweep.gnmap |cut -d' ' -f2 |sort -u -t'.' -k1,1n -k2,2n -
 ```
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -sn -noProgressMeter
 PS > Invoke-Portscan -Hosts 127.0.0.0/24 -T 4 -TopPorts 25 -oA top25
-PS > Invoke-Portscan -Hosts 127.0.0.1 -Ports 22,80,443
+PS > Invoke-Portscan -Hosts 127.0.0.1 -Pn -Ports "22,80,443" -oG ports
 ```
 
 
