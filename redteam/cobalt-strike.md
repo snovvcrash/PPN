@@ -8,6 +8,8 @@
 
 ## Malleable C2 Profiles
 
+- [https://blog.zsec.uk/cobalt-strike-profiles/](https://blog.zsec.uk/cobalt-strike-profiles/)
+
 - [https://github.com/rsmudge/Malleable-C2-Profiles](https://github.com/rsmudge/Malleable-C2-Profiles)
 - [https://github.com/BC-SECURITY/Malleable-C2-Profiles](https://github.com/BC-SECURITY/Malleable-C2-Profiles)
 - [https://github.com/threatexpress/malleable-c2](https://github.com/threatexpress/malleable-c2)
@@ -20,6 +22,7 @@
 
 - [https://github.com/Tylous/SourcePoint](https://github.com/Tylous/SourcePoint)
 - [https://github.com/FortyNorthSecurity/C2concealer](https://github.com/FortyNorthSecurity/C2concealer)
+- [https://github.com/threatexpress/random_c2_profile](https://github.com/threatexpress/random_c2_profile)
 
 
 

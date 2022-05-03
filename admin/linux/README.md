@@ -256,7 +256,7 @@ $ shred -zv -n0 /dev/sdc1
 
 ## Partitions
 
-* [https://youtu.be/QSpGaeHlkoE](https://youtu.be/QSpGaeHlkoE)
+{% embed url="https://youtu.be/QSpGaeHlkoE" %}
 
 List devices:
 

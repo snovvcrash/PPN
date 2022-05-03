@@ -2,7 +2,7 @@
 
 ## Pentest
 
-* [Auth Brute Force](pentest/auth-brute-force.md)
+* [Authentication Brute Force](pentest/authentication-brute-force.md)
 * [Binary Exploitation](pentest/binary-exploitation.md)
 * [C2](pentest/c2/README.md)
   - [Covenant](pentest/c2/covenant.md)
@@ -25,8 +25,8 @@
       - [AppLocker Bypass](pentest/infrastructure/ad/av-edr-evasion/applocker-bypass.md)
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
-      - [ExecutionPolicy Bypass](pentest/infrastructure/ad/av-edr-evasion/executionpolicy-bypass.md)
-      - Malware Development
+      - [Execution Policy Bypass](pentest/infrastructure/ad/av-edr-evasion/executionpolicy-bypass.md)
+      - [Malware Development]((pentest/infrastructure/ad/av-edr-evasion/maldev/README.md))
         * [Code Injection](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/README.md)
           - [DLL Injectors](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/dll-injectors.md)
           - [Process Hollowing](pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/process-hollowing.md)
@@ -61,7 +61,8 @@
     * [Discovery](pentest/infrastructure/ad/discovery.md)
     * [DnsAdmins](pentest/infrastructure/ad/dnsadmins.md)
     * [GPO Abuse](pentest/infrastructure/ad/gpo-abuse.md)
-    * [Kerberos](pentest/infrastructure/ad/kerberos.md)
+    * [Kerberos](pentest/infrastructure/ad/kerberos/README.md)
+      - [Kerberos Relay](pentest/infrastructure/ad/kerberos/kerberos-relay.md)
     * [Key Credentials Abuse](pentest/infrastructure/ad/key-credentials-abuse.md)
     * [LAPS](pentest/infrastructure/ad/laps.md)
     * [Lateral Movement](pentest/infrastructure/ad/lateral-movement/README.md)
