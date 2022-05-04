@@ -9,6 +9,7 @@
   - [Empire](pentest/c2/empire.md)
   - [Metasploit](pentest/c2/metasploit.md)
   - [PoshC2](pentest/c2/poshc2.md)
+  - [Sliver](pentest/c2/sliver.md)
 * [Infrastructure](pentest/infrastructure/README.md)
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
