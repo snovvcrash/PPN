@@ -200,7 +200,7 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 
 ### Sleep Mask
 
-{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion/maldev/code-injection/README.md#shellcode-in-memory-fluctuation" %}
+{% content-ref url="/redteam/maldev/code-injection/README.md#shellcode-in-memory-fluctuation-obfuscate-and-sleep" %}
 [ntlmv1-downgrade.md](ntlmv1-downgrade.md)
 {% endcontent-ref %}
 

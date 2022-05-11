@@ -624,7 +624,7 @@ PS > Remove-ADIDNSNode -DomainController dc1 -Node pc01 -Credential $cred -Verbo
 
 Check:
 
-* [https://twitter.com/\_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
+* [https://twitter.com/_wald0/status/1091062691383238656](https://twitter.com/_wald0/status/1091062691383238656)
 
 ```
 $ sudo ./Responder.py -I eth0 -Av
@@ -646,7 +646,7 @@ $ python privexchange.py -d MEGACORP -u snovvcrash -p 'Passw0rd!' -ah 10.10.13.3
 **CVE-2020-1472**
 
 * [https://www.secura.com/uploads/whitepapers/Zerologon.pdf](https://www.secura.com/uploads/whitepapers/Zerologon.pdf)
-* [https://twitter.com/\_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
+* [https://twitter.com/_dirkjan/status/1306280566313156608](https://twitter.com/_dirkjan/status/1306280566313156608)
 
 Check:
 

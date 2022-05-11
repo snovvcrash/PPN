@@ -44,7 +44,7 @@ int main (int argc, char **argv)
 
 
 
-## Shellcode In-Memory Fluctuation
+## Shellcode In-Memory Fluctuation (Obfuscate and Sleep)
 
 {% embed url="https://twitter.com/_RastaMouse/status/1443923456630968320" %}
 
@@ -57,56 +57,7 @@ int main (int argc, char **argv)
 
 
 
-## Detection
-
-- [https://www.mono-project.com/docs/tools+libraries/tools/monodis/](https://www.mono-project.com/docs/tools+libraries/tools/monodis/)
-- [https://github.com/Dump-GUY/Get-PDInvokeImports](https://github.com/Dump-GUY/Get-PDInvokeImports)
-
-Show P/Invoke imports in a .NET assembly with `System.Reflection.Metadata` and PowerShell Core (stolen from [1](https://stackoverflow.com/q/71456804/6253579), [2](https://stackoverflow.com/a/54775040/6253579)):
-
-```powershell
-$assembly = "\path\to\csharp\binary.exe"
-$stream = [System.IO.File]::OpenRead($assembly)
-$peReader = [System.Reflection.PortableExecutable.PEReader]::new($stream, [System.Reflection.PortableExecutable.PEStreamOptions]::LeaveOpen -bor [System.Reflection.PortableExecutable.PEStreamOptions]::PrefetchMetadata)
-$metadataReader = [System.Reflection.Metadata.PEReaderExtensions]::GetMetadataReader($peReader)
-$assemblyDefinition = $metadataReader.GetAssemblyDefinition()
-
-foreach($typeHandler in $metadataReader.TypeDefinitions) {
-    $typeDef = $metadataReader.GetTypeDefinition($typeHandler)
-    foreach($methodHandler in $typeDef.GetMethods()) {
-        $methodDef = $metadataReader.GetMethodDefinition($methodHandler)
-
-        $import = $methodDef.GetImport()
-        if ($import.Module.IsNil) {
-            continue
-        }
-
-        $dllImportFuncName = $metadataReader.GetString($import.Name)
-        $dllImportParameters = $import.Attributes.ToString()
-        $dllImportPath = $metadataReader.GetString($metadataReader.GetModuleReference($import.Module).Name)
-        Write-Host "$dllImportPath, $dllImportParameters`n$dllImportFuncName`n"
-    }
-}
-```
-
-Another [method](https://twitter.com/vinopaljiri/status/1508447487048261641) with a PowerShell one-liner:
-
-```powershell
-([System.Reflection.Assembly]::LoadFile("\path\to\csharp\binary.exe")).GetTypes() | % {$_.GetMethods([Reflection.BindingFlags]::Public -bxor [Reflection.BindingFlags]::NonPublic -bxor [Reflection.BindingFlags]::Static) | ? {$_.Attributes -band [Reflection.MethodAttributes]::PinvokeImpl}} | fl -Property Name,DeclaringType,CustomAttributes
-```
-
-
-
-
-## Tools
-
-* [https://github.com/0xDivyanshu/Injector](https://github.com/0xDivyanshu/Injector)
-* [https://github.com/jfmaes/SharpZipRunner](https://github.com/jfmaes/SharpZipRunner)
-* [https://github.com/plackyhacker/Shellcode-Injection-Techniques](https://github.com/plackyhacker/Shellcode-Injection-Techniques)
-
-
-
-### PE to Shellcode
+## PE to Shellcode
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
 - [https://github.com/TheWover/donut](https://github.com/TheWover/donut)
@@ -163,3 +114,53 @@ rm "/tmp/SharpHound.exe" "/tmp/SharpHound.bin" "/tmp/$RNDNAME.cs"
 {% hint style="info" %}
 This technique is enhanced and automated [here](https://gist.github.com/snovvcrash/30bd25b1a5a18d8bb7ce3bb8dc2bae37).
 {% endhint %}
+
+
+
+
+## Detection
+
+- [https://www.mono-project.com/docs/tools+libraries/tools/monodis/](https://www.mono-project.com/docs/tools+libraries/tools/monodis/)
+- [https://github.com/Dump-GUY/Get-PDInvokeImports](https://github.com/Dump-GUY/Get-PDInvokeImports)
+
+Show P/Invoke imports in a .NET assembly with `System.Reflection.Metadata` and PowerShell Core (stolen from [1](https://stackoverflow.com/q/71456804/6253579), [2](https://stackoverflow.com/a/54775040/6253579)):
+
+```powershell
+$assembly = "\path\to\csharp\binary.exe"
+$stream = [System.IO.File]::OpenRead($assembly)
+$peReader = [System.Reflection.PortableExecutable.PEReader]::new($stream, [System.Reflection.PortableExecutable.PEStreamOptions]::LeaveOpen -bor [System.Reflection.PortableExecutable.PEStreamOptions]::PrefetchMetadata)
+$metadataReader = [System.Reflection.Metadata.PEReaderExtensions]::GetMetadataReader($peReader)
+$assemblyDefinition = $metadataReader.GetAssemblyDefinition()
+
+foreach($typeHandler in $metadataReader.TypeDefinitions) {
+    $typeDef = $metadataReader.GetTypeDefinition($typeHandler)
+    foreach($methodHandler in $typeDef.GetMethods()) {
+        $methodDef = $metadataReader.GetMethodDefinition($methodHandler)
+
+        $import = $methodDef.GetImport()
+        if ($import.Module.IsNil) {
+            continue
+        }
+
+        $dllImportFuncName = $metadataReader.GetString($import.Name)
+        $dllImportParameters = $import.Attributes.ToString()
+        $dllImportPath = $metadataReader.GetString($metadataReader.GetModuleReference($import.Module).Name)
+        Write-Host "$dllImportPath, $dllImportParameters`n$dllImportFuncName`n"
+    }
+}
+```
+
+Another [method](https://twitter.com/vinopaljiri/status/1508447487048261641) with a PowerShell one-liner:
+
+```powershell
+([System.Reflection.Assembly]::LoadFile("\path\to\csharp\binary.exe")).GetTypes() | % {$_.GetMethods([Reflection.BindingFlags]::Public -bxor [Reflection.BindingFlags]::NonPublic -bxor [Reflection.BindingFlags]::Static) | ? {$_.Attributes -band [Reflection.MethodAttributes]::PinvokeImpl}} | fl -Property Name,DeclaringType,CustomAttributes
+```
+
+
+
+
+## Tools
+
+* [https://github.com/0xDivyanshu/Injector](https://github.com/0xDivyanshu/Injector)
+* [https://github.com/jfmaes/SharpZipRunner](https://github.com/jfmaes/SharpZipRunner)
+* [https://github.com/plackyhacker/Shellcode-Injection-Techniques](https://github.com/plackyhacker/Shellcode-Injection-Techniques)
