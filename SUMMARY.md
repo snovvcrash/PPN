@@ -14,6 +14,7 @@
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
     * [AD CS Abuse](pentest/infrastructure/ad/ad-cs-abuse/README.md)
+      - [dNSHostName Spoofing](pentest/infrastructure/ad/ad-cs-abuse/dnshostname-spoofing.md)
       - [ESC1](pentest/infrastructure/ad/ad-cs-abuse/esc1.md)
       - [ESC4](pentest/infrastructure/ad/ad-cs-abuse/esc4.md)
       - [ESC8](pentest/infrastructure/ad/ad-cs-abuse/esc8.md)
