@@ -1,19 +1,19 @@
 # Code Injection
 
-* [https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process](https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process)
-* [https://blog.xpnsec.com/weird-ways-to-execute-dotnet/](https://blog.xpnsec.com/weird-ways-to-execute-dotnet/)
-* [https://gitlab.com/users/ORCA666/projects](https://gitlab.com/users/ORCA666/projects)
+- [https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process](https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process)
+- [https://blog.xpnsec.com/weird-ways-to-execute-dotnet/](https://blog.xpnsec.com/weird-ways-to-execute-dotnet/)
+- [https://gitlab.com/users/ORCA666/projects](https://gitlab.com/users/ORCA666/projects)
 
 
 
 
 ## Shellcode as Function
 
-* [http://disbauxes.upc.es/code/two-basic-ways-to-run-and-test-shellcode/](http://disbauxes.upc.es/code/two-basic-ways-to-run-and-test-shellcode/)
-* [https://www.fergonez.net/post/shellcode-csharp](https://www.fergonez.net/post/shellcode-csharp)
-* [https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis](https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis)
-* [https://github.com/byt3bl33d3r/OffensiveNim/issues/16](https://github.com/byt3bl33d3r/OffensiveNim/issues/16)
-* [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c)
+- [http://disbauxes.upc.es/code/two-basic-ways-to-run-and-test-shellcode/](http://disbauxes.upc.es/code/two-basic-ways-to-run-and-test-shellcode/)
+- [https://www.fergonez.net/post/shellcode-csharp](https://www.fergonez.net/post/shellcode-csharp)
+- [https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis](https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis)
+- [https://github.com/byt3bl33d3r/OffensiveNim/issues/16](https://github.com/byt3bl33d3r/OffensiveNim/issues/16)
+- [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c)
 
 Linux example. Compile allowing execution on stack:
 
@@ -53,6 +53,16 @@ int main (int argc, char **argv)
 - [https://github.com/mgeeky/ShellcodeFluctuation](https://github.com/mgeeky/ShellcodeFluctuation)
 - [https://xz.aliyun.com/t/9399](https://xz.aliyun.com/t/9399)
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
+- [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
+- [https://github.com/JLospinoso/gargoyle](https://github.com/JLospinoso/gargoyle)
+- [https://labs.f-secure.com/blog/experimenting-bypassing-memory-scanners-with-cobalt-strike-and-gargoyle/](https://labs.f-secure.com/blog/experimenting-bypassing-memory-scanners-with-cobalt-strike-and-gargoyle/)
+
+
+
+### Memory Scanners
+
+- [https://github.com/forrest-orr/moneta](https://github.com/forrest-orr/moneta)
+- [https://github.com/hasherezade/pe-sieve](https://github.com/hasherezade/pe-sieve)
 
 
 
@@ -161,6 +171,7 @@ Another [method](https://twitter.com/vinopaljiri/status/1508447487048261641) wit
 
 ## Tools
 
-* [https://github.com/0xDivyanshu/Injector](https://github.com/0xDivyanshu/Injector)
-* [https://github.com/jfmaes/SharpZipRunner](https://github.com/jfmaes/SharpZipRunner)
-* [https://github.com/plackyhacker/Shellcode-Injection-Techniques](https://github.com/plackyhacker/Shellcode-Injection-Techniques)
+- [https://github.com/0xDivyanshu/Injector](https://github.com/0xDivyanshu/Injector)
+- [https://github.com/jfmaes/SharpZipRunner](https://github.com/jfmaes/SharpZipRunner)
+- [https://github.com/plackyhacker/Shellcode-Injection-Techniques](https://github.com/plackyhacker/Shellcode-Injection-Techniques)
+- [https://github.com/3xpl01tc0d3r/ProcessInjection](https://github.com/3xpl01tc0d3r/ProcessInjection)

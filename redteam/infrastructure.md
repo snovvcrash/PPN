@@ -25,8 +25,8 @@ Make certs for the **lighthouse**, **teamserver** and **proxy** (redirector):
 ```
 $ sudo ./nebula-cert ca -name 'hax0r1337, Inc.'
 $ sudo ./nebula-cert sign -name lighthouse -ip "10.10.13.1/24"
-$ sudo ./nebula-cert sign -name proxy1 -ip "10.10.13.2/24" -groups "proxies"
-$ sudo ./nebula-cert sign -name teamserver -ip "10.10.13.13/24" -groups "teamservers"
+$ sudo ./nebula-cert sign -name teamserver -ip "10.10.13.2/24" -groups "teamservers"
+$ sudo ./nebula-cert sign -name proxy1 -ip "10.10.13.37/24" -groups "proxies"
 ```
 
 Configs:
@@ -84,79 +84,6 @@ firewall:
       proto: icmp
       host: any
     
-    - port: 4789
-      proto: any
-      host: any
-
-    - port: 22
-      proto: any
-      cidr: 10.10.13.0/24
-```
-{% endcode %}
-{% endtab %}
-{% tab title="Proxy" %}
-{% code title="proxy1.yml" %}
-```yml
-pki:
-  ca: /opt/nebula/certs/ca.crt
-  cert: /opt/nebula/certs/proxy1.crt
-  key: /opt/nebula/certs/proxy1.key
-
-static_host_map:
-  "10.10.13.1": ["<LIGHTHOUSE_IP>:4242"]
-
-lighthouse:
-  am_lighthouse: false
-  interval: 60
-  hosts:
-    - "192.168.100.1"
-
-listen:
-  host: 0.0.0.0
-  port: 4242
-
-punchy:
-  punch: true
-
-tun:
-  disabled: false
-  dev: nebula1
-  drop_local_broadcast: false
-  drop_multicast: false
-  tx_queue: 500
-  mtu: 1300
-  routes:
-  unsafe_routes:
-
-logging:
-  level: info
-  format: text
-
-firewall:
-  conntrack:
-    tcp_timeout: 12m
-    udp_timeout: 3m
-    default_timeout: 10m
-    max_connections: 100000
-
-  outbound:
-    - port: any
-      proto: any
-      host: any
-
-  inbound:
-    - port: any
-      proto: icmp
-      host: any
-
-    - port: 80
-      proto: any
-      host: any
-
-    - port: 443
-      proto: any
-      host: any
-
     - port: 4789
       proto: any
       host: any
@@ -240,7 +167,98 @@ firewall:
 ```
 {% endcode %}
 {% endtab %}
+{% tab title="Proxy" %}
+{% code title="proxy1.yml" %}
+```yml
+pki:
+  ca: /opt/nebula/certs/ca.crt
+  cert: /opt/nebula/certs/proxy1.crt
+  key: /opt/nebula/certs/proxy1.key
+
+static_host_map:
+  "10.10.13.1": ["<LIGHTHOUSE_IP>:4242"]
+
+lighthouse:
+  am_lighthouse: false
+  interval: 60
+  hosts:
+    - "192.168.100.1"
+
+listen:
+  host: 0.0.0.0
+  port: 4242
+
+punchy:
+  punch: true
+
+tun:
+  disabled: false
+  dev: nebula1
+  drop_local_broadcast: false
+  drop_multicast: false
+  tx_queue: 500
+  mtu: 1300
+  routes:
+  unsafe_routes:
+
+logging:
+  level: info
+  format: text
+
+firewall:
+  conntrack:
+    tcp_timeout: 12m
+    udp_timeout: 3m
+    default_timeout: 10m
+    max_connections: 100000
+
+  outbound:
+    - port: any
+      proto: any
+      host: any
+
+  inbound:
+    - port: any
+      proto: icmp
+      host: any
+
+    - port: 80
+      proto: any
+      host: any
+
+    - port: 443
+      proto: any
+      host: any
+
+    - port: 4789
+      proto: any
+      host: any
+
+    - port: 22
+      proto: any
+      cidr: 10.10.13.0/24
+```
+{% endcode %}
+{% endtab %}
 {% endtabs %}
+
+Systemd [unit](https://github.com/slackhq/nebula/blob/master/examples/quickstart-vagrant/ansible/roles/nebula/files/systemd.nebula.service):
+
+```
+[Unit]
+Description=nebula
+Wants=basic.target
+After=basic.target network.target
+
+[Service]
+SyslogIdentifier=nebula
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/opt/nebula/nebula -config /opt/nebula/<CONFIG>.yml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
 
 
 
