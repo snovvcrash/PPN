@@ -16,6 +16,12 @@ $ sudo apt install git -y
 $ git version
 ```
 
+Show global origin config:
+
+```
+$ git config --list --show-origin
+```
+
 
 
 

@@ -201,7 +201,3 @@
 * [Git](dev/git.md)
 * [Python](dev/python/README.md)
   - [Code Snippets](dev/python/code-snippets.md)
-
-## Other
-
-* [Mitigations](other/mitigations.md)

