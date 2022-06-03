@@ -236,8 +236,22 @@ $ truncate logfile --size 0
 
 ### .bash_history
 
+- [https://askubuntu.com/a/832345](https://askubuntu.com/a/832345)
+
 ```
 $ cat /dev/null > ~/.bash_history && history -c && exit
+$ history -c && history -w && exit
+$ rm -f ~/.bash_history && kill -9 $$
+```
+
+
+
+### .zsh_history
+
+```
+$ cat /dev/null > ~/.zsh_history && history -p && exit
+$ history -c && history -w && exit
+$ rm -f ~/.zsh_history && kill -9 $$
 ```
 
 
