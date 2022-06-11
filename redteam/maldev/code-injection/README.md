@@ -81,6 +81,8 @@ $ gcc -o loader loader.c -z execstack
 - [https://www.solomonsklash.io/SleepyCrypt-shellcode-to-encrypt-a-running-image.html](https://www.solomonsklash.io/SleepyCrypt-shellcode-to-encrypt-a-running-image.html)
 - [https://github.com/SolomonSklash/SleepyCrypt](https://github.com/SolomonSklash/SleepyCrypt)
 - [https://github.com/mgeeky/ShellcodeFluctuation](https://github.com/mgeeky/ShellcodeFluctuation)
+- [https://github.com/phra/PEzor/blob/master/fluctuate.cpp](https://github.com/phra/PEzor/blob/master/fluctuate.cpp)
+- [https://labs.f-secure.com/blog/bypassing-windows-defender-runtime-scanning/](https://labs.f-secure.com/blog/bypassing-windows-defender-runtime-scanning/)
 - [https://xz.aliyun.com/t/9399](https://xz.aliyun.com/t/9399)
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)

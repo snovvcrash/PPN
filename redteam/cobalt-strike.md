@@ -22,6 +22,14 @@
 
 
 
+## Community Kit
+
+- [https://cobalt-strike.github.io/community_kit/](https://cobalt-strike.github.io/community_kit/)
+- [https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/cs/README.md](https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/cs/README.md)
+
+
+
+
 ## P2P Beacons
 
 Beacon TCP and Beacon SMB are Peer-to-Peer beacons which means they're used to chain a connection to an existent beacon. They act like bind shells and waits for the attacker to connect to them.
