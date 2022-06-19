@@ -169,6 +169,66 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 
 
+## Shellcode Execution via Callbacks
+
+- [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
+
+```
+CallWindowProc
+CertEnumSystemStore
+CertEnumSystemStoreLocation
+CopyFile2
+CopyFileEx
+CryptEnumOIDInfo
+EnumCalendarInfo
+EnumCalendarInfoEx
+EnumCalendarInfoExEx
+EnumChildWindows
+EnumDateFormats
+EnumDesktopWindows
+EnumDesktops
+EnumDirTree
+EnumDisplayMonitors
+EnumFontFamilies
+EnumFontFamiliesEx
+EnumFonts
+EnumLanguageGroupLocales
+EnumObjects
+EnumPageFiles
+EnumPwrSchemes
+EnumResourceTypes
+EnumResourceTypesEx
+EnumSystemCodePages
+EnumSystemGeoID
+EnumSystemLanguageGroups
+EnumSystemLocales
+EnumSystemLocalesEx
+EnumThreadWindows
+EnumTimeFormats
+EnumTimeFormatsEx
+EnumUILanguages
+EnumWindowStations
+EnumWindows
+EnumerateLoadedModules
+EnumerateLoadedModulesEx
+ImageGetDigestStream
+ImmEnumInputContext
+InitOnceExecuteOnce
+LdrEnumerateLoadedModules
+LineDDA
+NotifyIpInterfaceChange
+NotifyRouteChange2
+NotifyTeredoPortChange
+NotifyUnicastIpAddressChange
+SetupCommitFileQueue
+SymEnumProcesses
+SymFindFileInPath
+VerifierEnumerateResource
+```
+
+
+
+
 ## Detection
 
 - [https://www.mono-project.com/docs/tools+libraries/tools/monodis/](https://www.mono-project.com/docs/tools+libraries/tools/monodis/)

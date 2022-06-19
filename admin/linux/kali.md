@@ -137,7 +137,7 @@ $ ./paperify.sh 7z
 Translate the QR code with your favorite mobile app and send the contents via a secure channel (e. g., a messenger). Now your teammates can reverse the process to get the initial zip file:
 
 ```
-PS > b64decode.ps1 .\b64.txt out.7z
+PS > .\b64decode.ps1 .\b64.txt out.7z
 ```
 
 {% code title="b64decode.ps1" %}

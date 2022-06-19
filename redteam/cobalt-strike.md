@@ -212,4 +212,5 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 [README.md](README.md)
 {% endcontent-ref %}
 
+- [https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures](https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures)
 - [https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/](https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/)

