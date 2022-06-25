@@ -14,6 +14,7 @@
 - [https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis](https://www.ired.team/offensive-security/code-injection-process-injection/local-shellcode-execution-without-windows-apis)
 - [https://github.com/byt3bl33d3r/OffensiveNim/issues/16](https://github.com/byt3bl33d3r/OffensiveNim/issues/16)
 - [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Loaders/simpleLoader.c)
+- [https://github.com/paranoidninja/Brute-Ratel-C4-Community-Kit/blob/main/deprecated/badger_template.ps1](https://github.com/paranoidninja/Brute-Ratel-C4-Community-Kit/blob/main/deprecated/badger_template.ps1)
 
 {% tabs %}
 {% tab title="Windows" %}
@@ -86,6 +87,8 @@ $ gcc -o loader loader.c -z execstack
 - [https://xz.aliyun.com/t/9399](https://xz.aliyun.com/t/9399)
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
+- [https://github.com/y11en/FOLIAGE](https://github.com/y11en/FOLIAGE)
+- [https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c](https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c)
 
 
 
@@ -172,6 +175,8 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 ## Shellcode Execution via Callbacks
 
 - [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
+- [https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/](https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/)
+- [https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/](https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/)
 
 ```
 CallWindowProc

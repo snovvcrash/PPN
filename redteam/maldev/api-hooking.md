@@ -28,3 +28,5 @@
 ## Tools
 
 - [https://github.com/CCob/MinHook.NET](https://github.com/CCob/MinHook.NET)
+- [https://github.com/ars3n11/MineSweeper](https://github.com/ars3n11/MineSweeper)
+- [https://github.com/CCob/SharpBlock](https://github.com/CCob/SharpBlock)

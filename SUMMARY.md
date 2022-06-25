@@ -28,6 +28,7 @@
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
       - [Execution Policy Bypass](pentest/infrastructure/ad/av-edr-evasion/executionpolicy-bypass.md)
+      - [KIS / KES](pentest/infrastructure/ad/av-edr-evasion/kis-kes.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Authentication Coercion](pentest/infrastructure/ad/authentication-coercion.md)
