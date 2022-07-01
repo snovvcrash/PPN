@@ -133,3 +133,14 @@ $ nim c --cpu:amd64 --os:windows --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerex
 $ ./encrypt_assembly 'Passw0rd!' SharpKatz.exe b64.txt
 Cmd > .\encrypted_assembly_loader.exe Passw0rd! b64.txt --Command logonpasswords
 ```
+
+
+
+
+## Tools & Packers
+
+- [https://github.com/S3cur3Th1sSh1t/Nim-RunPE](https://github.com/S3cur3Th1sSh1t/Nim-RunPE)
+- [https://github.com/S3cur3Th1sSh1t/NimGetSyscallStub](https://github.com/S3cur3Th1sSh1t/NimGetSyscallStub)
+- [https://github.com/chvancooten/NimPackt-v1](https://github.com/chvancooten/NimPackt-v1)
+- [https://github.com/icyguider/Nimcrypt2](https://github.com/icyguider/Nimcrypt2)
+- [https://github.com/adamsvoboda/nim-loader](https://github.com/adamsvoboda/nim-loader)

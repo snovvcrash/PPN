@@ -89,6 +89,7 @@ $ gcc -o loader loader.c -z execstack
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
 - [https://github.com/y11en/FOLIAGE](https://github.com/y11en/FOLIAGE)
 - [https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c](https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c)
+- [https://mez0.cc/posts/vulpes-obfuscating-memory-regions/](https://mez0.cc/posts/vulpes-obfuscating-memory-regions/)
 
 
 
@@ -107,6 +108,18 @@ $ gcc -o loader loader.c -z execstack
 
 - [https://github.com/forrest-orr/moneta](https://github.com/forrest-orr/moneta)
 - [https://github.com/hasherezade/pe-sieve](https://github.com/hasherezade/pe-sieve)
+
+
+
+
+## Thread Stack Spoofing
+
+{% embed url="https://youtu.be/7EheXiC3MJE" %}
+
+- [https://github.com/mgeeky/ThreadStackSpoofer/tree/c2507248723d167fb2feddf50d35435a17fd61a2](https://github.com/mgeeky/ThreadStackSpoofer/tree/c2507248723d167fb2feddf50d35435a17fd61a2)
+- [https://github.com/mgeeky/ThreadStackSpoofer](https://github.com/mgeeky/ThreadStackSpoofer)
+- [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
+- [https://github.com/countercept/CallStackSpoofer](https://github.com/countercept/CallStackSpoofer)
 
 
 

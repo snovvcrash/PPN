@@ -95,6 +95,7 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 * [https://github.com/stephenfewer/ReflectiveDLLInjection#overview](https://github.com/stephenfewer/ReflectiveDLLInjection#overview)
 * [https://github.com/dismantl/ImprovedReflectiveDLLInjection](https://github.com/dismantl/ImprovedReflectiveDLLInjection)
 * [https://github.com/Moriarty2016/NimRDI](https://github.com/Moriarty2016/NimRDI)
+* [https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/](https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/)
 
 
 

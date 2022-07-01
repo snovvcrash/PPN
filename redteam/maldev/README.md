@@ -41,6 +41,15 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 
 
+### @preemptdev
+
+- [Maelstrom: An Introduction](https://pre.empt.dev/posts/maelstrom-an-introduction/)
+- [Maelstrom: The C2 Architecture](https://pre.empt.dev/posts/maelstrom-arch-episode-1/)
+- [Maelstrom: Building the Team Server](https://pre.empt.dev/posts/maelstrom-arch-episode-2/)
+- [Maelstrom: Writing a C2 Implant](https://pre.empt.dev/posts/maelstrom-the-implant/)
+
+
+
 
 ## PE Injection
 
