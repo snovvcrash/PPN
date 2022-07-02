@@ -6,6 +6,7 @@ description: Inject shellcode into remote process's virtual address space
 
 * [https://rastamouse.me/exploring-process-injection-opsec-part-1/](https://rastamouse.me/exploring-process-injection-opsec-part-1/)
 * [https://rastamouse.me/exploring-process-injection-opsec-part-2/](https://rastamouse.me/exploring-process-injection-opsec-part-2/)
+* [https://www.x86matthew.com/view_post?id=proc_env_injection](https://www.x86matthew.com/view_post?id=proc_env_injection)
 
 
 

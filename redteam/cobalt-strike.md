@@ -16,7 +16,7 @@
 
 ## Aggressor Scripts
 
-- [https://trial.cobaltstrike.com/aggressor-script/functions.html](https://trial.cobaltstrike.com/aggressor-script/functions.html)
+- [https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/agressor_script.htm](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/agressor_script.htm)
 - [https://chowdera.com/2021/02/20210204190220156W.html](https://chowdera.com/2021/02/20210204190220156W.html)
 
 
