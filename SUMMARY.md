@@ -70,7 +70,7 @@
       - [SPN-jacking](pentest/infrastructure/ad/lateral-movement/spn-jacking.md)
       - [WinRM / PSRemoting](pentest/infrastructure/ad/lateral-movement/winrm.md)
       - [WMI](pentest/infrastructure/ad/lateral-movement/wmi.md)
-    * [LDAP](pentest/infrastructure/ad/ldap.md)
+    * [LDAP](pentest/infrastructure/ad/ldap-ldaps.md)
     * [NTLM](pentest/infrastructure/ad/ntlm/README.md)
       - [NTLM Relay](pentest/infrastructure/ad/ntlm/ntlm-relay.md)
       - [NTLMv1 Downgrade](pentest/infrastructure/ad/ntlm/ntlmv1-downgrade.md)

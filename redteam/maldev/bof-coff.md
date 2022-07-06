@@ -69,7 +69,9 @@ beacon_command_register("msgbox", "Pops a message box", "Calls the MessageBoxA W
 {% endtabs %}
 
 
-## Running BOFs outside of CS
+
+
+## Run BOFs outside of CS
 
 - [https://www.trustedsec.com/blog/coffloader-building-your-own-in-memory-loader-or-how-to-run-bofs/](https://www.trustedsec.com/blog/coffloader-building-your-own-in-memory-loader-or-how-to-run-bofs/)
 - [https://github.com/trustedsec/COFFLoader](https://github.com/trustedsec/COFFLoader)
