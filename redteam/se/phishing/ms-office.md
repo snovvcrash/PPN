@@ -295,3 +295,11 @@ if __name__ == '__main__':
   print(gen_payload_wscript_shell(args.pwsh_file, args.chunk_size))
 ```
 {% endcode %}
+
+
+
+
+## Tools
+
+- [https://github.com/decalage2/oletools](https://github.com/decalage2/oletools)
+- [https://github.com/sevagas/macro_pack](https://github.com/sevagas/macro_pack)
