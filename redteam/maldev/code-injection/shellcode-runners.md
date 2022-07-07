@@ -246,7 +246,7 @@ $ python SharpShooter.py --dotnetver 4 --stageless --rawscfile met.bin --payload
 This tool can efficiently be used with **HTML Smuggling** technique.
 {% endhint %}
 
-{% content-ref url="/pentest/se/phishing/html-smuggling.md" %}
+{% content-ref url="/redteam/se/phishing/html-smuggling.md" %}
 [html-smuggling.md](html-smuggling.md)
 {% endcontent-ref %}
 

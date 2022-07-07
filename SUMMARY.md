@@ -34,7 +34,7 @@
     * [Authentication Coercion](pentest/infrastructure/ad/authentication-coercion.md)
     * [Azure](pentest/infrastructure/ad/azure.md)
     * [Credentials Dump](pentest/infrastructure/ad/credentials-dump/README.md)
-      - From Memory
+      - [From Memory](pentest/infrastructure/ad/credentials-dump/from-memory/README.md)
         * [lsass.exe](pentest/infrastructure/ad/credentials-dump/from-memory/lsass-exe.md)
         * [svchost.exe](pentest/infrastructure/ad/credentials-dump/from-memory/svchost-exe.md)
       - [Credential Manager](pentest/infrastructure/ad/credentials-dump/credential-manager.md)
@@ -90,7 +90,7 @@
     * [User Hunt](pentest/infrastructure/ad/user-hunt.md)
     * [WSUS](pentest/infrastructure/ad/wsus.md)
     * [Zerologon](pentest/infrastructure/ad/zerologon.md)
-  - DevOps
+  - [DevOps](pentest/infrastructure/devops/README.md)
     * [Ansible](pentest/infrastructure/devops/ansible.md)
     * [Artifactory](pentest/infrastructure/devops/artifactory.md)
     * [Containerization](pentest/infrastructure/devops/containerization.md)
@@ -146,10 +146,6 @@
   - [SMTP](pentest/perimeter/smtp.md)
   - [SSH](pentest/perimeter/ssh.md)
   - [Subdomain Takeover](pentest/perimeter/subdomain-takeover.md)
-* [SE](pentest/se/README.md)
-  - Phishing
-    * [HTML Smuggling](pentest/se/phishing/html-smuggling.md)
-    * [MS Office](pentest/se/phishing/ms-office.md)
 * [Shells](pentest/shells/README.md)
   - [Reverse Shells](pentest/shells/reverse-shells.md)
   - [Web Shells](pentest/shells/web-shells.md)
@@ -162,7 +158,7 @@
   - [WordPress](pentest/web/wordpress.md)
   - [XSS](pentest/web/xss.md)
 * [Wi-Fi](pentest/wi-fi/README.md)
-  - WPA/WPA2
+  - [WPA / WPA2](pentest/wi-fi/wpa-wpa2/README.md)
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
 
@@ -184,6 +180,10 @@
   - [Shellcodes](redteam/maldev/shellcodes.md)
   - [Syscalls](redteam/maldev/syscalls.md)
   - [Windows API](redteam/maldev/winapi.md)
+* [SE](redteam/se/README.md)
+  - [Phishing](redteam/se/phishing/README.md)
+    * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
+    * [MS Office](redteam/se/phishing/ms-office.md)
 
 ## Admin
 
@@ -193,7 +193,7 @@
   - [DHCP Server & Linux Hotspot](admin/networking/dhcp-hostapd.md)
   - [Quick Configurations](admin/networking/quick-configurations.md)
   - [Routing](admin/networking/routing.md)
-* Virtualization
+* [Virtualization](admin/virtualization/README.md)
   - [Docker](admin/virtualization/docker.md)
   - [Hyper-V](admin/virtualization/hyper-v.md)
   - [VirtualBox](admin/virtualization/virtualbox.md)
