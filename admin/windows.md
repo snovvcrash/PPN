@@ -8,7 +8,7 @@
 Kill process from cmd:
 
 ```
-Cmd > taskkill /f /im:calc.exe
+Cmd > taskkill /IM:calc.exe /F
 ```
 
 

