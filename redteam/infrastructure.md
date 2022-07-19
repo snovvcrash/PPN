@@ -18,7 +18,7 @@ Install:
 $ sudo mkdir -p /opt/nebula/certs
 $ sudo eget -s linux/amd64 --download-only slackhq/nebula --to /opt/nebula && cd /opt/nebula
 $ sudo tar -xzvf nebula-linux-amd64.tar.gz && sudo rm nebula-linux-amd64.tar.gz
-$ sudo mv nebula-cert certs
+$ sudo mv nebula-cert certs && cd certs
 ```
 
 Make certs for the **lighthouse**, **teamserver** and **proxy** (redirector):
@@ -110,7 +110,7 @@ lighthouse:
   am_lighthouse: false
   interval: 60
   hosts:
-    - "192.168.100.1"
+    - "10.10.13.1"
 
 listen:
   host: 0.0.0.0
@@ -183,7 +183,7 @@ lighthouse:
   am_lighthouse: false
   interval: 60
   hosts:
-    - "192.168.100.1"
+    - "10.10.13.1"
 
 listen:
   host: 0.0.0.0
@@ -245,6 +245,7 @@ firewall:
 
 Systemd [unit](https://github.com/slackhq/nebula/blob/master/examples/quickstart-vagrant/ansible/roles/nebula/files/systemd.nebula.service):
 
+{% code title="/etc/systemd/system/nebula.service" %}
 ```
 [Unit]
 Description=nebula
@@ -260,6 +261,7 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 ```
+{% endcode %}
 
 
 

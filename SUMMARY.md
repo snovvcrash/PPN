@@ -27,6 +27,7 @@
       - [AppLocker Bypass](pentest/infrastructure/ad/av-edr-evasion/applocker-bypass.md)
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
+      - [ETW Block](pentest/infrastructure/ad/av-edr-evasion/etw-block.md)
       - [Execution Policy Bypass](pentest/infrastructure/ad/av-edr-evasion/executionpolicy-bypass.md)
       - [KIS / KES](pentest/infrastructure/ad/av-edr-evasion/kis-kes.md)
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
@@ -169,6 +170,7 @@
 * [Cobalt Strike](redteam/cobalt-strike.md)
 * [Infrastructure](redteam/infrastructure.md)
 * [Malware Development](redteam/maldev/README.md)
+  - [API Hashing](redteam/maldev/api-hashing.md)
   - [API Hooking](redteam/maldev/api-hooking.md)
   - [BOF / COFF](redteam/maldev/bof-coff.md)
   - [Code Injection](redteam/maldev/code-injection/README.md)
@@ -183,6 +185,7 @@
   - [Windows API](redteam/maldev/winapi.md)
 * [SE](redteam/se/README.md)
   - [Phishing](redteam/se/phishing/README.md)
+    * [DLL Side-Loading](redteam/se/phishing/dll-side-loading.md)
     * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
     * [MS Office](redteam/se/phishing/ms-office.md)
 

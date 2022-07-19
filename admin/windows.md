@@ -170,6 +170,28 @@ Cmd > rundll32.exe keymgr.dll, KRShowKeyMgr
 ```
 
 
+## PowerShell Secure Strings
+
+Encrypt:
+
+```
+PS > $securePassword = Read-Host -AsSecureString "Enter password"  
+Enter password: Passw0rd!
+PS > $encString = $securePassword | ConvertFrom-SecureString
+PS > $encString  
+01000000d08c9ddf0115d1118c7a00c04fc297eb01000000e179d870f4f6374bab8b8d97c5375ed10000000002000000000010660000000100002000000053096b407f1bb14d6555203b96e0347a12267b69689f4ec6ca38f8533cd0feef000000000e8000000002000020000000d75f103a0d4fd550919f027815fb0fa242e9d5e57a4c25eec436b5e515ea274720000000765dee14954b7bd7d1  
+34bd5919a35ceab1b8b2fdfbb31fe53a7aa8d1f9078604400000006f63448217f77956c05e0028dd92c2f2466d180b1cc35d05fb760f48e2c0cf125aac944cf099b9995dd6401facaa393d0f9b98ccf3f4daa1386910b8567e7635
+```
+
+Decrypt:
+
+```
+PS > $securePassword = ConvertTo-SecureString $encString -Force
+PS > (New-Object PSCredential 0, $securePassword).GetNetworkCredential().Password  
+Passw0rd!
+```
+
+
 
 
 ## Permissions
