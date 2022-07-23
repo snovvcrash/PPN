@@ -11,6 +11,7 @@
 ## Tactics
 
 - [https://blog.binary-offensive.com/warcon-2022-modern-initial-access-and-evasion-tactics/](https://blog.binary-offensive.com/warcon-2022-modern-initial-access-and-evasion-tactics/)
+- [[PDF] Orchestrating Resilient Red Team Operations (Yiannis Ioannides)](https://github.com/secgroundzero/BSides-Cyprus-2019/blob/master/bsides_Cyprus_Yiannis.pdf)
 - [[PDF] WarCon22 - Modern Initial Access and Evasion Tactics (Mariusz Banach)](https://mgeeky.tech/uploads/WarCon22%20-%20Modern%20Initial%20Access%20and%20Evasion%20Tactics.pdf)
 
 

