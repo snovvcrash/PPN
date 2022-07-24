@@ -4,6 +4,7 @@
 - [https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure-3c4](https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure-3c4)
 - [https://github.com/bluscreenofjeff/Red-Team-Infrastructure-Wiki](https://github.com/bluscreenofjeff/Red-Team-Infrastructure-Wiki)
 - [https://github.com/mgeeky/RedWarden](https://github.com/mgeeky/RedWarden)
+- [[PDF] Orchestrating Resilient Red Team Operations (Yiannis Ioannides)](https://github.com/secgroundzero/BSides-Cyprus-2019/blob/master/bsides_Cyprus_Yiannis.pdf)
 
 
 

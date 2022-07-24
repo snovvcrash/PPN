@@ -73,14 +73,32 @@ $ socat -T 10 tcp4-listen:5353,fork udp4:127.0.0.1:53
 
 ### iptables Redirector
 
+{% tabs %}
+{% tab title="Add" %}
+{% code title="dns-forwarder-on.sh" %}
+```bash
+sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
+sudo iptables -I INPUT -p udp -m udp --dport 53 -j ACCEPT
+sudo iptables -t nat -A PREROUTING -m state --state NEW --protocol udp --destination <REDIRECTOR_IP> --destination-port 53 -j MARK --set-mark 0x400
+sudo iptables -t nat -A PREROUTING -m mark --mark 0x400 --protocol udp -j DNAT --to-destination <TEAMSERVER_IP>:53
+sudo iptables -t nat -A POSTROUTING -m mark --mark 0x400 -j MASQUERADE
+sudo iptables -I FORWARD -j ACCEPT
 ```
-$ sudo sh -c 'echo 1 > /proc/sys/net/ipv4/ip_forward'
-$ sudo iptables -I INPUT -p udp -m udp --dport 53 -j ACCEPT
-$ sudo iptables -t nat -A PREROUTING -m state --state NEW --protocol udp --destination <REDIRECTOR_IP> --destination-port 53 -j MARK --set-mark 0x400
-$ sudo iptables -t nat -A PREROUTING -m mark --mark 0x400 --protocol udp -j DNAT --to-destination <TEAMSERVER_IP>:53
-$ sudo iptables -t nat -A POSTROUTING -m mark --mark 0x400 -j MASQUERADE
-$ sudo iptables -I FORWARD -j ACCEPT
+{% endcode %}
+{% endtab %}
+{% tab title="Delete" %}
+{% code title="dns-forwarder-off.sh" %}
+```bash
+sudo sh -c 'echo 0 > /proc/sys/net/ipv4/ip_forward'
+sudo iptables -D INPUT -p udp -m udp --dport 53 -j ACCEPT
+sudo iptables -t nat -D PREROUTING -m state --state NEW --protocol udp --destination <REDIRECTOR_IP> --destination-port 53 -j MARK --set-mark 0x400
+sudo iptables -t nat -D PREROUTING -m mark --mark 0x400 --protocol udp -j DNAT --to-destination <TEAMSERVER_IP>:53
+sudo iptables -t nat -D POSTROUTING -m mark --mark 0x400 -j MASQUERADE
+sudo iptables -D FORWARD -j ACCEPT
 ```
+{% endcode %}
+{% endtab %}
+{% endtabs %}
 
 
 
