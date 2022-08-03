@@ -129,7 +129,7 @@ When dealing with an engagement where there's no internet access available on th
 Zip the hashes with best compression, base64 the archive and create a QR code:
 
 ```
-$ 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on archive.7z tgsrep.txt
+$ 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on archive.7z tgsrep.in
 $ base64 -w0 archive.7z > 7z
 $ ./paperify.sh 7z
 ```

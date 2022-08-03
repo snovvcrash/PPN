@@ -68,37 +68,6 @@ shellcode = (unsigned char*)malloc(shellcodeSize);
 memcpy(shellcode, scResourceData, shellcodeSize);
 ```
 
-Check if a machine a domain-joined (sandbox evasion):
-
-{% code title="is_domain_joined.py" %}
-```cpp
-// cl.exe is_domain_joined.cpp netapi32.lib
-#include <Windows.h>
-#include <LM.h>
-#include <iostream>
-
-BOOL IsDomainJoined() {
-	auto joined = false;
-	LPWSTR lpNameBuffer = nullptr;
-	NETSETUP_JOIN_STATUS joinStatus = NETSETUP_JOIN_STATUS::NetSetupUnknownStatus;
-
-	NET_API_STATUS status = NetGetJoinInformation(nullptr, &lpNameBuffer, &joinStatus);
-	if (status == NERR_Success)
-		joined = joinStatus == NETSETUP_JOIN_STATUS::NetSetupDomainName;
-
-	if (lpNameBuffer)
-		NetApiBufferFree(lpNameBuffer);
-
-	return joined;
-}
-
-int main()
-{
-    std::cout << (!IsDomainJoined() ? "No dynamic analysis 4 u" : "Hack the Planet!") << std::endl;
-}
-```
-{% endcode %}
-
 
 
 

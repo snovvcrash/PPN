@@ -2,14 +2,15 @@
 
 ## Pentest
 
-* [Authentication Brute Force](pentest/authentication-brute-force.md)
-* [Binary Exploitation](pentest/binary-exploitation.md)
 * [C2](pentest/c2/README.md)
   - [Covenant](pentest/c2/covenant.md)
   - [Empire](pentest/c2/empire.md)
   - [Metasploit](pentest/c2/metasploit.md)
   - [PoshC2](pentest/c2/poshc2.md)
   - [Sliver](pentest/c2/sliver.md)
+* [Misc](pentest/misc/README.md)
+  - [OSCP BOF](pentest/misc/oscp-bof.md)
+  - [RE](pentest/misc/re.md)
 * [Infrastructure](pentest/infrastructure/README.md)
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
@@ -105,6 +106,7 @@
     * [Oracle](pentest/infrastructure/dbms/oracle.md)
     * [Redis](pentest/infrastructure/dbms/redis.md)
     * [SQLite](pentest/infrastructure/dbms/sqlite.md)
+  - [Authentication Brute Force](pentest/infrastructure/authentication-brute-force.md)
   - [File Transfer](pentest/infrastructure/file-transfer.md)
   - [IPMI](pentest/infrastructure/ipmi.md)
   - [Kiosk Breakout](pentest/infrastructure/kiosk-breakout.md)
@@ -180,6 +182,7 @@
     * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/maldev/dinvoke.md)
   - [Nim](redteam/maldev/nim.md)
+  - [Sandbox Evasion](redteam/maldev/sandbox-evasion.md)
   - [Shellcodes](redteam/maldev/shellcodes.md)
   - [Syscalls](redteam/maldev/syscalls.md)
   - [Windows API](redteam/maldev/winapi.md)
