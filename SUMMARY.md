@@ -1,6 +1,6 @@
 # Table of Contents
 
-## Pentest
+## Pentest ⚒️
 
 * [C2](pentest/c2/README.md)
   - [Covenant](pentest/c2/covenant.md)
@@ -8,9 +8,6 @@
   - [Metasploit](pentest/c2/metasploit.md)
   - [PoshC2](pentest/c2/poshc2.md)
   - [Sliver](pentest/c2/sliver.md)
-* [Misc](pentest/misc/README.md)
-  - [OSCP BOF](pentest/misc/oscp-bof.md)
-  - [RE](pentest/misc/re.md)
 * [Infrastructure](pentest/infrastructure/README.md)
   - [AD](pentest/infrastructure/ad/README.md)
     * [ACL Abuse](pentest/infrastructure/ad/acl-abuse.md)
@@ -129,6 +126,9 @@
   - [SNMP](pentest/infrastructure/snmp.md)
   - [TFTP](pentest/infrastructure/tftp.md)
   - [VNC](pentest/infrastructure/vnc.md)
+* [Misc](pentest/misc/README.md)
+  - [OSCP BOF](pentest/misc/oscp-bof.md)
+  - [RE](pentest/misc/re.md)
 * [OSINT](pentest/osint/README.md)
   - [Shodan](pentest/osint/shodan.md)
 * [Password Brute Force](pentest/password-brute-force/README.md)
@@ -166,7 +166,7 @@
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
 
-## Red Team
+## Red Team 🐞
 
 * [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike.md)
@@ -192,8 +192,9 @@
     * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
     * [MS Office](redteam/se/phishing/ms-office.md)
 
-## Admin
+## Admin ⚙️
 
+* [Git](admin/git.md)
 * [Linux](admin/linux/README.md)
   - [Kali](admin/linux/kali.md)
 * [Networking](admin/networking/README.md)
@@ -206,10 +207,3 @@
   - [VirtualBox](admin/virtualization/virtualbox.md)
   - [VMWare](admin/virtualization/vmware.md)
 * [Windows](admin/windows.md)
-
-## Dev
-
-* [C / C++](dev/c-cpp.md)
-* [Git](dev/git.md)
-* [Python](dev/python/README.md)
-  - [Code Snippets](dev/python/code-snippets.md)
