@@ -94,6 +94,15 @@ Cmd > net config server /hidden:no
 
 
 
+### Disable NIC
+
+```
+wmic nic get name, index
+wmic path win32_networkadapter where index=<INDEX_ID> call {disable|enable}
+```
+
+
+
 
 ## Symlinks
 

@@ -1,6 +1,6 @@
 # Table of Contents
 
-## Pentest ⚒️
+## ⚒️ Pentest
 
 * [C2](pentest/c2/README.md)
   - [Covenant](pentest/c2/covenant.md)
@@ -118,6 +118,7 @@
       - [VLAN Hopping](pentest/infrastructure/networks/l2/vlan-hopping.md)
     * [NAC Bypass](pentest/infrastructure/networks/nac-bypass.md)
     * [Scanning](pentest/infrastructure/networks/scanning.md)
+    * [SIP / VoIP](pentest/infrastructure/sip-voip.md)
     * [Sniff Traffic](pentest/infrastructure/networks/sniff-traffic.md)
   - [NFS](pentest/infrastructure/nfs.md)
   - [Persistence](pentest/infrastructure/persistence.md)
@@ -166,7 +167,7 @@
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
 
-## Red Team 🐞
+## 🐞 Red Team
 
 * [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike.md)
@@ -192,7 +193,7 @@
     * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
     * [MS Office](redteam/se/phishing/ms-office.md)
 
-## Admin ⚙️
+## ⚙️ Admin
 
 * [Git](admin/git.md)
 * [Linux](admin/linux/README.md)
