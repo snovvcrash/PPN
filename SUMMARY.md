@@ -167,7 +167,7 @@
     * [Enterprise](pentest/wi-fi/wpa-wpa2/enterprise.md)
     * [Personal](pentest/wi-fi/wpa-wpa2/personal.md)
 
-## 🐞 Red Team
+## Red Team 🐞
 
 * [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike.md)
