@@ -118,7 +118,7 @@
       - [VLAN Hopping](pentest/infrastructure/networks/l2/vlan-hopping.md)
     * [NAC Bypass](pentest/infrastructure/networks/nac-bypass.md)
     * [Scanning](pentest/infrastructure/networks/scanning.md)
-    * [SIP / VoIP](pentest/infrastructure/sip-voip.md)
+    * [SIP / VoIP](pentest/infrastructure/networks/sip-voip.md)
     * [Sniff Traffic](pentest/infrastructure/networks/sniff-traffic.md)
   - [NFS](pentest/infrastructure/nfs.md)
   - [Persistence](pentest/infrastructure/persistence.md)
