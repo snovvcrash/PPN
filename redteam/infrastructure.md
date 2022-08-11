@@ -276,7 +276,7 @@ WantedBy=multi-user.target
 - [https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy](https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy)
 - [https://github.com/improsec/CaddyStager](https://github.com/improsec/CaddyStager)
 
-Install:
+Install from apt:
 
 ```
 $ sudo apt install debian-keyring debian-archive-keyring apt-transport-https -y
@@ -284,6 +284,18 @@ $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /
 $ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
 $ sudo apt install caddy -y
+```
+
+Install from a release:
+
+```
+$ eget -qs linux/amd64 caddyserver/caddy --to /tmp/caddy.deb
+$ sudo dpkg -i /tmp/caddy.deb && rm /tmp/caddy.deb
+```
+
+Configure and run:
+
+```
 $ sudo rm /etc/caddy/Caddyfile && sudo vi /etc/caddy/Caddyfile
 $ sudo systemctl restart caddy
 $ sudo systemctl status caddy
@@ -313,9 +325,9 @@ Config sample to act as a reverse proxy:
 (logging) {
     log {
         output file /var/log/caddy-{args.0}-access.log {
-            roll true
             roll_size 1Mib
-            roll_local_time true
+            roll_uncompressed
+            roll_local_time
             roll_keep 24
             roll_keep_for 7d
         }
@@ -345,7 +357,7 @@ Config sample to act as a reverse proxy:
         close
     }
         
-    reverse_proxy https://10.10.13.37:31337 {
+    reverse_proxy https://10.10.13.2:31337 {
         header_up Host {upstream_hostport}
         header_up X-Forwarded-Host {host}
         header_up X-Forwarded-Port {port}
