@@ -22,6 +22,14 @@ description: Dynamic API Invocation
 
 
 
+## H/Invoke
+
+- [https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html](https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html)
+- [https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d](https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d)
+
+
+
+
 ## Run PE From Memory
 
 - [https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/PE_Loader_DInvoke_ManualMap.cs](https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/PE_Loader_DInvoke_ManualMap.cs)

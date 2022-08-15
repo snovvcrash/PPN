@@ -3,6 +3,51 @@
 - [https://reconshell.com/list-of-awesome-cobaltstrike-resources/](https://reconshell.com/list-of-awesome-cobaltstrike-resources/)
 - [https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet](https://github.com/S1ckB0y1337/Cobalt-Strike-CheatSheet)
 
+Run as a daemon:
+
+{% tabs %}
+{% tab title="Service Unit" %}
+{% code title="/etc/systemd/system/cobaltstrike.service" %}
+```
+[Unit]
+Description=CobaltStrike
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=3
+User=root
+ExecStart=/opt/CobaltStrike/start.sh
+
+[Install]
+WantedBy=multi-user.target
+```
+{% endcode %}
+{% endtab %}
+{% tab title="Start Script" %}
+{% code title="/opt/CobaltStrike/start.sh" %}
+```bash
+#!/bin/bash
+
+CS_IP=`hostname -I | awk '{print $1}'`
+CS_PASS='Passw0rd1!'
+CS_PATH='/opt/CobaltStrike'
+
+rm -{f} "${CS_PATH}/Profiles/random_c2_profile/output/*.profile"
+CS_PROFILE=`cd "${CS_PATH}/Profiles/random_c2_profile"; python3 ./random_c2profile.py | tail -1 | awk -F/ '{print $2}'`
+
+if [ ! -f "${CS_PATH}/cobaltstrike.store" ]; then
+        /usr/bin/keytool -keystore ./cobaltstrike.store -storepass 'Passw0rd2!' -keypass 'Passw0rd2!' -genkey -keyalg RSA -alias cobaltstrike -dname 'CN=google.com, O=Google Inc, L=Mountain View, ST=California, C=US'
+fi
+
+${CS_PATH}/TeamServerImage -Dcobaltstrike.server_port=1337 -Dcobaltstrike.server_bindto="${CS_IP}" -Djavax.net.ssl.keyStore=./cobaltstrike.store -Djavax.net.ssl.keyStorePassword='Passw0rd2!' teamserver "${CS_IP}" "${CS_PASS}" "${CS_PATH}/Profiles/random_c2_profile/output/${CS_PROFILE}"
+```
+{% endtab %}
+{% endtab %}
+{% endtabs %}
+
 
 
 
@@ -18,6 +63,7 @@
 
 - [https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/agressor_script.htm](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/agressor_script.htm)
 - [https://chowdera.com/2021/02/20210204190220156W.html](https://chowdera.com/2021/02/20210204190220156W.html)
+- [https://www.kingstonesecurity.com/blog/efficiency-with-aggressor](https://www.kingstonesecurity.com/blog/efficiency-with-aggressor)
 
 
 
@@ -25,7 +71,7 @@
 ## Community Kit
 
 - [https://cobalt-strike.github.io/community_kit/](https://cobalt-strike.github.io/community_kit/)
-- [https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/cs/README.md](https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/cs/README.md)
+- [https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/00-CS/README.md](https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/00-CS/README.md)
 
 
 
