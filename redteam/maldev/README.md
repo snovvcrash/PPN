@@ -1,6 +1,9 @@
 # Malware Development
 
 - [https://threadreaderapp.com/thread/1520676600681209858.html](https://threadreaderapp.com/thread/1520676600681209858.html)
+- [https://www.mdsec.co.uk/2022/07/part-1-how-i-met-your-beacon-overview/](https://www.mdsec.co.uk/2022/07/part-1-how-i-met-your-beacon-overview/)
+- [https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/](https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/)
+- [https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/](https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/)
 
 [EIKAR](https://ru.wikipedia.org/wiki/EICAR-Test-File) Test File:
 

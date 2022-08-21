@@ -88,10 +88,13 @@ $ gcc -o loader loader.c -z execstack
 - [https://xz.aliyun.com/t/9399](https://xz.aliyun.com/t/9399)
 - [https://github.com/zu1k/beacon_hook_bypass_memscan](https://github.com/zu1k/beacon_hook_bypass_memscan)
 - [https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html](https://suspicious.actor/2022/05/05/mdsec-nighthawk-study.html)
+- [https://github.com/secidiot/FOLIAGE](https://github.com/secidiot/FOLIAGE)
 - [https://github.com/y11en/FOLIAGE](https://github.com/y11en/FOLIAGE)
 - [https://github.com/ShellBind/G0T-B0R3D/blob/main/Cs-Sleep-Mask-Fiber.c](https://github.com/ShellBind/G0T-B0R3D/blob/main/Cs-Sleep-Mask-Fiber.c)
 - [https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c](https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c)
 - [https://mez0.cc/posts/vulpes-obfuscating-memory-regions/](https://mez0.cc/posts/vulpes-obfuscating-memory-regions/)
+- [https://github.com/janoglezcampos/DeathSleep](https://github.com/janoglezcampos/DeathSleep)
+- [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
 
 
 

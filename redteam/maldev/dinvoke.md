@@ -69,6 +69,7 @@ namespace DInvokePE
             var rawBytes = File.ReadAllBytes(@"C:\Users\snovvcrash\Desktop\mimikatz.exe");
             var compressed = Compress(rawBytes);
             var compressedB64 = Convert.ToBase64String(compressed);
+            Console.WriteLine(compressedB64);
             */
 
             var compressed = Convert.FromBase64String("");

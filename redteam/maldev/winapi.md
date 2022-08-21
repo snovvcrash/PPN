@@ -6,3 +6,10 @@
 - [https://github.com/MohitDabas/malwinx](https://github.com/MohitDabas/malwinx)
 - [https://fourcore.io/blogs/how-a-windows-process-is-created-part-1](https://fourcore.io/blogs/how-a-windows-process-is-created-part-1)
 - [https://fourcore.io/blogs/how-a-windows-process-is-created-part-2](https://fourcore.io/blogs/how-a-windows-process-is-created-part-2)
+
+
+
+
+## Tools
+
+- [https://github.com/MalwareApiLib/MalwareApiLibrary](https://github.com/MalwareApiLib/MalwareApiLibrary)

@@ -11,8 +11,9 @@
 
 ## Nebula
 
-- [https://notes.huskyhacks.dev/blog/red-team-infrastructure-done-right](https://notes.huskyhacks.dev/blog/red-team-infrastructure-done-right)
 - [https://github.com/slackhq/nebula/releases](https://github.com/slackhq/nebula/releases)
+- [https://www.defined.net/nebula/config/](https://www.defined.net/nebula/config/)
+- [https://notes.huskyhacks.dev/blog/red-team-infrastructure-done-right](https://notes.huskyhacks.dev/blog/red-team-infrastructure-done-right)
 
 Install:
 
@@ -151,6 +152,10 @@ firewall:
     - port: any
       proto: icmp
       host: any
+
+    - port: any
+      proto: tcp
+      group: proxies
 
     - port: 80
       proto: any
@@ -337,8 +342,9 @@ Config sample to act as a reverse proxy:
 (proxy-upstream) {
     @ua_denylist {
         header User-Agent curl*
+        #not header User-Agent *hax0r*
     }
-        
+
     @ip_denylist {
         remote_ip 8.8.8.8/32
     }
@@ -348,7 +354,9 @@ Config sample to act as a reverse proxy:
         +X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"
         +X-Content-Type-Options "nosniff"
     }
-        
+
+    #redir @ua_denylist https://legit.com{uri} permanent
+
     respond @ua_denylist "Forbidden" 403 {
         close
     }
