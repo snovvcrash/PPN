@@ -71,7 +71,6 @@ ${CS_PATH}/TeamServerImage -Dcobaltstrike.server_port=1337 -Dcobaltstrike.server
 ## Community Kit
 
 - [https://cobalt-strike.github.io/community_kit/](https://cobalt-strike.github.io/community_kit/)
-- [https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/00-CS/README.md](https://github.com/penetrarnya-tm/WeaponizeKali.sh/blob/main/00-CS/README.md)
 
 
 
