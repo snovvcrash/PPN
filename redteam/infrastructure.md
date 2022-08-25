@@ -19,7 +19,7 @@ Install:
 
 ```
 $ sudo mkdir -p /opt/nebula/certs
-$ sudo eget -s linux/amd64 --download-only slackhq/nebula --to /opt/nebula && cd /opt/nebula
+$ sudo eget -s linux/amd64 --download-only "slackhq/nebula" --to /opt/nebula && cd /opt/nebula
 $ sudo tar -xzvf nebula-linux-amd64.tar.gz && sudo rm nebula-linux-amd64.tar.gz
 $ sudo mv nebula-cert certs && cd certs
 ```
@@ -294,7 +294,7 @@ $ sudo apt install caddy -y
 Install from a release:
 
 ```
-$ eget -qs linux/amd64 caddyserver/caddy --to /tmp/caddy.deb
+$ eget -qs linux/amd64 "caddyserver/caddy" --to /tmp/caddy.deb
 $ sudo dpkg -i /tmp/caddy.deb && rm /tmp/caddy.deb
 ```
 
@@ -381,7 +381,7 @@ https://example.com {
 
     handle /files/* {
         file_server {
-            # there should be this "files" directory in root
+            # There should be this "files" directory in root
             root /home/snovvcrash/www
             #browse
         }
@@ -391,5 +391,31 @@ https://example.com {
         import proxy-upstream
     }
 }
+```
+{% endcode %}
+
+
+
+
+## autossh
+
+- [https://linux.die.net/man/1/autossh](https://linux.die.net/man/1/autossh)
+
+Create and maintain an SSH tunnel from the team server to redirector `proxy1` in the background:
+
+```
+(teamserver)$ autossh -M 0 -f -N proxy1
+```
+
+{% code title="~/snovvcrash/.ssh/config" %}
+```
+Host proxy1
+    HostName 10.10.13.37
+    User snovvcrash
+    Port 22
+    IdentityFile /home/snovvcrash/.ssh/id_proxy1
+    RemoteForward 8443 localhost:443
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
 ```
 {% endcode %}
