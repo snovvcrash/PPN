@@ -182,7 +182,7 @@
     * [Process Injectors](redteam/maldev/code-injection/process-injectors.md)
     * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/maldev/dinvoke.md)
-  - [DLL Hijackingg](redteam/se/phishing/dll-hijacking.md)
+  - [DLL Hijacking](redteam/se/phishing/dll-hijacking.md)
   - [Nim](redteam/maldev/nim.md)
   - [Sandbox Evasion](redteam/maldev/sandbox-evasion.md)
   - [Shellcodes](redteam/maldev/shellcodes.md)
