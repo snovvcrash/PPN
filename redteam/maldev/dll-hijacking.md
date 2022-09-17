@@ -346,7 +346,7 @@ NTSTATUS(NTAPI* ZwClose)(_In_ HANDLE Handle);
 {% endtab %}
 {% endtabs %}
 
-Create a malicious link:
+Create a malicious link (also [here](https://gist.github.com/mttaggart/eb2ba020b8816cfe3da4cfd835240b7d)):
 
 ```powershell
 $obj = New-object -comobject wscript.shell

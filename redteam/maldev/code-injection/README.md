@@ -95,6 +95,7 @@ $ gcc -o loader loader.c -z execstack
 - [https://mez0.cc/posts/vulpes-obfuscating-memory-regions/](https://mez0.cc/posts/vulpes-obfuscating-memory-regions/)
 - [https://github.com/janoglezcampos/DeathSleep](https://github.com/janoglezcampos/DeathSleep)
 - [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
+- [https://blog.kyleavery.com/posts/avoiding-memory-scanners/](https://blog.kyleavery.com/posts/avoiding-memory-scanners/)
 
 
 
