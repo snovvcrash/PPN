@@ -82,6 +82,7 @@ AllowedIPs = 0.0.0.0/0
 Endpoint = <SERVER_IP>:41194
 PersistentKeepalive = 15
 ```
+{% endcode %}
 
 Restart the server:
 
