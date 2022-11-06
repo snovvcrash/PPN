@@ -215,7 +215,7 @@ Make any traffic hitting port **8443** on Victim to be redirected to **10.10.13.
 beacon> rportfwd 8443 10.10.13.37 443
 ```
 
-Make any traffic hitting port **8080** on Victim to be redirected to **localhost:8080** on Attacker (traffic flows through the CS client):
+Make any traffic hitting port **8080** on Victim to be redirected to **localhost:80** on Attacker (traffic flows through the CS client):
 
 ```
 beacon> rportfwd_local 8080 127.0.0.1 80
