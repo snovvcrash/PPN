@@ -173,12 +173,7 @@ def run_command(command):
 
 ### @preemptdev
 
-- [Maelstrom: An Introduction](https://pre.empt.dev/posts/maelstrom-an-introduction/)
-- [Maelstrom: The C2 Architecture](https://pre.empt.dev/posts/maelstrom-arch-episode-1/)
-- [Maelstrom: Building the Team Server](https://pre.empt.dev/posts/maelstrom-arch-episode-2/)
-- [Maelstrom: Writing a C2 Implant](https://pre.empt.dev/posts/maelstrom-the-implant/)
-- [Maelstrom: EDR Kernel Callbacks, Hooks, and Call Stacks](https://pre.empt.dev/posts/maelstrom-edr-kernel-callbacks-hooks-and-callstacks/)
-- [Maelstrom: Working with AMSI and ETW for Red and Blue](https://pre.empt.dev/posts/maelstrom-etw-amsi/)
+- [Mez0: Maelstrom](https://mez0.cc/posts/maelstrom/)
 
 
 
