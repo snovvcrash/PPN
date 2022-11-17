@@ -23,5 +23,3 @@ Previous version of PPN is ➡️ [here](https://snovvcrash.rocks/PPN/) (depreca
 {% embed url="https://github.com/snovvcrash" caption="GitHub" %}
 
 {% embed url="https://infosec.exchange/@snovvcrash" caption="Mastodon" %}
-
-<a rel="me" href="https://infosec.exchange/@snovvcrash"></a>
