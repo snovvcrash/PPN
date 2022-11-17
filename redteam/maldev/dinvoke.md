@@ -24,7 +24,7 @@ description: Dynamic API Invocation
 
 ## H/Invoke
 
-- [https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html](https://dr4k0nia.github.io/dotnet/coding/2022/08/10/HInvoke-and-avoiding-PInvoke.html)
+- [https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/](https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/)
 - [https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d](https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d)
 
 

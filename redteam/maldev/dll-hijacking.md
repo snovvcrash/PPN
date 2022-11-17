@@ -2,6 +2,7 @@
 
 - [https://hijacklibs.net/](https://hijacklibs.net/)
 - [https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads](https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads)
+- [https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/](https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
 

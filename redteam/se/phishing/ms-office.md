@@ -1,5 +1,8 @@
 # MS Office
 
+- [https://mgeeky.tech/backdooring-office-structures-part-1-oldschool/#malware-embedded-in-vba](https://mgeeky.tech/backdooring-office-structures-part-1-oldschool/#malware-embedded-in-vba)
+- [https://mgeeky.tech/payload-crumbs-in-custom-parts/](https://mgeeky.tech/payload-crumbs-in-custom-parts/)
+
 
 
 
