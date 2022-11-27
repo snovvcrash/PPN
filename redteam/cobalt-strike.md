@@ -313,6 +313,11 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 
 ## Evasion
 
+- [[PDF] Avoiding Memory Scanners (Kyle Avery, @kyleavery)](https://www.blackhillsinfosec.com/avoiding-memory-scanners/)
+- [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
+
+{% embed url="https://youtu.be/edIMUcxCueA" %}
+
 
 
 ### Sleep Mask
@@ -323,3 +328,10 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 
 - [https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures](https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures)
 - [https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/](https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/)
+
+
+
+
+## Detection
+
+- [https://github.com/chronicle/GCTI](https://github.com/chronicle/GCTI)

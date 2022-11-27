@@ -115,6 +115,8 @@ $ gcc -o loader loader.c -z execstack
 
 - [https://github.com/forrest-orr/moneta](https://github.com/forrest-orr/moneta)
 - [https://github.com/hasherezade/pe-sieve](https://github.com/hasherezade/pe-sieve)
+- [https://github.com/waldo-irc/MalMemDetect](https://github.com/waldo-irc/MalMemDetect)
+- [https://github.com/thefLink/Hunt-Sleeping-Beacons](https://github.com/thefLink/Hunt-Sleeping-Beacons)
 
 
 
