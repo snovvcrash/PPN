@@ -6230,7 +6230,7 @@ user@remote:$ export TERM=xterm
 
 * [https://github.com/sysdream/chashell](https://github.com/sysdream/chashell)
 
-Buy and configure DNS (e.g., `c2cdomain.net`):
+Buy and configure DNS (e. g., `c2cdomain.net`):
 
 ```
 A * -> <IP>

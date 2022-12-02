@@ -83,7 +83,7 @@ End Function
 
 ### Using Add-Type and C\#
 
-C data types to C# data types "translation" can be done with P/Invoke APIs (Platform Invocation Services) at [www.pinvoke.net](http://www.pinvoke.net/) (e.g., [VirtualAlloc](http://www.pinvoke.net/default.aspx/kernel32.VirtualAlloc)).
+C data types to C# data types "translation" can be done with P/Invoke APIs (Platform Invocation Services) at [www.pinvoke.net](http://www.pinvoke.net/) (e. g., [VirtualAlloc](http://www.pinvoke.net/default.aspx/kernel32.VirtualAlloc)).
 
 {% code title="ShellcodeRunnerv1.ps1" %}
 ```powershell
@@ -174,7 +174,7 @@ $hThread = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPoint
 {% endcode %}
 
 {% hint style="info" %}
-In order to run x64 shellcode from a 32-bit application (e.g., MS Word), you may want to specify the path to 64-bit PowerShell binary through [Sysnative](https://www.samlogic.net/articles/sysnative-folder-64-bit-windows.htm) alias.
+In order to run x64 shellcode from a 32-bit application (e. g., MS Word), you may want to specify the path to 64-bit PowerShell binary through [Sysnative](https://www.samlogic.net/articles/sysnative-folder-64-bit-windows.htm) alias.
 {% endhint %}
 
 
