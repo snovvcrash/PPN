@@ -3074,10 +3074,10 @@ $ crowbar -b rdp -s 192.168.1.0/24 -u snovvcrash -c 'Passw0rd!' -l ~/ws/log/crow
 
 ### impacket
 
-* [https://github.com/SecureAuthCorp/impacket](https://github.com/SecureAuthCorp/impacket)
+* [https://github.com/fortra/impacket](https://github.com/fortra/impacket)
 
 ```
-$ git clone https://github.com/SecureAuthCorp/impacket ~/tools/impacket && cd ~/tools/impacket
+$ git clone https://github.com/fortra/impacket ~/tools/impacket && cd ~/tools/impacket
 $ pip3 install .
 ```
 

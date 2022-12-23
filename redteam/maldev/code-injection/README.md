@@ -79,6 +79,8 @@ $ gcc -o loader loader.c -z execstack
 
 {% embed url="https://twitter.com/_RastaMouse/status/1443923456630968320" %}
 
+{% embed url="https://youtu.be/edIMUcxCueA" %}
+
 - [https://www.solomonsklash.io/SleepyCrypt-shellcode-to-encrypt-a-running-image.html](https://www.solomonsklash.io/SleepyCrypt-shellcode-to-encrypt-a-running-image.html)
 - [https://github.com/SolomonSklash/SleepyCrypt](https://github.com/SolomonSklash/SleepyCrypt)
 - [https://gist.github.com/S3cur3Th1sSh1t/6022dc2050bb1b21be2105b8b0dc077d](https://gist.github.com/S3cur3Th1sSh1t/6022dc2050bb1b21be2105b8b0dc077d)
@@ -94,8 +96,8 @@ $ gcc -o loader loader.c -z execstack
 - [https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c](https://github.com/Cracked5pider/Ekko/blob/main/Src/Ekko.c)
 - [https://mez0.cc/posts/vulpes-obfuscating-memory-regions/](https://mez0.cc/posts/vulpes-obfuscating-memory-regions/)
 - [https://github.com/janoglezcampos/DeathSleep](https://github.com/janoglezcampos/DeathSleep)
-- [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
 - [https://blog.kyleavery.com/posts/avoiding-memory-scanners/](https://blog.kyleavery.com/posts/avoiding-memory-scanners/)
+- [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
 - [https://github.com/Idov31/Cronos](https://github.com/Idov31/Cronos)
 
 
@@ -117,6 +119,14 @@ $ gcc -o loader loader.c -z execstack
 - [https://github.com/hasherezade/pe-sieve](https://github.com/hasherezade/pe-sieve)
 - [https://github.com/waldo-irc/MalMemDetect](https://github.com/waldo-irc/MalMemDetect)
 - [https://github.com/thefLink/Hunt-Sleeping-Beacons](https://github.com/thefLink/Hunt-Sleeping-Beacons)
+
+
+
+### SystemFunction032 / SystemFunction033
+
+- [https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/](https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/)
+- [https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99)
+- [https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033](https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033)
 
 
 

@@ -84,7 +84,7 @@
         * [Potatoes](pentest/infrastructure/ad/privileges-abuse/seimpersonateprivilege/potatoes.md)
         * [PrintSpoofer](pentest/infrastructure/ad/privileges-abuse/seimpersonateprivilege/printspoofer.md)
     * [RID Cycling](pentest/infrastructure/ad/rid-cycling.md)
-    * [SCCM Abuse](pentest/infrastructure/ad/sccm-abuse.md)
+    * [SCCM / MECM Abuse](pentest/infrastructure/ad/sccm-mecm-abuse.md)
     * [SMB](pentest/infrastructure/ad/smb.md)
     * [RPC](pentest/infrastructure/ad/rpc.md)
     * [Token Manipulation](pentest/infrastructure/ad/token-manipulation.md)

@@ -18,6 +18,7 @@ description: Dynamic API Invocation
 ## Dynamic P/Invoke
 
 - [https://bohops.com/2022/04/02/unmanaged-code-execution-with-net-dynamic-pinvoke/](https://bohops.com/2022/04/02/unmanaged-code-execution-with-net-dynamic-pinvoke/)
+- [https://github.com/bohops/DynamicDotNet](https://github.com/bohops/DynamicDotNet)
 
 
 
