@@ -144,6 +144,7 @@
   - [Information Gathering](pentest/perimeter/information-gathering.md)
   - [IPSec](pentest/perimeter/ipsec.md)
   - [Java RMI](pentest/perimeter/java-rmi.md)
+  - [Log4j / Log4Shell](pentest/perimeter/log4j-log4shell.md)
   - [Lync & Skype for Business](pentest/perimeter/lync-s4b.md)
   - [NTP](pentest/perimeter/ntp.md)
   - [Outlook](pentest/perimeter/outlook.md)

