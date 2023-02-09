@@ -77,6 +77,7 @@
       - [NTLMv1 Downgrade](pentest/infrastructure/ad/ntlm/ntlmv1-downgrade.md)
     * [Password Spraying](pentest/infrastructure/ad/password-spraying.md)
     * [Post Exploitation](pentest/infrastructure/ad/post-exploitation.md)
+    * [Pre-created Computers Abuse](pentest/infrastructure/ad/pre-created-computers-abuse.md)
     * [PrivExchange](pentest/infrastructure/ad/privexchange.md)
     * [Privileges Abuse](pentest/infrastructure/ad/privileges-abuse/README.md)
       - [SeBackupPrivilege](pentest/infrastructure/ad/privileges-abuse/sebackupprivilege.md)
