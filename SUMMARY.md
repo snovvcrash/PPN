@@ -195,6 +195,7 @@
   - [Phishing](redteam/se/phishing/README.md)
     * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
     * [MS Office](redteam/se/phishing/ms-office.md)
+    * [Rogue RDP](redteam/se/phishing/rogue-rdp.md)
 
 ## ⚙️ Admin
 
