@@ -147,6 +147,7 @@ $ gcc -o loader loader.c -z execstack
 
 - [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
 - [https://github.com/countercept/CallStackSpoofer](https://github.com/countercept/CallStackSpoofer)
+- [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
 - [https://github.com/klezVirus/SilentMoonwalk](https://github.com/klezVirus/SilentMoonwalk)
 
 
