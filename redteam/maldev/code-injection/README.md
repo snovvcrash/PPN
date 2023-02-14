@@ -75,6 +75,16 @@ $ gcc -o loader loader.c -z execstack
 
 
 
+## Function Stomping / Threadless Injection
+
+- [https://idov31.github.io/2022/01/28/function-stomping.html](https://idov31.github.io/2022/01/28/function-stomping.html)
+- [https://github.com/Idov31/FunctionStomping](https://github.com/Idov31/FunctionStomping)
+- [https://klezvirus.github.io/RedTeaming/AV_Evasion/FromInjectionToHijacking/](https://klezvirus.github.io/RedTeaming/AV_Evasion/FromInjectionToHijacking/)
+- [https://github.com/CCob/ThreadlessInject](https://github.com/CCob/ThreadlessInject)
+
+
+
+
 ## Shellcode In-Memory Fluctuation (Obfuscate and Sleep)
 
 {% embed url="https://twitter.com/_RastaMouse/status/1443923456630968320" %}
@@ -208,6 +218,8 @@ int main(int argc, char** argv)
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
 - [https://github.com/TheWover/donut](https://github.com/TheWover/donut)
 - [https://github.com/hasherezade/pe_to_shellcode](https://github.com/hasherezade/pe_to_shellcode)
+- [https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/](https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/)
+- [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
 
 [Example](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146) with [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe) and donut (C# cross-compilation is done with [Mono](https://www.mono-project.com/download/stable/)):
 
