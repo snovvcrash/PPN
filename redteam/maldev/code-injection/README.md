@@ -289,6 +289,7 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 ## Shellcode Execution via Callbacks
 
 - [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
+- [https://github.com/werdhaihai/SharpAltShellCodeExec](https://github.com/werdhaihai/SharpAltShellCodeExec)
 - [https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/](https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/)
 - [https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/](https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/)
 - [http://ropgadget.com/posts/abusing_win_functions.html](http://ropgadget.com/posts/abusing_win_functions.html)

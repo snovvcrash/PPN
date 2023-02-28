@@ -47,8 +47,8 @@ namespace DInvokePE
     {
         static byte[] Compress(byte[] data)
         {
-            MemoryStream output = new MemoryStream();
-            using (DeflateStream dStream = new DeflateStream(output, CompressionLevel.Optimal))
+            var output = new MemoryStream();
+            using (var dStream = new DeflateStream(output, CompressionLevel.Optimal))
                 dStream.Write(data, 0, data.Length);
 
             return output.ToArray();
@@ -56,9 +56,9 @@ namespace DInvokePE
 
         static byte[] Decompress(byte[] data)
         {
-            MemoryStream input = new MemoryStream(data);
-            MemoryStream output = new MemoryStream();
-            using (DeflateStream dStream = new DeflateStream(input, CompressionMode.Decompress))
+            var input = new MemoryStream(data);
+            var output = new MemoryStream();
+            using (var dStream = new DeflateStream(input, CompressionMode.Decompress))
                 dStream.CopyTo(output);
 
             return output.ToArray();
@@ -75,7 +75,7 @@ namespace DInvokePE
 
             var compressed = Convert.FromBase64String("");
             var rawBytes = Decompress(compressed);
-            DInvoke.Data.PE.PE_MANUAL_MAP map = DInvoke.ManualMap.Map.MapModuleToMemory(rawBytes);
+            var map = DInvoke.ManualMap.Map.MapModuleToMemory(rawBytes);
             DInvoke.DynamicInvoke.Generic.CallMappedPEModule(map.PEINFO, map.ModuleBase);
             Console.ReadLine();
         }

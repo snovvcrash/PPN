@@ -4,6 +4,8 @@ description: Beacon Object Files / Common Object File Format
 
 # BOF / COFF
 
+- [https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/](https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/)
+
 Argument types for [bof_pack](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics_aggressor-scripts/as-resources_functions.htm#bof_pack):
 
 | **Type** | **Description**                  | **Unpack With (C)**          |
@@ -26,12 +28,12 @@ A basic BOF example:
 #include <windows.h>
 #include "beacon.h"
 
-void go(char* args, int len)
+void go(char* args, int alen)
 {
     DECLSPEC_IMPORT INT WINAPI USER32$MessageBoxA(HWND, LPCSTR, LPCSTR, UINT);
 
     datap parser;
-    BeaconDataParse(&parser, args, len);
+    BeaconDataParse(&parser, args, alen);
 
     char* message;
     message = BeaconDataExtract(&parser, NULL);
@@ -46,7 +48,7 @@ void go(char* args, int len)
 ```
 alias msgbox {
     local('$handle $bof $args');
-    
+
     # Read the bof file
     $handle = openf(script_resource("msgbox.o"));
     $bof = readb($handle, -1);
@@ -71,7 +73,7 @@ beacon_command_register("msgbox", "Pops a message box", "Calls the MessageBoxA W
 
 
 
-## Run BOFs outside of CS
+## Run BOFs outside of C2
 
 - [https://www.trustedsec.com/blog/coffloader-building-your-own-in-memory-loader-or-how-to-run-bofs/](https://www.trustedsec.com/blog/coffloader-building-your-own-in-memory-loader-or-how-to-run-bofs/)
 - [https://github.com/trustedsec/COFFLoader](https://github.com/trustedsec/COFFLoader)
