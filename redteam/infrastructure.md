@@ -397,7 +397,25 @@ https://example.com {
 
 
 
-## autossh
+## Domain Fronting
+
+- [https://chigstuff.com/blog/metasploit-domain-fronting-with-microsoft-azure/](https://chigstuff.com/blog/metasploit-domain-fronting-with-microsoft-azure/)
+
+
+
+### Faslty
+
+- [https://fortynorthsecurity.com/blog/fastly-and-fronting/](https://fortynorthsecurity.com/blog/fastly-and-fronting/)
+- [https://github.com/vysecurity/DomainFrontingLists/blob/c4612cf436330a587b6a9beb0fc73b771dba3bdc/Fastly.txt](https://github.com/vysecurity/DomainFrontingLists/blob/c4612cf436330a587b6a9beb0fc73b771dba3bdc/Fastly.txt)
+
+
+
+
+## Tools
+
+
+
+### autossh
 
 - [https://linux.die.net/man/1/autossh](https://linux.die.net/man/1/autossh)
 

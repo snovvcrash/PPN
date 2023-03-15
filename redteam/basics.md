@@ -15,6 +15,14 @@
 
 
 
+### CISA Red Team
+
+- [https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-059a](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-059a)
+
+{% file src="/.gitbook/assets/CISA Red Team Shares Key Findings.pdf" %}
+
+
+
 
 ## RTFM
 

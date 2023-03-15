@@ -18,6 +18,7 @@
       - [ESC8](pentest/infrastructure/ad/ad-cs-abuse/esc8.md)
     * [ADIDNS Abuse](pentest/infrastructure/ad/adidns-abuse.md)
     * [Attack Trusts](pentest/infrastructure/ad/attack-trusts.md)
+    * [Attack RODCs](pentest/infrastructure/ad/attack-rodc.md)
     * [AV / EDR Evasion](pentest/infrastructure/ad/av-edr-evasion/README.md)
       - [.NET Reflective Assembly](pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md)
       - [AMSI Bypass](pentest/infrastructure/ad/av-edr-evasion/amsi-bypass.md)
