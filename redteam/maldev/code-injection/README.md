@@ -80,7 +80,14 @@ $ gcc -o loader loader.c -z execstack
 - [https://idov31.github.io/2022/01/28/function-stomping.html](https://idov31.github.io/2022/01/28/function-stomping.html)
 - [https://github.com/Idov31/FunctionStomping](https://github.com/Idov31/FunctionStomping)
 - [https://klezvirus.github.io/RedTeaming/AV_Evasion/FromInjectionToHijacking/](https://klezvirus.github.io/RedTeaming/AV_Evasion/FromInjectionToHijacking/)
+
+
+
+### ThreadlessInject
+
 - [https://github.com/CCob/ThreadlessInject](https://github.com/CCob/ThreadlessInject)
+- [https://github.com/iilegacyyii/ThreadlessInject-BOF](https://github.com/iilegacyyii/ThreadlessInject-BOF)
+- [https://github.com/rkbennett/pyThreadlessInject](https://github.com/rkbennett/pyThreadlessInject)
 
 
 
