@@ -187,6 +187,7 @@
     * [Shellcode Runners](redteam/maldev/code-injection/shellcode-runners.md)
   - [D/Invoke](redteam/maldev/dinvoke.md)
   - [DLL Hijacking](redteam/maldev/dll-hijacking.md)
+  - [Golang](redteam/maldev/golang.md)
   - [Nim](redteam/maldev/nim.md)
   - [Sandbox Evasion](redteam/maldev/sandbox-evasion.md)
   - [Shellcodes](redteam/maldev/shellcodes.md)
