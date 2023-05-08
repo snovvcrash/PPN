@@ -2,6 +2,7 @@
 
 - [https://ditrizna.medium.com/design-and-setup-of-c2-traffic-redirectors-ec3c11bd227d](https://ditrizna.medium.com/design-and-setup-of-c2-traffic-redirectors-ec3c11bd227d)
 - [https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure-3c4](https://byt3bl33d3r.substack.com/p/taking-the-pain-out-of-c2-infrastructure-3c4)
+- [https://rastamouse.me/sharpc2-https-with-redirector/](https://rastamouse.me/sharpc2-https-with-redirector/)
 - [https://github.com/bluscreenofjeff/Red-Team-Infrastructure-Wiki](https://github.com/bluscreenofjeff/Red-Team-Infrastructure-Wiki)
 - [https://github.com/mgeeky/RedWarden](https://github.com/mgeeky/RedWarden)
 - [[PDF] Orchestrating Resilient Red Team Operations (Yiannis Ioannides)](https://github.com/secgroundzero/BSides-Cyprus-2019/blob/master/bsides_Cyprus_Yiannis.pdf)
@@ -285,8 +286,8 @@ Install from apt:
 
 ```
 $ sudo apt install debian-keyring debian-archive-keyring apt-transport-https -y
-$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
-$ curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+$ curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/gpg.key | sudo tee /etc/apt/trusted.gpg.d/caddy-stable.asc
+$ curl -1sLf https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt | sudo tee /etc/apt/sources.list.d/caddy-stable.list
 $ sudo apt update
 $ sudo apt install caddy -y
 ```
@@ -324,6 +325,7 @@ Config sample to act as a reverse proxy:
     log
     #debug
     admin off
+    #default_sni example.com
     #auto_https disable_redirects
 }
 

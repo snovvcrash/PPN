@@ -47,6 +47,8 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 
 ## Tools
 
+- [https://github.com/monoxgas/Koppeling](https://github.com/monoxgas/Koppeling)
+- [https://github.com/Flangvik/SharpDllProxy](https://github.com/Flangvik/SharpDllProxy)
 - [https://github.com/tothi/dll-hijack-by-proxying](https://github.com/tothi/dll-hijack-by-proxying)
 
 
