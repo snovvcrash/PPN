@@ -281,6 +281,7 @@ WantedBy=multi-user.target
 - [https://github.com/caddyserver/caddy/releases](https://github.com/caddyserver/caddy/releases)
 - [https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy](https://improsec.com/tech-blog/staging-cobalt-strike-with-mtls-using-caddy)
 - [https://github.com/improsec/CaddyStager](https://github.com/improsec/CaddyStager)
+- [https://github.com/XiaoliChan/RedCaddy](https://github.com/XiaoliChan/RedCaddy)
 
 Install from apt:
 
@@ -366,7 +367,7 @@ Config sample to act as a reverse proxy:
     respond @ip_denylist "Forbidden" 403 {
         close
     }
-        
+
     reverse_proxy https://10.10.13.2:31337 {
         header_up Host {upstream_hostport}
         header_up X-Forwarded-Host {host}
