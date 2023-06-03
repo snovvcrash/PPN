@@ -64,7 +64,7 @@ AllowedIPs = 172.16.1.3/32
 Generate keys:
 
 ```
-$ $ wg genkey | tee client1 | wg pubkey > client1.pub
+$ wg genkey | tee client1 | wg pubkey > client1.pub
 ```
 
 Configuration template:

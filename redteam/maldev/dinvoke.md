@@ -23,10 +23,12 @@ description: Dynamic API Invocation
 
 
 
-## H/Invoke
+## H/Invoke & NixImports
 
 - [https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/](https://dr4k0nia.github.io/posts/HInvoke-and-avoiding-PInvoke/)
 - [https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d](https://gist.github.com/dr4k0nia/95bd2dc1cc09726f4aaaf920b9982f9d)
+- [https://dr4k0nia.github.io/posts/NixImports-a-NET-loader-using-HInvoke/](https://dr4k0nia.github.io/posts/NixImports-a-NET-loader-using-HInvoke/)
+- [https://github.com/dr4k0nia/NixImports](https://github.com/dr4k0nia/NixImports)
 
 
 
