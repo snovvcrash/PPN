@@ -44,7 +44,7 @@ fi
 
 ${CS_PATH}/TeamServerImage -Dcobaltstrike.server_port=1337 -Dcobaltstrike.server_bindto="${CS_IP}" -Djavax.net.ssl.keyStore=./cobaltstrike.store -Djavax.net.ssl.keyStorePassword='Passw0rd2!' teamserver "${CS_IP}" "${CS_PASS}" "${CS_PATH}/Profiles/random_c2_profile/output/${CS_PROFILE}"
 ```
-{% endtab %}
+{% endcode %}
 {% endtab %}
 {% endtabs %}
 

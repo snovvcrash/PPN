@@ -81,6 +81,7 @@ beacon_command_register("msgbox", "Pops a message box", "Calls the MessageBoxA W
 - [https://github.com/airbus-cert/Invoke-Bof](https://github.com/airbus-cert/Invoke-Bof)
 - [https://github.com/Cracked5pider/CoffeeLdr](https://github.com/Cracked5pider/CoffeeLdr)
 - [https://github.com/frkngksl/NiCOFF](https://github.com/frkngksl/NiCOFF)
+- [https://github.com/trustedsec/CS_COFFLoader](https://github.com/trustedsec/CS_COFFLoader)
 
 
 
