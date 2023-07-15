@@ -73,11 +73,13 @@ Mix settings list (both for hardware install and virtualization):
 ## Console Logging
 
 
+
 ### script
 
 ```
 $ script ~/ws/shells/`date "+%FT%H%M%S"`.script
 ```
+
 
 
 ### tmux
@@ -90,7 +92,18 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 ```
 
 
+
+### ts
+
+```
+$ sudo apt install moreutils -y
+$ command | ts '[%Y-%m-%d %H:%M:%S]' | tee command.log
+```
+
+
+
 ### Time in Prompt
+
 
 #### bash
 
@@ -99,6 +112,7 @@ bash ~/.tmux/plugins/tmux-logging/scripts/save_complete_history.sh
 ```
 PS1='${debian_chroot:!($debian_chroot)}[\D!d}|\D{!k:!M}] \[\033[01;32m\]λ  \[\033[00m\]\[\033[01;34m\]\w\[\033[00m\] '
 ```
+
 
 #### zsh
 

@@ -5,6 +5,8 @@ description: Beacon Object Files / Common Object File Format
 # BOF / COFF
 
 - [https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/](https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/)
+- [https://securityintelligence.com/posts/how-to-hide-beacon-during-bof-execution/](https://securityintelligence.com/posts/how-to-hide-beacon-during-bof-execution/)
+- [https://github.com/xforcered/bofmask](https://github.com/xforcered/bofmask)
 
 Argument types for [bof_pack](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics_aggressor-scripts/as-resources_functions.htm#bof_pack):
 
