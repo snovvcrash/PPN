@@ -96,6 +96,7 @@
   - [DevOps](pentest/infrastructure/devops/README.md)
     * [Ansible](pentest/infrastructure/devops/ansible.md)
     * [Artifactory](pentest/infrastructure/devops/artifactory.md)
+    * [Atlassian](pentest/infrastructure/devops/atlassian.md)
     * [Containerization / Orchestration](pentest/infrastructure/devops/containerization-orchestration.md)
     * [GitLab](pentest/infrastructure/devops/gitlab.md)
     * [Jenkis](pentest/infrastructure/devops/jenkins.md)
