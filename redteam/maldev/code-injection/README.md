@@ -116,6 +116,7 @@ $ gcc -o loader loader.c -z execstack
 - [https://blog.kyleavery.com/posts/avoiding-memory-scanners/](https://blog.kyleavery.com/posts/avoiding-memory-scanners/)
 - [https://github.com/kyleavery/AceLdr](https://github.com/kyleavery/AceLdr)
 - [https://github.com/Idov31/Cronos](https://github.com/Idov31/Cronos)
+- [https://github.com/lem0nSec/ShellGhost](https://github.com/lem0nSec/ShellGhost)
 
 
 
