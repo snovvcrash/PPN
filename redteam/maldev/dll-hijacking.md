@@ -5,6 +5,7 @@
 - [https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/](https://dec0ne.github.io/research/2021-04-26-DLL-Proxying-pt1/)
 - [https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/](https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/)
 - [https://besteffortteam.it/onedrive-and-teams-dll-hijacking/](https://besteffortteam.it/onedrive-and-teams-dll-hijacking/)
+- [https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/](https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
 

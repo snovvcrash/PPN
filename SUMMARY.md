@@ -100,6 +100,7 @@
     * [Containerization / Orchestration](pentest/infrastructure/devops/containerization-orchestration.md)
     * [GitLab](pentest/infrastructure/devops/gitlab.md)
     * [Jenkis](pentest/infrastructure/devops/jenkins.md)
+    * [Zabbix](pentest/infrastructure/devops/zabbix.md)
   - [DBMS](pentest/infrastructure/dbms/README.md)
     * [FireBird](pentest/infrastructure/dbms/firebird.md)
     * [MS SQL](pentest/infrastructure/dbms/mssql.md)
