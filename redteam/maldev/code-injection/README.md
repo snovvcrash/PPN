@@ -126,6 +126,7 @@ sc = CFUNCTYPE(c_void_p, c_void_p)
 call_sc = cast(cptr, sc)
 call_sc(None)
 ```
+{% endcode %}
 
 
 

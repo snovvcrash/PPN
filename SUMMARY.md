@@ -24,6 +24,7 @@
       - [AMSI Bypass](pentest/infrastructure/ad/av-edr-evasion/amsi-bypass.md)
       - [Application Whitelist Bypass](pentest/infrastructure/ad/av-edr-evasion/application-whitelist-bypass.md)
       - [AppLocker Bypass](pentest/infrastructure/ad/av-edr-evasion/applocker-bypass.md)
+      - [BYOVD](pentest/infrastructure/ad/av-edr-evasion/byovd.md)
       - [CLM Bypass](pentest/infrastructure/ad/av-edr-evasion/clm-bypass.md)
       - [Defender](pentest/infrastructure/ad/av-edr-evasion/defender.md)
       - [ETW Block](pentest/infrastructure/ad/av-edr-evasion/etw-block.md)
