@@ -56,10 +56,10 @@ unsigned char buf[] =
 
 int main (int argc, char **argv)
 {
-	int bufsize = (int)sizeof(buf);
-	for (int i = 0; i < bufsize-1; i++) { buf[i] = buf[i] ^ 'a'; }
-	int (*ret)() = (int(*)())buf;
-	ret();
+    int bufsize = (int)sizeof(buf);
+    for (int i = 0; i < bufsize-1; i++) { buf[i] = buf[i] ^ 'a'; }
+    int (*ret)() = (int(*)())buf;
+    ret();
 }
 ```
 {% endcode %}
