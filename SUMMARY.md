@@ -180,7 +180,6 @@
 * [Basics](redteam/basics.md)
 * [Cobalt Strike](redteam/cobalt-strike/README.md)
   - [UDRL](redteam/maldev/udrl.md)
-* [Cobalt Strike](redteam/cobalt-strike.md)
 * [Infrastructure](redteam/infrastructure.md)
 * [Malware Development](redteam/maldev/README.md)
   - [API Hashing](redteam/maldev/api-hashing.md)
