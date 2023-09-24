@@ -3,6 +3,7 @@
 - [https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process](https://www.elastic.co/blog/ten-process-injection-techniques-technical-survey-common-and-trending-process)
 - [https://blog.xpnsec.com/weird-ways-to-execute-dotnet/](https://blog.xpnsec.com/weird-ways-to-execute-dotnet/)
 - [https://gitlab.com/users/ORCA666/projects](https://gitlab.com/users/ORCA666/projects)
+- [https://github.com/itaymigdal/awesome-injection](https://github.com/itaymigdal/awesome-injection)
 
 
 
