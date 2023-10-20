@@ -328,6 +328,9 @@ Config sample to act as a reverse proxy:
     admin off
     #default_sni example.com
     #auto_https disable_redirects
+    servers {
+        protocols h1
+    }
 }
 
 (logging) {
