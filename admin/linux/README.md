@@ -73,6 +73,8 @@ $ ss -nlpt | grep LIST
 
 ```
 $ wget -q -O - https://ipinfo.io/ip
+$ curl ifconfig.me; echo
+$ dig +time=1 +tcp +tries=1 +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"'
 ```
 
 

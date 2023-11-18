@@ -44,6 +44,7 @@
       - [KeePass](pentest/infrastructure/ad/credential-harvesting/keepass.md)
       - [Linux](pentest/infrastructure/ad/credential-harvesting/linux.md)
       - [LSA](pentest/infrastructure/ad/credential-harvesting/lsa.md)
+      - [NetSync](pentest/infrastructure/ad/credential-harvesting/netsync.md)
       - [NPLogonNotify](pentest/infrastructure/ad/credential-harvesting/nplogonnotify.md)
       - [NTDS](pentest/infrastructure/ad/credential-harvesting/ntds.md)
       - [Password Filter](pentest/infrastructure/ad/credential-harvesting/password-filter.md)

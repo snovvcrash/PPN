@@ -179,6 +179,8 @@ $ /proc/1732982/fd/4
 - [https://github.com/iilegacyyii/ThreadlessInject-BOF](https://github.com/iilegacyyii/ThreadlessInject-BOF)
 - [https://github.com/rkbennett/pyThreadlessInject](https://github.com/rkbennett/pyThreadlessInject)
 
+{% embed url="https://youtu.be/BYuAUYQcI-E" %}
+
 
 
 
@@ -227,6 +229,7 @@ $ /proc/1732982/fd/4
 - [https://github.com/hasherezade/pe-sieve](https://github.com/hasherezade/pe-sieve)
 - [https://github.com/waldo-irc/MalMemDetect](https://github.com/waldo-irc/MalMemDetect)
 - [https://github.com/thefLink/Hunt-Sleeping-Beacons](https://github.com/thefLink/Hunt-Sleeping-Beacons)
+- [https://github.com/paranoidninja/Cobaltstrike-Detection/blob/main/scan_process.c](https://github.com/paranoidninja/Cobaltstrike-Detection/blob/main/scan_process.c)
 
 
 

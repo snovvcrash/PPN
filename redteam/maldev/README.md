@@ -137,3 +137,12 @@ def run_command(command):
 
 - [[PDF] Malware Development for Dummies (Cas van Cooten)](https://github.com/chvancooten/maldev-for-dummies/blob/main/Slides/Malware%20Development%20for%20Dummies%20-%20Hack%20in%20Paris%2030-06-2022%20%26%2001-07-2022.pdf)
 - [https://github.com/chvancooten/maldev-for-dummies](https://github.com/chvancooten/maldev-for-dummies)
+
+
+
+### Windows APT Warfare
+
+- [https://www.packtpub.com/product/windows-apt-warfare/9781804618110](https://www.packtpub.com/product/windows-apt-warfare/9781804618110)
+- [https://github.com/PacktPublishing/Windows-APT-Warfare](https://github.com/PacktPublishing/Windows-APT-Warfare)
+- [https://habr.com/ru/articles/766760/](https://habr.com/ru/articles/766760/)
+- [https://xss.is/threads/87501/](https://xss.is/threads/87501/)

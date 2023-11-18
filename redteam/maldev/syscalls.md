@@ -8,3 +8,4 @@
 - [https://jmpesp.me/malware-analysis-syscalls-example/](https://jmpesp.me/malware-analysis-syscalls-example/)
 - [https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/](https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/)
 - [https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/](https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/)
+- [https://xakep.ru/2023/08/08/hells-gate/](https://xakep.ru/2023/08/08/hells-gate/)
