@@ -46,6 +46,14 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 
 
 
+## Unlock DllMain
+
+- [https://elliotonsecurity.com/perfect-dll-hijacking/](https://elliotonsecurity.com/perfect-dll-hijacking/)
+- [https://github.com/ElliotKillick/LdrLockLiberator](https://github.com/ElliotKillick/LdrLockLiberator)
+
+
+
+
 ## Tools
 
 - [https://github.com/monoxgas/Koppeling](https://github.com/monoxgas/Koppeling)

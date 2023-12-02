@@ -21,6 +21,7 @@
     * [Attack Trusts](pentest/infrastructure/ad/attack-trusts.md)
     * [Attack RODCs](pentest/infrastructure/ad/attack-rodc.md)
     * [AV / EDR Evasion](pentest/infrastructure/ad/av-edr-evasion/README.md)
+      - [.NET Config Loader](pentest/infrastructure/ad/av-edr-evasion/dotnet-config-loader.md)
       - [.NET Reflective Assembly](pentest/infrastructure/ad/av-edr-evasion/dotnet-reflective-assembly.md)
       - [AMSI Bypass](pentest/infrastructure/ad/av-edr-evasion/amsi-bypass.md)
       - [Application Whitelist Bypass](pentest/infrastructure/ad/av-edr-evasion/application-whitelist-bypass.md)
