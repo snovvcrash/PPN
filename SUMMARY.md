@@ -198,6 +198,7 @@
   - [D/Invoke](redteam/maldev/dinvoke.md)
   - [DLL Hijacking](redteam/maldev/dll-hijacking.md)
   - [Golang](redteam/maldev/golang.md)
+  - [Kernel Mode](redteam/maldev/kernel-mode.md)
   - [Nim](redteam/maldev/nim.md)
   - [Sandbox Evasion](redteam/maldev/sandbox-evasion.md)
   - [Shellcodes](redteam/maldev/shellcodes.md)
