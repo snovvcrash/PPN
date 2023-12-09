@@ -6,6 +6,7 @@
 - [https://jmpesp.me/malware-analysis-syscalls-example/](https://jmpesp.me/malware-analysis-syscalls-example/)
 - [https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/](https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/)
 - [https://xakep.ru/2023/08/08/hells-gate/](https://xakep.ru/2023/08/08/hells-gate/)
+- [https://hadess.io/edr-evasion-techniques-using-syscalls/](https://hadess.io/edr-evasion-techniques-using-syscalls/)
 
 
 

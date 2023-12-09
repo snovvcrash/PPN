@@ -1,6 +1,8 @@
 # Golang
 
 - [https://www.redteam.cafe/red-team/golang/red-team-how-to-embed-golang-tools-in-c](https://www.redteam.cafe/red-team/golang/red-team-how-to-embed-golang-tools-in-c)
+- [https://ethicalchaos.dev/2020/01/26/weaponizing-your-favorite-go-program-for-cobalt-strike/](https://ethicalchaos.dev/2020/01/26/weaponizing-your-favorite-go-program-for-cobalt-strike/)
+- [https://sokarepo.github.io//redteam/2023/10/11/create-reflective-dll-for-cobaltstrike.html](https://sokarepo.github.io//redteam/2023/10/11/create-reflective-dll-for-cobaltstrike.html)
 
 
 
