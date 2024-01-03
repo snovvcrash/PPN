@@ -63,7 +63,7 @@ ${CS_PATH}/TeamServerImage -Dcobaltstrike.server_port=1337 -Dcobaltstrike.server
 - [https://github.com/Tylous/SourcePoint](https://github.com/Tylous/SourcePoint)
 
 ```
-$ ./SourcePoint -Host 10.10.13.37 -Injector NtMapViewOfSection [-Sleep 10 -Jitter 0] -Outfile test.profile
+$ ./SourcePoint -Host www.microsoft.com -Forwarder -Sleep 20 -Jitter 20 -Injector NtMapViewOfSection -Stage False -Syscall Indirect -Outfile test.profile
 ```
 
 
@@ -338,6 +338,7 @@ beacon> mimikatz dpapi::cred /in:C:\Users\snovvcrash\AppData\Local\Microsoft\Cre
 
 - [https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures](https://www.elastic.co/blog/detecting-cobalt-strike-with-memory-signatures)
 - [https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/](https://adamsvoboda.net/sleeping-with-a-mask-on-cobaltstrike/)
+- [https://codex-7.gitbook.io/codexs-terminal-window/red-team/cobalt-strike/evading-hunt-sleeping-beacons](https://codex-7.gitbook.io/codexs-terminal-window/red-team/cobalt-strike/evading-hunt-sleeping-beacons)
 
 
 

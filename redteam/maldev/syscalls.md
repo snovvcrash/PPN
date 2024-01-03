@@ -5,7 +5,7 @@
 - [https://www.solomonsklash.io/syscalls-for-shellcode-injection.html](https://www.solomonsklash.io/syscalls-for-shellcode-injection.html)
 - [https://jmpesp.me/malware-analysis-syscalls-example/](https://jmpesp.me/malware-analysis-syscalls-example/)
 - [https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/](https://klezvirus.github.io/RedTeaming/AV_Evasion/NoSysWhisper/)
-- [https://xakep.ru/2023/08/08/hells-gate/](https://xakep.ru/2023/08/08/hells-gate/)
+- [https://labs.cognisys.group/posts/Combining-Indirect-Dynamic-Syscalls-and-API-Hashing/](https://labs.cognisys.group/posts/Combining-Indirect-Dynamic-Syscalls-and-API-Hashing/)
 - [https://hadess.io/edr-evasion-techniques-using-syscalls/](https://hadess.io/edr-evasion-techniques-using-syscalls/)
 
 
@@ -16,6 +16,14 @@
 - [https://jhalon.github.io/utilizing-syscalls-in-csharp-1/](https://jhalon.github.io/utilizing-syscalls-in-csharp-1/)
 - [https://jhalon.github.io/utilizing-syscalls-in-csharp-2/](https://jhalon.github.io/utilizing-syscalls-in-csharp-2/)
 - [https://github.com/jhalon/SharpCall](https://github.com/jhalon/SharpCall)
+
+
+
+
+## HellsGate
+
+- [https://redops.at/en/blog/exploring-hells-gate](https://redops.at/en/blog/exploring-hells-gate)
+- [https://xakep.ru/2023/08/08/hells-gate/](https://xakep.ru/2023/08/08/hells-gate/)
 
 
 

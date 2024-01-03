@@ -96,6 +96,8 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 * [https://github.com/dismantl/ImprovedReflectiveDLLInjection](https://github.com/dismantl/ImprovedReflectiveDLLInjection)
 * [https://github.com/Moriarty2016/NimRDI](https://github.com/Moriarty2016/NimRDI)
 * [https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/](https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/)
+* [https://github.com/Krypteria/AtlasLdr](https://github.com/Krypteria/AtlasLdr)
+* [https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/](https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/)
 
 
 

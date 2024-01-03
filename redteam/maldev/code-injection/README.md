@@ -185,6 +185,15 @@ $ /proc/1732982/fd/4
 
 
 
+## Thread Pools (PoolParty)
+
+- [https://www.safebreach.com/blog/process-injection-using-windows-thread-pools/](https://www.safebreach.com/blog/process-injection-using-windows-thread-pools/)
+- [https://github.com/SafeBreach-Labs/PoolParty](https://github.com/SafeBreach-Labs/PoolParty)
+- [https://github.com/0xEr3bus/PoolPartyBof](https://github.com/0xEr3bus/PoolPartyBof)
+
+
+
+
 ## Shellcode In-Memory Fluctuation (Obfuscate and Sleep)
 
 {% embed url="https://twitter.com/_RastaMouse/status/1443923456630968320" %}
@@ -247,10 +256,10 @@ $ /proc/1732982/fd/4
 
 {% embed url="https://youtu.be/7EheXiC3MJE" %}
 
+- [https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks](https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks)
+- [https://dtsec.us/2023-09-15-StackSpoofin/](https://dtsec.us/2023-09-15-StackSpoofin/)
 - [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
-- [https://github.com/countercept/CallStackSpoofer](https://github.com/countercept/CallStackSpoofer)
 - [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
-- [https://github.com/klezVirus/SilentMoonwalk](https://github.com/klezVirus/SilentMoonwalk)
 
 
 
@@ -500,3 +509,4 @@ Another [method](https://twitter.com/vinopaljiri/status/1508447487048261641) wit
 - [https://github.com/jfmaes/SharpZipRunner](https://github.com/jfmaes/SharpZipRunner)
 - [https://github.com/plackyhacker/Shellcode-Injection-Techniques](https://github.com/plackyhacker/Shellcode-Injection-Techniques)
 - [https://github.com/3xpl01tc0d3r/ProcessInjection](https://github.com/3xpl01tc0d3r/ProcessInjection)
+- [https://github.com/Wra7h/SingleDose](https://github.com/Wra7h/SingleDose)
