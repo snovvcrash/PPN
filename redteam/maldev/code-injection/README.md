@@ -325,6 +325,24 @@ int main(int argc, char** argv)
 
 
 
+## Hook NtCreateSection
+
+- [https://waawaa.github.io/es/amsi_bypass-hooking-NtCreateSection/](https://waawaa.github.io/es/amsi_bypass-hooking-NtCreateSection/)
+- [https://github.com/waawaa/Hooked-Injector](https://github.com/waawaa/Hooked-Injector)
+- [https://s3cur3th1ssh1t.github.io/Cat_Mouse_or_Chess/](https://s3cur3th1ssh1t.github.io/Cat_Mouse_or_Chess/)
+- [https://github.com/S3cur3Th1sSh1t/Ruy-Lopez](https://github.com/S3cur3Th1sSh1t/Ruy-Lopez)
+
+
+
+
+## Avoid PsSetCreateThreadNotifyRoutine
+
+- [https://www.r-tec.net/r-tec-blog-process-injection-avoiding-kernel-triggered-memory-scans.html](https://www.r-tec.net/r-tec-blog-process-injection-avoiding-kernel-triggered-memory-scans.html)
+- [https://github.com/S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann)
+
+
+
+
 ## PE to Shellcode
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
