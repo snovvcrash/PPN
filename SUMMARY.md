@@ -139,9 +139,6 @@
   - [SSH](pentest/infrastructure/ssh.md)
   - [TFTP](pentest/infrastructure/tftp.md)
   - [VNC](pentest/infrastructure/vnc.md)
-* [Misc](pentest/misc/README.md)
-  - [OSCP BOF](pentest/misc/oscp-bof.md)
-  - [RE](pentest/misc/re.md)
 * [OSINT](pentest/osint/README.md)
   - [Shodan](pentest/osint/shodan.md)
 * [Password Brute Force](pentest/password-brute-force/README.md)
@@ -209,6 +206,14 @@
     * [HTML Smuggling](redteam/se/phishing/html-smuggling.md)
     * [MS Office](redteam/se/phishing/ms-office.md)
     * [Rogue RDP](redteam/se/phishing/rogue-rdp.md)
+
+## 🐞 Exploit Development
+
+* [BOF](expdev/bof/README.md)
+  - [OSCP BOF](expdev/bof/oscp-bof.md)
+* [RE](expdev/re/README.md)
+* [SEH Overflow](expdev/sehof/README.md)
+  - [OSED SEH Overflow](expdev/sehof/osed-sehof.md)
 
 ## ⚙️ Admin
 
