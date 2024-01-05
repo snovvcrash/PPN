@@ -243,14 +243,6 @@ $ /proc/1732982/fd/4
 
 
 
-### SystemFunction032 / SystemFunction033
-
-- [https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/](https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/)
-- [https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99)
-- [https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033](https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033)
-
-
-
 
 ## Thread Stack Spoofing
 
@@ -343,6 +335,90 @@ int main(int argc, char** argv)
 
 
 
+## Shellcode Encryption
+
+
+
+### SystemFunction032 / SystemFunction033
+
+- [https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/](https://s3cur3th1ssh1t.github.io/SystemFunction032_Shellcode/)
+- [https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99](https://gist.github.com/snovvcrash/3533d950be2d96cf52131e8393794d99)
+- [https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033](https://www.redteam.cafe/red-team/shellcode-injection/inmemory-shellcode-encryption-and-decryption-using-systemfunction033)
+
+
+
+### SystemFunction040 / SystemFunction041
+
+- [https://github.com/Cracked5pider/CodeCave/tree/main/EkkoSys040](https://github.com/Cracked5pider/CodeCave/tree/main/EkkoSys040)
+
+
+
+
+## Shellcode Execution via Callbacks
+
+- [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
+- [https://github.com/werdhaihai/SharpAltShellCodeExec](https://github.com/werdhaihai/SharpAltShellCodeExec)
+- [https://github.com/ScriptIdiot/shellcode_execute_rare_WinAPI](https://github.com/ScriptIdiot/shellcode_execute_rare_WinAPI)
+- [https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/](https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/)
+- [https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/](https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/)
+- [http://ropgadget.com/posts/abusing_win_functions.html](http://ropgadget.com/posts/abusing_win_functions.html)
+
+```
+CallWindowProc
+CertEnumSystemStore
+CertEnumSystemStoreLocation
+CopyFile2
+CopyFileEx
+CryptEnumOIDInfo
+EnumCalendarInfo
+EnumCalendarInfoEx
+EnumCalendarInfoExEx
+EnumChildWindows
+EnumDateFormats
+EnumDesktopWindows
+EnumDesktops
+EnumDirTree
+EnumDisplayMonitors
+EnumFontFamilies
+EnumFontFamiliesEx
+EnumFonts
+EnumLanguageGroupLocales
+EnumObjects
+EnumPageFiles
+EnumPwrSchemes
+EnumResourceTypes
+EnumResourceTypesEx
+EnumSystemCodePages
+EnumSystemGeoID
+EnumSystemLanguageGroups
+EnumSystemLocales
+EnumSystemLocalesEx
+EnumThreadWindows
+EnumTimeFormats
+EnumTimeFormatsEx
+EnumUILanguages
+EnumWindowStations
+EnumWindows
+EnumerateLoadedModules
+EnumerateLoadedModulesEx
+ImageGetDigestStream
+ImmEnumInputContext
+InitOnceExecuteOnce
+LdrEnumerateLoadedModules
+LineDDA
+NotifyIpInterfaceChange
+NotifyRouteChange2
+NotifyTeredoPortChange
+NotifyUnicastIpAddressChange
+SetupCommitFileQueue
+SymEnumProcesses
+SymFindFileInPath
+VerifierEnumerateResource
+```
+
+
+
+
 ## PE to Shellcode
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
@@ -411,71 +487,6 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 - [https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10](https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10)
 - [https://xakep.ru/2018/08/27/doppelganging-process/](https://xakep.ru/2018/08/27/doppelganging-process/)
 - [https://xakep.ru/2022/04/21/herpaderping-and-ghosting/](https://xakep.ru/2022/04/21/herpaderping-and-ghosting/)
-
-
-
-
-## Shellcode Execution via Callbacks
-
-- [https://github.com/aahmad097/AlternativeShellcodeExec](https://github.com/aahmad097/AlternativeShellcodeExec)
-- [https://github.com/werdhaihai/SharpAltShellCodeExec](https://github.com/werdhaihai/SharpAltShellCodeExec)
-- [https://github.com/ScriptIdiot/shellcode_execute_rare_WinAPI](https://github.com/ScriptIdiot/shellcode_execute_rare_WinAPI)
-- [https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/](https://marcoramilli.com/2022/06/15/running-shellcode-through-windows-callbacks/)
-- [https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/](https://osandamalith.com/2021/04/01/executing-shellcode-via-callbacks/)
-- [http://ropgadget.com/posts/abusing_win_functions.html](http://ropgadget.com/posts/abusing_win_functions.html)
-
-```
-CallWindowProc
-CertEnumSystemStore
-CertEnumSystemStoreLocation
-CopyFile2
-CopyFileEx
-CryptEnumOIDInfo
-EnumCalendarInfo
-EnumCalendarInfoEx
-EnumCalendarInfoExEx
-EnumChildWindows
-EnumDateFormats
-EnumDesktopWindows
-EnumDesktops
-EnumDirTree
-EnumDisplayMonitors
-EnumFontFamilies
-EnumFontFamiliesEx
-EnumFonts
-EnumLanguageGroupLocales
-EnumObjects
-EnumPageFiles
-EnumPwrSchemes
-EnumResourceTypes
-EnumResourceTypesEx
-EnumSystemCodePages
-EnumSystemGeoID
-EnumSystemLanguageGroups
-EnumSystemLocales
-EnumSystemLocalesEx
-EnumThreadWindows
-EnumTimeFormats
-EnumTimeFormatsEx
-EnumUILanguages
-EnumWindowStations
-EnumWindows
-EnumerateLoadedModules
-EnumerateLoadedModulesEx
-ImageGetDigestStream
-ImmEnumInputContext
-InitOnceExecuteOnce
-LdrEnumerateLoadedModules
-LineDDA
-NotifyIpInterfaceChange
-NotifyRouteChange2
-NotifyTeredoPortChange
-NotifyUnicastIpAddressChange
-SetupCommitFileQueue
-SymEnumProcesses
-SymFindFileInPath
-VerifierEnumerateResource
-```
 
 
 
