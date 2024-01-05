@@ -207,7 +207,7 @@
     * [MS Office](redteam/se/phishing/ms-office.md)
     * [Rogue RDP](redteam/se/phishing/rogue-rdp.md)
 
-## 🐞 Exploit Development
+## 🐞 Exploit Dev
 
 * [BOF](expdev/bof/README.md)
   - [OSCP BOF](expdev/bof/oscp-bof.md)
