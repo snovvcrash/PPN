@@ -213,7 +213,6 @@
   - [OSCP BOF](expdev/bof/oscp-bof.md)
   - [OSED SEH Overflow](expdev/bof/osed-sehof.md)
 * [RE](expdev/re/README.md)
-* [test](expdev/test.md)
 
 ## ⚙️ Admin
 
