@@ -331,6 +331,8 @@ int main(int argc, char** argv)
 
 - [https://www.r-tec.net/r-tec-blog-process-injection-avoiding-kernel-triggered-memory-scans.html](https://www.r-tec.net/r-tec-blog-process-injection-avoiding-kernel-triggered-memory-scans.html)
 - [https://github.com/S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann)
+- [https://caueb.com/attackdefense/threadlessstompingkann/](https://caueb.com/attackdefense/threadlessstompingkann/)
+- [https://github.com/caueb/ThreadlessStompingKann](https://github.com/caueb/ThreadlessStompingKann)
 
 
 
@@ -421,11 +423,26 @@ VerifierEnumerateResource
 
 ## PE to Shellcode
 
-- [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
-- [https://github.com/TheWover/donut](https://github.com/TheWover/donut)
 - [https://github.com/hasherezade/pe_to_shellcode](https://github.com/hasherezade/pe_to_shellcode)
 - [https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/](https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/)
 - [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
+
+
+
+### sRDI
+
+- [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
+
+
+
+### Donut
+
+- [https://thewover.github.io/Introducing-Donut/](https://thewover.github.io/Introducing-Donut/)
+- [https://thewover.github.io/Cruller/](https://thewover.github.io/Cruller/)
+- [https://github.com/TheWover/donut](https://github.com/TheWover/donut)
+- [https://github.com/S4ntiagoP/donut/tree/syscalls](https://github.com/S4ntiagoP/donut/tree/syscalls)
+- [https://github.com/Binject/go-donut](https://github.com/Binject/go-donut)
+- [https://github.com/listinvest/undonut]https://github.com/listinvest/undonut()
 
 [Example](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146) with [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe) and donut (C# cross-compilation is done with [Mono](https://www.mono-project.com/download/stable/)):
 
@@ -478,6 +495,14 @@ rm "/tmp/SharpHound.exe" "/tmp/SharpHound.bin" "/tmp/$RNDNAME.cs"
 {% hint style="info" %}
 This technique is enhanced and automated [here](https://gist.github.com/snovvcrash/30bd25b1a5a18d8bb7ce3bb8dc2bae37).
 {% endhint %}
+
+
+
+### CLRvoyance
+
+- [https://github.com/Accenture/CLRvoyance](https://github.com/Accenture/CLRvoyance)
+- [https://github.com/kyleavery/ThirdEye](https://github.com/kyleavery/ThirdEye)
+- [https://web.archive.org/web/20230601160135/https://www.accenture.com/us-en/blogs/cyber-defense/clrvoyance-loading-managed-code-into-unmanaged-processes](https://web.archive.org/web/20230601160135/https://www.accenture.com/us-en/blogs/cyber-defense/clrvoyance-loading-managed-code-into-unmanaged-processes)
 
 
 

