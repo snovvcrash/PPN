@@ -1,9 +1,19 @@
-# Shellcodes
+---
+description: Position-Independent Code / Shellcode
+---
+
+# PIC / Shellcode
 
 - [https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c](https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c)
 - [https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud](https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud)
 
-Compile runners with a Bash script (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
+Compile runner with nasm & MinGW:
+
+```
+
+```
+
+Compile runner with a Bash script (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
 
 {% code title="bin2compile.sh" %}
 ```bash
@@ -52,3 +62,12 @@ fi
 rm -f /tmp/${SC_NAME}.{asm,obj}
 ```
 {% endcode %}
+
+
+
+
+## Templates
+
+- [https://github.com/thefLink/C-To-Shellcode-Examples](https://github.com/thefLink/C-To-Shellcode-Examples)
+- [https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design](https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design)
+- [https://github.com/Cracked5pider/Stardust](https://github.com/Cracked5pider/Stardust)
