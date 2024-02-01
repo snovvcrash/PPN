@@ -7,10 +7,17 @@ description: Position-Independent Code / Shellcode
 - [https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c](https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c)
 - [https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud](https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud)
 
-Compile runner with nasm & MinGW:
+Compile runner with nasm & MinGW (stolen from [PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)):
 
-```
+```asm
+; Compile with:
+; nasm -f win64 runshellcode.asm -o runshellcode.o
+; x86_64-w64-mingw32-ld runshellcode.o -o runshellcode.exe
 
+Global Start
+
+Start:
+    incbin "shellcode.bin"
 ```
 
 Compile runner with a Bash script (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
