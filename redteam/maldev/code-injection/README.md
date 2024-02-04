@@ -432,6 +432,7 @@ VerifierEnumerateResource
 ### sRDI
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
+- [https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/](https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/)
 
 
 
