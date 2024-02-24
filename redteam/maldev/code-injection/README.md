@@ -190,6 +190,7 @@ $ /proc/1732982/fd/4
 - [https://www.safebreach.com/blog/process-injection-using-windows-thread-pools/](https://www.safebreach.com/blog/process-injection-using-windows-thread-pools/)
 - [https://github.com/SafeBreach-Labs/PoolParty](https://github.com/SafeBreach-Labs/PoolParty)
 - [https://github.com/0xEr3bus/PoolPartyBof](https://github.com/0xEr3bus/PoolPartyBof)
+- [https://urien.gitbook.io/diago-lima/a-deep-dive-into-exploiting-windows-thread-pools](https://urien.gitbook.io/diago-lima/a-deep-dive-into-exploiting-windows-thread-pools)
 
 
 
@@ -333,6 +334,14 @@ int main(int argc, char** argv)
 - [https://github.com/S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann)
 - [https://caueb.com/attackdefense/threadlessstompingkann/](https://caueb.com/attackdefense/threadlessstompingkann/)
 - [https://github.com/caueb/ThreadlessStompingKann](https://github.com/caueb/ThreadlessStompingKann)
+
+
+
+
+## EDR Preloading
+
+- [https://malwaretech.com/2024/02/bypassing-edrs-with-edr-preload.html](https://malwaretech.com/2024/02/bypassing-edrs-with-edr-preload.html)
+- [https://github.com/MalwareTech/EDR-Preloader](https://github.com/MalwareTech/EDR-Preloader)
 
 
 

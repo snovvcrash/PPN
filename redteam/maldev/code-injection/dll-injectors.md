@@ -98,6 +98,7 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 * [https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/](https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/)
 * [https://github.com/Krypteria/AtlasLdr](https://github.com/Krypteria/AtlasLdr)
 * [https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/](https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/)
+* [https://oldboy21.github.io/posts/2024/02/reflective-dll-got-indirect-syscall-skills/](https://oldboy21.github.io/posts/2024/02/reflective-dll-got-indirect-syscall-skills/)
 * [https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/](https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/)
 
 

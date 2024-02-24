@@ -97,11 +97,26 @@ def run_command(command):
 
 
 
-## Blog Series
+## Blog Series / Books
+
+- [https://cocomelonc.github.io/](https://cocomelonc.github.io/)
 
 
 
-### @0xPat
+### A dive into the PE file format (0xRick)
+
+- [A dive into the PE file format - Introduction](https://0xrick.github.io/win-internals/pe1/)
+- [A dive into the PE file format - PE file structure - Part 1: Overview](https://0xrick.github.io/win-internals/pe2/)
+- [A dive into the PE file format - PE file structure - Part 2: DOS Header, DOS Stub and Rich Header](https://0xrick.github.io/win-internals/pe3/)
+- [A dive into the PE file format - PE file structure - Part 3: NT Headers](https://0xrick.github.io/win-internals/pe4/)
+- [A dive into the PE file format - PE file structure - Part 4: Data Directories, Section Headers and Sections](https://0xrick.github.io/win-internals/pe5/)
+- [A dive into the PE file format - PE file structure - Part 5: PE Imports (Import Directory Table, ILT, IAT)](https://0xrick.github.io/win-internals/pe6/)
+- [A dive into the PE file format - PE file structure - Part 6: PE Base Relocations](https://0xrick.github.io/win-internals/pe7/)
+- [A dive into the PE file format - LAB 1: Writing a PE Parser](https://0xrick.github.io/win-internals/pe8/)
+
+
+
+### Malware development (0xPat)
 
 - [Malware development part 1 - basics](https://0xpat.github.io/Malware_development_part_1/)
 - [Malware development part 2 - anti dynamic analysis & sandboxes](https://0xpat.github.io/Malware_development_part_2/)
@@ -115,34 +130,16 @@ def run_command(command):
 
 
 
-### @cocomelonc
-
-- [Malware development: persistence - part 1. Registry run keys](https://cocomelonc.github.io/tutorial/2022/04/20/malware-pers-1.html)
-- [Malware development: persistence - part 2. Screensaver hijack](https://cocomelonc.github.io/tutorial/2022/04/26/malware-pers-2.html)
-- [Malware development: persistence - part 3. COM DLL hijack](https://cocomelonc.github.io/tutorial/2022/05/02/malware-pers-3.html)
-- [Malware development: persistence - part 4. Windows services](https://cocomelonc.github.io/tutorial/2022/05/09/malware-pers-4.html)
-- [Malware development: persistence - part 5. AppInit_DLLs](https://cocomelonc.github.io/tutorial/2022/05/16/malware-pers-5.html)
-- [Malware development: persistence - part 6. Windows netsh helper DLL](https://cocomelonc.github.io/tutorial/2022/05/29/malware-pers-6.html)
-- [Malware AV evasion: part 7. Disable Windows Defender](https://cocomelonc.github.io/tutorial/2022/06/05/malware-av-evasion-7.html)
-
-
-
-### @preemptdev
-
-- [Mez0: Maelstrom](https://mez0.cc/posts/maelstrom/)
-
-
-
-### @chvancooten
-
-- [[PDF] Malware Development for Dummies (Cas van Cooten)](https://github.com/chvancooten/maldev-for-dummies/blob/main/Slides/Malware%20Development%20for%20Dummies%20-%20Hack%20in%20Paris%2030-06-2022%20%26%2001-07-2022.pdf)
-- [https://github.com/chvancooten/maldev-for-dummies](https://github.com/chvancooten/maldev-for-dummies)
-
-
-
-### Windows APT Warfare
+### Windows APT Warfare (Sheng-Hao Ma)
 
 - [https://www.packtpub.com/product/windows-apt-warfare/9781804618110](https://www.packtpub.com/product/windows-apt-warfare/9781804618110)
 - [https://github.com/PacktPublishing/Windows-APT-Warfare](https://github.com/PacktPublishing/Windows-APT-Warfare)
 - [https://habr.com/ru/articles/766760/](https://habr.com/ru/articles/766760/)
 - [https://xss.is/threads/87501/](https://xss.is/threads/87501/)
+
+
+
+### Malware Development for Dummies (Cas van Cooten)
+
+- [[PDF] Malware Development for Dummies (Cas van Cooten)](https://github.com/chvancooten/maldev-for-dummies/blob/main/Slides/Malware%20Development%20for%20Dummies%20-%20Hack%20in%20Paris%2030-06-2022%20%26%2001-07-2022.pdf)
+- [https://github.com/chvancooten/maldev-for-dummies](https://github.com/chvancooten/maldev-for-dummies)
