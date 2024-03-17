@@ -1,8 +1,9 @@
-## Process Hollowing
+# Process Hollowing
 
 
 
-### Hollow with Shellcode
+
+## Hollow with Shellcode
 
 * [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Hollowing/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/Shellcode%20Process%20Hollowing/Program.cs)
 * [https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/DinvokeProcessHollow.cs](https://github.com/S3cur3Th1sSh1t/Creds/blob/master/Csharp/DinvokeProcessHollow.cs)
@@ -179,7 +180,8 @@ namespace ProcessHollower
 
 
 
-### Hollow with EXE
+
+## Hollow with EXE
 
 * [https://github.com/m0n0ph1/Process-Hollowing](https://github.com/m0n0ph1/Process-Hollowing)
 * [https://gist.github.com/gnh1201/6a3836468c898f7ad3a3656e6f24dce3](https://gist.github.com/gnh1201/6a3836468c898f7ad3a3656e6f24dce3)

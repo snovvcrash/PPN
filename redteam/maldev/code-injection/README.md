@@ -432,6 +432,7 @@ VerifierEnumerateResource
 
 ## PE to Shellcode
 
+- [https://samples.vx-underground.org/Papers/Windows/Analysis and Internals/2020-10-11 - From a C project through assembly to shellcode.pdf](https://samples.vx-underground.org/Papers/Windows/Analysis%20and%20Internals/2020-10-11%20-%20From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf)
 - [https://github.com/hasherezade/pe_to_shellcode](https://github.com/hasherezade/pe_to_shellcode)
 - [https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/](https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/)
 - [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
@@ -508,11 +509,10 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 
 
-### CLRvoyance
+### InflativeLoading
 
-- [https://github.com/Accenture/CLRvoyance](https://github.com/Accenture/CLRvoyance)
-- [https://github.com/kyleavery/ThirdEye](https://github.com/kyleavery/ThirdEye)
-- [https://web.archive.org/web/20230601160135/https://www.accenture.com/us-en/blogs/cyber-defense/clrvoyance-loading-managed-code-into-unmanaged-processes](https://web.archive.org/web/20230601160135/https://www.accenture.com/us-en/blogs/cyber-defense/clrvoyance-loading-managed-code-into-unmanaged-processes)
+- [https://winslow1984.com/books/malware/page/reflectiveloading-and-inflativeloading](https://winslow1984.com/books/malware/page/reflectiveloading-and-inflativeloading)
+- [https://github.com/senzee1984/InflativeLoading](https://github.com/senzee1984/InflativeLoading)
 
 
 
