@@ -37,7 +37,7 @@ Cmd > sdelete -p 7 testfile.txt
 Directory (recursively):
 
 ```
-Cmd > sdelete -p 7 -r "C:\temp"
+Cmd > sdelete -p 7 -s -r "C:\temp"
 ```
 
 Disk or partition:

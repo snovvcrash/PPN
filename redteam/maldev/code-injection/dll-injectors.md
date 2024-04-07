@@ -92,7 +92,7 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 
 ## Reflective DLL Injection (RDI)
 
-* [https://github.com/stephenfewer/ReflectiveDLLInjection#overview](https://github.com/stephenfewer/ReflectiveDLLInjection#overview)
+* [https://github.com/stephenfewer/ReflectiveDLLInjection](https://github.com/stephenfewer/ReflectiveDLLInjection)
 * [https://github.com/dismantl/ImprovedReflectiveDLLInjection](https://github.com/dismantl/ImprovedReflectiveDLLInjection)
 * [https://github.com/Moriarty2016/NimRDI](https://github.com/Moriarty2016/NimRDI)
 * [https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/](https://bruteratel.com/research/feature-update/2021/06/01/PE-Reflection-Long-Live-The-King/)
@@ -100,6 +100,15 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 * [https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/](https://oldboy21.github.io/posts/2023/12/all-i-want-for-christmas-is-reflective-dll-injection/)
 * [https://oldboy21.github.io/posts/2024/02/reflective-dll-got-indirect-syscall-skills/](https://oldboy21.github.io/posts/2024/02/reflective-dll-got-indirect-syscall-skills/)
 * [https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/](https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/)
+* [https://github.com/BlackHat-Ashura/Reflective_DLL_Injection](https://github.com/BlackHat-Ashura/Reflective_DLL_Injection)
+
+
+
+### Theory Basics
+
+- [https://www.ired.team/offensive-security/code-injection-process-injection/reflective-dll-injection](https://www.ired.team/offensive-security/code-injection-process-injection/reflective-dll-injection)
+- [https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations#relocation](https://www.ired.team/offensive-security/code-injection-process-injection/process-hollowing-and-pe-image-relocations#relocation)
+- [https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/pe-file-header-parser-in-c++](https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/pe-file-header-parser-in-c++)
 
 
 
