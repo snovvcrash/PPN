@@ -156,12 +156,51 @@ $ /proc/1732982/fd/4
 
 
 
-## Module Stomping
+## DLL Hollowing / Module Stomping
+
+- [https://www.ired.team/offensive-security/code-injection-process-injection/modulestomping-dll-hollowing-shellcode-injection](https://www.ired.team/offensive-security/code-injection-process-injection/modulestomping-dll-hollowing-shellcode-injection)
+- [https://github.com/TheWover/donut/blob/61af8ccee3c2cafa743b2628654d1a2dafc66f3a/loader/inmem_pe.c#L135](https://github.com/TheWover/donut/blob/61af8ccee3c2cafa743b2628654d1a2dafc66f3a/loader/inmem_pe.c)
+
+
+
+### Variations of (Phantom) DLL Hollowing
+
+- [https://www.forrest-orr.net/post/malicious-memory-artifacts-part-i-dll-hollowing](https://www.forrest-orr.net/post/malicious-memory-artifacts-part-i-dll-hollowing)
+- [https://www.forrest-orr.net/post/masking-malicious-memory-artifacts-part-ii-insights-from-moneta](https://www.forrest-orr.net/post/masking-malicious-memory-artifacts-part-ii-insights-from-moneta)
+- [https://www.forrest-orr.net/post/masking-malicious-memory-artifacts-part-iii-bypassing-defensive-scanners](https://www.forrest-orr.net/post/masking-malicious-memory-artifacts-part-iii-bypassing-defensive-scanners)
+- [https://github.com/forrest-orr/phantom-dll-hollower-poc](https://github.com/forrest-orr/phantom-dll-hollower-poc)
+- [https://blog.f-secure.com/hiding-malicious-code-with-module-stomping/](https://blog.f-secure.com/hiding-malicious-code-with-module-stomping/)
+- [https://blog.f-secure.com/hiding-malicious-code-with-module-stomping-part-2/](https://blog.f-secure.com/hiding-malicious-code-with-module-stomping-part-2/)
+- [https://github.com/WithSecureLabs/ModuleStomping](https://github.com/WithSecureLabs/ModuleStomping)
+- [https://www.secforce.com/blog/dll-hollowing-a-deep-dive-into-a-stealthier-memory-allocation-variant/](https://www.secforce.com/blog/dll-hollowing-a-deep-dive-into-a-stealthier-memory-allocation-variant/)
+- [https://github.com/SECFORCE/DLL-Hollow-PoC](https://github.com/SECFORCE/DLL-Hollow-PoC)
+
+
+
+### Advanced Module Stomping
+
+- [https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/](https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/)
+- [https://github.com/CognisysGroup/SweetDreams](https://github.com/CognisysGroup/SweetDreams)
+- [https://bruteratel.com/release/2023/03/19/Release-Nightmare/](https://bruteratel.com/release/2023/03/19/Release-Nightmare/)
+
+
+
+### Module Overloading
+
+- [https://github.com/hasherezade/module_overloading](https://github.com/hasherezade/module_overloading)
+
+
+#### Module Shifting
+
+- [https://github.com/naksyn/ModuleShifting](https://github.com/naksyn/ModuleShifting)
+- [https://naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html](https://naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html)
+
+
+
+### Module Stomping in C#
 
 - [https://offensivedefence.co.uk/posts/module-stomping/](https://offensivedefence.co.uk/posts/module-stomping/)
 - [https://github.com/rasta-mouse/TikiTorch/blob/master/TikiLoader/Stomper.cs](https://github.com/rasta-mouse/TikiTorch/blob/master/TikiLoader/Stomper.cs)
-- [https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/](https://labs.cognisys.group/posts/Advanced-Module-Stomping-and-Heap-Stack-Encryption/)
-- [https://github.com/CognisysGroup/SweetDreams](https://github.com/CognisysGroup/SweetDreams)
 
 
 
@@ -308,12 +347,14 @@ int main(int argc, char** argv)
 
 
 
-### Hiding In PlainSight
+### Proxy DLL Loading
 
 - [https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/](https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/)
-- [https://github.com/paranoidninja/Proxy-DLL-Loads](https://github.com/paranoidninja/Proxy-DLL-Loads)
 - [https://0xdarkvortex.dev/hiding-in-plainsight/](https://0xdarkvortex.dev/hiding-in-plainsight/)
+- [https://github.com/paranoidninja/Proxy-DLL-Loads](https://github.com/paranoidninja/Proxy-DLL-Loads)
 - [https://github.com/paranoidninja/Proxy-Function-Calls-For-ETwTI](https://github.com/paranoidninja/Proxy-Function-Calls-For-ETwTI)
+- [https://github.com/kleiton0x00/Proxy-DLL-Loads](https://github.com/kleiton0x00/Proxy-DLL-Loads)
+- [https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/](https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/)
 
 
 

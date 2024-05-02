@@ -342,6 +342,14 @@ $a = [ShellcodeRunner.Program]::Run()
 
 
 
+## DLL Shellcode Runners
+
+- [https://gist.github.com/securitytube/c956348435cc90b8e1f7](https://gist.github.com/securitytube/c956348435cc90b8e1f7)
+- [https://github.com/florylsk/ExecIT](https://github.com/florylsk/ExecIT)
+
+
+
+
 ## Shellcode Encoders/Encryptors
 
 - [https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs](https://github.com/chvancooten/OSEP-Code-Snippets/blob/main/ROT%20Shellcode%20Encoder/Program.cs)

@@ -4,7 +4,8 @@
 
 - [https://redteam.guide/](https://redteam.guide/)
 - [https://malcomvetter.medium.com/how-to-create-an-internal-corporate-red-team-1023027ea1e3](https://malcomvetter.medium.com/how-to-create-an-internal-corporate-red-team-1023027ea1e3)
-
+- [https://sokarepo.github.io/redteam/2024/01/04/increase-your-stealth-capabilities-part1.html](https://sokarepo.github.io/redteam/2024/01/04/increase-your-stealth-capabilities-part1.html)
+- [https://sokarepo.github.io//redteam/2024/01/04/increase-your-stealth-capabilities-part2.html](https://sokarepo.github.io//redteam/2024/01/04/increase-your-stealth-capabilities-part2.html)
 
 
 

@@ -51,6 +51,7 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 - [https://elliotonsecurity.com/perfect-dll-hijacking/](https://elliotonsecurity.com/perfect-dll-hijacking/)
 - [https://github.com/ElliotKillick/LdrLockLiberator](https://github.com/ElliotKillick/LdrLockLiberator)
 - [https://elliotonsecurity.com/what-is-loader-lock/](https://elliotonsecurity.com/what-is-loader-lock/)
+- [https://habr.com/ru/articles/792424/](https://habr.com/ru/articles/792424/)
 
 
 
