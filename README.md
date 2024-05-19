@@ -14,10 +14,6 @@ While taking these notes, one main rule is that all the given techniques are act
 **DISCLAIMER.** All information contained in this blog is provided for educational and research purposes only. The author is not responsible for any illegal use of any information published on the pages of this blog.
 {% endhint %}
 
-{% hint style="success" %}
-**SUPPORT.** Private pet projects of mine in offensive tooling are available [for my sponsors](https://boosty.to/snovvcrash).
-{% endhint %}
-
 {% hint style="info" %}
 **DEPRECATED.** The previous version of PPN is right [here](https://snovvcrash.rocks/PPN/).
 {% endhint %}
@@ -29,3 +25,5 @@ While taking these notes, one main rule is that all the given techniques are act
 {% embed url="https://github.com/snovvcrash" caption="GitHub" %}
 
 {% embed url="https://infosec.exchange/@snovvcrash" caption="Mastodon" %}
+
+{% embed url="https://t.me/OffensiveTwitter" caption="Offensive Twitter" %}
