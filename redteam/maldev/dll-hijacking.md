@@ -6,6 +6,8 @@
 - [https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/](https://blog.cyble.com/2022/07/27/targeted-attacks-being-carried-out-via-dll-sideloading/)
 - [https://besteffortteam.it/onedrive-and-teams-dll-hijacking/](https://besteffortteam.it/onedrive-and-teams-dll-hijacking/)
 - [https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/](https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/)
+- [https://xss.is/threads/67021/](https://xss.is/threads/67021/)
+- [https://xss.is/threads/67718/](https://xss.is/threads/67718/)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
 
