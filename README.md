@@ -18,6 +18,10 @@ While taking these notes, one main rule is that all the given techniques are act
 **DEPRECATED.** The previous version of PPN is right [here](https://snovvcrash.rocks/PPN/).
 {% endhint %}
 
+## Twitter Bot
+
+[![](/.gitbook/assets/OffensiveTwitter.png)](https://t.me/OffensiveTwitter)
+
 ## About
 
 {% embed url="https://snovvcrash.rocks/" caption="Blog" %}
@@ -25,5 +29,3 @@ While taking these notes, one main rule is that all the given techniques are act
 {% embed url="https://github.com/snovvcrash" caption="GitHub" %}
 
 {% embed url="https://infosec.exchange/@snovvcrash" caption="Mastodon" %}
-
-{% embed url="https://t.me/OffensiveTwitter" caption="Offensive Twitter" %}
