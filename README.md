@@ -18,7 +18,7 @@ While taking these notes, one main rule is that all the given techniques are act
 **DEPRECATED.** The previous version of PPN is right [here](https://snovvcrash.rocks/PPN/).
 {% endhint %}
 
-## Twitter Bot
+## Telegram Channel
 
 [![@OffensiveTwitter](/.gitbook/assets/OffensiveTwitter.png)](https://t.me/OffensiveTwitter)
 
