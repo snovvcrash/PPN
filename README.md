@@ -20,7 +20,9 @@ While taking these notes, one main rule is that all the given techniques are act
 
 ## Telegram Channel
 
-[![OffensiveTwitter](/.gitbook/assets/OffensiveTwitter.png)](https://t.me/OffensiveTwitter)
+[![](/.gitbook/assets/OffensiveTwitter.png)](https://t.me/OffensiveTwitter)
+
+***https://t.me/OffensiveTwitter***
 
 ## About
 

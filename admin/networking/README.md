@@ -11,12 +11,18 @@
 
 
 
-### tcpdump/tshark
+### tcpdump / tshark
 
 Register ICMP replies from 10.10.13.38:
 
 ```
-$ sudo tcpdump -n -i tun0 -XSs 0 'src 10.10.13.38 and icmp[icmptype]==8'
+$ sudo tcpdump -n -i eth0 -XSs 0 'src 10.10.13.38 and icmp[icmptype]==8'
+```
+
+Redirect to text file adding timestamps:
+
+```
+$ sudo tcpdump -i eth0 -tttt -l icmp | tee icmp.txt
 ```
 
 

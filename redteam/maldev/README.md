@@ -82,7 +82,7 @@ Run OS command:
 import subprocess, shlex
 
 def run_command(command):
-	process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+	process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
 	while True:
 		output = process.stdout.readline().decode()
 		if output == '' and process.poll() is not None:
@@ -100,6 +100,7 @@ def run_command(command):
 ## Blog Series / Books
 
 - [https://cocomelonc.github.io/](https://cocomelonc.github.io/)
+- [https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/](https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/)
 
 
 

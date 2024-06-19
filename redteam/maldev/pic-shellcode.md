@@ -9,16 +9,18 @@ description: Position-Independent Code / Shellcode
 
 Compile runner with nasm & MinGW (stolen from [PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges/blob/main/runshellcode.asm)):
 
+{% code title="runShellcode.asm" %}
 ```asm
 ; Compile with:
-; nasm -f win64 runshellcode.asm -o runshellcode.o
-; x86_64-w64-mingw32-ld runshellcode.o -o runshellcode.exe
+; nasm -f win64 runShellcode.asm -o runShellcode.o
+; x86_64-w64-mingw32-ld runShellcode.o -o runShellcode.exe
 
 Global Start
 
 Start:
     incbin "shellcode.bin"
 ```
+{% endcode %}
 
 Compile runner with a Bash script (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
 
