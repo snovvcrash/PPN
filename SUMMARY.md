@@ -193,7 +193,7 @@
 * [Cobalt Strike](redteam/cobalt-strike/README.md)
   - [UDRL](redteam/maldev/udrl.md)
 * [Infrastructure](redteam/infrastructure.md)
-* [Malware Development](redteam/maldev/README.md)
+* [MalDev](redteam/maldev/README.md)
   - [API Hashing](redteam/maldev/api-hashing.md)
   - [API Hooking](redteam/maldev/api-hooking.md)
   - [BOF / COFF](redteam/maldev/bof-coff.md)

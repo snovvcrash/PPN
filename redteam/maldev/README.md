@@ -1,4 +1,4 @@
-# Malware Development
+# MalDev
 
 - [https://threadreaderapp.com/thread/1520676600681209858.html](https://threadreaderapp.com/thread/1520676600681209858.html)
 - [https://www.mdsec.co.uk/2022/07/part-1-how-i-met-your-beacon-overview/](https://www.mdsec.co.uk/2022/07/part-1-how-i-met-your-beacon-overview/)
@@ -109,7 +109,7 @@ def run_command(command):
 - [https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html](https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html)
 - [https://print3m.github.io/blog/x64-winapi-shellcoding](https://print3m.github.io/blog/x64-winapi-shellcoding)
 
-![](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
+![PE File Structure (by @Print3M)](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 
 
 #### A dive into the PE file format (0xRick)
