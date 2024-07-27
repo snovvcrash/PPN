@@ -100,12 +100,19 @@ def run_command(command):
 ## Blog Series / Books
 
 - [https://cocomelonc.github.io/](https://cocomelonc.github.io/)
+
+
+
+### PE Structure
+
 - [https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/](https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/)
 - [https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html](https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html)
+- [https://print3m.github.io/blog/x64-winapi-shellcoding](https://print3m.github.io/blog/x64-winapi-shellcoding)
+
+![](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 
 
-
-### A dive into the PE file format (0xRick)
+#### A dive into the PE file format (0xRick)
 
 - [A dive into the PE file format - Introduction](https://0xrick.github.io/win-internals/pe1/)
 - [A dive into the PE file format - PE file structure - Part 1: Overview](https://0xrick.github.io/win-internals/pe2/)
