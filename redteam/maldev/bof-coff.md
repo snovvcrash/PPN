@@ -7,6 +7,7 @@ description: Beacon Object Files / Common Object File Format
 - [https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/](https://www.trustedsec.com/blog/operators-guide-to-the-meterpreter-bofloader/)
 - [https://securityintelligence.com/posts/how-to-hide-beacon-during-bof-execution/](https://securityintelligence.com/posts/how-to-hide-beacon-during-bof-execution/)
 - [https://github.com/xforcered/bofmask](https://github.com/xforcered/bofmask)
+- [[PDF] Microsoft Portable Executable and Common Object File Format Specification (Microsoft Corporation)](https://courses.cs.washington.edu/courses/cse378/03wi/lectures/LinkerFiles/coff.pdf)
 
 Argument types for [bof_pack](https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics_aggressor-scripts/as-resources_functions.htm#bof_pack):
 

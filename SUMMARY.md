@@ -97,7 +97,7 @@
         * [PrintSpoofer](pentest/infrastructure/ad/privileges-abuse/seimpersonate/printspoofer.md)
       - [SeTrustedCredmanAccess](pentest/infrastructure/ad/privileges-abuse/setrustedcredmanaccess.md)
     * [RID Cycling](pentest/infrastructure/ad/rid-cycling.md)
-    * [SCCM Abuse](pentest/infrastructure/ad/sccm-mecm-abuse.md)
+    * [SCCM Abuse](pentest/infrastructure/ad/sccm-abuse.md)
     * [SMB](pentest/infrastructure/ad/smb.md)
     * [RPC](pentest/infrastructure/ad/rpc.md)
     * [Token Manipulation](pentest/infrastructure/ad/token-manipulation.md)

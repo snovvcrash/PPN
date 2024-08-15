@@ -270,6 +270,16 @@ $ shred -zv -n0 /dev/sdc1
 
 
 
+## Recover Deleted Files
+
+```
+$ sudo grep -i -a -B100 -A100 'file contents to find' /dev/sda1 > recovered.bin
+$ strings recovered.bin
+```
+
+
+
+
 ## Partitions
 
 {% embed url="https://youtu.be/QSpGaeHlkoE" %}

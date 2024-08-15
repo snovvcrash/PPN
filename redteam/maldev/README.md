@@ -25,6 +25,7 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 - [https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/](https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/)
 - [https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html](https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html)
 - [https://print3m.github.io/blog/x64-winapi-shellcoding](https://print3m.github.io/blog/x64-winapi-shellcoding)
+- [https://habr.com/ru/articles/808787/](https://habr.com/ru/articles/808787/)
 
 ![PE File Structure (by @Print3M)](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 
@@ -69,3 +70,11 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 - [[PDF] Malware Development for Dummies (Cas van Cooten)](https://github.com/chvancooten/maldev-for-dummies/blob/main/Slides/Malware%20Development%20for%20Dummies%20-%20Hack%20in%20Paris%2030-06-2022%20%26%2001-07-2022.pdf)
 - [https://github.com/chvancooten/maldev-for-dummies](https://github.com/chvancooten/maldev-for-dummies)
+
+
+
+### Learning LLVM (sh4dy)
+
+- [https://sh4dy.com/2024/06/29/learning_llvm_01/](https://sh4dy.com/2024/06/29/learning_llvm_01/)
+- [https://sh4dy.com/2024/07/06/learning_llvm_02/](https://sh4dy.com/2024/07/06/learning_llvm_02/)
+- [https://github.com/0xSh4dy/learning_llvm](https://github.com/0xSh4dy/learning_llvm)

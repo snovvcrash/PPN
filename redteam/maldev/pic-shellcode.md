@@ -22,7 +22,7 @@ Start:
 ```
 {% endcode %}
 
-Compile runner with a Bash script (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
+Automated with Bash (like [shcode2exe](https://github.com/accidentalrebel/shcode2exe)):
 
 {% code title="bin2compile.sh" %}
 ```bash
