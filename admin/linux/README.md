@@ -79,6 +79,16 @@ $ dig +time=1 +tcp +tries=1 +short txt ch whoami.cloudflare @1.0.0.1 | tr -d '\"
 
 
 
+### Internel Speed
+
+```
+$ curl https://speedtest.selectel.ru/100MB -o/dev/null
+$ curl --connect-to ::speedtest.selectel.ru https://manifest.googlevideo.com/100MB -k -o/dev/null
+$ speedtest-cli
+```
+
+
+
 
 ## Virtual Terminal
 

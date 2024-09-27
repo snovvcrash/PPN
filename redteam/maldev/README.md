@@ -5,6 +5,8 @@
 - [https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/](https://www.mdsec.co.uk/2022/07/part-2-how-i-met-your-beacon-cobalt-strike/)
 - [https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/](https://www.mdsec.co.uk/2022/08/part-3-how-i-met-your-beacon-brute-ratel/)
 
+{% embed url="https://gist.github.com/0prrr/c0954a638c55ab4b39e8b02ef312e806" caption="Malware Dev Reading List, 0prrr/All-Mal-Dev.md" %}
+
 [EIKAR](https://ru.wikipedia.org/wiki/EICAR-Test-File) test file:
 
 ```
@@ -16,16 +18,16 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 ## Blog Series / Books
 
-- [https://cocomelonc.github.io/](https://cocomelonc.github.io/)
-
 
 
 ### PE Structure
 
+- [https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/](https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/#the-common-ground)
 - [https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/](https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/)
 - [https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html](https://fareedfauzi.github.io/2024/07/13/PEB-Walk.html)
 - [https://print3m.github.io/blog/x64-winapi-shellcoding](https://print3m.github.io/blog/x64-winapi-shellcoding)
 - [https://habr.com/ru/articles/808787/](https://habr.com/ru/articles/808787/)
+- [https://nikhilh-20.github.io/blog/peb_phobos_ransomware/](https://nikhilh-20.github.io/blog/peb_phobos_ransomware/)
 
 ![PE File Structure (by @Print3M)](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 
