@@ -25,7 +25,7 @@ A basic BOF example:
 {% tab title="BOF" %}
 {% code title="msgbox.c" %}
 ```c
-// wget https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/beacon.h
+// curl -sS https://download.cobaltstrike.com/downloads/beacon.h -o beacon.h
 // x86_64-w64-mingw32-gcc -c msgbox.c -o msgbox.o
 
 #include <windows.h>

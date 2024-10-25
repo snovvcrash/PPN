@@ -1,3 +1,7 @@
+---
+description: DLL Hijacking / DLL Side-Loading / DLL Proxying
+---
+
 # DLL Hijacking
 
 - [https://hijacklibs.net/](https://hijacklibs.net/)
@@ -8,8 +12,25 @@
 - [https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/](https://www.binarydefense.com/resources/blog/demystifying-dll-hijacking-understanding-the-intricate-world-of-dynamic-link-library-attacks/)
 - [https://xss.is/threads/67021/](https://xss.is/threads/67021/)
 - [https://xss.is/threads/67718/](https://xss.is/threads/67718/)
+- [https://www.r-tec.net/r-tec-blog-dll-sideloading.html](https://www.r-tec.net/r-tec-blog-dll-sideloading.html)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
+
+Print debug output from a DLL:
+
+```c
+#ifdef _DEBUG
+#include <stdio.h>
+#include <string.h>
+#define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
+#define DPRINT(...) { \
+   fprintf(stderr, "DEBUG: %s:%d:%s(): ", __FILENAME__, __LINE__, __FUNCTION__); \
+   fprintf(stderr, __VA_ARGS__); \
+ }
+#else
+#define DPRINT(...)
+#endif
+```
 
 
 
@@ -61,9 +82,16 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 ## Tools
 
 - [https://github.com/monoxgas/Koppeling](https://github.com/monoxgas/Koppeling)
+
+
+
+### DLL Proxying
+
 - [https://github.com/Flangvik/SharpDllProxy](https://github.com/Flangvik/SharpDllProxy)
 - [https://github.com/tothi/dll-hijack-by-proxying](https://github.com/tothi/dll-hijack-by-proxying)
 - [https://github.com/kagasu/ProxyDllGenerator](https://github.com/kagasu/ProxyDllGenerator)
+- [https://github.com/namazso/dll-proxy-generator](https://github.com/namazso/dll-proxy-generator)
+- [https://github.com/mrexodia/perfect-dll-proxy](https://github.com/mrexodia/perfect-dll-proxy)
 
 
 

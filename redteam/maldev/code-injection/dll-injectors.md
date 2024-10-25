@@ -112,6 +112,13 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 
 
 
+### Custom LoadLibrary
+
+- [https://github.com/OtterHacker/Conferences/tree/main/Defcon32](https://github.com/OtterHacker/Conferences/tree/main/Defcon32)
+- [https://injectexp.dev/b/LoadLibraryReloaded](https://injectexp.dev/b/LoadLibraryReloaded)
+
+
+
 ### Invoke-ReflectivePEInjection
 
 * [https://github.com/S3cur3Th1sSh1t/Creds/blob/master/PowershellScripts/Invoke-ReflectivePEInjection.ps1](https://github.com/S3cur3Th1sSh1t/Creds/blob/master/PowershellScripts/Invoke-ReflectivePEInjection.ps1)

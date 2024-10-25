@@ -80,3 +80,4 @@ rm -f /tmp/${SC_NAME}.{asm,obj}
 - [https://github.com/thefLink/C-To-Shellcode-Examples](https://github.com/thefLink/C-To-Shellcode-Examples)
 - [https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design](https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design)
 - [https://github.com/Cracked5pider/Stardust](https://github.com/Cracked5pider/Stardust)
+- [https://github.com/safedv/Rustic64](https://github.com/safedv/Rustic64)
