@@ -13,3 +13,4 @@
 ## Tools
 
 - [https://github.com/MalwareApiLib/MalwareApiLibrary](https://github.com/MalwareApiLib/MalwareApiLibrary)
+- [https://www.leeholmes.com/managing-ini-files-with-powershell/](https://www.leeholmes.com/managing-ini-files-with-powershell/)
