@@ -114,6 +114,7 @@ According to [this](https://github.com/rapid7/metasploit-framework/blob/09fe84fa
 
 ### Custom LoadLibrary
 
+- [https://www.riskinsight-wavestone.com/en/2024/10/loadlibrary-madness-dynamically-load-winhttp-dll/](https://www.riskinsight-wavestone.com/en/2024/10/loadlibrary-madness-dynamically-load-winhttp-dll/)
 - [https://github.com/OtterHacker/Conferences/tree/main/Defcon32](https://github.com/OtterHacker/Conferences/tree/main/Defcon32)
 - [https://injectexp.dev/b/LoadLibraryReloaded](https://injectexp.dev/b/LoadLibraryReloaded)
 

@@ -20,7 +20,7 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 
 
 
-### PE Structure
+### PE Structure (+ PEB/LDR)
 
 - [https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/](https://alice.climent-pommeret.red/posts/direct-syscalls-hells-halos-syswhispers2/#the-common-ground)
 - [https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/](https://viuleeenz.github.io/posts/2024/02/understanding-peb-and-ldr-structures-using-ida-and-lummastealer/)
@@ -28,6 +28,7 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 - [https://print3m.github.io/blog/x64-winapi-shellcoding](https://print3m.github.io/blog/x64-winapi-shellcoding)
 - [https://habr.com/ru/articles/808787/](https://habr.com/ru/articles/808787/)
 - [https://nikhilh-20.github.io/blog/peb_phobos_ransomware/](https://nikhilh-20.github.io/blog/peb_phobos_ransomware/)
+- [https://redops.at/en/blog/edr-analysis-leveraging-fake-dlls-guard-pages-and-veh-for-enhanced-detection](https://redops.at/en/blog/edr-analysis-leveraging-fake-dlls-guard-pages-and-veh-for-enhanced-detection)
 
 ![PE File Structure (by @Print3M)](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 

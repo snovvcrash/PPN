@@ -278,6 +278,11 @@ $ /proc/1732982/fd/4
 - [https://github.com/thefLink/Hunt-Sleeping-Beacons](https://github.com/thefLink/Hunt-Sleeping-Beacons)
 - [https://github.com/paranoidninja/Cobaltstrike-Detection/blob/main/scan_process.c](https://github.com/paranoidninja/Cobaltstrike-Detection/blob/main/scan_process.c)
 
+```
+PS > curl https://github.com/forrest-orr/moneta/releases/download/1.0/Moneta64.exe -o Moneta64.exe
+PS > .\Moneta64.exe -p ((Get-Process notepad).Id) -m region --address 0xd34dc0d31000
+```
+
 
 
 

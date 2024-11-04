@@ -273,7 +273,7 @@ $ rm -f ~/.zsh_history && kill -9 $$
 
 ```
 $ shred -zvu -n7 /path/to/file
-$ find /path/to/dir -type f -exec shred -zvu -n7 {} \\;
+$ find /path/to/dir -type f -exec shred -zvu -n7 {} \;
 $ shred -zv -n0 /dev/sdc1
 ```
 
