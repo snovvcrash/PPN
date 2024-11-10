@@ -78,6 +78,7 @@ Mix settings list (both for hardware install and virtualization):
 
 ```
 $ script ~/ws/shells/`date "+%FT%H%M%S"`.script
+$ for i in `grep -anr '\... OK' | rev | cut -d: -f2 | rev | awk -F" " '{print $3}' | sort -u | grep . | cut -d: -f1`; do proxychains4 -q dig +tcp +noall +answer $i @192.168.1.11 | grep IN; sleep $((1+RANDOM % 3)); done
 ```
 
 
