@@ -19,8 +19,11 @@
 ### CISA Red Team
 
 - [https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-059a](https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-059a)
+- [https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-326a](https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-326a)
 
-{% file src="/.gitbook/assets/CISA Red Team Shares Key Findings.pdf" %}
+{% file src="/.gitbook/assets/CISA Red Team Shares Key Findings to Improve Monitoring and Hardening of Networks.pdf" %}
+
+{% file src="/.gitbook/assets/Enhancing Cyber Resilience - Insights from CISA Red Team Assessment of a US Critical Infrastructure Sector Organization.pdf" %}
 
 
 
