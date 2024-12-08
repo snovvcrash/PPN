@@ -1,6 +1,6 @@
 # Basics
 
-> *"Everything is stealthy until someone is looking for it."* - [@tifkin_](https://twitter.com/tifkin_)
+> *"Everything is stealthy until someone is looking for it."* (Lee Chagolla-Christensen, [@tifkin_](https://twitter.com/tifkin_))
 
 - [https://redteam.guide/](https://redteam.guide/)
 - [https://malcomvetter.medium.com/how-to-create-an-internal-corporate-red-team-1023027ea1e3](https://malcomvetter.medium.com/how-to-create-an-internal-corporate-red-team-1023027ea1e3)
