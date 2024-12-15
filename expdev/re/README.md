@@ -26,3 +26,11 @@ $ sudo apt install openjdk-11-jdk
 
 - [https://www.issp.com/post/frida-benefits-and-use](https://www.issp.com/post/frida-benefits-and-use)
 - [https://passthehashbrowns.github.io/using-frida-for-rapid-detection-testing](https://passthehashbrowns.github.io/using-frida-for-rapid-detection-testing)
+
+
+
+
+## Python
+
+- [https://github.com/extremecoders-re/pyinstxtractor](https://github.com/extremecoders-re/pyinstxtractor)
+- [https://pylingual.io/]https://pylingual.io/()
