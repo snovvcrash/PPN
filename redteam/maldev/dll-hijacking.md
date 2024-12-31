@@ -24,9 +24,9 @@ Print debug output from a DLL:
 #include <string.h>
 #define __FILENAME__ (strrchr(__FILE__, '\\') ? strrchr(__FILE__, '\\') + 1 : __FILE__)
 #define DPRINT(...) { \
-   fprintf(stderr, "DEBUG: %s:%d:%s(): ", __FILENAME__, __LINE__, __FUNCTION__); \
-   fprintf(stderr, __VA_ARGS__); \
- }
+  fprintf(stderr, "DEBUG: %s:%d:%s(): ", __FILENAME__, __LINE__, __FUNCTION__); \
+  fprintf(stderr, __VA_ARGS__); \
+}
 #else
 #define DPRINT(...)
 #endif
