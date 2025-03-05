@@ -27,3 +27,4 @@
 - [https://github.com/floesen/KExecDD](https://github.com/floesen/KExecDD)
 - [https://tierzerosecurity.co.nz/2024/04/29/kexecdd.html](https://tierzerosecurity.co.nz/2024/04/29/kexecdd.html)
 - [https://github.com/lem0nSec/KBlast](https://github.com/lem0nSec/KBlast)
+- [https://github.com/scrt/KexecDDPlus](https://github.com/scrt/KexecDDPlus)

@@ -7,6 +7,8 @@ description: Position-Independent Code / Shellcode
 - [https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c](https://www.ired.team/offensive-security/code-injection-process-injection/writing-and-compiling-shellcode-in-c)
 - [https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud](https://www.codeproject.com/Articles/5304605/Creating-Shellcode-from-any-Code-Using-Visual-Stud)
 
+{% embed url="https://github.com/silentwarble/PIC-Library" caption="silentwarble/PIC-Library: A collection of position independent coding resources" %}
+
 Compile runner with nasm & MinGW (stolen from [PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges/blob/main/runshellcode.asm)):
 
 {% code title="runShellcode.asm" %}
@@ -55,8 +57,8 @@ elif [[ "${ARCH}" == "64" ]]; then
     LD_ARCH="i386pep"
 fi
 
-echo "[*] Compile time: `date`"
 echo "[*] Compiling x${ARCH}"
+echo "[*] Compilation time: `date "+%F %H:%M:%S"`"
 
 nasm -f "${NASM_ARCH}" -o "/tmp/${SC_NAME}.obj" "/tmp/${SC_NAME}.asm"
 ld -m "${LD_ARCH}" -o "${EXE_NAME}" "/tmp/${SC_NAME}.obj"
@@ -78,6 +80,12 @@ rm -f /tmp/${SC_NAME}.{asm,obj}
 ## Templates
 
 - [https://github.com/thefLink/C-To-Shellcode-Examples](https://github.com/thefLink/C-To-Shellcode-Examples)
+- [https://github.com/rainerzufalldererste/windows_x64_shellcode_template](https://github.com/rainerzufalldererste/windows_x64_shellcode_template)
+
+
+
+### Startust-based
+
 - [https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design](https://5pider.net/blog/2024/01/27/modern-shellcode-implant-design)
 - [https://github.com/Cracked5pider/Stardust](https://github.com/Cracked5pider/Stardust)
 - [https://github.com/Octoberfest7/Secure_Stager](https://github.com/Octoberfest7/Secure_Stager)

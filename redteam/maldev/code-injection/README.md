@@ -77,6 +77,7 @@ $ gcc -o loader loader.c -z execstack
 ## Linux In-Memory Code Execution
 
 - [https://blog.sektor7.net/#!res/2018/pure-in-memory-linux.md](https://blog.sektor7.net/#!res/2018/pure-in-memory-linux.md)
+- [https://www.akamai.com/blog/security-research/the-definitive-guide-to-linux-process-injection](https://www.akamai.com/blog/security-research/the-definitive-guide-to-linux-process-injection)
 
 
 
@@ -149,6 +150,15 @@ $ python3 -c 'import os;os.fork()or(os.setsid(),print(f"/proc/{os.getpid()}/fd/{
 $ cat /usr/bin/date > /proc/1732982/fd/4
 $ /proc/1732982/fd/4
 ```
+
+
+
+
+## RtlRemoteCall
+
+- [https://www.alex-ionescu.com/rtlremotecall/](https://www.alex-ionescu.com/rtlremotecall/)
+- [https://github.com/REDMED-X/OperatorsKit/blob/ff56550a1606e2a2cd9c6295ef42b5f8dc6ed156/KIT/LoadLib/loadlib.c](https://github.com/REDMED-X/OperatorsKit/blob/ff56550a1606e2a2cd9c6295ef42b5f8dc6ed156/KIT/LoadLib/loadlib.c)
+- [https://sabotagesec.com/thread-hijacking-iceberg-deep-dive-into-phantom-call-rtlremotecall/](https://sabotagesec.com/thread-hijacking-iceberg-deep-dive-into-phantom-call-rtlremotecall/)
 
 
 
@@ -231,6 +241,15 @@ $ /proc/1732982/fd/4
 
 
 
+## Early Cascade
+
+- [https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/](https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/)
+- [https://github.com/Cracked5pider/earlycascade-injection](https://github.com/Cracked5pider/earlycascade-injection)
+- [https://github.com/0xNinjaCyclone/EarlyCascade](https://github.com/0xNinjaCyclone/EarlyCascade)
+
+
+
+
 ## Shellcode In-Memory Fluctuation (Obfuscate and Sleep)
 
 {% embed url="https://twitter.com/_RastaMouse/status/1443923456630968320" %}
@@ -287,14 +306,15 @@ PS > .\Moneta64.exe -p ((Get-Process notepad).Id) -m region --address 0xd34dc0d3
 
 
 
-## Thread Stack Spoofing
+## Return Address / Call Stack Spoofing
 
-{% embed url="https://youtu.be/7EheXiC3MJE" %}
 
-- [https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks](https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks)
-- [https://dtsec.us/2023-09-15-StackSpoofin/](https://dtsec.us/2023-09-15-StackSpoofin/)
-- [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
-- [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
+
+### Return Address Spoofing
+
+- [https://www.unknowncheats.me/forum/anti-cheat-bypass/268039-x64-return-address-spoofing-source-explanation.html](https://www.unknowncheats.me/forum/anti-cheat-bypass/268039-x64-return-address-spoofing-source-explanation.html)
+- [https://hulkops.gitbook.io/blog/red-team/x64-return-address-spoofing](https://hulkops.gitbook.io/blog/red-team/x64-return-address-spoofing)
+- [https://github.com/NtDallas/Svartalfheim/blob/main/src/RetAddr.c](https://github.com/NtDallas/Svartalfheim/blob/main/src/RetAddr.c)
 
 
 
@@ -302,7 +322,6 @@ PS > .\Moneta64.exe -p ((Get-Process notepad).Id) -m region --address 0xd34dc0d3
 
 - [https://github.com/mgeeky/ThreadStackSpoofer/tree/c2507248723d167fb2feddf50d35435a17fd61a2](https://github.com/mgeeky/ThreadStackSpoofer/tree/c2507248723d167fb2feddf50d35435a17fd61a2)
 - [https://github.com/mgeeky/ThreadStackSpoofer](https://github.com/mgeeky/ThreadStackSpoofer)
-- [https://www.unknowncheats.me/forum/anti-cheat-bypass/268039-x64-return-address-spoofing-source-explanation.html](https://www.unknowncheats.me/forum/anti-cheat-bypass/268039-x64-return-address-spoofing-source-explanation.html)
 
 An alternative way to get the nearest return address in current stack frame (besides [\_ReturnAddress](https://docs.microsoft.com/ru-ru/cpp/intrinsics/returnaddress?view=msvc-170) and [\_AddressOfReturnAddress](https://docs.microsoft.com/ru-ru/cpp/intrinsics/addressofreturnaddress?view=msvc-170)) without manually walking the stack:
 
@@ -350,7 +369,20 @@ int main(int argc, char** argv)
 
 
 
-### Proxy DLL Loading
+### Call Stack Spoofing
+
+{% embed url="https://youtu.be/7EheXiC3MJE" %}
+
+- [https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks](https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks)
+- [https://dtsec.us/2023-09-15-StackSpoofin/](https://dtsec.us/2023-09-15-StackSpoofin/)
+- [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
+- [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
+- [https://hulkops.gitbook.io/blog/red-team/x64-call-stack-spoofing](https://hulkops.gitbook.io/blog/red-team/x64-call-stack-spoofing)
+
+
+
+
+## Proxy DLL Loading
 
 - [https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/](https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/)
 - [https://0xdarkvortex.dev/hiding-in-plainsight/](https://0xdarkvortex.dev/hiding-in-plainsight/)
@@ -476,7 +508,7 @@ VerifierEnumerateResource
 
 ## PE to Shellcode
 
-- [https://samples.vx-underground.org/Papers/Windows/Analysis and Internals/2020-10-11 - From a C project through assembly to shellcode.pdf](https://samples.vx-underground.org/Papers/Windows/Analysis%20and%20Internals/2020-10-11%20-%20From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf)
+- [[PDF] From a C project, through assembly, to shellcode (hasherezade for @vxunderground)](https://github.com/vxunderground/VXUG-Papers/blob/main/From%20a%20C%20project%20through%20assembly%20to%20shellcode.pdf)
 - [https://github.com/hasherezade/pe_to_shellcode](https://github.com/hasherezade/pe_to_shellcode)
 - [https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/](https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/)
 - [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
@@ -502,13 +534,12 @@ VerifierEnumerateResource
 
 [Example](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146) with [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe) and donut (C# cross-compilation is done with [Mono](https://www.mono-project.com/download/stable/)):
 
-{% code title="sweetblood.sh" %}
+{% code title="blood.sh" %}
 ```bash
 RNDNAME=`curl -sL https://github.com/snovvcrash/WeaponizeKali.sh/raw/main/misc/binaries.txt | shuf -n1`
 wget https://github.com/BloodHoundAD/BloodHound/raw/master/Collectors/SharpHound.exe -qO /tmp/SharpHound.exe
 
-# --ldapusername snovvcrash --ldappassword Passw0rd!
-~/tools/PEzor/deps/donut/donut -a2 -z2 -i /tmp/SharpHound.exe -p '--CollectionMethod All,LoggedOn --NoSaveCache --OutputDirectory C:\Windows\Tasks --ZipFilename sweetbl.zip' -o /tmp/SharpHound.bin
+~/tools/PEzor/deps/donut/donut -a2 -z2 -i /tmp/SharpHound.exe -p '--CollectionMethod All,LoggedOn --NoSaveCache --OutputDirectory C:\Windows\Tasks --ZipFilename blood.zip' -o /tmp/SharpHound.bin
 
 BUF=`xxd -i /tmp/SharpHound.bin | head -n-2 | tail -n+2 | tr -d ' ' | tr -d '\n'`
 BUFSIZE=`xxd -i /tmp/SharpHound.bin | tail -n1 | awk '{print $5}' | tr -d ';\n'`

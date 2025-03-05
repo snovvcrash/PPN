@@ -537,7 +537,7 @@ $ 7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on files.7z files/
 
 
 
-### grep/find/sed
+### grep / find / sed
 
 Recursive grep:
 
@@ -551,16 +551,29 @@ Recursive find and replace:
 $ find . -type f -name "*.txt" -exec sed -i'' -e 's/\<foo\>/bar/g' {} +
 ```
 
-Exec `strings` and grep on the result with printing filenames:
+Exec `strings` and grep on the result (with filenames):
 
 ```
 $ find . -type f -print -exec sh -c 'strings $1 | grep -i -n "signature"' sh {} \;
 ```
 
-Find and `xargs` grep results:
+Find and `xargs` grep the results:
 
 ```
 $ find . -type f -print0 | xargs -0 grep <PATTERN>
+```
+
+Find and `xargs` less/grep the results:
+
+```
+$ export LESS="-R -i"
+$ find . -type f -name "*.txt" -print0 | xargs -0 -I{} sh -c 'cat "{}"; echo' | less
+```
+
+Enhanced variant using parallel and tre-agrep:
+
+```
+$ find . -type f -name "*.txt" | parallel tre-agrep -H --color mystring {} -iE2
 ```
 
 

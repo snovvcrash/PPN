@@ -4,7 +4,7 @@
 
 Hey there!
 
-I'm [snovvcrash](https://snovvcrash.rocks/about) and I do ethical penetration testing, red teaming, offensive tooling developement and cybersecurity researching.
+I'm [snovvcrash](https://snovvcra.sh/about) and I do ethical penetration testing, red teaming, offensive tooling developement and cybersecurity researching.
 
 This is a GitBook of mine whose purpose is keeping my pentest notes on hand. It's far from being perfect in terms of organization (that's why I call it "promiscuous") and, basically, I'm logging it for myself, but it turned out that hosting it online makes it most convenient to access. So, if you find it handy too, feel free to use it... **responsibly**, of course!
 
@@ -15,7 +15,7 @@ While taking these notes, one main rule is that all the given techniques are act
 {% endhint %}
 
 {% hint style="info" %}
-**DEPRECATED.** The previous version of PPN is right [here](https://snovvcrash.rocks/PPN/).
+**DEPRECATED.** The previous version of PPN is right [here](https://snovvcra.sh/PPN/).
 {% endhint %}
 
 ## Telegram Channel
@@ -26,7 +26,7 @@ While taking these notes, one main rule is that all the given techniques are act
 
 ## About
 
-{% embed url="https://snovvcrash.rocks/" caption="Blog" %}
+{% embed url="https://snovvcra.sh/" caption="Blog" %}
 
 {% embed url="https://github.com/snovvcrash" caption="GitHub" %}
 
