@@ -116,6 +116,7 @@
     * [Atlassian](pentest/infrastructure/devops/atlassian.md)
     * [Containerization / Orchestration](pentest/infrastructure/devops/containerization-orchestration.md)
     * [GitLab](pentest/infrastructure/devops/gitlab.md)
+    * [HashiCorp Vault](pentest/infrastructure/devops/hashicorp-vault.md)
     * [Jenkins](pentest/infrastructure/devops/jenkins.md)
     * [Zabbix](pentest/infrastructure/devops/zabbix.md)
   - [DBMS](pentest/infrastructure/dbms/README.md)
