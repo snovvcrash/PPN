@@ -118,6 +118,7 @@
     * [GitLab](pentest/infrastructure/devops/gitlab.md)
     * [HashiCorp Vault](pentest/infrastructure/devops/hashicorp-vault.md)
     * [Jenkins](pentest/infrastructure/devops/jenkins.md)
+    * [VS Code](pentest/infrastructure/devops/vscode.md)
     * [Zabbix](pentest/infrastructure/devops/zabbix.md)
   - [DBMS](pentest/infrastructure/dbms/README.md)
     * [FireBird](pentest/infrastructure/dbms/firebird.md)
