@@ -245,3 +245,15 @@ Check encryption status of all drives (must be elevated):
 ```
 Cmd > manage-bde -status
 ```
+
+
+
+
+## Cisco AnyConnect
+
+Bypass ISE Posture host scans on older versions of Cisco AnyConnect Secure Mobility Client:
+
+```
+Cmd > cd "C:\Program Files (x86)\Cisco\Cisco AnyConnect Secure Mobility Client"
+Cmd > move aciseposture.exe aciseposture.exe.bak
+```
