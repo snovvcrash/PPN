@@ -153,6 +153,12 @@ $ /proc/1732982/fd/4
 
 
 
+### Tools
+
+- [https://github.com/hackerschoice/bincrypter](https://github.com/hackerschoice/bincrypter)
+
+
+
 
 ## RtlRemoteCall
 
@@ -237,6 +243,15 @@ $ /proc/1732982/fd/4
 - [https://github.com/SafeBreach-Labs/PoolParty](https://github.com/SafeBreach-Labs/PoolParty)
 - [https://github.com/0xEr3bus/PoolPartyBof](https://github.com/0xEr3bus/PoolPartyBof)
 - [https://urien.gitbook.io/diago-lima/a-deep-dive-into-exploiting-windows-thread-pools](https://urien.gitbook.io/diago-lima/a-deep-dive-into-exploiting-windows-thread-pools)
+
+
+
+
+## VEH (Vectored Exception Handling)
+
+- [https://www.ibm.com/think/x-force/using-veh-for-defense-evasion-process-injection](https://www.ibm.com/think/x-force/using-veh-for-defense-evasion-process-injection)
+- [https://github.com/passthehashbrowns/VectoredExceptionHandling](https://github.com/passthehashbrowns/VectoredExceptionHandling)
+- [https://bruteratel.com/research/2024/10/20/Exception-Junction/](https://bruteratel.com/research/2024/10/20/Exception-Junction/)
 
 
 
