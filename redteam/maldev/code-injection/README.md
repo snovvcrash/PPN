@@ -209,6 +209,13 @@ $ /proc/1732982/fd/4
 - [https://naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html](https://naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html)
 
 
+#### Process Stomping
+
+- [https://github.com/hasherezade/process_overwriting](https://github.com/hasherezade/process_overwriting)
+- [https://www.naksyn.com/edr%20evasion/2023/11/18/mockingjay-revisited-process-stomping-srdi-beacon.html](https://www.naksyn.com/edr%20evasion/2023/11/18/mockingjay-revisited-process-stomping-srdi-beacon.html)
+- [https://github.com/naksyn/ProcessStomping](https://github.com/naksyn/ProcessStomping)
+
+
 
 ### Module Stomping in C#
 
@@ -545,7 +552,7 @@ VerifierEnumerateResource
 - [https://github.com/TheWover/donut](https://github.com/TheWover/donut)
 - [https://github.com/S4ntiagoP/donut/tree/syscalls](https://github.com/S4ntiagoP/donut/tree/syscalls)
 - [https://github.com/Binject/go-donut](https://github.com/Binject/go-donut)
-- [https://github.com/listinvest/undonut]https://github.com/listinvest/undonut()
+- [https://github.com/listinvest/undonut](https://github.com/listinvest/undonut)
 
 [Example](https://github.com/l4ckyguy/ukn0w/commit/0823f51d01790ef53aa9406f99b6a75dfff7f146) with [SharpHound.exe](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe) and donut (C# cross-compilation is done with [Mono](https://www.mono-project.com/download/stable/)):
 
@@ -597,6 +604,18 @@ rm "/tmp/SharpHound.exe" "/tmp/SharpHound.bin" "/tmp/$RNDNAME.cs"
 {% hint style="info" %}
 This technique is enhanced and automated [here](https://gist.github.com/snovvcrash/30bd25b1a5a18d8bb7ce3bb8dc2bae37).
 {% endhint %}
+
+
+
+### Python
+
+{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion.md#python" %}
+[EDR Blindspots](av-edr-evasion.md)
+{% endcontent-ref %}
+
+- [https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html](https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html)
+- [https://github.com/naksyn/PythonMemoryModule](https://github.com/naksyn/PythonMemoryModule)
+- [https://github.com/naksyn/ModuleShifting](https://github.com/naksyn/ModuleShifting)
 
 
 

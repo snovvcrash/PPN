@@ -91,3 +91,15 @@ rm -f /tmp/${SC_NAME}.{asm,obj}
 - [https://github.com/Octoberfest7/Secure_Stager](https://github.com/Octoberfest7/Secure_Stager)
 - [https://github.com/safedv/Rustic64](https://github.com/safedv/Rustic64)
 - [https://github.com/NtDallas/Svartalfheim](https://github.com/NtDallas/Svartalfheim)
+
+
+
+
+## Tools
+
+
+
+### Binary Ninja Shellcode Compiler (SCC)
+
+- [https://scc.binary.ninja/](https://scc.binary.ninja/)
+- [https://github.com/Vector35/scc](https://github.com/Vector35/scc)
