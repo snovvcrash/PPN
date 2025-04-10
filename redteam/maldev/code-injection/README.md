@@ -610,7 +610,7 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 ### Python
 
 {% content-ref url="/pentest/infrastructure/ad/av-edr-evasion.md#python" %}
-[EDR Blindspots](av-edr-evasion.md)
+[av-edr-evasion.md](av-edr-evasion.md)
 {% endcontent-ref %}
 
 - [https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html](https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html)
