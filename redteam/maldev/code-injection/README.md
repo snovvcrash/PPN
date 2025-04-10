@@ -609,7 +609,7 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 ### Python
 
-{% content-ref url="/pentest/infrastructure/ad/README.md#python" %}
+{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion/README.md#python" %}
 [README.md](README.md)
 {% endcontent-ref %}
 
