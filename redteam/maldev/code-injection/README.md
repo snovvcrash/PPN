@@ -609,8 +609,8 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 ### Python
 
-{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion.md#python" %}
-[av-edr-evasion.md](av-edr-evasion.md)
+{% content-ref url="/pentest/infrastructure/ad/README.md#python" %}
+[README.md](README.md)
 {% endcontent-ref %}
 
 - [https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html](https://www.naksyn.com/edr%20evasion/2023/06/01/improving-the-stealthiness-of-memory-injections.html)
