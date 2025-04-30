@@ -19,6 +19,7 @@
       - [ESC8](pentest/infrastructure/ad/ad-cs-abuse/esc8.md)
       - [ESC15](pentest/infrastructure/ad/ad-cs-abuse/esc15.md)
       - [Golden Certificate](pentest/infrastructure/ad/ad-cs-abuse/golden-certificate.md)
+      - [Pass-the-Certificate](pentest/infrastructure/ad/ad-cs-abuse/ptc.md)
     * [ADIDNS Abuse](pentest/infrastructure/ad/adidns-abuse.md)
     * [Attack Trusts](pentest/infrastructure/ad/attack-trusts.md)
     * [Attack RODCs](pentest/infrastructure/ad/attack-rodc.md)

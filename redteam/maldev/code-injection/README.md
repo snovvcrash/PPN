@@ -5,6 +5,8 @@
 - [https://gitlab.com/users/ORCA666/projects](https://gitlab.com/users/ORCA666/projects)
 - [https://github.com/itaymigdal/awesome-injection](https://github.com/itaymigdal/awesome-injection)
 
+{% embed url="https://github.com/itaymigdal/awesome-injection" caption="Centralized resource for listing and organizing known injection techniques and POCs" %}
+
 
 
 
@@ -268,6 +270,30 @@ $ /proc/1732982/fd/4
 - [https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/](https://www.outflank.nl/blog/2024/10/15/introducing-early-cascade-injection-from-windows-process-creation-to-stealthy-injection/)
 - [https://github.com/Cracked5pider/earlycascade-injection](https://github.com/Cracked5pider/earlycascade-injection)
 - [https://github.com/0xNinjaCyclone/EarlyCascade](https://github.com/0xNinjaCyclone/EarlyCascade)
+
+
+
+
+## Thread Name-Calling Injection
+
+- [https://research.checkpoint.com/2024/thread-name-calling-using-thread-name-for-offense/](https://research.checkpoint.com/2024/thread-name-calling-using-thread-name-for-offense/)
+- [https://github.com/hasherezade/thread_namecalling](https://github.com/hasherezade/thread_namecalling)
+
+
+
+
+## Waiting Thread Hijacking
+
+- [https://research.checkpoint.com/2025/waiting-thread-hijacking/](https://research.checkpoint.com/2025/waiting-thread-hijacking/)
+- [https://github.com/hasherezade/waiting_thread_hijacking](https://github.com/hasherezade/waiting_thread_hijacking)
+
+
+
+
+## Control Flow Hijacking (Data Pointers)
+
+- [https://www.legacyy.xyz/defenseevasion/windows/2025/04/16/control-flow-hijacking-via-data-pointers.html](https://www.legacyy.xyz/defenseevasion/windows/2025/04/16/control-flow-hijacking-via-data-pointers.html)
+- [https://github.com/iilegacyyii/DataInject-BOF](https://github.com/iilegacyyii/DataInject-BOF)
 
 
 
@@ -609,7 +635,7 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 ### Python
 
-{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion/README.md#python" %}
+{% content-ref url="/pentest/infrastructure/ad/av-edr-evasion/README.md#pyramid" %}
 [README.md](README.md)
 {% endcontent-ref %}
 
