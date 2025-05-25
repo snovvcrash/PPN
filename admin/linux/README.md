@@ -598,6 +598,17 @@ $ paste -d':' a.txt b.txt > c.txt
 
 
 
+### tmux
+
+Send a bunch of lines to a tmux pane:
+
+```
+$ tmux run 'echo #{pane_id}'
+$ cat files.txt | while read; do tmux send -t '%1' "$REPLY"; sleep 5; done
+```
+
+
+
 ### dpkg
 
 ```

@@ -79,6 +79,13 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 
 
 
+## CVE-2025-24076, CVE-2025-24994
+
+- [https://blog.compass-security.com/2025/04/3-milliseconds-to-admin-mastering-dll-hijacking-and-hooking-to-win-the-race-cve-2025-24076-and-cve-2025-24994/](https://blog.compass-security.com/2025/04/3-milliseconds-to-admin-mastering-dll-hijacking-and-hooking-to-win-the-race-cve-2025-24076-and-cve-2025-24994/)
+
+
+
+
 ## Tools
 
 - [https://github.com/monoxgas/Koppeling](https://github.com/monoxgas/Koppeling)

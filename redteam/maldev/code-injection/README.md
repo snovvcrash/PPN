@@ -561,6 +561,7 @@ VerifierEnumerateResource
 - [https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/](https://bruteratel.com/research/feature-update/2021/01/30/OBJEXEC/)
 - [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
 - [https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py](https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py)
+- [https://github.com/4l3x777/shell_maker](https://github.com/4l3x777/shell_maker)
 
 
 

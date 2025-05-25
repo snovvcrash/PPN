@@ -40,6 +40,7 @@
       - [Mimikatz](pentest/infrastructure/ad/av-edr-evasion/mimikatz.md)
       - [UAC Bypass](pentest/infrastructure/ad/av-edr-evasion/uac-bypass.md)
     * [Authentication Coercion](pentest/infrastructure/ad/authentication-coercion.md)
+    * [BadSuccessor](pentest/infrastructure/ad/badsuccessor.md)
     * [Credentials Harvesting](pentest/infrastructure/ad/credential-harvesting/README.md)
       - [From Memory](pentest/infrastructure/ad/credential-harvesting/from-memory/README.md)
         * [lsass.exe](pentest/infrastructure/ad/credential-harvesting/from-memory/lsass.md)
