@@ -162,6 +162,15 @@ $ /proc/1732982/fd/4
 
 
 
+## Non-Standard GetModuleHandle/GetProcAddress
+
+- [https://github.com/MzHmO/SymProcAddress](https://github.com/MzHmO/SymProcAddress)
+- [https://github.com/Teach2Breach/moonwalk](https://github.com/Teach2Breach/moonwalk)
+- [https://github.com/Teach2Breach/stargate](https://github.com/Teach2Breach/stargate)
+
+
+
+
 ## RtlRemoteCall
 
 - [https://www.alex-ionescu.com/rtlremotecall/](https://www.alex-ionescu.com/rtlremotecall/)
@@ -423,14 +432,28 @@ int main(int argc, char** argv)
 
 - [https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks](https://www.elastic.co/security-labs/peeling-back-the-curtain-with-call-stacks)
 - [https://dtsec.us/2023-09-15-StackSpoofin/](https://dtsec.us/2023-09-15-StackSpoofin/)
-- [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
-- [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
 - [https://hulkops.gitbook.io/blog/red-team/x64-call-stack-spoofing](https://hulkops.gitbook.io/blog/red-team/x64-call-stack-spoofing)
 
 
+#### VulcanRaven
+
+- [https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/](https://labs.withsecure.com/blog/spoofing-call-stacks-to-confuse-edrs/)
+- [https://github.com/WithSecureLabs/CallStackSpoofer](https://github.com/WithSecureLabs/CallStackSpoofer)
 
 
-## Proxy DLL Loading
+#### SilentMoonwalk
+
+- [https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/](https://klezvirus.github.io/RedTeaming/AV_Evasion/StackSpoofing/)
+- [https://github.com/klezVirus/SilentMoonwalk](https://github.com/klezVirus/SilentMoonwalk)
+
+
+#### LoudSunRun
+
+- [https://github.com/susMdT/LoudSunRun](https://github.com/susMdT/LoudSunRun)
+
+
+
+### Proxy DLL Loading / Legit APIs
 
 - [https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/](https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/)
 - [https://0xdarkvortex.dev/hiding-in-plainsight/](https://0xdarkvortex.dev/hiding-in-plainsight/)
@@ -438,6 +461,7 @@ int main(int argc, char** argv)
 - [https://github.com/paranoidninja/Proxy-Function-Calls-For-ETwTI](https://github.com/paranoidninja/Proxy-Function-Calls-For-ETwTI)
 - [https://github.com/kleiton0x00/Proxy-DLL-Loads](https://github.com/kleiton0x00/Proxy-DLL-Loads)
 - [https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/](https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/)
+- [https://blog.cryptoplague.net/main/research/windows-research/proxyalloc-evading-ntallocatevirtualmemory-detection-ft.-elastic-defend-and-binary-ninja](https://blog.cryptoplague.net/main/research/windows-research/proxyalloc-evading-ntallocatevirtualmemory-detection-ft.-elastic-defend-and-binary-ninja)
 
 
 
@@ -458,6 +482,14 @@ int main(int argc, char** argv)
 - [https://github.com/S3cur3Th1sSh1t/Caro-Kann](https://github.com/S3cur3Th1sSh1t/Caro-Kann)
 - [https://caueb.com/attackdefense/threadlessstompingkann/](https://caueb.com/attackdefense/threadlessstompingkann/)
 - [https://github.com/caueb/ThreadlessStompingKann](https://github.com/caueb/ThreadlessStompingKann)
+
+
+
+
+## ntdll!Ldrp* Shenanigans
+
+- [https://github.com/cybersectroll/TrollBlacklistDLL](https://github.com/cybersectroll/TrollBlacklistDLL)
+- [https://github.com/RWXstoned/LdrShuffle](https://github.com/RWXstoned/LdrShuffle)
 
 
 
@@ -562,6 +594,7 @@ VerifierEnumerateResource
 - [https://github.com/paranoidninja/PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges)
 - [https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py](https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py)
 - [https://github.com/4l3x777/shell_maker](https://github.com/4l3x777/shell_maker)
+- [https://github.com/maxDcb/DreamWalkers](https://github.com/maxDcb/DreamWalkers)
 
 
 
@@ -569,6 +602,7 @@ VerifierEnumerateResource
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
 - [https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/](https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/)
+- [https://tradecraftgarden.org/docs.html](https://tradecraftgarden.org/docs.html)
 
 
 

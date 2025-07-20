@@ -61,7 +61,8 @@ echo "[*] Compiling x${ARCH}"
 echo "[*] Compilation time: `date "+%F %H:%M:%S"`"
 
 nasm -f "${NASM_ARCH}" -o "/tmp/${SC_NAME}.obj" "/tmp/${SC_NAME}.asm"
-ld -m "${LD_ARCH}" -o "${EXE_NAME}" "/tmp/${SC_NAME}.obj"
+ld -m "${LD_ARCH}" -o "${EXE_NAME}" "/tmp/${SC_NAME}.obj" #-s --subsystem=windows
+#strip "${EXE_NAME}"
 
 if [[ "$?" -ne 1 ]]; then
     echo "[+] Success"

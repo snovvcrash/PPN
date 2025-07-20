@@ -30,6 +30,7 @@ $ msfvenom -p windows/messagebox TITLE="EICAR" TEXT="X5O!P%@AP[4\PZX54(P^)7CC)7}
 - [https://nikhilh-20.github.io/blog/peb_phobos_ransomware/](https://nikhilh-20.github.io/blog/peb_phobos_ransomware/)
 - [https://redops.at/en/blog/edr-analysis-leveraging-fake-dlls-guard-pages-and-veh-for-enhanced-detection](https://redops.at/en/blog/edr-analysis-leveraging-fake-dlls-guard-pages-and-veh-for-enhanced-detection)
 - [https://onlyf8.com/pe-format](https://onlyf8.com/pe-format)
+- [https://synawk.com/blog/peb-obfuscation-malware-dev-0x4](https://synawk.com/blog/peb-obfuscation-malware-dev-0x4)
 
 ![PE File Structure (by @Print3M)](https://print3m.github.io/imgs/x64-shellcoding-winapi/pe-structure.png)
 
