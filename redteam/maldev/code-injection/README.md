@@ -452,6 +452,12 @@ int main(int argc, char** argv)
 - [https://github.com/susMdT/LoudSunRun](https://github.com/susMdT/LoudSunRun)
 
 
+#### DreamWalkers
+
+- [https://maxdcb.github.io/DreamWalkers/](https://maxdcb.github.io/DreamWalkers/)
+- [https://github.com/maxDcb/DreamWalkers](https://github.com/maxDcb/DreamWalkers)
+
+
 
 ### Proxy DLL Loading / Legit APIs
 
