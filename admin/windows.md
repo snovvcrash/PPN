@@ -102,6 +102,22 @@ wmic path win32_networkadapter where index=<INDEX_ID> call {disable|enable}
 ```
 
 
+## Event Logs
+
+Clean logs with Batch:
+
+```bat
+for /f %%a in ('WEVTUTIL EL') do WEVTUTIL CL "%%a"
+```
+
+Clear logs with PS:
+
+```powershell
+ForEach ($log in (Get-WinEvent *).LogName | sort | Get-Unique)
+{ [System.Diagnostics.Eventing.Reader.EventLogSession]::GlobalSession.ClearLog($log) }
+```
+
+
 
 
 ## Symlinks
@@ -177,6 +193,8 @@ Run:
 ```
 Cmd > rundll32.exe keymgr.dll, KRShowKeyMgr
 ```
+
+
 
 
 ## PowerShell Secure Strings

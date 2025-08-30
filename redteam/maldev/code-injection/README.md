@@ -608,7 +608,6 @@ VerifierEnumerateResource
 
 - [https://github.com/monoxgas/sRDI](https://github.com/monoxgas/sRDI)
 - [https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/](https://blog.malicious.group/writing-your-own-rdi-srdi-loader-using-c-and-asm/)
-- [https://tradecraftgarden.org/docs.html](https://tradecraftgarden.org/docs.html)
 
 
 
@@ -693,12 +692,35 @@ This technique is enhanced and automated [here](https://gist.github.com/snovvcra
 
 
 
+### Crystal Palace
+
+- [https://tradecraftgarden.org/docs.html](https://tradecraftgarden.org/docs.html)
+- [https://rastamouse.me/crystal-malware/](https://rastamouse.me/crystal-malware/)
+- [https://rastamouse.me/modular-pic-c2-agents/](https://rastamouse.me/modular-pic-c2-agents/)
+- [https://github.com/rasta-mouse/Crystal-Loaders](https://github.com/rasta-mouse/Crystal-Loaders)
+
+
+
 
 ## PE Injection
 
 - [https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10](https://gist.github.com/hasherezade/e6daa4124fab73543497b6d1295ece10)
 - [https://xakep.ru/2018/08/27/doppelganging-process/](https://xakep.ru/2018/08/27/doppelganging-process/)
 - [https://xakep.ru/2022/04/21/herpaderping-and-ghosting/](https://xakep.ru/2022/04/21/herpaderping-and-ghosting/)
+
+
+
+
+## Backdoor Legit PE
+
+
+
+### SuperMega
+
+- [https://blog.deeb.ch/posts/supermega/](https://blog.deeb.ch/posts/supermega/)
+- [https://blog.deeb.ch/posts/how-edr_works/](https://blog.deeb.ch/posts/how-edr_works/)
+- [https://blog.deeb.ch/posts/exe-injection/](https://blog.deeb.ch/posts/exe-injection/)
+- [https://github.com/dobin/SuperMega](https://github.com/dobin/SuperMega)
 
 
 
