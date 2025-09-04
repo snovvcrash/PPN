@@ -85,13 +85,6 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 
 
 
-
-## Tools
-
-- [https://github.com/monoxgas/Koppeling](https://github.com/monoxgas/Koppeling)
-
-
-
 ### DLL Proxying
 
 - [https://github.com/Flangvik/SharpDllProxy](https://github.com/Flangvik/SharpDllProxy)
@@ -109,3 +102,10 @@ PS > python .\PackMyPayload.py .\out\ .\out\a.iso --out-format iso --hide OneDri
 ```
 $ ./Shhhloader.py -p RuntimeBroker.exe -d -dp vresion.dll -o version.dll -s domain -sa megacorp.local shellcode.bin
 ```
+
+
+
+### DLL ForwardSideloading
+
+- [https://www.hexacorn.com/blog/2025/08/19/dll-forwardsideloading/](https://www.hexacorn.com/blog/2025/08/19/dll-forwardsideloading/)
+- [https://hexacorn.com/d/apis_fwd.txt](https://hexacorn.com/d/apis_fwd.txt)
