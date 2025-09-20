@@ -9,7 +9,7 @@ description: Position-Independent Code / Shellcode
 
 {% embed url="https://github.com/silentwarble/PIC-Library" caption="silentwarble/PIC-Library: A collection of position independent coding resources" %}
 
-Compile runner with nasm & MinGW (stolen from [PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges/blob/main/runshellcode.asm)):
+Compile runner with nasm & MinGW (stolen from [PIC-Get-Privileges](https://github.com/paranoidninja/PIC-Get-Privileges/blob/main/runshellcode.asm)) for testing purposes:
 
 {% code title="runShellcode.asm" %}
 ```asm

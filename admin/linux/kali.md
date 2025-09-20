@@ -139,7 +139,7 @@ fi
 
 ### Paperify
 
-When dealing with an engagement where there's no internet access available on the attacker's box, one can use [paperify](https://github.com/alisinabh/paperify) to send data to her teammates (hashes to brute force, for example).
+When dealing with an engagement where there's no internet access available on the adversary's box, one can use [paperify](https://github.com/alisinabh/paperify) to send data to her teammates (hashes to brute force, for example).
 
 Zip the hashes with best compression, base64 the archive and create a QR code:
 

@@ -144,7 +144,7 @@ nasm > call esp
 !mona find -s "\xff\xe4" -m "application.exe"
 ```
 
-Discovered pointer is the needed value for EIP to force the execution flow into malicious shellcode.
+Discovered pointer is the needed value for EIP to force the execution flow into the shellcode.
 
 
 
