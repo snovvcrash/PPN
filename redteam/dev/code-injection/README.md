@@ -20,6 +20,39 @@
 
 
 
+### cdb.exe (Debugging Tools for Windows)
+
+- [https://mrd0x.com/the-power-of-cdb-debugging-tool/](https://mrd0x.com/the-power-of-cdb-debugging-tool/)
+- [https://github.com/mrd0x/pe2shc-to-cdb/blob/main/cdb.py](https://github.com/mrd0x/pe2shc-to-cdb/blob/main/cdb.py)
+
+Convert raw shellcode to a CDB script:
+
+{% code title="cdb.py" %}
+```python
+import sys
+
+with open(sys.argv[1], 'rb') as f:
+	data = f.read()
+
+arr = [f';eb @$t0+{hex(i)[2:].zfill(2)} {hex(b)[2:].zfill(2).upper()}' for i, b in enumerate(data)]
+
+with open('out.wds', 'w') as f:
+	f.write(f'.foreach /pS 5 (register {{.dvalloc {len(data)}}}) {{r @$t0 = register}}\n')
+	f.write('\n'.join([''.join(arr[i:i+16]) for i in range(0, len(arr), 16)]) + '\n')
+	f.write('r @$ip=@$t0\n')
+	f.write('g\n')
+```
+{% endcode %}
+
+Run the shellcode in the debugged process:
+
+```
+Cmd > py .\cdb.py calc.bin
+Cmd > cdb.exe -pd -cf .\out.wds -o notepad.exe
+```
+
+
+
 
 ## Linux In-Memory Code Execution
 
