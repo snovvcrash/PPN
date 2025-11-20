@@ -78,10 +78,13 @@ rm -f /tmp/${SC_NAME}.{asm,obj}
 
 
 
-## Templates
+## Development Frameworks
 
 - [https://github.com/thefLink/C-To-Shellcode-Examples](https://github.com/thefLink/C-To-Shellcode-Examples)
 - [https://github.com/rainerzufalldererste/windows_x64_shellcode_template](https://github.com/rainerzufalldererste/windows_x64_shellcode_template)
+- [https://github.com/oldboy21/SHGenOb](https://github.com/oldboy21/SHGenOb)
+- [https://github.com/Print3M/epic](https://github.com/Print3M/epic)
+- [https://github.com/winterknife/SILVERPICK](https://github.com/winterknife/SILVERPICK)
 
 
 

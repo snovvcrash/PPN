@@ -13,10 +13,11 @@ description: DLL Hijacking / DLL Side-Loading / DLL Proxying
 - [https://xss.is/threads/67021/](https://xss.is/threads/67021/)
 - [https://xss.is/threads/67718/](https://xss.is/threads/67718/)
 - [https://www.r-tec.net/r-tec-blog-dll-sideloading.html](https://www.r-tec.net/r-tec-blog-dll-sideloading.html)
+- [https://www.netspi.com/blog/technical-blog/adversary-simulation/adaptive-dll-hijacking/](https://www.netspi.com/blog/technical-blog/adversary-simulation/adaptive-dll-hijacking/)
 
 {% embed url="https://youtu.be/3eROsG_WNpE" %}
 
-Print debug output from a DLL:
+Print debug output from a DLL to a file:
 
 ```c
 #ifdef _DEBUG
@@ -30,6 +31,14 @@ Print debug output from a DLL:
 #else
 #define DPRINT(...)
 #endif
+```
+
+Print debug output from a DLL to dbgview:
+
+```c
+char buffer[256];
+wsprintfA(buffer, "Hex: 0x%X, String: %s\n", 0x1234, "test");
+OutputDebugStringA(buffer);
 ```
 
 
