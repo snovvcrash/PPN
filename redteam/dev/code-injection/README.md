@@ -248,6 +248,7 @@ $ /proc/1732982/fd/4
 - [https://www.ibm.com/think/x-force/using-veh-for-defense-evasion-process-injection](https://www.ibm.com/think/x-force/using-veh-for-defense-evasion-process-injection)
 - [https://github.com/passthehashbrowns/VectoredExceptionHandling](https://github.com/passthehashbrowns/VectoredExceptionHandling)
 - [https://bruteratel.com/research/2024/10/20/Exception-Junction/](https://bruteratel.com/research/2024/10/20/Exception-Junction/)
+- [https://kr0tt.github.io/posts/early-exception-handling/](https://kr0tt.github.io/posts/early-exception-handling/)
 
 
 
